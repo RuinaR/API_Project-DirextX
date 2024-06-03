@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AnimationRender.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapRender.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorButton.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugWindow.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="InputString.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Rigidbody.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowFrame.cpp">
+      <Filter>WindowFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>MainFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimationRender.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapRender.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorButton.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugWindow.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="InputString.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Rigidbody.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowFrame.h">
+      <Filter>WindowFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Component">
+      <UniqueIdentifier>{35d33738-361d-4a7c-9e91-c27bd68abc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{1c152b55-1093-4ff8-a6df-0a2fa28d5108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WindowFrame">
+      <UniqueIdentifier>{52e1a455-5b50-44df-bb72-4ecc310c252c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{f5798204-8be9-4b7b-b50a-5a3e54cf45dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{e2fe58d4-1f94-4801-b1a5-9cab40f188f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mouse">
+      <UniqueIdentifier>{779aa936-e18c-4963-bec7-7d6d60a46b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainFrame">
+      <UniqueIdentifier>{89d5651b-119d-4cd1-b5c4-8f4e0d28b506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{a16cc285-1a48-44b3-b463-ad6803caa0ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{f5b82436-9489-4d60-bd12-68909b2c251e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{ec01aace-cb20-4a7d-9db3-dd13b775942b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
