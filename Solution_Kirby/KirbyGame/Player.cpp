@@ -476,9 +476,9 @@ void Player::Start()
 	m_bo->ColSize() = m_cSize;
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
-	Camera::GetInstance()->SetPos(
-		m_gameObj->Position().x + rect.right / 2 + m_gameObj->Size().x / 2,
-		m_gameObj->Position().y - rect.bottom / 2 + m_gameObj->Size().y / 2);
+	//Camera::GetInstance()->SetPos(
+	//	m_gameObj->Position().x + rect.right / 2 + m_gameObj->Size().x / 2,
+	//	m_gameObj->Position().y - rect.bottom / 2 + m_gameObj->Size().y / 2);
 	if (m_rig)
 		m_rig->SetNoFriction(true);
 

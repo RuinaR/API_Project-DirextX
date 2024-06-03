@@ -84,8 +84,8 @@ void GameScene::Start()
 	btnObj->AddComponent(m_btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	m_btn->SetUIPos({ 0,200,-1.0f });
-	m_btn->SetUISize({ 190,50 });
+	m_btn->SetUIPos({ 0,200,2.0f });
+	m_btn->SetUISize({ 200,100 });
 	m_btn->SetText(TEXT("Start Game"));
 	m_btn->SetTextColor(RGB(255, 0, 255));
 	m_btn->SetDefaultColor(RGB(255, 255, 255));
