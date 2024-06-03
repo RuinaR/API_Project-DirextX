@@ -9,7 +9,6 @@ void WindowFrame::Create(HINSTANCE hInstance)
 	{
 		m_Pthis = new WindowFrame();
 		m_Pthis->m_Instance = hInstance;
-		m_Pthis->m_buffer = new Buffer();
 	}
 }
 
@@ -26,7 +25,6 @@ void WindowFrame::Destroy()
 		{
 			delete m_Pthis->m_scene;
 		}
-		delete m_Pthis->m_buffer;
 		delete m_Pthis;
 		m_Pthis = nullptr;
 	}
@@ -76,14 +74,10 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 	case WM_SIZE:
 		return 0;
 	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		m_Pthis->m_buffer->CopyBitmap(hdc);
-		m_Pthis->m_buffer->DrawBG();
-		EndPaint(hWnd, &ps);
+		ValidateRect(hWnd, NULL);
 		return 0;
 	case WM_DESTROY:
 		m_Pthis->m_scene->Release();
-		m_Pthis->m_buffer->Release();
 		PostQuitMessage(0);
 		return 0;
 	}
@@ -106,34 +100,30 @@ void WindowFrame::SetScene(Scene* scene)
 void WindowFrame::Initialize()
 {
 	BuildWindow();
-	m_Pthis->m_buffer->Init(m_Pthis->m_hWnd);
 	MoveWindow(m_Pthis->m_hWnd, 100, 100, 1440, 900, TRUE);
 	SetFocus(m_Pthis->m_hWnd);
 }
 
 void WindowFrame::BuildWindow()
 {
-	WNDCLASS WndClass;
+	WNDCLASSEX WndClass = 
+	{
+	sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
+	GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
+	L"MyWindow", NULL
+	};
 
-	WndClass.cbClsExtra = 0;
-	WndClass.cbWndExtra = 0;
-	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hInstance = m_Pthis->m_Instance;
-	WndClass.lpfnWndProc = WndProc;
-	WndClass.lpszClassName = TEXT("최원준");
-	WndClass.lpszMenuName = NULL;
-	WndClass.style = CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&WndClass);
+	RegisterClassEx(&WndClass);
 
 	m_Pthis->m_hWnd =
-		CreateWindow(WndClass.lpszClassName, WndClass.lpszClassName,
+		CreateWindow(WndClass.lpszClassName, L"최원준",
 			WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 			0, 0, MAXWINDOWW, MAXWINDOWH,
 			NULL, (HMENU)NULL, m_Pthis->m_Instance, NULL);
 
-	ShowWindow(m_Pthis->m_hWnd, SW_SHOW);
+	ShowWindow(m_Pthis->m_hWnd, SW_SHOWDEFAULT);
+	UpdateWindow(m_Pthis->m_hWnd);
+
 }
 
 void WindowFrame::Run(const MSG* Message)

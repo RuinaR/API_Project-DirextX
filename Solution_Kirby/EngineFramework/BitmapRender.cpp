@@ -1,42 +1,112 @@
 #include "pch.h"
 #include "BitmapRender.h"
 
-void BitmapRender::DrawBitmap(HDC hdc, int x, int y, int w, int h, HBITMAP hbit, UINT transparentColor)
+void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
 {
-    D3DXVECTOR3 vec;
-    D3DXMATRIX mat;
-    D3DXMatrixTranslation(&mat, 1, 1, 1);
+    SetupVertices(x, y, z, w, h);
 
-    HDC MemoryDC;
-    int BitmapX, BitmapY;
-    BITMAP Bitmap_;
-    HBITMAP OldBitmap;
-    MemoryDC = CreateCompatibleDC(hdc);
-    OldBitmap = (HBITMAP)SelectObject(MemoryDC, hbit);
-    GetObject(hbit, sizeof(BITMAP), &Bitmap_);
-    BitmapX = Bitmap_.bmWidth;
-    BitmapY = Bitmap_.bmHeight;
-    TransparentBlt(hdc, x, y, w, h, MemoryDC, 0, 0, BitmapX, BitmapY, transparentColor);
-    SelectObject(MemoryDC, OldBitmap);
-    DeleteDC(MemoryDC);
+    // Set world, view, and projection matrices here
+    D3DXMATRIX matWorld;
+    D3DXMatrixTranslation(&matWorld, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
+
+    m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+    m_device->SetFVF(D3DFVF_CUSTOMVERTEX);
+    m_device->SetTransform(D3DTS_WORLD, &matWorld);
+
+    m_device->SetTexture(0, m_texture);
+    m_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+    m_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    m_device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE); // 색상과 텍스처를 곱하여 출력
+    m_device->SetStreamSource(0, m_vertexBuffer, 0, sizeof(CUSTOMVERTEX));
+
+
+    m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 6, 0, 2);
+    m_device->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+}
+
+void BitmapRender::SetupVertices(float x, float y, float z, float width, float height)
+{
+    // Define vertices
+    CUSTOMVERTEX vertices[4];
+    vertices[0].x = x;
+    vertices[0].y = y - height; // 왼쪽 상단 모서리
+    vertices[0].z = z;
+    vertices[0].color = 0xffffffff;
+    vertices[0].tu = 0.0f;
+    vertices[0].tv = 1.0f;
+
+    vertices[1].x = x;
+    vertices[1].y = y; // 왼쪽 하단 모서리
+    vertices[1].z = z;
+    vertices[1].color = 0xffffffff;
+    vertices[1].tu = 0.0f;
+    vertices[1].tv = 0.0f;
+
+    vertices[2].x = x + width; // 오른쪽 상단 모서리
+    vertices[2].y = y - height;
+    vertices[2].z = z;
+    vertices[2].color = 0xffffffff;
+    vertices[2].tu = 1.0f;
+    vertices[2].tv = 1.0f;
+
+    vertices[3].x = x + width; // 오른쪽 하단 모서리
+    vertices[3].y = y;
+    vertices[3].z = z;
+    vertices[3].color = 0xffffffff;
+    vertices[3].tu = 1.0f;
+    vertices[3].tv = 0.0f;
+
+    // Lock the vertex buffer
+    VOID* pVertices;
+    m_vertexBuffer->Lock(0, sizeof(CUSTOMVERTEX) * 4, (void**)&pVertices, 0);
+    memcpy(pVertices, vertices, sizeof(CUSTOMVERTEX) * 4);
+    m_vertexBuffer->Unlock();
+
+    // Define indices
+    WORD indices[] =
+    {
+        0, 1, 2,    // First triangle
+        2, 1, 3     // Second triangle
+    };
+
+    // Create and lock the index buffer
+    IDirect3DIndexBuffer9* indexBuffer;
+    m_device->CreateIndexBuffer(6 * sizeof(WORD), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &indexBuffer, nullptr);
+    WORD* pIndices;
+    indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0);
+    memcpy(pIndices, indices, sizeof(indices));
+    indexBuffer->Unlock();
+
+    // Set the index buffer
+    m_device->SetIndices(indexBuffer);
+
+    // Release the index buffer
+    indexBuffer->Release();
 }
 
 
-BitmapRender::BitmapRender(HBITMAP hbit) : Component(), m_bit(hbit)
+BitmapRender::BitmapRender(IDirect3DTexture9* texture) : Component(), m_texture(texture)
 {
 }
 
 void BitmapRender::Initialize()
 {
+	m_device = MainFrame::GetInstance()->GetDevice();
+
+	m_device->
+		CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &m_vertexBuffer, NULL);
 }
 
 void BitmapRender::Release()
 {
+    m_vertexBuffer->Release();
 }
 
-void BitmapRender::ChangeBitmap(HBITMAP hbit)
+void BitmapRender::ChangeBitmap(IDirect3DTexture9* texture)
 {
-	m_bit = hbit;
+    m_texture = texture;
 }
 
 void BitmapRender::Start()
@@ -45,23 +115,14 @@ void BitmapRender::Start()
 
 void BitmapRender::Update()
 {
-	if (m_bit == nullptr)
+	if (m_texture == nullptr)
 		return;
 
-    RECT tmp, bitrect, clientrect;
-    GetClientRect(WindowFrame::GetInstance()->GetHWND(), &clientrect);
-    bitrect = 
-        { (long)(m_gameObj->Position().x - Camera::GetInstance()->GetPos().x),
-        (long)(m_gameObj->Position().y - Camera::GetInstance()->GetPos().y),
-        (long)(m_gameObj->Position().x - Camera::GetInstance()->GetPos().x) + (long)(m_gameObj->Size().x),
-        (long)(m_gameObj->Position().y - Camera::GetInstance()->GetPos().y) + (long)(m_gameObj->Size().y) };
-    if (IntersectRect(&tmp, &bitrect, &clientrect))
-    {
-        DrawBitmap(WindowFrame::GetInstance()->GetBuffer()->GetHDC(),
-            m_gameObj->Position().x - Camera::GetInstance()->GetPos().x,
-            m_gameObj->Position().y - Camera::GetInstance()->GetPos().y,
-            m_gameObj->Size().x,
-            m_gameObj->Size().y,
-            m_bit, TRANSCOLOR);
-    }
+	DrawBitmap(
+		m_gameObj->Position().x,
+		m_gameObj->Position().y,
+		m_gameObj->Position().z,
+		m_gameObj->Size().x,
+		m_gameObj->Size().y);
+
 }

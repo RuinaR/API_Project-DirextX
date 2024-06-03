@@ -11,13 +11,13 @@ private:
 
 	vector<string> ReadMapData(string mapName);
 	int m_count = MAXUNITCNT;
-	HBITMAP m_bg = NULL;
-	HBITMAP m_land = NULL;
-	HBITMAP m_swordObj = NULL;
-	HBITMAP m_stoneObj = NULL;
-	HBITMAP m_defaultObj = NULL;
-	HBITMAP m_player = NULL;
-	HBITMAP m_door = NULL;
+	IDirect3DTexture9* m_bg = NULL;
+	IDirect3DTexture9* m_land = NULL;
+	IDirect3DTexture9* m_swordObj = NULL;
+	IDirect3DTexture9* m_stoneObj = NULL;
+	IDirect3DTexture9* m_defaultObj = NULL;
+	IDirect3DTexture9* m_player = NULL;
+	IDirect3DTexture9* m_door = NULL;
 
 	MapType m_select = MapType::None;
 

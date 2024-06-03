@@ -27,13 +27,13 @@ void AnimationRender::Release()
 void AnimationRender::ChangeAnim(Animation anim)
 {
 	m_anim = anim;
-	m_curItr = m_anim.bitmaps.begin();
+	m_curItr = m_anim.textures.begin();
 	m_bitren->ChangeBitmap(*m_curItr);
 }
 
 void AnimationRender::Start()
 {
-	m_curItr = m_anim.bitmaps.begin();
+	m_curItr = m_anim.textures.begin();
 }
 
 void AnimationRender::Update()
@@ -45,13 +45,13 @@ void AnimationRender::Update()
 	if (m_updateTimer < (float)m_anim.time)
 		return;
 
-	if (m_isOneTime && m_curItr == --m_anim.bitmaps.end())
+	if (m_isOneTime && m_curItr == --m_anim.textures.end())
 		return;
 	m_updateTimer = 0.0f;
 	m_curItr++;
-	if (m_curItr == m_anim.bitmaps.end())
+	if (m_curItr == m_anim.textures.end())
 	{
-		m_curItr = m_anim.bitmaps.begin();
+		m_curItr = m_anim.textures.begin();
 	}
 
 	m_bitren->ChangeBitmap(*m_curItr);
@@ -69,7 +69,7 @@ void AnimationRender::SetOneTime(bool b)
 
 bool AnimationRender::IsFinishAnim()
 {
-	if (m_isOneTime && m_curItr == --m_anim.bitmaps.end())
+	if (m_isOneTime && m_curItr == --m_anim.textures.end())
 		return true;
 
 	return false;

@@ -43,7 +43,7 @@ void Player::FlyAction()
 			m_flyTimer.tick();
 			if (m_flyTimer.getTotalDeltaTime() > m_dblTime * 2)
 			{
-				m_rig->Velocity().y = -m_speed_fly;
+				m_rig->Velocity().y = +m_speed_fly;
 				m_flyTimer.resetTotalDeltaTime();
 			}
 		}
@@ -206,14 +206,14 @@ void Player::Attack_default()
 			if (m_arrow == Arrow::left)
 			{
 				ao->SetSpeed(-5.0f);
-				obj->SetPosition({m_dOffset.x + m_gameObj->Position().x - m_cSize.x, 
-					m_dOffset.y + m_gameObj->Position().y + m_cSize.y / 2 - 20});
+				obj->SetPosition({(float)(m_dOffset.x + m_gameObj->Position().x - m_cSize.x), 
+					(float)(m_dOffset.y + m_gameObj->Position().y + m_cSize.y / 2 - 20),0});
 			}
 			else
 			{
 				ao->SetSpeed(5.0f);
-				obj->SetPosition({ m_dOffset.x+ m_gameObj->Position().x + m_cSize.x, 
-					m_dOffset.y + m_gameObj->Position().y + m_cSize.y / 2 - 20});
+				obj->SetPosition({ (float)(m_dOffset.x+ m_gameObj->Position().x + m_cSize.x),
+					(float)(m_dOffset.y + m_gameObj->Position().y + m_cSize.y / 2 - 20),0});
 			}
 			obj->AddComponent(ao);
 			obj->InitializeSet();
@@ -235,15 +235,15 @@ void Player::Attack_sword()
 		UpdateAnim(true);
 		m_atkTrigger = false;
 		GameObject* atk = new GameObject();
-		atk->Size() = { m_atkRange,m_cSize.y };
+		atk->Size() = { m_atkRange, (float)m_cSize.y };
 		atk->SetOrderInLayer(10);
 		if (m_arrow == Arrow::left)
 		{
-			atk->SetPosition({ m_dOffset.x + m_gameObj->Position().x - m_atkRange - 5, m_dOffset.y + m_gameObj->Position().y });
+			atk->SetPosition({ (float)m_dOffset.x + m_gameObj->Position().x - m_atkRange - 5, (float)m_dOffset.y + m_gameObj->Position().y,0 });
 		}
 		else
 		{
-			atk->SetPosition({ m_dOffset.x + m_gameObj->Position().x + m_cSize.x + 5, m_dOffset.y + m_gameObj->Position().y });
+			atk->SetPosition({ (float)m_dOffset.x + m_gameObj->Position().x + (float)m_cSize.x + 5, (float)m_dOffset.y + m_gameObj->Position().y,0 });
 		}
 		BoxCollider* newbo = new BoxCollider();
 		newbo->SetTrigger(true);
@@ -304,15 +304,11 @@ void Player::Collision(Collider* other)
 
 			SceneChanger::Destroy();
 			StageMaker::Destroy();
-			if (DEBUGMODE)
-				DebugWindow::Destroy();
 
 			ObjectManager::GetInstance()->Clear();
 
 			SceneChanger::Create();
 			StageMaker::Create();
-			if (DEBUGMODE)
-				DebugWindow::Create();
 
 			string nextName = to_string(atoi(stageName.c_str()) + 1);
 			if (!StageMaker::GetInstance()->SetMap(nextName))
@@ -327,7 +323,7 @@ void Player::Collision(Collider* other)
 			btnObj->AddComponent(btn);
 			btnObj->SetOrderInLayer(10);
 			btnObj->InitializeSet();
-			btn->SetUIPos({ 0,400 });
+			btn->SetUIPos({ 0,400,-1.0f });
 			btn->SetUISize({ 200,50 });
 			btn->SetText(TEXT("GameScene Load"));
 			btn->SetTextColor(RGB(255, 0, 255));
@@ -342,7 +338,7 @@ void Player::Collision(Collider* other)
 			btnObj2->AddComponent(btn2);
 			btnObj2->SetOrderInLayer(10);
 			btnObj2->InitializeSet();
-			btn2->SetUIPos({ 0,500 });
+			btn2->SetUIPos({ 0,500, -1.0f });
 			btn2->SetUISize({ 200,50 });
 			btn2->SetText(TEXT("StartScene Load"));
 			btn2->SetTextColor(RGB(255, 0, 255));
@@ -404,7 +400,7 @@ Player::~Player()
 void Player::Initialize()
 {
 	m_gameObj->SetTag(TAG_PLAYER);
-	m_gameObj->Size() = m_dSize;
+	m_gameObj->Size() = {(float)m_dSize.x, (float)m_dSize.y};
 
 	m_mode = PlayerMode::mDefault;
 	string modeStr[(int)PlayerMode::max] = { "default", "sword", "stone"};
@@ -481,8 +477,8 @@ void Player::Start()
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
 	Camera::GetInstance()->SetPos(
-		m_gameObj->Position().x - rect.right / 2 + m_gameObj->Size().x / 2,
-		m_gameObj->Position().y - rect.right / 2 + m_gameObj->Size().y / 2);
+		m_gameObj->Position().x + rect.right / 2 + m_gameObj->Size().x / 2,
+		m_gameObj->Position().y - rect.bottom / 2 + m_gameObj->Size().y / 2);
 	if (m_rig)
 		m_rig->SetNoFriction(true);
 
@@ -496,16 +492,16 @@ void Player::Update()
 	if (!m_rig)	return;
 	if (!m_ar)	return;
 
-	Vector2D playerPos = m_gameObj->Position();  // 플레이어 위치
-	Vector2D camPos = Camera::GetInstance()->GetPos();  // 현재 카메라 위치
+	D3DXVECTOR3 playerPos = m_gameObj->Position();  // 플레이어 위치
+	D3DXVECTOR3 camPos = Camera::GetInstance()->GetPos();  // 현재 카메라 위치
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
 	if (m_state != PlayerAState::fly)m_rig->SetGravity(m_startGravity);
 	// 선형 보간을 사용하여 카메라 위치 업데이트
 	float smoothFactor = 0.02f;  // 부드러운 이동을 위한 보간 계수
-	Vector2D newCamPos = {
-		Lerp(camPos.x, playerPos.x - rect.right / 2 + m_gameObj->Size().x / 2, smoothFactor),
-		Lerp(camPos.y, playerPos.y - rect.bottom / 2 + m_gameObj->Size().y / 2, smoothFactor)
+	D3DXVECTOR2 newCamPos = {
+		Lerp(camPos.x, m_gameObj->Position().x + rect.right / 2 + m_gameObj->Size().x / 2, smoothFactor),
+		Lerp(camPos.y, m_gameObj->Position().y - rect.bottom / 2 + m_gameObj->Size().y / 2, smoothFactor)
 	};
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
 
@@ -608,13 +604,6 @@ void Player::Update()
 	else
 		m_jumpFlyTrigger = true;
 
-
-	//Debug
-	if (DEBUGMODE && DebugWindow::GetInstance() != nullptr)
-	{
-		string text = "Player Velocity :\nX:" + to_string(m_rig->Velocity().x) + " \nY:" + to_string(m_rig->Velocity().y);
-		DebugWindow::GetInstance()->SetText2(text);
-	}
 }
 
 void Player::SetPlayerMode(PlayerMode mode)

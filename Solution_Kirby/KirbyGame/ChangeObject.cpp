@@ -36,13 +36,13 @@ void ChangeObject::Update()
 				m_gameObj->Position().x < m_player->GetGameObject()->Position().x &&
 				m_gameObj->Position().x > m_player->GetGameObject()->Position().x - m_area)
 			{
-				m_gameObj->AddPosition({ m_speed * MainFrame::GetInstance()->DeltaTime(), 0.0f });
+				m_gameObj->AddPosition({ (float)(m_speed * MainFrame::GetInstance()->DeltaTime()), 0.0f, 0.0f });
 			}
 			else if (m_player->GetArrow() == Arrow::right &&
 				m_gameObj->Position().x > m_player->GetGameObject()->Position().x &&
 				m_gameObj->Position().x < m_player->GetGameObject()->Position().x + m_area)
 			{
-				m_gameObj->AddPosition({ -m_speed * MainFrame::GetInstance()->DeltaTime(), 0.0f });
+				m_gameObj->AddPosition({(float)(- m_speed * MainFrame::GetInstance()->DeltaTime()), 0.0f, 0.0f});
 			}
 		}
 	}

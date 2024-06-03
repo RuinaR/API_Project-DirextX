@@ -25,24 +25,24 @@ void Mouse::Destroy()
 
 void Mouse::Initialize()
 {
-	this->mPos.X = 0;
-	this->mPos.Y = 0;
+	this->mPos.x = 0;
+	this->mPos.y = 0;
 	this->mIsLeftDown = false;
 	this->mIsRightDown = false;
 }
 
 void Mouse::SetPos(int x, int y)
 {
-	this->mPos.X = x;
-	this->mPos.Y = y;
+	this->mPos.x = x;
+	this->mPos.y = y;
 }
 
-void Mouse::SetPos(COORD pos)
+void Mouse::SetPos(D3DXVECTOR2 pos)
 {
 	this->mPos = pos;
 }
 
-COORD Mouse::GetPos()
+D3DXVECTOR2 Mouse::GetPos()
 {
 	return this->mPos;
 }

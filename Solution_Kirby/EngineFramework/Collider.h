@@ -19,7 +19,6 @@ public:
 	set<Collider*>* SetCol();
 	void Initialize() final;
 	void Release() final;
-	virtual void DrawCollider();
 	void SetTrigger(bool b);
 	bool GetTrigger();
 };

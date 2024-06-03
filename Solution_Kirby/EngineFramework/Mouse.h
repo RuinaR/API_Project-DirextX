@@ -7,7 +7,7 @@ private:
 	Mouse() {}
 	~Mouse() {}
 
-	COORD mPos = { 0 };
+	D3DXVECTOR2 mPos = { 0,0 };
 	bool mIsLeftDown = false;
 	bool mIsRightDown = false;
 public:
@@ -18,8 +18,8 @@ public:
 	void Initialize();
 
 	void SetPos(int x, int y);
-	void SetPos(COORD pos);
-	COORD GetPos();
+	void SetPos(D3DXVECTOR2 pos);
+	D3DXVECTOR2 GetPos();
 	void SetLeftBtn(bool isDown);
 	bool IsLeftDown();
 	void SetRightBtn(bool isDown);

@@ -7,12 +7,16 @@ private:
 	static Camera* mPthis;
 	Camera() {}
 	~Camera() {}
-	Vector2D m_Position = {0.0f, 0.0f};
+	// 카메라 위치
+	D3DXVECTOR3 m_eye;
+	D3DXVECTOR3 m_at;
+	D3DXVECTOR3 m_up;
 public:
 	static void Create();
 	static Camera* GetInstance();
 	static void Destroy();
 
+	void InitializeView();
 	void SetPos(float x, float y);
-	Vector2D GetPos();
+	D3DXVECTOR3 GetPos();
 };

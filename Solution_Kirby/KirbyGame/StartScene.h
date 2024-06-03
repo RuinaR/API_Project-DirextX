@@ -5,7 +5,7 @@
 class StartScene : public Scene
 {
 private:
-	HBITMAP m_bg = NULL;
+	IDirect3DTexture9* m_bg = NULL;
 public:
 	void Init() override;
 	void Release() override;

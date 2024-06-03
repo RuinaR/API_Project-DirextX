@@ -158,15 +158,6 @@ void ObjectManager::Update()
 		else
 			itr++;
 	}
-
-	//Debug
-	if (DEBUGMODE && DebugWindow::GetInstance() != nullptr)
-	{
-		string text = "---CNT---\nobject : " + 
-			to_string(this->Count()) + "\ncollider : " + 
-			to_string(CollisionManager::GetInstance()->Count());
-		DebugWindow::GetInstance()->SetText3(text);
-	}
 }
 
 void ObjectManager::Clear()

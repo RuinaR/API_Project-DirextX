@@ -2,7 +2,7 @@
 class AttakObject : public Component
 {
 protected:
-	HBITMAP m_bit = NULL;
+	IDirect3DTexture9* m_texture = NULL;
 	float m_speedX = 0.0f;
 	virtual void CollisionEnter(Collider* other);
 	virtual void CollisionExit(Collider* other);

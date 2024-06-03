@@ -7,8 +7,8 @@ protected:
     bool m_isDestroy = false;
     bool m_setActive = true;
     string m_tag = "";
-    Vector2D m_position = { 0 };
-    Vector2D m_size = { 0 };
+    D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
+    D3DXVECTOR2 m_size = { 0.0f, 0.0f };
     float m_orderInLayer = 0.0f;
     vector<Component*>* m_vecComponent = nullptr;
     GameObject* m_parent = nullptr;
@@ -17,11 +17,11 @@ public:
     GameObject();
     virtual ~GameObject();
 
-    const Vector2D& Position();
-    void SetPosition(Vector2D v);
-	void AddPosition(Vector2D v);
+    const D3DXVECTOR3& Position();
+    void SetPosition(D3DXVECTOR3 v);
+	void AddPosition(D3DXVECTOR3 v);
 
-    Vector2D& Size();
+    D3DXVECTOR2& Size();
     template <typename T>
     T* GetComponent() 
     {

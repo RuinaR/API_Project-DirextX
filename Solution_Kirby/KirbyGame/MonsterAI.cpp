@@ -21,7 +21,7 @@ void MonsterAI::CollisionEnter(Collider* other)
 			m_arrow = Arrow::left;
 			m_checker->GetCollider()->ColOffset().x = m_bo->ColOffset().x - m_gameObj->Size().x / 8;
 		}
-		m_gameObj->AddPosition({ m_arrowVal * m_speed * MainFrame::GetInstance()->DeltaTime() ,0 });
+		m_gameObj->AddPosition({ (float)(m_arrowVal * m_speed * MainFrame::GetInstance()->DeltaTime()) ,0,0 });
 	}
 }
 
@@ -107,7 +107,7 @@ void MonsterAI::Update()
 			m_checker->GetCollider()->ColOffset().x = m_bo->ColOffset().x - m_gameObj->Size().x / 8;
 		}
 	}
-	m_gameObj->AddPosition({ m_arrowVal * m_speed * MainFrame::GetInstance()->DeltaTime() ,0 });
+	m_gameObj->AddPosition({ (float)(m_arrowVal * m_speed * MainFrame::GetInstance()->DeltaTime()) ,0,0 });
 }
 
 

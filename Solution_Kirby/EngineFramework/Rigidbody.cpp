@@ -72,11 +72,11 @@ void Rigidbody::Update()
 {
 	if (!m_isOnLand)
 	{
-		m_velocity.y += m_gravity * MainFrame::GetInstance()->DeltaTime();
+		m_velocity.y -= m_gravity * MainFrame::GetInstance()->DeltaTime();
 	}
 	else
 	{
-		if (m_velocity.y > 0)
+		if (m_velocity.y < 0)
 			m_velocity.y = 0.0f;
 	}
 	if (!m_isNoFriction)
@@ -87,10 +87,10 @@ void Rigidbody::Update()
 	if (abs(m_velocity.x) < 20.0f && abs(m_velocity.y) < 20.0f)
 		return;
 
-	Vector2D move;
+	D3DXVECTOR3 move;
 	move.x = (float)(m_velocity.x * MainFrame::GetInstance()->DeltaTime());
 	move.y = (float)(m_velocity.y * MainFrame::GetInstance()->DeltaTime());
-
+	move.z = 0.0f;
 	m_gameObj->AddPosition(move);
 }
 
@@ -139,7 +139,7 @@ void Rigidbody::Collision(Collider* other)
 			(long)other->ColOffset().y + (long)(other->GetGameObject()->Position().y + other->ColSize().y - d) };
 
 	SetNoIntersect(&r2, &r1);
-	m_gameObj->SetPosition(Vector2D({ (float)r1.left - m_box->ColOffset().x, (float)r1.top - m_box->ColOffset().y }));
+	m_gameObj->SetPosition(D3DXVECTOR3({ (float)(r1.left - m_box->ColOffset().x), (float)(r1.top - m_box->ColOffset().y), 0.0f }));
 
 	return;
 }

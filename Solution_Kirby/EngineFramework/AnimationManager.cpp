@@ -18,26 +18,26 @@ Animation AnimationManager::LoadAnimation(const string& folderName, float time)
     GetCurrentDirectoryA(MAX_PATH, buffer);
     string currentDirectory = buffer;
 
-    vector<HBITMAP> bitmapHandles;
+    vector<IDirect3DTexture9*> textures;
     string searchPath = currentDirectory + "\\" + folderName + "\\*.*";
     WIN32_FIND_DATAA fileData;
     HANDLE hFind = FindFirstFileA(searchPath.c_str(), &fileData);
 
-    if (hFind != INVALID_HANDLE_VALUE) 
+    if (hFind != INVALID_HANDLE_VALUE)
     {
         do {
             string fileName = fileData.cFileName;
             if (IsBitmapFile(fileName))
             {
-                string filePath = folderName + "\\" + fileName;
-                HBITMAP hBitmap = (HBITMAP)LoadImageA(NULL, filePath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-                if (hBitmap != NULL)
+                string filePath = currentDirectory + "\\" + folderName + "\\" + fileName;
+                IDirect3DTexture9* texture = nullptr;
+                if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), filePath.c_str(), &texture)))
                 {
-                    bitmapHandles.push_back(hBitmap);
+                    textures.push_back(texture);
                 }
-                else 
+                else
                 {
-                    cout << "Failed to load bitmap: " << filePath << endl;
+                    cout << "Failed to load texture: " << filePath << endl;
                 }
             }
         } while (FindNextFileA(hFind, &fileData) != 0);
@@ -49,7 +49,7 @@ Animation AnimationManager::LoadAnimation(const string& folderName, float time)
     }
 
     Animation newAnim;
-    newAnim.bitmaps = bitmapHandles;
+    newAnim.textures = textures;
     newAnim.time = time;
 
     static int identity = 1000;
@@ -60,30 +60,44 @@ Animation AnimationManager::LoadAnimation(const string& folderName, float time)
 
 void AnimationManager::ReleaseAnimation(Animation& anim)
 {
-    for (HBITMAP hBitmap : anim.bitmaps)
+    for (IDirect3DTexture9* tex : anim.textures)
     {
-        DeleteObject(hBitmap);
+        tex->Release();
     }
+    anim.textures.clear();
 }
 
-HBITMAP AnimationManager::LoadHBitmap(const string& path)
+IDirect3DTexture9* AnimationManager::LoadTexture(const wstring& path)
 {
-    char buffer[MAX_PATH];
-    GetCurrentDirectoryA(MAX_PATH, buffer);
-    string currentDirectory = buffer;
-    string searchPath = currentDirectory + "\\" + path + ".bmp";
-    HBITMAP hBitmap = (HBITMAP)LoadImageA(NULL, searchPath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    if (hBitmap != NULL)
-    {
-        return hBitmap;
+    IDirect3DTexture9* texture;
+    D3DXIMAGE_INFO imageInfo;
+    WCHAR buffer[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, buffer);
+    wstring currentDirectory = buffer;
+    wstring searchPath = currentDirectory + L"\\" + path + L".bmp";
+    if (FAILED(D3DXCreateTextureFromFileEx(
+        MainFrame::GetInstance()->GetDevice() ,
+        searchPath.c_str(),
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
+        0,
+        D3DFMT_UNKNOWN,
+        D3DPOOL_MANAGED,
+        D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		TRANSCOLOR,
+		&imageInfo,
+		NULL,
+		&texture)))
+	{
+		wcout << L"Failed to load texture: " << searchPath << endl;
+		return NULL;
     }
-    else
-    {
-        return NULL;
-    }
+    return texture;
 }
 
-void AnimationManager::ReleaseHBitmap(HBITMAP hbit)
+void AnimationManager::ReleaseTexture(IDirect3DTexture9* tex)
 {
-    DeleteObject(hbit);
+    tex->Release();
 }

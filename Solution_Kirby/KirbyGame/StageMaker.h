@@ -9,12 +9,12 @@ protected:
 	vector<string> ReadMapData(string mapName);
 	void MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup, vector<bool>* colRow);
 
-	HBITMAP m_bg = NULL;
-	HBITMAP m_land = NULL;
-	HBITMAP m_swordObj = NULL;
-	HBITMAP m_stoneObj = NULL;
-	HBITMAP m_defaultObj = NULL;
-	HBITMAP m_door = NULL;
+	IDirect3DTexture9* m_bg = NULL;
+	IDirect3DTexture9* m_land = NULL;
+	IDirect3DTexture9* m_swordObj = NULL;
+	IDirect3DTexture9* m_stoneObj = NULL;
+	IDirect3DTexture9* m_defaultObj = NULL;
+	IDirect3DTexture9* m_door = NULL;
 
 	Player* m_player = nullptr;
 	GameObject* m_playerObj = nullptr;

@@ -42,8 +42,8 @@
 
 #define TRANSCOLOR (RGB((255),(0),(255)))
 #define COLSIZEOFFSET 1.0f
-#define MAXWINDOWW 2560
-#define MAXWINDOWH 1440
+#define MAXWINDOWW 1440
+#define MAXWINDOWH 900
 #define BUFFERBITW MAXWINDOWW
 #define BUFFERBITH MAXWINDOWH
 #define TARGETFPS 120
@@ -56,9 +56,18 @@
 #define DEBUGCOLOR1 (RGB((0),(0),(255)))
 #define DEBUGCOLOR2 (RGB((255),(0),(0)))
 
+struct CUSTOMVERTEX
+{
+    FLOAT x, y, z;         // The transformed position for the vertex
+    DWORD color;        // The vertex color
+    FLOAT tu, tv;
+};
+#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
 using namespace std;
 
+D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& worldPos);
+D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& screenPos);
 
 void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT& rect);
 

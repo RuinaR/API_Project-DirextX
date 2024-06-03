@@ -23,13 +23,30 @@ void Camera::Destroy()
 	}
 }
 
-void Camera::SetPos(float x, float y)
+void Camera::InitializeView()
 {
-	m_Position.x = x;
-	m_Position.y = y;
+	mPthis->m_eye = { 0.0f, 0.0f, -10.0f };
+	mPthis->m_at = { 0.0f, 0.0f, 0.0f };
+	mPthis->m_up = { 0.0f, 1.0f, 0.0f };
+
+	// 뷰 행렬 생성
+	D3DXMATRIX matView;
+	D3DXMatrixLookAtLH(&matView, &m_eye, &m_at, &m_up);
+
+	// 디바이스에 뷰 행렬 설정
+	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_VIEW, &matView);
 }
 
-Vector2D Camera::GetPos()
+void Camera::SetPos(float x, float y)
 {
-	return m_Position;
+	mPthis->m_eye = { x, y, -10.0f };
+	mPthis->m_at = { x, y, 0 };
+	D3DXMATRIX matView;
+	D3DXMatrixLookAtLH(&matView, &m_eye, &m_at, &m_up);
+	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_VIEW, &matView);
+}
+
+D3DXVECTOR3 Camera::GetPos()
+{
+	return m_at;
 }

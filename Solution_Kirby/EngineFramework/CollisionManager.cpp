@@ -61,19 +61,6 @@ void CollisionManager::CollisionUpdate(vector<Collider*>* vec, const RECT& rect,
 	int x = rect.left + (rect.right - rect.left) / 2;
 	int y = rect.top + (rect.bottom - rect.top) / 2;
 
-	if (DEBUGMODE)
-	{
-		HPEN newPen = CreatePen(PS_SOLID, 3, DEBUGCOLOR2);
-		HPEN oldPen = (HPEN)SelectObject(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), newPen);
-
-		MoveToEx(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), x - Camera::GetInstance()->GetPos().x, rect.top - Camera::GetInstance()->GetPos().y, NULL);
-		LineTo(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), x - Camera::GetInstance()->GetPos().x, rect.bottom - Camera::GetInstance()->GetPos().y);
-		MoveToEx(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), rect.left - Camera::GetInstance()->GetPos().x, y - Camera::GetInstance()->GetPos().y, NULL);
-		LineTo(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), rect.right - Camera::GetInstance()->GetPos().x, y - Camera::GetInstance()->GetPos().y);
-
-		SelectObject(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), oldPen);
-		DeleteObject(newPen);
-	}
 	for (vector<Collider*>::iterator itr = vec->begin(); itr != vec->end(); itr++)
 	{
 		RECT tmp;
@@ -142,14 +129,6 @@ void CollisionManager::CollisionUpdate(vector<Collider*>* vec, const RECT& rect,
 		}
 		for (vector<Collider*>::iterator itr1 = rctDivision[i]->begin(); itr1 != rctDivision[i]->end(); itr1++)
 		{
-			if (DEBUGMODE)
-			{
-				TextOut(WindowFrame::GetInstance()->GetBuffer()->GetHDC(),
-					(*itr1)->GetGameObject()->Position().x - Camera::GetInstance()->GetPos().x + 10,
-					(*itr1)->GetGameObject()->Position().y - Camera::GetInstance()->GetPos().y + 10,
-					TEXT("бс"), 1);
-			}
-
 			cloneColSet = set<Collider*>((*itr1)->SetCol()->begin(), (*itr1)->SetCol()->end());
 			(*itr1)->SetCol()->clear();
 
@@ -228,7 +207,7 @@ void CollisionManager::Update()
 	rect.top = 0;
 	rect.bottom = 10000;
 
-	CollisionUpdate(m_objVec, rect, 5);
+	CollisionUpdate(m_objVec, rect, 10);
 }
 
 void CollisionManager::Clear()

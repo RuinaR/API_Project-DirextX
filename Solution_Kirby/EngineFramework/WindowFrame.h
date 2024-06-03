@@ -8,7 +8,7 @@ private:
 
 	HWND m_hWnd = NULL;
 	HINSTANCE m_Instance = NULL;
-	Buffer* m_buffer = nullptr;
+	//Buffer* m_buffer = nullptr;
 	Scene* m_scene = nullptr;
 	bool m_isFocus = true;
 	WindowFrame() {}
@@ -25,7 +25,7 @@ public:
 	void Initialize();
 	void BuildWindow();
 	void Run(const MSG* Message);
-	Buffer* GetBuffer() { return this->m_buffer; }
+	//Buffer* GetBuffer() { return this->m_buffer; }
 	HINSTANCE GetHInst() { return this->m_Instance; }
 	HWND GetHWND() { return this->m_hWnd; }
 	bool IsFocus() { return m_isFocus; }

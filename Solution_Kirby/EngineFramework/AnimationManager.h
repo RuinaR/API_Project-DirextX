@@ -9,7 +9,7 @@ private:
 public:
 	static Animation LoadAnimation(const string& folderName, float time);
 	static void ReleaseAnimation(Animation& anim);
-	static HBITMAP LoadHBitmap(const string& folderName);
-	static void ReleaseHBitmap(HBITMAP hbit);
+	static IDirect3DTexture9* LoadTexture(const wstring& folderName);
+	static void ReleaseTexture(IDirect3DTexture9* tex);
 };
 

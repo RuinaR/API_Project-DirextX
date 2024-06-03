@@ -25,7 +25,7 @@ void EditerScene::StartEdit()
 	btnObj->AddComponent(btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	btn->SetUIPos({ 0,10 });
+	btn->SetUIPos({ 0,10,-1.0f });
 	btn->SetUISize({ 190,50 });
 	btn->SetText(TEXT("StartScene Load"));
 	btn->SetTextColor(RGB(255, 0, 255));
@@ -37,27 +37,18 @@ void EditerScene::StartEdit()
 }
 void EditerScene::Init()
 {
-	m_bg = AnimationManager::LoadHBitmap("Bitmaps\\obj\\BG");
+	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
 	SceneChanger::Create();
-	if (DEBUGMODE)
-	{
-		DebugWindow::Create();
-		DebugWindow::GetInstance()->SetDWPos({ 0,400 });
-	}
 }
 
 void EditerScene::Release()
 {
-	AnimationManager::ReleaseHBitmap(m_bg);
+	AnimationManager::ReleaseTexture(m_bg);
 	SceneChanger::Destroy();
-	if (DEBUGMODE)
-		DebugWindow::Destroy();
 }
 
 void EditerScene::Start()
 {
-	WindowFrame::GetInstance()->GetBuffer()->SetBG(m_bg);
-
 	GameObject* obj = new GameObject();
 	m_input = new InputString();
 	obj->AddComponent(m_input);
@@ -69,7 +60,7 @@ void EditerScene::Start()
 	btnObj->AddComponent(m_btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	m_btn->SetUIPos({ 0,200 });
+	m_btn->SetUIPos({ 0,200,-1.0f });
 	m_btn->SetUISize({ 190,50 });
 	m_btn->SetText(TEXT("Start Edit"));
 	m_btn->SetTextColor(RGB(255, 0, 255));

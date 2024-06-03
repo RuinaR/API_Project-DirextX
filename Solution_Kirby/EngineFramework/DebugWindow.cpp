@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DebugWindow.h"
+#include "DebugWindow.h"/*
 DebugWindow* DebugWindow::m_Pthis = nullptr;
 
 void DebugWindow::Initialize()
@@ -102,4 +102,4 @@ void DebugWindow::SetDWPos(Vector2D pos)
 {
 	m_dwPos = pos;
 }
-
+*/

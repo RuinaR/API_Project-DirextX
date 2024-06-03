@@ -40,11 +40,11 @@ protected:
 	float m_speed_fly = 150.0f;
 	float m_eatSpeed = 150.0f;
 	float m_curXSpeed = 0.0f;
-	float m_JumpV = 600.0f;
+	float m_JumpV = -600.0f;
 
-	float m_startGravity = 1200.0f;
-	float m_flyGravity = 450.0f;
-	float m_stoneGravity = 2400.0f;
+	float m_startGravity = 600.0f;
+	float m_flyGravity = 250.0f;
+	float m_stoneGravity = 1200.0f;
 
 	bool isStoneAtked = false;
 

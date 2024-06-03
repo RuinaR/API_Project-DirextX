@@ -6,7 +6,7 @@
 class EditerScene : public Scene
 {
 private:
-	HBITMAP m_bg = NULL;
+	IDirect3DTexture9* m_bg = NULL;
 	Edit* m_edit = nullptr;
 	InputString* m_input = nullptr;
 	ColorButton* m_btn = nullptr;

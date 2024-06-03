@@ -85,7 +85,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_player));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 2 ,(double)UNITSIZE * j + UNITSIZE / 2 });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -94,7 +94,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_land));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 2 ,(double)UNITSIZE * j + UNITSIZE / 2 });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -103,7 +103,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_defaultObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 2 ,(double)UNITSIZE * j + UNITSIZE / 2 });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -112,7 +112,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_swordObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 2 ,(double)UNITSIZE * j + UNITSIZE / 2 });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -121,7 +121,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_stoneObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 2 ,(double)UNITSIZE * j + UNITSIZE / 2 });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -130,7 +130,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_door));
         obj->Size() = { UNITSIZE, UNITSIZE };
-        obj->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 2 ,(double)UNITSIZE * j + UNITSIZE / 2 });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -250,7 +250,7 @@ void Edit::ReDrawMapObj(int indexX, int indexY, MapType type)
 	}
 
 	newObj->Size() = { UNITSIZE, UNITSIZE };
-	newObj->SetPosition({ (double)UNITSIZE * indexX + UNITSIZE / 2 ,(double)UNITSIZE * indexY + UNITSIZE / 2 });
+	newObj->SetPosition({ (float)(UNITSIZE * indexX + UNITSIZE / 2) ,(float)(UNITSIZE * indexY + UNITSIZE / 2), 0.0f });
 	newObj->InitializeSet();
 
 	m_mapData[indexY][indexX] = newObj;
@@ -350,20 +350,20 @@ void Edit::Redo()
 
 void Edit::Initialize()
 {
-    m_land = AnimationManager::LoadHBitmap("Bitmaps\\obj\\land");
-    m_bg = AnimationManager::LoadHBitmap("Bitmaps\\obj\\BG");
-    m_defaultObj = AnimationManager::LoadHBitmap("Bitmaps\\obj\\defaultObj");
-    m_swordObj = AnimationManager::LoadHBitmap("Bitmaps\\obj\\swordObj");
-    m_stoneObj = AnimationManager::LoadHBitmap("Bitmaps\\obj\\stoneObj");
-    m_player = AnimationManager::LoadHBitmap("Bitmaps\\obj\\player");
-    m_door = AnimationManager::LoadHBitmap("Bitmaps\\obj\\door");
+    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land");
+    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
+    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj");
+    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
+    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
+    m_player = AnimationManager::LoadTexture(L"Bitmaps\\obj\\player");
+    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
 
     for (int i = 0; i < (int)MapType::max; i++)
     {
         GameObject* obj = new GameObject();
         m_selectBtn[i] = new ColorButton();
         obj->AddComponent(m_selectBtn[i]);
-        m_selectBtn[i]->SetUIPos({ 200.0 + i * 100, 10 });
+        m_selectBtn[i]->SetUIPos({ 200.0f + i * 100, 10, -1.0f });
         m_selectBtn[i]->SetUISize({ 90,50 });
         obj->SetOrderInLayer(10);
         obj->InitializeSet();
@@ -379,9 +379,9 @@ void Edit::Initialize()
     GameObject* obj = new GameObject();
     m_InitMapBtn = new ColorButton();
     obj->AddComponent(m_InitMapBtn);
-    m_InitMapBtn->SetUIPos({900, 10});
+    m_InitMapBtn->SetUIPos({900, 10, -1.0f});
     m_InitMapBtn->SetUISize({ 90,50 });
-    obj->SetOrderInLayer(10);
+    obj->SetOrderInLayer(-10);
     obj->InitializeSet();
     m_InitMapBtn->SetText(TEXT("ÃÊ±âÈ­"));
     m_InitMapBtn->SetEvent(bind(&Edit::InitMap, this));
@@ -389,9 +389,9 @@ void Edit::Initialize()
     GameObject* objUndo = new GameObject();
     ColorButton* btnUndo = new ColorButton();
     objUndo->AddComponent(btnUndo);
-    btnUndo->SetUIPos({ 1000, 10 });
+    btnUndo->SetUIPos({ 1000, 10, -1.0f });
     btnUndo->SetUISize({ 90,50 });
-    objUndo->SetOrderInLayer(10);
+    objUndo->SetOrderInLayer(-10);
     objUndo->InitializeSet();
     btnUndo->SetText(TEXT("UnDo"));
     btnUndo->SetEvent(bind(&Edit::Undo, this));
@@ -399,9 +399,9 @@ void Edit::Initialize()
     GameObject* objRedo = new GameObject();
     ColorButton* btnRedo = new ColorButton();
     objRedo->AddComponent(btnRedo);
-    btnRedo->SetUIPos({ 1100, 10 });
+    btnRedo->SetUIPos({ 1100, 10, -1.0f });
     btnRedo->SetUISize({ 90,50 });
-    objRedo->SetOrderInLayer(10);
+    objRedo->SetOrderInLayer(-10);
     objRedo->InitializeSet();
     btnRedo->SetText(TEXT("ReDo"));
     btnRedo->SetEvent(bind(&Edit::Redo, this));
@@ -427,13 +427,13 @@ void Edit::Initialize()
 
 void Edit::Release()
 {
-    AnimationManager::ReleaseHBitmap(m_land);
-    AnimationManager::ReleaseHBitmap(m_bg);
-    AnimationManager::ReleaseHBitmap(m_defaultObj);
-    AnimationManager::ReleaseHBitmap(m_swordObj);
-    AnimationManager::ReleaseHBitmap(m_stoneObj);
-    AnimationManager::ReleaseHBitmap(m_player);
-    AnimationManager::ReleaseHBitmap(m_door);
+    AnimationManager::ReleaseTexture(m_land);
+    AnimationManager::ReleaseTexture(m_bg);
+    AnimationManager::ReleaseTexture(m_defaultObj);
+    AnimationManager::ReleaseTexture(m_swordObj);
+    AnimationManager::ReleaseTexture(m_stoneObj);
+    AnimationManager::ReleaseTexture(m_player);
+    AnimationManager::ReleaseTexture(m_door);
 
     WriteMapData();
 }
@@ -447,7 +447,7 @@ void Edit::Start()
 
 void Edit::Update()
 {
-	for (int i = 0; i < m_count; i++)
+	/*for (int i = 0; i < m_count; i++)
 	{
         MoveToEx(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), 
             i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().x, -Camera::GetInstance()->GetPos().y, NULL);
@@ -460,7 +460,7 @@ void Edit::Update()
             - Camera::GetInstance()->GetPos().x, i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().y, NULL);
         LineTo(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), 
             UNITSIZE * 100 - Camera::GetInstance()->GetPos().x, i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().y);
-    }
+    }*/
 
 	int cameraSpd = 10;
 	if (GetAsyncKeyState(0x57)) //W
@@ -487,11 +487,11 @@ void Edit::Update()
 
 	if (Mouse::GetInstance()->IsLeftDown())
     {
-        if (Mouse::GetInstance()->GetPos().Y < UNITSIZE)
+        if (Mouse::GetInstance()->GetPos().y < UNITSIZE)
             return;
 
-        int x = Mouse::GetInstance()->GetPos().X + Camera::GetInstance()->GetPos().x - UNITSIZE / 2;
-        int y = Mouse::GetInstance()->GetPos().Y + Camera::GetInstance()->GetPos().y - UNITSIZE / 2;
+        int x = Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x - UNITSIZE / 2;
+        int y = Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y - UNITSIZE / 2;
 
         int indexX = x / UNITSIZE;
         int indexY = y / UNITSIZE;
@@ -558,8 +558,6 @@ void Edit::Update()
 
 void Edit::SetMap(string mapName)
 {
-    WindowFrame::GetInstance()->GetBuffer()->SetBG(m_bg);
-
     vector<string> strMapData = ReadMapData(mapName);
     if (strMapData.empty())
     {

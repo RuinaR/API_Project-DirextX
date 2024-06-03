@@ -6,7 +6,7 @@
 class GameScene : public Scene
 {
 private:
-	HBITMAP m_bg = NULL;
+	IDirect3DTexture9* m_bg = NULL;
 	InputString* m_input = nullptr;
 	ColorButton* m_btn = nullptr;
 

@@ -55,7 +55,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
 		break;
 	case MapType::Player:
     {
-        m_playerObj->SetPosition({ (double)UNITSIZE * i,(double)UNITSIZE * j });
+        m_playerObj->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,5.0f });
         rowGroup->push_back(m_playerObj);
         colRow->push_back(false);
 	}
@@ -64,7 +64,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
 	{
 		GameObject* obj = new GameObject();
 		obj->SetTag(TAG_LAND);
-		obj->SetPosition({ (double)UNITSIZE * i,(double)UNITSIZE * j });
+		obj->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,10.0f });
 		obj->Size() = { UNITSIZE, UNITSIZE };
 		obj->AddComponent(new BitmapRender(m_land));
         if (!rowGroup->empty() && (rowGroup->back() != nullptr && rowGroup->back()->GetTag() == TAG_LAND))
@@ -115,7 +115,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
        defaultMon->SetTag(TAG_MONSTER);
        defaultMon->SetOrderInLayer(2);
        defaultMon->Size() = { UNITSIZE, UNITSIZE};
-       defaultMon->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 4, (double)UNITSIZE * j + UNITSIZE / 4 - 2 });
+       defaultMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j + UNITSIZE / 4 - 2,7.0f });
        defaultMon->AddComponent(new ChangeObject(PlayerMode::mDefault, m_player));
        defaultMon->AddComponent(new MonsterAI("default"));
        defaultMon->InitializeSet();
@@ -129,7 +129,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         swordMon->SetTag(TAG_MONSTER);
         swordMon->SetOrderInLayer(2);
         swordMon->Size() = { UNITSIZE, UNITSIZE};
-        swordMon->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 4 ,(double)UNITSIZE * j + UNITSIZE / 4 - 2});
+        swordMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4 ,(float)-UNITSIZE * j + UNITSIZE / 4 - 2,7.0f});
         swordMon->AddComponent(new ChangeObject(PlayerMode::mSword, m_player));
         swordMon->AddComponent(new MonsterAI("sword"));
         swordMon->InitializeSet();
@@ -143,7 +143,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
 		stoneMon->SetTag(TAG_MONSTER);
         stoneMon->SetOrderInLayer(2);
 		stoneMon->Size() = { UNITSIZE, UNITSIZE};
-		stoneMon->SetPosition({ (double)UNITSIZE * i + UNITSIZE / 4, (double)UNITSIZE * j + UNITSIZE / 4 - 2});
+		stoneMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j + UNITSIZE / 4 - 2,7.0f});
 		stoneMon->AddComponent(new ChangeObject(PlayerMode::mStone, m_player));
         stoneMon->AddComponent(new MonsterAI("stone"));
 		stoneMon->InitializeSet();
@@ -157,7 +157,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         door->SetTag(TAG_DOOR);
         door->SetOrderInLayer(2);
         door->Size() = { UNITSIZE, UNITSIZE};
-        door->SetPosition({ (double)UNITSIZE * i, (double)UNITSIZE * j});
+        door->SetPosition({ (float)UNITSIZE * i, (float)-UNITSIZE * j,7.0f});
         door->AddComponent(new BitmapRender(m_door));
         BoxCollider* bo = new BoxCollider();
         bo->SetTrigger(true);
@@ -218,7 +218,6 @@ bool StageMaker::SetMap(string mapName)
         itr->clear();
     m_colInfo.clear();
 
-    WindowFrame::GetInstance()->GetBuffer()->SetBG(m_bg);
     vector<string> mapData = ReadMapData(mapName);
     if (mapData.empty())
     {
@@ -315,12 +314,12 @@ void StageMaker::SetPlayerMode(PlayerMode mode)
 
 void StageMaker::Initialize()
 {
-    m_land = AnimationManager::LoadHBitmap("Bitmaps\\obj\\land");
-    m_bg = AnimationManager::LoadHBitmap("Bitmaps\\obj\\BG");
-    m_defaultObj = AnimationManager::LoadHBitmap("Bitmaps\\obj\\defaultObj");
-    m_swordObj = AnimationManager::LoadHBitmap("Bitmaps\\obj\\swordObj");
-    m_stoneObj = AnimationManager::LoadHBitmap("Bitmaps\\obj\\stoneObj");
-    m_door = AnimationManager::LoadHBitmap("Bitmaps\\obj\\door");
+    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land");
+    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
+    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj");
+    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
+    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
+    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
 
     m_playerObj = new GameObject();
     m_player = new Player();
@@ -333,12 +332,12 @@ void StageMaker::Initialize()
 
 void StageMaker::Release()
 {
-    AnimationManager::ReleaseHBitmap(m_land);
-    AnimationManager::ReleaseHBitmap(m_bg);
-    AnimationManager::ReleaseHBitmap(m_defaultObj);
-    AnimationManager::ReleaseHBitmap(m_swordObj);
-    AnimationManager::ReleaseHBitmap(m_stoneObj);
-    AnimationManager::ReleaseHBitmap(m_door);
+    AnimationManager::ReleaseTexture(m_land);
+    AnimationManager::ReleaseTexture(m_bg);
+    AnimationManager::ReleaseTexture(m_defaultObj);
+    AnimationManager::ReleaseTexture(m_swordObj);
+    AnimationManager::ReleaseTexture(m_stoneObj);
+    AnimationManager::ReleaseTexture(m_door);
 }
 
 void StageMaker::Start()

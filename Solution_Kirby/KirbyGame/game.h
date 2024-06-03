@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define UNITSIZE 100
+#define UNITSIZE 30
 #define MAXUNITCNT 100
 
 #define TAG_LAND "land"

@@ -26,14 +26,12 @@ void GameScene::StartGame()
 		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("존재하지 않는 맵"), TEXT("알림"), MB_OK);
 	}
 	StageMaker::GetInstance()->StageStart();
-	if (DEBUGMODE)
-		DebugWindow::GetInstance()->SetDWPos({ 0,0 });
 	GameObject* btnObj = new GameObject();
 	ColorButton* btn = new ColorButton();
 	btnObj->AddComponent(btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	btn->SetUIPos({ 0,400 });
+	btn->SetUIPos({ 0,400, -1.0f });
 	btn->SetUISize({ 200,50 });
 	btn->SetText(TEXT("GameScene Load"));
 	btn->SetTextColor(RGB(255, 0, 255));
@@ -48,7 +46,7 @@ void GameScene::StartGame()
 	btnObj2->AddComponent(btn2);
 	btnObj2->SetOrderInLayer(10);
 	btnObj2->InitializeSet();
-	btn2->SetUIPos({ 0,500 });
+	btn2->SetUIPos({ 0,500, -1.0f });
 	btn2->SetUISize({ 200,50 });
 	btn2->SetText(TEXT("StartScene Load"));
 	btn2->SetTextColor(RGB(255, 0, 255));
@@ -61,29 +59,20 @@ void GameScene::StartGame()
 
 void GameScene::Init()
 {
-	m_bg = AnimationManager::LoadHBitmap("Bitmaps\\obj\\BG");
+	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
 	SceneChanger::Create();
 	StageMaker::Create();
-	if (DEBUGMODE)
-	{
-		DebugWindow::Create();
-		DebugWindow::GetInstance()->SetDWPos({ 0,250 });
-	}
 }
 
 void GameScene::Release()
 {
-	AnimationManager::ReleaseHBitmap(m_bg);
+	AnimationManager::ReleaseTexture(m_bg);
 	SceneChanger::Destroy();
 	StageMaker::Destroy();
-	if (DEBUGMODE)
-		DebugWindow::Destroy();
 }
 
 void GameScene::Start()
 {
-	WindowFrame::GetInstance()->GetBuffer()->SetBG(m_bg);
-	
 	GameObject* obj = new GameObject();
 	m_input = new InputString();
 	obj->AddComponent(m_input);
@@ -95,7 +84,7 @@ void GameScene::Start()
 	btnObj->AddComponent(m_btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	m_btn->SetUIPos({ 0,200 });
+	m_btn->SetUIPos({ 0,200,-1.0f });
 	m_btn->SetUISize({ 190,50 });
 	m_btn->SetText(TEXT("Start Game"));
 	m_btn->SetTextColor(RGB(255, 0, 255));

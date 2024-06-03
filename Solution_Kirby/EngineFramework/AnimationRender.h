@@ -11,7 +11,7 @@ private:
 	bool m_isPlay;
 	bool m_isOneTime = false;
 	float m_updateTimer;
-	vector<HBITMAP>::iterator m_curItr;
+	vector<IDirect3DTexture9*>::iterator m_curItr;
 
 public:
 	AnimationRender(Animation anim);

@@ -23,16 +23,16 @@ AttakObject::~AttakObject()
 
 void AttakObject::Initialize()
 {
-	m_bit = AnimationManager::LoadHBitmap("Bitmaps\\obj\\attack");
+	m_texture = AnimationManager::LoadTexture(L"Bitmaps\\obj\\attack");
 	m_gameObj->Size() = { 30,30 };
 	m_gameObj->SetTag(TAG_ATTACK);
-	m_gameObj->AddComponent(new BitmapRender(m_bit));
+	m_gameObj->AddComponent(new BitmapRender(m_texture));
 	m_gameObj->AddComponent(new BoxCollider());
 }
 
 void AttakObject::Release()
 {
-	AnimationManager::ReleaseHBitmap(m_bit);
+	AnimationManager::ReleaseTexture(m_texture);
 }
 
 void AttakObject::Start()
@@ -41,7 +41,7 @@ void AttakObject::Start()
 
 void AttakObject::Update()
 {
-	m_gameObj->AddPosition({ m_speedX, 0.0f });
+	m_gameObj->AddPosition({ m_speedX, 0.0f, 0.0f });
 }
 
 void AttakObject::SetSpeed(float speed)
