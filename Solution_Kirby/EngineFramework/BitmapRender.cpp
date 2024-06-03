@@ -3,6 +3,10 @@
 
 void BitmapRender::DrawBitmap(HDC hdc, int x, int y, int w, int h, HBITMAP hbit, UINT transparentColor)
 {
+    D3DXVECTOR3 vec;
+    D3DXMATRIX mat;
+    D3DXMatrixTranslation(&mat, 1, 1, 1);
+
     HDC MemoryDC;
     int BitmapX, BitmapY;
     BITMAP Bitmap_;

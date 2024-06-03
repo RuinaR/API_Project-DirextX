@@ -1,5 +1,158 @@
-﻿  Rigidbody.cpp
-C:\Users\user\Desktop\API_Project\API_Project\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'Rigidbody.cpp'을(를) 컴파일하는 중)
-  
-  EngineFramework.vcxproj -> C:\Users\user\Desktop\API_Project\API_Project\Solution_Kirby\x64\Debug\EngineFramework.lib
+﻿  AnimationManager.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  AnimationRender.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp(44,54): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  BitmapRender.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(60,30): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(59,30): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(58,37): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(57,37): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  BoxCollider.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  Buffer.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  Camera.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  Collider.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(57,34): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(57,23): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(58,34): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(58,23): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(59,34): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(59,23): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(60,34): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(60,21): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(61,38): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(61,25): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(62,34): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(62,21): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(63,38): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(63,25): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(64,34): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(64,23): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CollisionManager.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(69,111): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(69,65): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(70,112): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(70,63): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(71,112): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(71,73): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(72,111): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(72,72): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(82,41): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(82,41): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(83,41): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(83,41): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(84,65): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(84,65): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(85,65): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(85,65): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(149,81): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(148,81): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp(241,23): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Component.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  DebugWindow.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(27,26): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(27,26): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(28,26): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(28,26): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(29,62): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(29,62): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(30,62): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp(30,62): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GameObject.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(141,22): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(141,22): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(142,22): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(142,22): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(143,58): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(143,58): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(144,52): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(144,52): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(208,23): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(208,23): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(209,23): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(209,23): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(210,59): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(210,59): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(211,59): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(211,59): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(227,22): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(227,22): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(228,22): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(228,22): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(229,58): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(229,58): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(230,58): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(230,58): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(246,22): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(246,22): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(247,22): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(247,22): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(248,58): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(248,58): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(249,58): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(249,58): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(265,23): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(265,23): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(266,23): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(266,23): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(267,59): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(267,59): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(268,59): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(268,59): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  InputString.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(2765,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(2621,17): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Size_type=unsigned __int64,
+              _Iter=wchar_t *,
+              _Sent=wchar_t *,
+              _Size=unsigned __int64
+          ]
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\InputString.cpp(44,18): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\InputString.cpp(44,18): message : 'InputString::GetString'에서 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string'에 대한 첫 번째 참조를 확인하세요.
+  MainFrame.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  Mouse.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  ObjectManager.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ObjectManager.cpp(185,24): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  pch.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  ColorButton.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(25,26): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(25,26): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(26,26): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(26,26): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(27,62): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(27,62): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(28,62): warning C4838: 'double'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\ColorButton.cpp(28,62): warning C4244: '초기화 중': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Rigidbody.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  WindowFrame.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  코드를 생성하고 있습니다...
+  EngineFramework.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\x64\Debug\EngineFramework.lib

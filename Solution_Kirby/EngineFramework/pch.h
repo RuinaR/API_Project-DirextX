@@ -22,6 +22,7 @@
 #include <sstream>
 #include <functional>
 #include <stack>
+#include <d3dx9.h>
 
 #include "AnimationManager.h"
 #include "ObjectManager.h"

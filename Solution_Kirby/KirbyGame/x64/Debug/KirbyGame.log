@@ -1,1 +1,29 @@
-﻿  KirbyGame.vcxproj -> C:\Users\user\Desktop\API_Project\API_Project\Solution_Kirby\x64\Debug\KirbyGame.exe
+﻿  AttackEvent.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  AttakObject.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  ChangeObject.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  Edit.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  EditerScene.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  GameScene.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  LandChecker.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  MonsterAI.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  Player.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  SceneChanger.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  StageMaker.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  StartScene.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  game.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  main.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.h(25,10): fatal  error C1083: 포함 파일을 열 수 없습니다. 'd3dx9.h': No such file or directory
+  코드를 생성하고 있습니다...
