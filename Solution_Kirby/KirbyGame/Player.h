@@ -18,8 +18,8 @@ protected:
 	Timer m_leftKeyTimer = Timer();
 	Timer m_rightKeyTimer = Timer();
 	Vector2D m_dSize = { UNITSIZE,UNITSIZE };
-	Vector2D m_cSize = { 40,40 };
-	Vector2D m_dOffset = { 30,50 };
+	Vector2D m_cSize = { 70,70 };
+	Vector2D m_dOffset = { 10,10 };
 	float m_atkRange = 60.0f;
 	bool m_leftKeyTrigger = false;
 	bool m_rightKeyTrigger = false;
@@ -42,9 +42,9 @@ protected:
 	float m_curXSpeed = 0.0f;
 	float m_JumpV = -600.0f;
 
-	float m_startGravity = 600.0f;
-	float m_flyGravity = 250.0f;
-	float m_stoneGravity = 1200.0f;
+	float m_startGravity = 1200.0f;
+	float m_flyGravity = 500.0f;
+	float m_stoneGravity = 2000.0f;
 
 	bool isStoneAtked = false;
 

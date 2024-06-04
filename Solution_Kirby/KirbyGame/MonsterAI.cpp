@@ -80,7 +80,7 @@ void MonsterAI::Start()
 	m_checker->GetCollider()->ColSize().x = m_bo->ColSize().x / 4;
 	m_checker->GetCollider()->ColSize().y = m_bo->ColSize().y / 4;
 	m_checker->GetCollider()->ColOffset().x = m_bo->ColOffset().x + m_gameObj->Size().x / 2;
-	m_checker->GetCollider()->ColOffset().y = m_bo->ColOffset().y + m_gameObj->Size().y / 2;
+	m_checker->GetCollider()->ColOffset().y = m_bo->ColOffset().y - m_gameObj->Size().y / 2;
 }
 
 void MonsterAI::Update()

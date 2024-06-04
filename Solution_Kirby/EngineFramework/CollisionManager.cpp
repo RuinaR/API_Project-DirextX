@@ -6,6 +6,37 @@
 #include "Rigidbody.h"
 CollisionManager* CollisionManager::m_Pthis = nullptr;
 
+BOOL IsBoxIntersect(Collider* b1, Collider* b2)
+{
+	float b1_left = b1->GetGameObject()->Position().x + b1->ColOffset().x;
+	float b1_right = b1_left + b1->ColSize().x;
+	float b1_bottom = b1->GetGameObject()->Position().y + b1->ColOffset().y;
+	float b1_top = b1_bottom + b1->ColSize().y; // 위로 갈수록 y 좌표가 증가하는 좌표계
+	
+
+	float b2_left = b2->GetGameObject()->Position().x + b2->ColOffset().x;
+	float b2_right = b2_left + b2->ColSize().x;
+	float b2_bottom = b2->GetGameObject()->Position().y + b2->ColOffset().y;
+	float b2_top = b2_bottom + b2->ColSize().y; // 위로 갈수록 y 좌표가 증가하는 좌표계
+	
+
+	// 충돌 검사
+	if (b1_right < b2_left || b1_left > b2_right || b1_bottom > b2_top || b1_top < b2_bottom)
+	{
+		return false;
+	}
+	return true;
+}
+
+BOOL IsBoxIntersect(RECT* b1, RECT* b2)
+{
+	// 충돌 검사
+	if (b1->right < b2->left || b1->left > b2->right || b1->bottom > b2->top|| b1->top < b2->bottom)
+	{
+		return false;
+	}
+	return true;
+}
 
 void CollisionManager::Create()
 {
@@ -59,72 +90,43 @@ void CollisionManager::CollisionUpdate(vector<Collider*>* vec, const RECT& rect,
 		rctDivision[i] = new vector<Collider*>();
 	}
 	int x = rect.left + (rect.right - rect.left) / 2;
-	int y = rect.top + (rect.bottom - rect.top) / 2;
+	int y = rect.bottom + (rect.top - rect.bottom) / 2;
 
+	RECT areas[4];
+	//0번 영역
+	areas[0] = {rect.left , rect.top, x, y};
+	//1번 영역
+	areas[1] = {x, rect.top, rect.right, y};
+	//2번 영역
+	areas[2] = {rect.left, y, x, rect.bottom};
+	//3번 영역
+	areas[3] = {x, y, rect.right, rect.bottom};
 	for (vector<Collider*>::iterator itr = vec->begin(); itr != vec->end(); itr++)
 	{
-		RECT tmp;
 		RECT dst =
 		{
 		(*itr)->GetGameObject()->Position().x + (*itr)->ColOffset().x ,
-		(*itr)->GetGameObject()->Position().y + (*itr)->ColOffset().y ,
+		(*itr)->GetGameObject()->Position().y - (*itr)->ColOffset().y,
 		(*itr)->GetGameObject()->Position().x + (*itr)->ColOffset().x + (*itr)->ColSize().x,
-		(*itr)->GetGameObject()->Position().y + (*itr)->ColOffset().y + (*itr)->ColSize().y
+		(*itr)->GetGameObject()->Position().y + (*itr)->ColOffset().y - (*itr)->ColSize().y
 		};
-		//0번 영역
-		RECT area0 = { rect.left , rect.top, x, y };
-		//1번 영역
-		RECT area1 = { x, rect.top, rect.right, y };
-		//2번 영역
-		RECT area2 = { rect.left, y, x, rect.bottom};
-		//3번 영역
-		RECT area3 = { x, y, rect.right, rect.bottom };
 
-		if (IntersectRect(&tmp, &area0, &dst))
+		if (IsBoxIntersect(&areas[0], &dst))
 			rctDivision[0]->push_back((*itr));
-		if (IntersectRect(&tmp, &area1, &dst))
+		if (IsBoxIntersect(&areas[1], &dst))
 			rctDivision[1]->push_back((*itr));
-		if (IntersectRect(&tmp, &area2, &dst))
+		if (IsBoxIntersect(&areas[2], &dst))
 			rctDivision[2]->push_back((*itr));
-		if (IntersectRect(&tmp, &area3, &dst))
+		if (IsBoxIntersect(&areas[3], &dst))
 			rctDivision[3]->push_back((*itr));
 	}
 
-	RECT r1, r2, tmpr;
 	set<Collider*> cloneColSet;
 	for (int i = 0; i < 4; i++)
 	{
 		if (rctDivision[i]->size() >= maxAreaCnt)
 		{
-			RECT area;
-			switch (i)
-			{
-			case 0:
-				area.left = rect.left;
-				area.right = rect.left + (rect.right - rect.left) / 2;
-				area.top = rect.top;
-				area.bottom = rect.top + (rect.bottom - rect.top) / 2;
-				break;
-			case 1:
-				area.left = rect.left + (rect.right - rect.left) / 2;
-				area.right = rect.right;
-				area.top = rect.top;
-				area.bottom = rect.top + (rect.bottom - rect.top) / 2;
-				break;
-			case 2:
-				area.left = rect.left;
-				area.right = rect.left + (rect.right - rect.left) / 2;
-				area.top = rect.top + (rect.bottom - rect.top) / 2;
-				area.bottom =rect.bottom;
-				break;
-			case 3:
-				area.left = rect.left + (rect.right - rect.left) / 2;
-				area.right = rect.right;
-				area.top = rect.top + (rect.bottom - rect.top) / 2;
-				area.bottom = rect.bottom;
-				break;
-			}
-			CollisionUpdate(rctDivision[i], area, maxAreaCnt);
+			CollisionUpdate(rctDivision[i], areas[i], maxAreaCnt);
 			continue;
 		}
 		for (vector<Collider*>::iterator itr1 = rctDivision[i]->begin(); itr1 != rctDivision[i]->end(); itr1++)
@@ -132,10 +134,7 @@ void CollisionManager::CollisionUpdate(vector<Collider*>* vec, const RECT& rect,
 			cloneColSet = set<Collider*>((*itr1)->SetCol()->begin(), (*itr1)->SetCol()->end());
 			(*itr1)->SetCol()->clear();
 
-			r1 = { (long)(*itr1)->ColOffset().x + (long)(*itr1)->GetGameObject()->Position().x,
-						(long)(*itr1)->ColOffset().y + (long)(*itr1)->GetGameObject()->Position().y,
-						(long)(*itr1)->ColOffset().x + (long)(*itr1)->GetGameObject()->Position().x + (long)(*itr1)->ColSize().x,
-						(long)(*itr1)->ColOffset().y + (long)(*itr1)->GetGameObject()->Position().y + (long)(*itr1)->ColSize().y };
+			
 			vector<Collider*>::iterator tmpItr = itr1;
 			for (vector<Collider*>::iterator itr2 = ++tmpItr; itr2 != rctDivision[i]->end(); itr2++)
 			{
@@ -143,11 +142,8 @@ void CollisionManager::CollisionUpdate(vector<Collider*>* vec, const RECT& rect,
 					continue;
 				if (!(*itr1)->GetGameObject()->GetActive() || !(*itr2)->GetGameObject()->GetActive())
 					continue;
-				r2 = { (long)(*itr2)->ColOffset().x + (long)(*itr2)->GetGameObject()->Position().x,
-							(long)(*itr2)->ColOffset().y + (long)(*itr2)->GetGameObject()->Position().y,
-							(long)(*itr2)->ColOffset().x + (long)(*itr2)->GetGameObject()->Position().x + (long)(*itr2)->ColSize().x,
-							(long)(*itr2)->ColOffset().y + (long)(*itr2)->GetGameObject()->Position().y + (long)(*itr2)->ColSize().y };
-				if (IntersectRect(&tmpr, &r1, &r2)) //충돌
+				
+				if (IsBoxIntersect(*itr1, *itr2)) //충돌
 				{
 					(*itr1)->SetCol()->insert(*itr2);
 					bool isfind = false;
@@ -202,10 +198,10 @@ void CollisionManager::Update()
 	//rect.top += Camera::GetInstance()->GetPos().y;
 	//rect.bottom += Camera::GetInstance()->GetPos().y;
 
-	rect.left = 0;
-	rect.right = 10000;
-	rect.top = 0;
-	rect.bottom = 10000;
+	rect.left = -5000;
+	rect.right = 5000;
+	rect.top = 5000;
+	rect.bottom = -5000;
 
 	CollisionUpdate(m_objVec, rect, 10);
 }

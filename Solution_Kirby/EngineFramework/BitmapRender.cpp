@@ -3,11 +3,13 @@
 
 void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
 {
-    SetupVertices(x, y, z, w, h);
+    SetupVertices();
 
     // Set world, view, and projection matrices here
-    D3DXMATRIX matWorld;
-    D3DXMatrixTranslation(&matWorld, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
+    D3DXMATRIX matWorld, matScale, matTrans;
+    D3DXMatrixScaling(&matScale, m_gameObj->Size().x, m_gameObj->Size().y, 1.0f);
+    D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
+    matWorld = matScale * matTrans;
 
     m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
 
@@ -20,43 +22,40 @@ void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
     m_device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE); // 색상과 텍스처를 곱하여 출력
     m_device->SetStreamSource(0, m_vertexBuffer, 0, sizeof(CUSTOMVERTEX));
 
-
-    m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 6, 0, 2);
+    m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
     m_device->SetRenderState(D3DRS_LIGHTING, TRUE);
-
 }
 
-void BitmapRender::SetupVertices(float x, float y, float z, float width, float height)
+void BitmapRender::SetupVertices()
 {
-    // Define vertices
     CUSTOMVERTEX vertices[4];
-    vertices[0].x = x;
-    vertices[0].y = y - height; // 왼쪽 상단 모서리
-    vertices[0].z = z;
+    vertices[0].x = 0.0f; // 왼쪽 상단 모서리
+    vertices[0].y = 0.0f;
+    vertices[0].z = 0.0f;
     vertices[0].color = 0xffffffff;
     vertices[0].tu = 0.0f;
-    vertices[0].tv = 1.0f;
+    vertices[0].tv = 0.0f;
 
-    vertices[1].x = x;
-    vertices[1].y = y; // 왼쪽 하단 모서리
-    vertices[1].z = z;
+    vertices[1].x = 0.0f; // 왼쪽 하단 모서리
+    vertices[1].y = -1.0f;
+    vertices[1].z = 0.0f;
     vertices[1].color = 0xffffffff;
     vertices[1].tu = 0.0f;
-    vertices[1].tv = 0.0f;
+    vertices[1].tv = 1.0f;
 
-    vertices[2].x = x + width; // 오른쪽 상단 모서리
-    vertices[2].y = y - height;
-    vertices[2].z = z;
+    vertices[2].x = 1.0f; // 오른쪽 상단 모서리
+    vertices[2].y = 0.0f;
+    vertices[2].z = 0.0f;
     vertices[2].color = 0xffffffff;
     vertices[2].tu = 1.0f;
-    vertices[2].tv = 1.0f;
+    vertices[2].tv = 0.0f;
 
-    vertices[3].x = x + width; // 오른쪽 하단 모서리
-    vertices[3].y = y;
-    vertices[3].z = z;
+    vertices[3].x = 1.0f; // 오른쪽 하단 모서리
+    vertices[3].y = -1.0f;
+    vertices[3].z = 0.0f;
     vertices[3].color = 0xffffffff;
     vertices[3].tu = 1.0f;
-    vertices[3].tv = 0.0f;
+    vertices[3].tv = 1.0f;
 
     // Lock the vertex buffer
     VOID* pVertices;

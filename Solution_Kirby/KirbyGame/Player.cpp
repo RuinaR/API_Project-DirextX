@@ -371,7 +371,7 @@ void Player::Collision(Collider* other)
 			other->GetGameObject()->SetDestroy(true);//적 데미지
 		}
 	}
-	else if (m_state != PlayerAState::eating &&
+	else if (m_state != PlayerAState::eating && m_state != PlayerAState::hit &&
 		(other->GetGameObject()->GetTag() == TAG_HIT || other->GetGameObject()->GetTag() == TAG_MONSTER)) //피격
 	{
 		m_mode = PlayerMode::mDefault;
@@ -379,11 +379,11 @@ void Player::Collision(Collider* other)
 		UpdateAnim(true);
 		if (m_arrow == Arrow::left)
 		{
-			m_rig->Velocity() = {300,-350};
+			m_rig->Velocity() = {300,350};
 		}
 		else
 		{
-			m_rig->Velocity() = {-300,-350};
+			m_rig->Velocity() = {-300,350};
 		}
 	}
 }
@@ -500,8 +500,8 @@ void Player::Update()
 	// 선형 보간을 사용하여 카메라 위치 업데이트
 	float smoothFactor = 0.02f;  // 부드러운 이동을 위한 보간 계수
 	D3DXVECTOR2 newCamPos = {
-		Lerp(camPos.x, m_gameObj->Position().x + rect.right / 2 + m_gameObj->Size().x / 2, smoothFactor),
-		Lerp(camPos.y, m_gameObj->Position().y - rect.bottom / 2 + m_gameObj->Size().y / 2, smoothFactor)
+		Lerp(camPos.x, m_gameObj->Position().x  /*+ m_gameObj->Size().x / 2*/, smoothFactor),
+		Lerp(camPos.y, m_gameObj->Position().y  /*- m_gameObj->Size().y / 2*/, smoothFactor)
 	};
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
 

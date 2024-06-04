@@ -16,11 +16,11 @@ C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Eng
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(6,25): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(6,22): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(6,19): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(127,20): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(126,20): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(125,20): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(125,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(124,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(123,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\BitmapRender.cpp(122,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   BoxCollider.cpp
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   (소스 파일 'BoxCollider.cpp'을(를) 컴파일하는 중)

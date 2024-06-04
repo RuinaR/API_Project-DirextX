@@ -11,7 +11,7 @@ private:
 
 	void DrawBitmap(int x, int y, int z, int w, int h);
 
-	void SetupVertices(float x, float y, float z, float width, float height);
+	void SetupVertices();
 public:
 	BitmapRender(IDirect3DTexture9* texture);
 
