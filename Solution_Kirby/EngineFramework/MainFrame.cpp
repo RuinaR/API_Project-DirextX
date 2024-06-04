@@ -109,6 +109,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
 
 	m_targetFPS = targetFPS;
     
+    Mouse::GetInstance()->Initialize();
 	ObjectManager::Create();
 	CollisionManager::Create();
 

@@ -22,7 +22,7 @@ void StartScene::Start()
 	btnObj->AddComponent(btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	btn->SetUIPos({ 0,0, 2.0f });
+	btn->SetUIPos({ -300,0, -1.0f });
 	btn->SetUISize({ 200,100 });
 	btn->SetText(TEXT("GameScene Load"));
 	btn->SetTextColor(RGB(255, 0, 255));
@@ -37,7 +37,7 @@ void StartScene::Start()
 	btnObj2->AddComponent(btn2);
 	btnObj2->SetOrderInLayer(10);
 	btnObj2->InitializeSet();
-	btn2->SetUIPos({ 200,100, 2.0f });
+	btn2->SetUIPos({ 100,0, -1.0f });
 	btn2->SetUISize({ 200,100 });
 	btn2->SetText(TEXT("EditScene Load"));
 	btn2->SetTextColor(RGB(255, 0, 255));

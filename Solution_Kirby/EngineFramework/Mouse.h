@@ -10,6 +10,7 @@ private:
 	D3DXVECTOR2 mPos = { 0,0 };
 	bool mIsLeftDown = false;
 	bool mIsRightDown = false;
+	D3DVIEWPORT9 m_viewport;
 public:
 	static void Create();
 	static Mouse* GetInstance();

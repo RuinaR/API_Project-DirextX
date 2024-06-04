@@ -22,6 +22,11 @@ protected:
 	vector<vector<bool>> m_colInfo = vector<vector<bool>>();
 
 	string m_name;
+
+	Animation m_defaultMobAnim[(int)Arrow::max];
+	Animation m_swordMobAnim[(int)Arrow::max];
+	Animation m_stoneMobAnim[(int)Arrow::max];
+
 public:
 	static StageMaker* GetInstance();
 	static void Create();

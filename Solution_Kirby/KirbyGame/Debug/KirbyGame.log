@@ -1,5 +1,5 @@
-﻿  Player.cpp
+﻿  EditerScene.cpp
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'Player.cpp'을(를) 컴파일하는 중)
+  (소스 파일 'EditerScene.cpp'을(를) 컴파일하는 중)
   
   KirbyGame.vcxproj -> C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\KirbyGame.exe

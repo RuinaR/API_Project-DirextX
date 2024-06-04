@@ -11,6 +11,9 @@
 
 void GameScene::StartGame()
 {
+	cout << "Start---0" << endl;
+	if (m_input == nullptr)
+		return;
 	string mapName = m_input->GetString();
 	if (mapName.empty())
 	{
@@ -31,8 +34,8 @@ void GameScene::StartGame()
 	btnObj->AddComponent(btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	btn->SetUIPos({ 0,400, -1.0f });
-	btn->SetUISize({ 200,50 });
+	btn->SetUIPos({ -700,300, -1.0f });
+	btn->SetUISize({ 200,100 });
 	btn->SetText(TEXT("GameScene Load"));
 	btn->SetTextColor(RGB(255, 0, 255));
 	btn->SetDefaultColor(RGB(255, 255, 255));
@@ -46,8 +49,8 @@ void GameScene::StartGame()
 	btnObj2->AddComponent(btn2);
 	btnObj2->SetOrderInLayer(10);
 	btnObj2->InitializeSet();
-	btn2->SetUIPos({ 0,500, -1.0f });
-	btn2->SetUISize({ 200,50 });
+	btn2->SetUIPos({ -700,200, -1.0f });
+	btn2->SetUISize({ 200,100 });
 	btn2->SetText(TEXT("StartScene Load"));
 	btn2->SetTextColor(RGB(255, 0, 255));
 	btn2->SetDefaultColor(RGB(255, 255, 255));
@@ -84,7 +87,7 @@ void GameScene::Start()
 	btnObj->AddComponent(m_btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	m_btn->SetUIPos({ 0,200,2.0f });
+	m_btn->SetUIPos({ -700,200,-1.0f });
 	m_btn->SetUISize({ 200,100 });
 	m_btn->SetText(TEXT("Start Game"));
 	m_btn->SetTextColor(RGB(255, 0, 255));

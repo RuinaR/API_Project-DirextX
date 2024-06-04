@@ -26,6 +26,11 @@ void AnimationRender::Release()
 
 void AnimationRender::ChangeAnim(Animation anim)
 {
+	if (anim.textures.size() == 0)
+	{
+		cout << "animation err " << endl;
+		return;
+	}
 	m_anim = anim;
 	m_curItr = m_anim.textures.begin();
 	m_bitren->ChangeBitmap(*m_curItr);
@@ -38,6 +43,12 @@ void AnimationRender::Start()
 
 void AnimationRender::Update()
 {
+	if (m_anim.textures.size() == 0)
+	{
+		cout << "animation err " << endl;
+		return;
+	}
+
 	if (!m_isPlay)
 		return;
 

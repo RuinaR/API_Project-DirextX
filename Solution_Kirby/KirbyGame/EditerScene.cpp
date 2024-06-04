@@ -25,7 +25,7 @@ void EditerScene::StartEdit()
 	btnObj->AddComponent(btn);
 	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
-	btn->SetUIPos({ 0,10,-1.0f });
+	btn->SetUIPos({ 0,400,-1.0f });
 	btn->SetUISize({ 190,50 });
 	btn->SetText(TEXT("StartScene Load"));
 	btn->SetTextColor(RGB(255, 0, 255));

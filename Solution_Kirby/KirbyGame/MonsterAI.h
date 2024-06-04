@@ -10,7 +10,6 @@ private:
 	float m_speed = 100.0f;
 	Arrow m_arrow = Arrow::right;
 	Animation m_anim[(int)Arrow::max];
-	string m_namePath;
 private:
 	LandChecker* m_checker = nullptr;
 	AnimationRender* m_ar = nullptr;
@@ -25,7 +24,7 @@ public:
 	void Start() override;
 	void Update() override;
 public:
-	MonsterAI(string namePath);
+	MonsterAI(Animation left, Animation right);
 	~MonsterAI();
 };
 

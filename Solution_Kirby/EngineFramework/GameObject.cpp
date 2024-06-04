@@ -141,11 +141,13 @@ void GameObject::Update() {
         return;
 
     RECT rect = {
-        m_position.x - Camera::GetInstance()->GetPos().x,
-        m_position.y - Camera::GetInstance()->GetPos().y,
-        m_position.x - Camera::GetInstance()->GetPos().x + m_size.x,
-		m_position.y - Camera::GetInstance()->GetPos().y + m_size.y };
-	POINT point = { Mouse::GetInstance()->GetPos().x, Mouse::GetInstance()->GetPos().y };
+        m_position.x + Camera::GetInstance()->GetPos().x,
+        m_position.y + Camera::GetInstance()->GetPos().y,
+        m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
+		m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
+	POINT point = { 
+        Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x, 
+        Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y };
 
 	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
 	{
@@ -192,11 +194,13 @@ void GameObject::OnLBtnDown()
         return;
 
     RECT rect = {
-         m_position.x - Camera::GetInstance()->GetPos().x,
-         m_position.y - Camera::GetInstance()->GetPos().y,
-         m_position.x - Camera::GetInstance()->GetPos().x + m_size.x,
-         m_position.y - Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { Mouse::GetInstance()->GetPos().x, Mouse::GetInstance()->GetPos().y };
+         m_position.x + Camera::GetInstance()->GetPos().x,
+         m_position.y + Camera::GetInstance()->GetPos().y,
+         m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
+         m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
+    POINT point = { 
+        Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x,
+        Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y};
 
     if (PtInRect(&rect, point))
     {
@@ -211,11 +215,13 @@ void GameObject::OnLBtnUp()
         return;
 
     RECT rect = {
-        m_position.x - Camera::GetInstance()->GetPos().x,
-        m_position.y - Camera::GetInstance()->GetPos().y,
-        m_position.x - Camera::GetInstance()->GetPos().x + m_size.x,
-        m_position.y - Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { Mouse::GetInstance()->GetPos().x, Mouse::GetInstance()->GetPos().y };
+        m_position.x + Camera::GetInstance()->GetPos().x,
+        m_position.y + Camera::GetInstance()->GetPos().y,
+        m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
+        m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
+    POINT point = { 
+        Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x,
+        Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y };
 
 	if (PtInRect(&rect, point))
 	{
@@ -230,11 +236,13 @@ void GameObject::OnRBtnDown()
         return;
 
     RECT rect = {
-        m_position.x - Camera::GetInstance()->GetPos().x,
-        m_position.y - Camera::GetInstance()->GetPos().y,
-        m_position.x - Camera::GetInstance()->GetPos().x + m_size.x,
-        m_position.y - Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { Mouse::GetInstance()->GetPos().x, Mouse::GetInstance()->GetPos().y };
+        m_position.x + Camera::GetInstance()->GetPos().x,
+        m_position.y + Camera::GetInstance()->GetPos().y,
+        m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
+        m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
+    POINT point = { 
+        Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x,
+        Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y};
 
     if (PtInRect(&rect, point))
     {
@@ -249,11 +257,13 @@ void GameObject::OnRBtnUp()
         return;
 
     RECT rect = {
-         m_position.x - Camera::GetInstance()->GetPos().x,
-         m_position.y - Camera::GetInstance()->GetPos().y,
-         m_position.x - Camera::GetInstance()->GetPos().x + m_size.x,
-         m_position.y - Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { Mouse::GetInstance()->GetPos().x, Mouse::GetInstance()->GetPos().y };
+         m_position.x + Camera::GetInstance()->GetPos().x,
+         m_position.y + Camera::GetInstance()->GetPos().y,
+         m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
+         m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
+    POINT point = { 
+        Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x,
+        Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y};
 
     if (PtInRect(&rect, point))
     {

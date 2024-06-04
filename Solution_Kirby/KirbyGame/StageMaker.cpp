@@ -117,7 +117,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
        defaultMon->Size() = { UNITSIZE, UNITSIZE};
        defaultMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f });
        defaultMon->AddComponent(new ChangeObject(PlayerMode::mDefault, m_player));
-       defaultMon->AddComponent(new MonsterAI("default"));
+       defaultMon->AddComponent(new MonsterAI(m_defaultMobAnim[(int)Arrow::left], m_defaultMobAnim[(int)Arrow::right]));
        defaultMon->InitializeSet();
        rowGroup->push_back(defaultMon);
        colRow->push_back(false);
@@ -131,7 +131,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         swordMon->Size() = { UNITSIZE, UNITSIZE};
         swordMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4 ,(float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f});
         swordMon->AddComponent(new ChangeObject(PlayerMode::mSword, m_player));
-        swordMon->AddComponent(new MonsterAI("sword"));
+        swordMon->AddComponent(new MonsterAI(m_swordMobAnim[(int)Arrow::left], m_swordMobAnim[(int)Arrow::right]));
         swordMon->InitializeSet();
         rowGroup->push_back(swordMon);
         colRow->push_back(false);
@@ -145,7 +145,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
 		stoneMon->Size() = { UNITSIZE, UNITSIZE};
 		stoneMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f});
 		stoneMon->AddComponent(new ChangeObject(PlayerMode::mStone, m_player));
-        stoneMon->AddComponent(new MonsterAI("stone"));
+        stoneMon->AddComponent(new MonsterAI(m_stoneMobAnim[(int)Arrow::left], m_stoneMobAnim[(int)Arrow::right]));
 		stoneMon->InitializeSet();
         rowGroup->push_back(stoneMon);
         colRow->push_back(false);
@@ -321,6 +321,20 @@ void StageMaker::Initialize()
     m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
     m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
 
+    string path[(int)Arrow::max];
+    path[(int)Arrow::left] = "Bitmaps\\monster\\default\\left";
+    path[(int)Arrow::right] = "Bitmaps\\monster\\default\\right";
+    m_defaultMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
+    m_defaultMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    path[(int)Arrow::left] = "Bitmaps\\monster\\sword\\left";
+    path[(int)Arrow::right] = "Bitmaps\\monster\\sword\\right";
+    m_swordMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
+    m_swordMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    path[(int)Arrow::left] = "Bitmaps\\monster\\stone\\left";
+    path[(int)Arrow::right] = "Bitmaps\\monster\\stone\\right";
+    m_stoneMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
+    m_stoneMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+
     m_playerObj = new GameObject();
     m_player = new Player();
     m_playerObj->AddComponent(m_player);
@@ -338,6 +352,16 @@ void StageMaker::Release()
     AnimationManager::ReleaseTexture(m_swordObj);
     AnimationManager::ReleaseTexture(m_stoneObj);
     AnimationManager::ReleaseTexture(m_door);
+
+    AnimationManager::ReleaseAnimation(m_defaultMobAnim[(int)Arrow::left]);
+    AnimationManager::ReleaseAnimation(m_defaultMobAnim[(int)Arrow::right]);
+
+    AnimationManager::ReleaseAnimation(m_swordMobAnim[(int)Arrow::left]);
+    AnimationManager::ReleaseAnimation(m_swordMobAnim[(int)Arrow::right]);
+
+    AnimationManager::ReleaseAnimation(m_stoneMobAnim[(int)Arrow::left]);
+    AnimationManager::ReleaseAnimation(m_stoneMobAnim[(int)Arrow::right]);
+
 }
 
 void StageMaker::Start()

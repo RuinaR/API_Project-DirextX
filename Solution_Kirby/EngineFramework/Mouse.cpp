@@ -29,12 +29,15 @@ void Mouse::Initialize()
 	this->mPos.y = 0;
 	this->mIsLeftDown = false;
 	this->mIsRightDown = false;
+	MainFrame::GetInstance()->GetDevice()->GetViewport(&m_viewport);
 }
 
 void Mouse::SetPos(int x, int y)
 {
-	this->mPos.x = x;
-	this->mPos.y = y;
+	int clientWidth = m_viewport.Width;
+	int clientHeight = m_viewport.Height;
+	this->mPos.x = x - (clientWidth/2);
+	this->mPos.y = (clientHeight / 2) - y;
 }
 
 void Mouse::SetPos(D3DXVECTOR2 pos)

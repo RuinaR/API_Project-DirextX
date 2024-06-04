@@ -356,21 +356,26 @@ void Edit::Initialize()
     m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
     m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
     m_player = AnimationManager::LoadTexture(L"Bitmaps\\obj\\player");
-    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
+	m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
 
-    for (int i = 0; i < (int)MapType::max; i++)
-    {
-        GameObject* obj = new GameObject();
-        m_selectBtn[i] = new ColorButton();
-        obj->AddComponent(m_selectBtn[i]);
-        m_selectBtn[i]->SetUIPos({ 200.0f + i * 100, 10, -1.0f });
-        m_selectBtn[i]->SetUISize({ 90,50 });
-        obj->SetOrderInLayer(10);
+	for (int i = 0; i < (int)MapType::max; i++)
+	{
+		GameObject* obj = new GameObject();
+		m_selectBtn[i] = new ColorButton();
+		obj->AddComponent(m_selectBtn[i]);
         obj->InitializeSet();
-    }
-    m_selectBtn[(int)MapType::None]->SetText(TEXT("后镑"));
-    m_selectBtn[(int)MapType::Block]->SetText(TEXT("顶"));
-    m_selectBtn[(int)MapType::Player]->SetText(TEXT("目厚"));
+		m_selectBtn[i]->SetUIPos({ -700.0f + i * 100, 50, -1.0f });
+		m_selectBtn[i]->SetUISize({ 50,50 });
+		m_selectBtn[i]->SetTextColor(RGB(255, 0, 255));
+		m_selectBtn[i]->SetDefaultColor(RGB(255, 255, 255));
+		m_selectBtn[i]->SetHoverColor(RGB(200, 200, 200));
+		m_selectBtn[i]->SetDownColor(RGB(150, 150, 150));
+		obj->SetOrderInLayer(10);
+		
+	}
+	m_selectBtn[(int)MapType::None]->SetText(TEXT("后镑"));
+	m_selectBtn[(int)MapType::Block]->SetText(TEXT("顶"));
+	m_selectBtn[(int)MapType::Player]->SetText(TEXT("目厚"));
     m_selectBtn[(int)MapType::DefaultMon]->SetText(TEXT("扁夯 各"));
     m_selectBtn[(int)MapType::SwordMon]->SetText(TEXT("家靛 各"));
     m_selectBtn[(int)MapType::StoneMon]->SetText(TEXT("胶沛 各"));
@@ -379,7 +384,7 @@ void Edit::Initialize()
     GameObject* obj = new GameObject();
     m_InitMapBtn = new ColorButton();
     obj->AddComponent(m_InitMapBtn);
-    m_InitMapBtn->SetUIPos({900, 10, -1.0f});
+    m_InitMapBtn->SetUIPos({200, 10, -1.0f});
     m_InitMapBtn->SetUISize({ 90,50 });
     obj->SetOrderInLayer(-10);
     obj->InitializeSet();
@@ -465,13 +470,13 @@ void Edit::Update()
 	int cameraSpd = 10;
 	if (GetAsyncKeyState(0x57)) //W
 	{
-		if (Camera::GetInstance()->GetPos().y - cameraSpd >= 0)
-			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y - cameraSpd);
+		if (Camera::GetInstance()->GetPos().y + cameraSpd < 0)
+			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y + cameraSpd);
 	}
 	if (GetAsyncKeyState(0x53)) //S
 	{
-		if (Camera::GetInstance()->GetPos().y + cameraSpd <= UNITSIZE * m_count - UNITSIZE * 15)
-			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y + cameraSpd);
+		if (Camera::GetInstance()->GetPos().y - cameraSpd >= -UNITSIZE * m_count + UNITSIZE * 15)
+			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y - cameraSpd);
 	}
 	if (GetAsyncKeyState(0x41)) //A
 	{

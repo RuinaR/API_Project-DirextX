@@ -35,13 +35,6 @@ void MonsterAI::Collision(Collider* other)
 
 void MonsterAI::Initialize()
 {
-	string path[(int)Arrow::max];
-	path[(int)Arrow::left] = "Bitmaps\\monster\\" + m_namePath + "\\left";
-	path[(int)Arrow::right] = "Bitmaps\\monster\\" + m_namePath + "\\right";
-
-	m_anim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-	m_anim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
-
 	GameObject* newGo = new GameObject();
 	m_checker = new LandChecker();
 	newGo->SetOrderInLayer(3);
@@ -111,10 +104,11 @@ void MonsterAI::Update()
 }
 
 
-MonsterAI::MonsterAI(string namePath)
+MonsterAI::MonsterAI(Animation left, Animation right)
 {
-	m_namePath = namePath;
-}
+	m_anim[(int)Arrow::left] = left;
+	m_anim[(int)Arrow::right] = right;
+}  
 
 MonsterAI::~MonsterAI()
 {

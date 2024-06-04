@@ -32,6 +32,8 @@ void InputString::Update()
 
 string InputString::GetString()
 {
+    if (!m_hEdit)
+        return "";
     int length = GetWindowTextLength(m_hEdit); 
     wstring text;
     if (length > 0)

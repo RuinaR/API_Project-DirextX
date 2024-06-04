@@ -3,6 +3,9 @@
 
 void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
 {
+    if (m_gameObj->GetDestroy())
+        return;
+
     SetupVertices();
 
     // Set world, view, and projection matrices here
