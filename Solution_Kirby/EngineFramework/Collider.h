@@ -11,15 +11,15 @@ protected:
 
 	bool m_isTrigger = false;
 
-	b2Body* m_body;
+	b2Body* m_body = nullptr;
 	b2BodyType m_type;
 public:
 	Collider(b2BodyType type);
 	void Start() final;
 	void Update() final;
-	const Vector2D GetColSize();
-	void SetColSize(Vector2D size);
-	Vector2D& ColOffset();
+	const Vector2D& GetColSize();
+	const Vector2D& GetColOffset();
+	void CreateBody(Vector2D offset, Vector2D size);
 	void Initialize() final;
 	void Release() final;
 	void SetTrigger(bool b);

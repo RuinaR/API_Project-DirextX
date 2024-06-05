@@ -19,7 +19,7 @@ protected:
 	Timer m_leftKeyTimer = Timer();
 	Timer m_rightKeyTimer = Timer();
 	Vector2D m_dSize = { UNITSIZE,UNITSIZE };
-	Vector2D m_cSize = { 70,70 };
+	Vector2D m_cSize = { 70, 70 };
 	Vector2D m_dOffset = { 10,10 };
 
 	b2Body* m_body = nullptr;
@@ -52,6 +52,9 @@ protected:
 	bool isStoneAtked = false;
 
 	void (Player::* m_attackFunc[(int)PlayerMode::max])();
+
+	bool m_isClear = false;
+	void NextStage();
 protected:
 	void UpdateAnim(bool isOneTime);
 	void FlyAction();

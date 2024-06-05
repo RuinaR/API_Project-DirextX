@@ -7,7 +7,7 @@ protected:
 	static StageMaker* m_Pthis;
 protected:
 	vector<string> ReadMapData(string mapName);
-	void MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup, vector<bool>* colRow);
+	void MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup);
 
 	IDirect3DTexture9* m_bg = NULL;
 	IDirect3DTexture9* m_land = NULL;
@@ -19,7 +19,6 @@ protected:
 	Player* m_player = nullptr;
 	GameObject* m_playerObj = nullptr;
 	vector<vector<GameObject*>> m_mapObj = vector<vector<GameObject*>>();
-	vector<vector<bool>> m_colInfo = vector<vector<bool>>();
 
 	string m_name;
 

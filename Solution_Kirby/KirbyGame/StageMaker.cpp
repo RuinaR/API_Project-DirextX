@@ -43,67 +43,33 @@ vector<string> StageMaker::ReadMapData(string mapName)
     return mapData;
 }
 
-void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup, vector<bool>* colRow)
+void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
 {
 	switch (t)
 	{
 	case MapType::None:
     {
         rowGroup->push_back(nullptr);
-        colRow->push_back(false);
     }
 		break;
 	case MapType::Player:
     {
         m_playerObj->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,5.0f });
         rowGroup->push_back(m_playerObj);
-        colRow->push_back(false);
 	}
 	break;
 	case MapType::Block: //가로줄 콜라이더를 계산해서 합친 상태로 생성
 	{
-		GameObject* obj = new GameObject();
-		obj->SetTag(TAG_LAND);
-		obj->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,10.0f });
-		obj->Size() = { UNITSIZE, UNITSIZE };
-		obj->AddComponent(new BitmapRender(m_land));
-        if (!rowGroup->empty() && (rowGroup->back() != nullptr && rowGroup->back()->GetTag() == TAG_LAND))
-        {
-            int startIdx = rowGroup->size() - 1;
-            int endIdx = 0;
-            for (int k = startIdx; k >= 0; k--)
-            {
-                if ((*rowGroup)[k] == nullptr || (*rowGroup)[k]->GetTag() != TAG_LAND)
-				{
-					endIdx = k + 1;
-                    BoxCollider* bo = (*rowGroup)[endIdx]->GetComponent<BoxCollider>();
-                    if (bo == nullptr)
-                    {
-                        BoxCollider* newBo = new BoxCollider(b2BodyType::b2_staticBody);
-                        (*rowGroup)[endIdx]->AddComponent(newBo);
-                        newBo->SetColSize({ (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE });
-                    }
-                    else
-                    {
-                        bo->SetColSize( { (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE });
-                    }
-                    for (int q = endIdx; q < startIdx + 1; q++)
-                    {
-                        (*colRow)[q] = true;
-                    }
-                    if (startIdx + 1 >= colRow->size())
-                        colRow->push_back(true);
-                    else
-                        (*colRow)[startIdx + 1] = true;
-
-					break;
-				}
-			}
-		}
-		obj->InitializeSet();
-		rowGroup->push_back(obj);
-		if (rowGroup->size() > colRow->size())
-			colRow->push_back(false);
+        GameObject* block = new GameObject();
+        block->SetTag(TAG_LAND);
+        block->Size() = { UNITSIZE, UNITSIZE };
+        block->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,10.0f });
+        BoxCollider* box = new BoxCollider(b2BodyType::b2_staticBody);
+        block->AddComponent(box);
+        box->CreateBody({ 0,0 }, { block->Size().x, block->Size().y });
+        block->AddComponent(new BitmapRender(m_land));
+        block->InitializeSet();
+        rowGroup->push_back(block);
 	}
 	break;
 	case MapType::DefaultMon:
@@ -116,7 +82,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
        defaultMon->AddComponent(new MonsterAI(m_defaultMobAnim[(int)Arrow::left], m_defaultMobAnim[(int)Arrow::right]));
        defaultMon->InitializeSet();
        rowGroup->push_back(defaultMon);
-       colRow->push_back(false);
     }
         break;
     case MapType::SwordMon:
@@ -129,7 +94,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         swordMon->AddComponent(new MonsterAI(m_swordMobAnim[(int)Arrow::left], m_swordMobAnim[(int)Arrow::right]));
         swordMon->InitializeSet();
         rowGroup->push_back(swordMon);
-        colRow->push_back(false);
     }
 	break;
 	case MapType::StoneMon:
@@ -142,7 +106,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         stoneMon->AddComponent(new MonsterAI(m_stoneMobAnim[(int)Arrow::left], m_stoneMobAnim[(int)Arrow::right]));
 		stoneMon->InitializeSet();
         rowGroup->push_back(stoneMon);
-        colRow->push_back(false);
 	}
         break;
     case MapType::Door:
@@ -152,12 +115,12 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         door->Size() = { UNITSIZE, UNITSIZE};
         door->SetPosition({ (float)UNITSIZE * i, (float)-UNITSIZE * j,7.0f});
         door->AddComponent(new BitmapRender(m_door));
-        BoxCollider* bo = new BoxCollider(b2BodyType::b2_kinematicBody);
-        bo->SetTrigger(true);
-        door->AddComponent(bo);
+        BoxCollider* box = new BoxCollider(b2BodyType::b2_kinematicBody);
+        box->SetTrigger(true);
+        door->AddComponent(box);
+        box->CreateBody({ 0,0 }, { door->Size().x, door->Size().y });
         door->InitializeSet();
         rowGroup->push_back(door);
-        colRow->push_back(false);
     }
     break;
     }
@@ -211,17 +174,17 @@ bool StageMaker::SetMap(string mapName)
     m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
     m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
 
-    string path[(int)Arrow::max];
-    path[(int)Arrow::left] = "Bitmaps\\monster\\default\\left";
-    path[(int)Arrow::right] = "Bitmaps\\monster\\default\\right";
+    wstring path[(int)Arrow::max];
+    path[(int)Arrow::left] = L"Bitmaps\\monster\\default\\left";
+    path[(int)Arrow::right] = L"Bitmaps\\monster\\default\\right";
     m_defaultMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
     m_defaultMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
-    path[(int)Arrow::left] = "Bitmaps\\monster\\sword\\left";
-    path[(int)Arrow::right] = "Bitmaps\\monster\\sword\\right";
+    path[(int)Arrow::left] = L"Bitmaps\\monster\\sword\\left";
+    path[(int)Arrow::right] = L"Bitmaps\\monster\\sword\\right";
     m_swordMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
     m_swordMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
-    path[(int)Arrow::left] = "Bitmaps\\monster\\stone\\left";
-    path[(int)Arrow::right] = "Bitmaps\\monster\\stone\\right";
+    path[(int)Arrow::left] = L"Bitmaps\\monster\\stone\\left";
+    path[(int)Arrow::right] = L"Bitmaps\\monster\\stone\\right";
     m_stoneMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
     m_stoneMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
 
@@ -229,9 +192,6 @@ bool StageMaker::SetMap(string mapName)
 	for (vector<vector<GameObject*>>::iterator itr = m_mapObj.begin(); itr != m_mapObj.end(); itr++)
 		itr->clear();
 	m_mapObj.clear();
-    for (vector<vector<bool>>::iterator itr = m_colInfo.begin(); itr != m_colInfo.end(); itr++)
-        itr->clear();
-    m_colInfo.clear();
 
     vector<string> mapData = ReadMapData(mapName);
     if (mapData.empty())
@@ -244,77 +204,13 @@ bool StageMaker::SetMap(string mapName)
     for (int i = 0; i < mapData.size(); ++i)
 	{
 		vector<GameObject*> row;
-		vector<bool> colrow;
 		for (int j = 0; j < mapData[i].size(); ++j)
 		{
-			MakeMap((MapType)(mapData[i][j] - '0'), j, i, &row, &colrow);
+			MakeMap((MapType)(mapData[i][j] - '0'), j, i, &row);
 			if ((MapType)(mapData[i][j] - '0') != MapType::None)
 				cout << "Create Tile Type : " << MapTypeToString((MapType)(mapData[i][j] - '0')) << endl;
 		}
 		m_mapObj.push_back(row);
-		m_colInfo.push_back(colrow);
-	}
-
-	for (int i = 0; i < m_mapObj.size(); i++) //나머지 세로줄 콜라이더를 합쳐서 생성하는 작업
-	{
-		for (int j = 0; j < m_mapObj[i].size(); j++)
-		{
-			if (m_mapObj[i][j] != nullptr &&
-				m_mapObj[i][j]->GetTag() == TAG_LAND &&
-				m_mapObj[i][j]->GetComponent<BoxCollider>() == nullptr &&
-                m_colInfo[i][j] == false)
-            {
-                int cnt = 1;
-                m_colInfo[i][j] = true;
-                for (int k = i + 1; k < m_mapObj.size(); k++)
-                {
-                    if (m_mapObj[k][j] != nullptr &&
-                        m_mapObj[k][j]->GetTag() == TAG_LAND &&
-                        m_mapObj[k][j]->GetComponent<BoxCollider>() == nullptr &&
-                        m_colInfo[k][j] == false)
-                    {
-                        cnt++;
-                        m_colInfo[k][j] = true;
-                    }
-                    else
-                        break;
-                }
-                BoxCollider* newBo = new BoxCollider(b2BodyType::b2_staticBody);
-                m_mapObj[i][j]->AddComponent(newBo);
-                newBo->SetColSize({ UNITSIZE, (double)(UNITSIZE * cnt) });
-            }
-        }
-    }
-
-    //가로줄 콜라이더끼리 마지막으로 합치는 작업(가로줄 우선이므로 세로줄끼리 합치는 작업은 필요없음)
-    for (int i = 0; i < m_mapObj.size(); i++)
-    {
-        for (int j = 0; j < m_mapObj[i].size(); j++)
-        {
-            if (m_mapObj[i][j] == nullptr || m_mapObj[i][j]->GetTag() != TAG_LAND)
-                continue;
-            BoxCollider* bo = m_mapObj[i][j]->GetComponent<BoxCollider>();
-			int cnt = 1;
-			if (bo != nullptr && EqualFloat(bo->GetColSize().y, UNITSIZE, 0.1f))
-			{
-				for (int k = i + 1; k < m_mapObj.size(); k++)
-				{
-                    if (m_mapObj[k][j] == nullptr || m_mapObj[k][j]->GetTag() != TAG_LAND)
-                        break;
-					BoxCollider* bo2 = m_mapObj[k][j]->GetComponent<BoxCollider>();
-					if (bo2 == nullptr || !EqualFloat(bo->GetColSize().x, bo2->GetColSize().x, 0.1f))
-					{
-						break;
-					}
-					else
-					{
-						m_mapObj[k][j]->DeleteComponent(bo2);
-                        cnt++;
-					}
-				}
-                bo->SetColSize({ bo->GetColSize().x , (double)(UNITSIZE * cnt) });
-			}
-		}
 	}
     return true;
 }

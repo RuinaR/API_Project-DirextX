@@ -185,6 +185,31 @@ void GameObject::DeleteChild(GameObject* obj)
     }
 }
 
+void GameObject::OnCollisionEnter(Collider* col)
+{
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
+        (*itr)->OnCollisionEnter(col);
+    }
+}
+
+void GameObject::OnCollisionStay(Collider* col)
+{
+	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+	{
+		(*itr)->OnCollision(col);
+	}
+}
+
+void GameObject::OnCollisionExit(Collider* col)
+{
+	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+	{
+		if (*itr)
+			(*itr)->OnCollisionExit(col);
+	}
+}
+
 void GameObject::OnLBtnDown()
 {
     if (!m_setActive || !m_vecComponent)

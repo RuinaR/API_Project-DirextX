@@ -18,6 +18,56 @@ float Lerp(float start, float end, float t)
 	return start + ((end - start) * t);
 }
 
+void Player::NextStage()
+{
+	cout << "NEXT STAGE" << endl;
+	string stageName = StageMaker::GetInstance()->GetMapName();
+
+	SceneChanger::Destroy();
+	StageMaker::Destroy();
+
+	ObjectManager::GetInstance()->Clear();
+
+	SceneChanger::Create();
+	StageMaker::Create();
+
+	string nextName = to_string(atoi(stageName.c_str()) + 1);
+	if (!StageMaker::GetInstance()->SetMap(nextName))
+	{
+		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("존재하지 않는 맵"), TEXT("알림"), MB_OK);
+	}
+	StageMaker::GetInstance()->SetPlayerMode(m_mode);
+	StageMaker::GetInstance()->StageStart();
+
+	GameObject* btnObj = new GameObject();
+	ColorButton* btn = new ColorButton();
+	btnObj->AddComponent(btn);
+	btnObj->InitializeSet();
+	btn->SetUIPos({ 0,400,-1.0f });
+	btn->SetUISize({ 200,50 });
+	btn->SetText(TEXT("GameScene Load"));
+	btn->SetTextColor(RGB(255, 0, 255));
+	btn->SetDefaultColor(RGB(255, 255, 255));
+	btn->SetHoverColor(RGB(200, 200, 200));
+	btn->SetDownColor(RGB(150, 150, 150));
+	btn->SetTextSize(20);
+	btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
+
+	GameObject* btnObj2 = new GameObject();
+	ColorButton* btn2 = new ColorButton();
+	btnObj2->AddComponent(btn2);
+	btnObj2->InitializeSet();
+	btn2->SetUIPos({ 0,500, -1.0f });
+	btn2->SetUISize({ 200,50 });
+	btn2->SetText(TEXT("StartScene Load"));
+	btn2->SetTextColor(RGB(255, 0, 255));
+	btn2->SetDefaultColor(RGB(255, 255, 255));
+	btn2->SetHoverColor(RGB(200, 200, 200));
+	btn2->SetDownColor(RGB(150, 150, 150));
+	btn2->SetTextSize(20);
+	btn2->SetEvent(bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
+}
+
 void Player::UpdateAnim(bool isOneTime)
 {
 	m_ar->SetOneTime(isOneTime);
@@ -306,52 +356,7 @@ void Player::Collision(Collider* other)
 	{
 		if (GetAsyncKeyState(m_upKey) & 0x8000) //다음 스테이지
 		{
-			cout << "NEXT STAGE" << endl;
-			string stageName = StageMaker::GetInstance()->GetMapName();
-
-			SceneChanger::Destroy();
-			StageMaker::Destroy();
-
-			ObjectManager::GetInstance()->Clear();
-
-			SceneChanger::Create();
-			StageMaker::Create();
-
-			string nextName = to_string(atoi(stageName.c_str()) + 1);
-			if (!StageMaker::GetInstance()->SetMap(nextName))
-			{
-				MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("존재하지 않는 맵"), TEXT("알림"), MB_OK);
-			}
-			StageMaker::GetInstance()->SetPlayerMode(m_mode);
-			StageMaker::GetInstance()->StageStart();
-
-			GameObject* btnObj = new GameObject();
-			ColorButton* btn = new ColorButton();
-			btnObj->AddComponent(btn);
-			btnObj->InitializeSet();
-			btn->SetUIPos({ 0,400,-1.0f });
-			btn->SetUISize({ 200,50 });
-			btn->SetText(TEXT("GameScene Load"));
-			btn->SetTextColor(RGB(255, 0, 255));
-			btn->SetDefaultColor(RGB(255, 255, 255));
-			btn->SetHoverColor(RGB(200, 200, 200));
-			btn->SetDownColor(RGB(150, 150, 150));
-			btn->SetTextSize(20);
-			btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
-
-			GameObject* btnObj2 = new GameObject();
-			ColorButton* btn2 = new ColorButton();
-			btnObj2->AddComponent(btn2);
-			btnObj2->InitializeSet();
-			btn2->SetUIPos({ 0,500, -1.0f });
-			btn2->SetUISize({ 200,50 });
-			btn2->SetText(TEXT("StartScene Load"));
-			btn2->SetTextColor(RGB(255, 0, 255));
-			btn2->SetDefaultColor(RGB(255, 255, 255));
-			btn2->SetHoverColor(RGB(200, 200, 200));
-			btn2->SetDownColor(RGB(150, 150, 150));
-			btn2->SetTextSize(20);
-			btn2->SetEvent(bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
+			m_isClear = true;
 			return;
 		}
 	}
@@ -385,10 +390,12 @@ void Player::Collision(Collider* other)
 		if (m_arrow == Arrow::left)
 		{
 			//m_rig->Velocity() = {300,350};
+			m_body->SetLinearVelocity({ 300, 350 });
 		}
 		else
 		{
 			//m_rig->Velocity() = {-300,350};
+			m_body->SetLinearVelocity({ -300, 350 });
 		}
 	}
 }
@@ -408,22 +415,22 @@ void Player::Initialize()
 	m_gameObj->Size() = {(float)m_dSize.x, (float)m_dSize.y};
 
 	m_mode = PlayerMode::mDefault;
-	string modeStr[(int)PlayerMode::max] = { "default", "sword", "stone"};
-	string arrowStr[(int)Arrow::max] = { "left", "right" };
-	string stateStr[(int)PlayerAState::max] = {};
-	stateStr[(int)PlayerAState::idle] = "idle";
-	stateStr[(int)PlayerAState::walk] = "walk";
-	stateStr[(int)PlayerAState::jump] = "jump";
-	stateStr[(int)PlayerAState::run] = "run";
-	stateStr[(int)PlayerAState::fly] = "fly";
-	stateStr[(int)PlayerAState::eat_idle] = "eat_idle";
-	stateStr[(int)PlayerAState::eat_move] = "eat_move";
-	stateStr[(int)PlayerAState::eat_jump] = "eat_jump";
-	stateStr[(int)PlayerAState::change] = "change";
-	stateStr[(int)PlayerAState::eat] = "eat";
-	stateStr[(int)PlayerAState::eating] = "eating";
-	stateStr[(int)PlayerAState::attack] = "attack";
-	stateStr[(int)PlayerAState::hit] = "hit";
+	wstring modeStr[(int)PlayerMode::max] = { L"default", L"sword", L"stone"};
+	wstring arrowStr[(int)Arrow::max] = { L"left", L"right" };
+	wstring stateStr[(int)PlayerAState::max] = {};
+	stateStr[(int)PlayerAState::idle] = L"idle";
+	stateStr[(int)PlayerAState::walk] = L"walk";
+	stateStr[(int)PlayerAState::jump] = L"jump";
+	stateStr[(int)PlayerAState::run] = L"run";
+	stateStr[(int)PlayerAState::fly] = L"fly";
+	stateStr[(int)PlayerAState::eat_idle] = L"eat_idle";
+	stateStr[(int)PlayerAState::eat_move] = L"eat_move";
+	stateStr[(int)PlayerAState::eat_jump] = L"eat_jump";
+	stateStr[(int)PlayerAState::change] = L"change";
+	stateStr[(int)PlayerAState::eat] = L"eat";
+	stateStr[(int)PlayerAState::eating] = L"eating";
+	stateStr[(int)PlayerAState::attack] = L"attack";
+	stateStr[(int)PlayerAState::hit] = L"hit";
 
 	m_attackFunc[(int)PlayerMode::mDefault] = &Player::Attack_default;
 	m_attackFunc[(int)PlayerMode::mSword] = &Player::Attack_sword;
@@ -435,7 +442,7 @@ void Player::Initialize()
 		{
 			for (int j = 0; j < (int)PlayerAState::max; j++)
 			{
-				string path = "Bitmaps\\Player\\" + modeStr[a] + "\\" + arrowStr[i] + "\\" + stateStr[j];
+				wstring path = L"Bitmaps\\Player\\" + modeStr[a] + L"\\" + arrowStr[i] + L"\\" + stateStr[j];
 				float atime = 0.1f;
 				if (j == (int)PlayerAState::jump) atime = 0.07f;
 				else if (j == (int)PlayerAState::idle || j == (int)PlayerAState::eat_idle) atime = 0.25f;
@@ -449,6 +456,7 @@ void Player::Initialize()
 	//m_rig->SetGravity(0.0f);
 	m_gameObj->AddComponent(m_bo);
 	m_gameObj->AddComponent(m_ar);
+	m_bo->CreateBody(m_dOffset, m_cSize);
 	//m_gameObj->AddComponent(m_rig);
 	m_body = m_bo->GetBody();
 	m_leftKey = VK_LEFT;
@@ -477,8 +485,6 @@ void Player::Release()
 void Player::Start()
 {
 	//m_rig->SetGravity(m_startGravity);
-	m_bo->ColOffset() = m_dOffset;
-	m_bo->SetColSize(m_cSize);
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
 	/*if (m_rig)
@@ -494,7 +500,13 @@ void Player::Update()
 	//if (!m_rig)	return;
 	if (!m_ar)	return;
 
-	cout << "x : " << m_body->GetPosition().x << "y : " << m_body->GetPosition().y << endl;
+	if (m_isClear)
+	{
+		//NextStage();
+		SceneChanger::GetInstance()->ChangeGameScene();
+		return;
+	}
+
 	D3DXVECTOR3 playerPos = m_gameObj->Position();  // 플레이어 위치
 	D3DXVECTOR3 camPos = Camera::GetInstance()->GetPos();  // 현재 카메라 위치
 	RECT rect;

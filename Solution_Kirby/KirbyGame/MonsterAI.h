@@ -7,11 +7,11 @@ class MonsterAI : public Component
 {
 private:
 	int m_arrowVal = 0;
-	float m_speed = 100.0f;
+	float m_speed = 500.0f;
 	Arrow m_arrow = Arrow::right;
 	Animation m_anim[(int)Arrow::max];
 private:
-	LandChecker* m_checker = nullptr;
+	//LandChecker* m_checker = nullptr;
 	AnimationRender* m_ar = nullptr;
 	BoxCollider* m_bo = nullptr;
 protected:

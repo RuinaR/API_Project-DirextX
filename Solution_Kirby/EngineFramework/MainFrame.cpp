@@ -222,9 +222,6 @@ void MainFrame::Release()
 
 void CollisionListener::BeginContact(b2Contact* contact)
 {
-    cout << "BeginCollision" << endl;
-    return;
-
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
@@ -232,39 +229,37 @@ void CollisionListener::BeginContact(b2Contact* contact)
     BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
     BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
 
-    dataA->OnCollisionEnter(dataB);
-    dataB->OnCollisionEnter(dataA);
+    dataA->GetGameObject()->OnCollisionEnter(dataB);
+    dataB->GetGameObject()->OnCollisionEnter(dataA);
+
+    cout << dataA->GetGameObject()->GetTag() << " / " << dataB->GetGameObject()->GetTag() << endl;;
 }
 
 void CollisionListener::EndContact(b2Contact* contact)
 {
-    cout << "EndCollision" << endl;
-    return;
-
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
     // Fixture에서 사용자 정의 데이터 가져오기
-    BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
-    BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
-
-    dataA->OnCollisionExit(dataB);
-    dataB->OnCollisionExit(dataA);
+	BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
+	BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+	if (dataA)
+		dataA->GetGameObject()->OnCollisionExit(dataB);
+	if (dataB)
+		dataB->GetGameObject()->OnCollisionExit(dataA);
 }
 
 void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
-    return;
+	b2Fixture* fixtureA = contact->GetFixtureA();
+	b2Fixture* fixtureB = contact->GetFixtureB();
 
-    b2Fixture* fixtureA = contact->GetFixtureA();
-    b2Fixture* fixtureB = contact->GetFixtureB();
+	// Fixture에서 사용자 정의 데이터 가져오기
+	BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
+	BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
 
-    // Fixture에서 사용자 정의 데이터 가져오기
-    BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
-    BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
-
-    dataA->OnCollision(dataB);
-    dataB->OnCollision(dataA);
+	dataA->GetGameObject()->OnCollisionStay(dataB);
+	dataB->GetGameObject()->OnCollisionStay(dataA);
 }
 
 void CollisionListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)

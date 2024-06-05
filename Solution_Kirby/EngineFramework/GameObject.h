@@ -53,6 +53,10 @@ public:
     void AddChild(GameObject* obj);
     void DeleteChild(GameObject* obj);
 
+    void OnCollisionEnter(Collider* col);
+    void OnCollisionStay(Collider* col);
+    void OnCollisionExit(Collider* col);
+
     void OnLBtnDown();
     void OnLBtnUp();
     void OnRBtnDown();

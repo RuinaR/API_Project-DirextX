@@ -1,51 +1,65 @@
 #include "pch.h"
 #include "AnimationRender.h"
-bool AnimationManager::IsBitmapFile(const string& filename)
+bool AnimationManager::IsBitmapFile(const wstring& filename)
 {
     size_t dotIndex = filename.find_last_of('.');
     if (dotIndex != string::npos)
     {
-        string extension = filename.substr(dotIndex + 1);
+        wstring extension = filename.substr(dotIndex + 1);
         transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-        return extension == "bmp";
+        return extension == L"bmp";
     }
     return false;
 }
 
-Animation AnimationManager::LoadAnimation(const string& folderName, float time)
+Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
 {
-    char buffer[MAX_PATH];
-    GetCurrentDirectoryA(MAX_PATH, buffer);
-    string currentDirectory = buffer;
-
+    WCHAR buffer[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, buffer);
+    wstring currentDirectory = buffer;
     vector<IDirect3DTexture9*> textures;
-    string searchPath = currentDirectory + "\\" + folderName + "\\*.*";
-    WIN32_FIND_DATAA fileData;
-    HANDLE hFind = FindFirstFileA(searchPath.c_str(), &fileData);
+    wstring searchPath = currentDirectory + L"\\" + folderName +L"\\*.*";
+    WIN32_FIND_DATAW fileData;
+    D3DXIMAGE_INFO imageInfo;
+    HANDLE hFind = FindFirstFile(searchPath.c_str(), &fileData);
 
     if (hFind != INVALID_HANDLE_VALUE)
     {
         do {
-            string fileName = fileData.cFileName;
+            wstring fileName = fileData.cFileName;
             if (IsBitmapFile(fileName))
             {
-                string filePath = currentDirectory + "\\" + folderName + "\\" + fileName;
+                wstring filePath = currentDirectory + L"\\" + folderName + L"\\" + fileName;
                 IDirect3DTexture9* texture = nullptr;
-                if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), filePath.c_str(), &texture)))
+                if (SUCCEEDED(D3DXCreateTextureFromFileEx(
+                    MainFrame::GetInstance()->GetDevice(),
+                    filePath.c_str(),
+                    D3DX_DEFAULT,
+                    D3DX_DEFAULT,
+                    D3DX_DEFAULT,
+                    0,
+                    D3DFMT_UNKNOWN,
+                    D3DPOOL_MANAGED,
+                    D3DX_DEFAULT,
+                    D3DX_DEFAULT,
+                    TRANSCOLOR,
+                    &imageInfo,
+                    NULL,
+                    &texture)))
                 {
                     textures.push_back(texture);
                 }
                 else
                 {
-                    cout << "Failed to load texture: " << filePath << endl;
+                    wcout << L"Failed to load texture: " << filePath << endl;
                 }
             }
-        } while (FindNextFileA(hFind, &fileData) != 0);
+        } while (FindNextFile(hFind, &fileData) != 0);
         FindClose(hFind);
     }
     else
     {
-        cout << "Failed to find files in folder: " << folderName << endl;
+        wcout << L"Failed to find files in folder: " << folderName << endl;
     }
 
     Animation newAnim;
