@@ -115,6 +115,8 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
 
 	m_scene = scene;
 	WindowFrame::GetInstance()->SetScene(m_scene);
+
+    m_pWorld = new b2World(m_gravity);
 }
 
 int MainFrame::Run()
@@ -148,21 +150,22 @@ int MainFrame::Run()
 			{
 				frameCount++;
 				fpsCheckTime += m_timer.getTotalDeltaTime();
+				static int32 velocityIterations = 6;
+				static int32 positionIterations = 2;
+                m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
 
 				if (NULL == m_pd3dDevice)
 					return -1;
 
 				m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-
 				if (SUCCEEDED(m_pd3dDevice->BeginScene()))
 				{
-					//UPDATE
+					//UPDATE, RENDER
 					ObjectManager::GetInstance()->Update();
-					CollisionManager::GetInstance()->Update();
-
-					//RENDER
+                    CollisionManager::GetInstance()->Update();
 					InvalidateRect(WindowFrame::GetInstance()->GetHWND(), NULL, FALSE);
 					UpdateWindow(WindowFrame::GetInstance()->GetHWND());
+
 					m_pd3dDevice->EndScene();
 				}
 				m_pd3dDevice->Present(NULL, NULL, NULL, NULL);
@@ -206,4 +209,6 @@ void MainFrame::Release()
 
     if (m_pFont != NULL)
         m_pFont->Release();
+
+    delete m_pWorld;
 }

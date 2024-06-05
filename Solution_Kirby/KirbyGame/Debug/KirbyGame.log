@@ -1,5 +1,80 @@
-﻿  SceneChanger.cpp
+﻿  AttackEvent.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'AttackEvent.cpp'을(를) 컴파일하는 중)
+  
+  AttakObject.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'AttakObject.cpp'을(를) 컴파일하는 중)
+  
+  ChangeObject.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'ChangeObject.cpp'을(를) 컴파일하는 중)
+  
+  Edit.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'Edit.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(51,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(54,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(278,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(281,22): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(324,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(327,31): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(496,15): warning C4244: '초기화 중': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(497,15): warning C4244: '초기화 중': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(531,35): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\Edit.cpp(534,39): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  EditerScene.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'EditerScene.cpp'을(를) 컴파일하는 중)
+  
+  GameScene.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'GameScene.cpp'을(를) 컴파일하는 중)
+  
+  LandChecker.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'LandChecker.cpp'을(를) 컴파일하는 중)
+  
+  MonsterAI.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'MonsterAI.cpp'을(를) 컴파일하는 중)
+  
+  Player.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'Player.cpp'을(를) 컴파일하는 중)
+  
+  SceneChanger.cpp
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   (소스 파일 'SceneChanger.cpp'을(를) 컴파일하는 중)
   
+  StageMaker.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'StageMaker.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(96,38): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(246,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(250,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(260,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(262,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(271,39): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(292,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(294,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(300,49): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(302,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(307,71): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGame\StageMaker.cpp(307,53): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  StartScene.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'StartScene.cpp'을(를) 컴파일하는 중)
+  
+  game.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'game.cpp'을(를) 컴파일하는 중)
+  
+  main.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'main.cpp'을(를) 컴파일하는 중)
+  
+  코드를 생성하고 있습니다...
   KirbyGame.vcxproj -> C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\KirbyGame.exe

@@ -11,6 +11,8 @@ private:
 	Timer m_timer;
 	int m_targetFPS = 60;
 
+	b2Vec2 m_gravity = { 0.0f, -10.0f };
+	b2World* m_pWorld;
 private:
 
 	HWND m_hWnd;

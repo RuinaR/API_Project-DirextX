@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineFramework", "EngineFramework\EngineFramework.vcxproj", "{AFEF9603-4EC1-4B69-803D-ACBA84BB6D41}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169} = {E38AEF18-DB8A-4DDC-A921-C8DA94406169}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KirbyGame", "KirbyGame\KirbyGame.vcxproj", "{49851CD3-C9B5-40F3-A043-619A9657CED5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "Box2D\Box2D.vcxproj", "{E38AEF18-DB8A-4DDC-A921-C8DA94406169}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{49851CD3-C9B5-40F3-A043-619A9657CED5}.Release|x64.Build.0 = Release|x64
 		{49851CD3-C9B5-40F3-A043-619A9657CED5}.Release|x86.ActiveCfg = Release|Win32
 		{49851CD3-C9B5-40F3-A043-619A9657CED5}.Release|x86.Build.0 = Release|Win32
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Debug|x64.ActiveCfg = Debug|x64
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Debug|x64.Build.0 = Debug|x64
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Debug|x86.ActiveCfg = Debug|Win32
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Debug|x86.Build.0 = Debug|Win32
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Release|x64.ActiveCfg = Release|x64
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Release|x64.Build.0 = Release|x64
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Release|x86.ActiveCfg = Release|Win32
+		{E38AEF18-DB8A-4DDC-A921-C8DA94406169}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

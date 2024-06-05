@@ -24,6 +24,8 @@
 #include <stack>
 #include <d3dx9.h>
 
+#include "../Box2D/box2d/include/box2d/box2d.h"
+
 #include "AnimationManager.h"
 #include "ObjectManager.h"
 #include "CollisionManager.h"
