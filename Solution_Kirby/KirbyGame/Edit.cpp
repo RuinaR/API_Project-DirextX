@@ -85,7 +85,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_player));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -94,7 +94,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_land));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -103,7 +103,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_defaultObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -112,7 +112,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_swordObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -121,7 +121,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_stoneObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -130,7 +130,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_door));
         obj->Size() = { UNITSIZE, UNITSIZE };
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -250,7 +250,7 @@ void Edit::ReDrawMapObj(int indexX, int indexY, MapType type)
 	}
 
 	newObj->Size() = { UNITSIZE, UNITSIZE };
-	newObj->SetPosition({ (float)(UNITSIZE * indexX + UNITSIZE / 2) ,(float)(UNITSIZE * indexY + UNITSIZE / 2), 0.0f });
+	newObj->SetPosition({ (float)(UNITSIZE * indexX + UNITSIZE / 2) ,(float)(-UNITSIZE * indexY + UNITSIZE / 2), 0.0f });
 	newObj->InitializeSet();
 
 	m_mapData[indexY][indexX] = newObj;
@@ -364,13 +364,12 @@ void Edit::Initialize()
 		m_selectBtn[i] = new ColorButton();
 		obj->AddComponent(m_selectBtn[i]);
         obj->InitializeSet();
-		m_selectBtn[i]->SetUIPos({ -700.0f + i * 100, 50, -1.0f });
+		m_selectBtn[i]->SetUIPos({ -700.0f + i * 100, 400, -1.0f });
 		m_selectBtn[i]->SetUISize({ 50,50 });
-		m_selectBtn[i]->SetTextColor(RGB(255, 0, 255));
+		m_selectBtn[i]->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 		m_selectBtn[i]->SetDefaultColor(RGB(255, 255, 255));
 		m_selectBtn[i]->SetHoverColor(RGB(200, 200, 200));
 		m_selectBtn[i]->SetDownColor(RGB(150, 150, 150));
-		obj->SetOrderInLayer(10);
 		
 	}
 	m_selectBtn[(int)MapType::None]->SetText(TEXT("ºó°÷"));
@@ -384,9 +383,8 @@ void Edit::Initialize()
     GameObject* obj = new GameObject();
     m_InitMapBtn = new ColorButton();
     obj->AddComponent(m_InitMapBtn);
-    m_InitMapBtn->SetUIPos({200, 10, -1.0f});
+    m_InitMapBtn->SetUIPos({200, 400, -1.0f});
     m_InitMapBtn->SetUISize({ 90,50 });
-    obj->SetOrderInLayer(-10);
     obj->InitializeSet();
     m_InitMapBtn->SetText(TEXT("ÃÊ±âÈ­"));
     m_InitMapBtn->SetEvent(bind(&Edit::InitMap, this));
@@ -394,9 +392,8 @@ void Edit::Initialize()
     GameObject* objUndo = new GameObject();
     ColorButton* btnUndo = new ColorButton();
     objUndo->AddComponent(btnUndo);
-    btnUndo->SetUIPos({ 1000, 10, -1.0f });
+    btnUndo->SetUIPos({ 300, 400, -1.0f });
     btnUndo->SetUISize({ 90,50 });
-    objUndo->SetOrderInLayer(-10);
     objUndo->InitializeSet();
     btnUndo->SetText(TEXT("UnDo"));
     btnUndo->SetEvent(bind(&Edit::Undo, this));
@@ -404,9 +401,8 @@ void Edit::Initialize()
     GameObject* objRedo = new GameObject();
     ColorButton* btnRedo = new ColorButton();
     objRedo->AddComponent(btnRedo);
-    btnRedo->SetUIPos({ 1100, 10, -1.0f });
+    btnRedo->SetUIPos({ 400, 400, -1.0f });
     btnRedo->SetUISize({ 90,50 });
-    objRedo->SetOrderInLayer(-10);
     objRedo->InitializeSet();
     btnRedo->SetText(TEXT("ReDo"));
     btnRedo->SetEvent(bind(&Edit::Redo, this));
@@ -447,7 +443,7 @@ void Edit::Start()
 {
     RECT rect;
     GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
-    Camera::GetInstance()->SetPos(UNITSIZE + UNITSIZE / 2, 0);
+    Camera::GetInstance()->SetPos(UNITSIZE * 10, -UNITSIZE * 2);
 }
 
 void Edit::Update()
@@ -470,7 +466,7 @@ void Edit::Update()
 	int cameraSpd = 10;
 	if (GetAsyncKeyState(0x57)) //W
 	{
-		if (Camera::GetInstance()->GetPos().y + cameraSpd < 0)
+		if (Camera::GetInstance()->GetPos().y + cameraSpd < -UNITSIZE * 2)
 			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y + cameraSpd);
 	}
 	if (GetAsyncKeyState(0x53)) //S
@@ -480,7 +476,7 @@ void Edit::Update()
 	}
 	if (GetAsyncKeyState(0x41)) //A
 	{
-		if (Camera::GetInstance()->GetPos().x - cameraSpd >= UNITSIZE + UNITSIZE / 2)
+		if (Camera::GetInstance()->GetPos().x - cameraSpd >= UNITSIZE * 10)
 			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x - cameraSpd, Camera::GetInstance()->GetPos().y);
 	}
 	if (GetAsyncKeyState(0x44)) //D
@@ -492,11 +488,13 @@ void Edit::Update()
 
 	if (Mouse::GetInstance()->IsLeftDown())
     {
-        if (Mouse::GetInstance()->GetPos().y < UNITSIZE)
+        if (Mouse::GetInstance()->GetWinPos().y < UNITSIZE)
             return;
 
-        int x = Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x - UNITSIZE / 2;
-        int y = Mouse::GetInstance()->GetPos().y + Camera::GetInstance()->GetPos().y - UNITSIZE / 2;
+        D3DVIEWPORT9 vp;
+        MainFrame::GetInstance()->GetDevice()->GetViewport(&vp);
+        int x = Mouse::GetInstance()->GetWinPos().x + Camera::GetInstance()->GetPos().x - vp.Width / 2 - UNITSIZE / 2;
+        int y = Mouse::GetInstance()->GetWinPos().y - Camera::GetInstance()->GetPos().y - vp.Height / 2 + UNITSIZE / 2;
 
         int indexX = x / UNITSIZE;
         int indexY = y / UNITSIZE;

@@ -117,7 +117,12 @@ void WindowFrame::BuildWindow()
 
 	m_Pthis->m_hWnd =
 		CreateWindow(WndClass.lpszClassName, L"ÃÖ¿øÁØ",
-			WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+			WS_OVERLAPPED | 
+			WS_CAPTION | 
+			WS_SYSMENU | 
+			WS_MINIMIZEBOX | 
+			WS_CLIPSIBLINGS | 
+			WS_CLIPCHILDREN,
 			0, 0, MAXWINDOWW, MAXWINDOWH,
 			NULL, (HMENU)NULL, m_Pthis->m_Instance, NULL);
 

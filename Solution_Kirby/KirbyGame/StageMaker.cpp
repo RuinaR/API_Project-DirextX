@@ -81,7 +81,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
                     {
                         BoxCollider* newBo = new BoxCollider();
                         (*rowGroup)[endIdx]->AddComponent(newBo);
-                        (*rowGroup)[endIdx]->SetOrderInLayer(1);
                         newBo->ColSize() =
                         { (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE };
                     }
@@ -113,7 +112,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
 	{
        GameObject* defaultMon = new GameObject();
        defaultMon->SetTag(TAG_MONSTER);
-       defaultMon->SetOrderInLayer(2);
        defaultMon->Size() = { UNITSIZE, UNITSIZE};
        defaultMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f });
        defaultMon->AddComponent(new ChangeObject(PlayerMode::mDefault, m_player));
@@ -127,7 +125,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
     {
         GameObject* swordMon = new GameObject();
         swordMon->SetTag(TAG_MONSTER);
-        swordMon->SetOrderInLayer(2);
         swordMon->Size() = { UNITSIZE, UNITSIZE};
         swordMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4 ,(float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f});
         swordMon->AddComponent(new ChangeObject(PlayerMode::mSword, m_player));
@@ -141,7 +138,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
 	{
 		GameObject* stoneMon = new GameObject();
 		stoneMon->SetTag(TAG_MONSTER);
-        stoneMon->SetOrderInLayer(2);
 		stoneMon->Size() = { UNITSIZE, UNITSIZE};
 		stoneMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f});
 		stoneMon->AddComponent(new ChangeObject(PlayerMode::mStone, m_player));
@@ -155,7 +151,6 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
     {
         GameObject* door = new GameObject();
         door->SetTag(TAG_DOOR);
-        door->SetOrderInLayer(2);
         door->Size() = { UNITSIZE, UNITSIZE};
         door->SetPosition({ (float)UNITSIZE * i, (float)-UNITSIZE * j,7.0f});
         door->AddComponent(new BitmapRender(m_door));
@@ -211,6 +206,28 @@ void StageMaker::StageStart()
 
 bool StageMaker::SetMap(string mapName)
 {
+    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land");
+    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
+    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj");
+    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
+    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
+    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
+
+    string path[(int)Arrow::max];
+    path[(int)Arrow::left] = "Bitmaps\\monster\\default\\left";
+    path[(int)Arrow::right] = "Bitmaps\\monster\\default\\right";
+    m_defaultMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
+    m_defaultMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    path[(int)Arrow::left] = "Bitmaps\\monster\\sword\\left";
+    path[(int)Arrow::right] = "Bitmaps\\monster\\sword\\right";
+    m_swordMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
+    m_swordMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    path[(int)Arrow::left] = "Bitmaps\\monster\\stone\\left";
+    path[(int)Arrow::right] = "Bitmaps\\monster\\stone\\right";
+    m_stoneMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
+    m_stoneMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+
+
 	for (vector<vector<GameObject*>>::iterator itr = m_mapObj.begin(); itr != m_mapObj.end(); itr++)
 		itr->clear();
 	m_mapObj.clear();
@@ -267,7 +284,6 @@ bool StageMaker::SetMap(string mapName)
                 BoxCollider* newBo = new BoxCollider();
                 m_mapObj[i][j]->AddComponent(newBo);
                 newBo->ColSize() = { UNITSIZE, (double)(UNITSIZE * cnt) };
-                m_mapObj[i][j]->SetOrderInLayer(1);
             }
         }
     }
@@ -295,12 +311,10 @@ bool StageMaker::SetMap(string mapName)
 					else
 					{
 						m_mapObj[k][j]->DeleteComponent(bo2);
-                        m_mapObj[k][j]->SetOrderInLayer(0);
                         cnt++;
 					}
 				}
                 bo->ColSize() = { bo->ColSize().x , (double)(UNITSIZE * cnt) };
-                bo->GetGameObject()->SetOrderInLayer(1);
 			}
 		}
 	}
@@ -314,32 +328,10 @@ void StageMaker::SetPlayerMode(PlayerMode mode)
 
 void StageMaker::Initialize()
 {
-    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land");
-    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
-    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj");
-    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
-    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
-    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
-
-    string path[(int)Arrow::max];
-    path[(int)Arrow::left] = "Bitmaps\\monster\\default\\left";
-    path[(int)Arrow::right] = "Bitmaps\\monster\\default\\right";
-    m_defaultMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-    m_defaultMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
-    path[(int)Arrow::left] = "Bitmaps\\monster\\sword\\left";
-    path[(int)Arrow::right] = "Bitmaps\\monster\\sword\\right";
-    m_swordMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-    m_swordMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
-    path[(int)Arrow::left] = "Bitmaps\\monster\\stone\\left";
-    path[(int)Arrow::right] = "Bitmaps\\monster\\stone\\right";
-    m_stoneMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-    m_stoneMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
-
     m_playerObj = new GameObject();
     m_player = new Player();
     m_playerObj->AddComponent(m_player);
     m_playerObj->InitializeSet();
-    m_playerObj->SetOrderInLayer(5);
 
     m_playerObj->SetActive(false);
 }

@@ -37,7 +37,6 @@ void MonsterAI::Initialize()
 {
 	GameObject* newGo = new GameObject();
 	m_checker = new LandChecker();
-	newGo->SetOrderInLayer(3);
 	newGo->SetPosition(m_gameObj->Position());
 	newGo->Size() = {0.0f, 0.0f};
 	newGo->AddComponent(m_checker);

@@ -26,7 +26,8 @@ void ChangeObject::Start()
 
 void ChangeObject::Update()
 {
-	
+	if (m_gameObj->GetDestroy())
+		return;
 	if (m_player->GetState() == PlayerAState::eating)
 	{
 		if (m_gameObj->Position().y < m_player->GetGameObject()->Position().y + 50 &&

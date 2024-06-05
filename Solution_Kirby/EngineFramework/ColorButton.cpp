@@ -31,8 +31,8 @@ void ColorButton::Update()
     RECT mouseRect = { sPos.x, sPos.y, sPos.x + m_UISize.x, sPos.y + m_UISize.y };
     // 마우스 포인터가 버튼 영역 안에 있는지 확인하고, 상태를 업데이트합니다.
     POINT point = { 
-        Mouse::GetInstance()->GetPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetPos().y  + Camera::GetInstance()->GetPos().y };
+        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
+        Mouse::GetInstance()->GetDXPos().y  + Camera::GetInstance()->GetPos().y };
     if (!PtInRect(&rect, point))
         m_curColor = m_defaultColor;
 
@@ -89,7 +89,7 @@ void ColorButton::Update()
     sPos = { sPos.x + 10, sPos.y - (rect.bottom - rect.top) / 2 , 0.0f };
 	RECT textRect = { sPos.x, sPos.y, sPos.x + 100, sPos.y + 100 };
     pFont->DrawText(
-		nullptr, m_text.c_str(), -1, &textRect, DT_NOCLIP, D3DCOLOR_XRGB(0, 0, 255));
+		nullptr, m_text.c_str(), -1, &textRect, DT_NOCLIP, m_textColor);
 	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, TRUE);
     pFont->Release();
 }
@@ -160,7 +160,7 @@ void ColorButton::SetBorderColor(COLORREF col)
     m_borderColor = col;
 }
 
-void ColorButton::SetTextColor(COLORREF col)
+void ColorButton::SetTextColor(D3DCOLOR col)
 {
     m_textColor = col;
 }

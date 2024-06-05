@@ -7,7 +7,7 @@ protected:
     COLORREF m_hoverColor = RGB(255, 255, 0);
     COLORREF m_downColor = RGB(0, 255, 0);
     COLORREF m_borderColor = RGB(0, 0, 0);
-    COLORREF m_textColor = RGB(0, 0, 0);
+    D3DCOLOR m_textColor = D3DCOLOR_XRGB(0, 0, 0);
 
     COLORREF m_curColor = NULL;
     D3DXVECTOR3 m_UIPos = D3DXVECTOR3();
@@ -37,7 +37,7 @@ public:
     void SetHoverColor(COLORREF col);
     void SetDownColor(COLORREF col);
     void SetBorderColor(COLORREF col);
-    void SetTextColor(COLORREF col);
+    void SetTextColor(D3DCOLOR col);
     void SetTextSize(int val);
     void SetText(std::wstring str);
 

@@ -217,7 +217,6 @@ void Player::Attack_default()
 			}
 			obj->AddComponent(ao);
 			obj->InitializeSet();
-			obj->SetOrderInLayer(m_gameObj->GetOrderInLayer() + 1);
 			m_state = PlayerAState::attack;
 			UpdateAnim(true);
 			m_atkTrigger = false;
@@ -236,7 +235,6 @@ void Player::Attack_sword()
 		m_atkTrigger = false;
 		GameObject* atk = new GameObject();
 		atk->Size() = { m_atkRange, (float)m_cSize.y };
-		atk->SetOrderInLayer(10);
 		if (m_arrow == Arrow::left)
 		{
 			atk->SetPosition({ (float)m_dOffset.x + m_gameObj->Position().x - m_atkRange - 5, (float)m_dOffset.y + m_gameObj->Position().y,0 });
@@ -321,7 +319,6 @@ void Player::Collision(Collider* other)
 			GameObject* btnObj = new GameObject();
 			ColorButton* btn = new ColorButton();
 			btnObj->AddComponent(btn);
-			btnObj->SetOrderInLayer(10);
 			btnObj->InitializeSet();
 			btn->SetUIPos({ 0,400,-1.0f });
 			btn->SetUISize({ 200,50 });
@@ -336,7 +333,6 @@ void Player::Collision(Collider* other)
 			GameObject* btnObj2 = new GameObject();
 			ColorButton* btn2 = new ColorButton();
 			btnObj2->AddComponent(btn2);
-			btnObj2->SetOrderInLayer(10);
 			btnObj2->InitializeSet();
 			btn2->SetUIPos({ 0,500, -1.0f });
 			btn2->SetUISize({ 200,50 });

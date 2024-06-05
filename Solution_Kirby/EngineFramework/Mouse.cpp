@@ -34,10 +34,8 @@ void Mouse::Initialize()
 
 void Mouse::SetPos(int x, int y)
 {
-	int clientWidth = m_viewport.Width;
-	int clientHeight = m_viewport.Height;
-	this->mPos.x = x - (clientWidth/2);
-	this->mPos.y = (clientHeight / 2) - y;
+	this->mPos.x = x;
+	this->mPos.y = y;
 }
 
 void Mouse::SetPos(D3DXVECTOR2 pos)
@@ -45,7 +43,17 @@ void Mouse::SetPos(D3DXVECTOR2 pos)
 	this->mPos = pos;
 }
 
-D3DXVECTOR2 Mouse::GetPos()
+D3DXVECTOR2 Mouse::GetDXPos()
+{
+	D3DXVECTOR2 dxPos;
+	int clientWidth = m_viewport.Width;
+	int clientHeight = m_viewport.Height;
+	dxPos.x = this->mPos.x - (clientWidth / 2);
+	dxPos.y = (clientHeight / 2) - this->mPos.y;
+	return dxPos;
+}
+
+D3DXVECTOR2 Mouse::GetWinPos()
 {
 	return this->mPos;
 }

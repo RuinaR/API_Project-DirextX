@@ -20,12 +20,11 @@ void StartScene::Start()
 	GameObject* btnObj = new GameObject();
 	ColorButton* btn = new ColorButton();
 	btnObj->AddComponent(btn);
-	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
 	btn->SetUIPos({ -300,0, -1.0f });
 	btn->SetUISize({ 200,100 });
 	btn->SetText(TEXT("GameScene Load"));
-	btn->SetTextColor(RGB(255, 0, 255));
+	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn->SetDefaultColor(RGB(255, 255, 255));
 	btn->SetHoverColor(RGB(200, 200, 200));
 	btn->SetDownColor(RGB(150, 150, 150));
@@ -35,12 +34,11 @@ void StartScene::Start()
 	GameObject* btnObj2 = new GameObject();
 	ColorButton* btn2 = new ColorButton();
 	btnObj2->AddComponent(btn2);
-	btnObj2->SetOrderInLayer(10);
 	btnObj2->InitializeSet();
 	btn2->SetUIPos({ 100,0, -1.0f });
 	btn2->SetUISize({ 200,100 });
 	btn2->SetText(TEXT("EditScene Load"));
-	btn2->SetTextColor(RGB(255, 0, 255));
+	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn2->SetDefaultColor(RGB(255, 255, 255));
 	btn2->SetHoverColor(RGB(200, 200, 200));
 	btn2->SetDownColor(RGB(150, 150, 150));

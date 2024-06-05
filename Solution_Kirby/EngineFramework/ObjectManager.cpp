@@ -37,15 +37,6 @@ void ObjectManager::Destroy()
 
 void ObjectManager::AddObject(GameObject* obj)
 {
-	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
-	{
-		if ((*itr)->GetOrderInLayer() > obj->GetOrderInLayer())
-		{
-			m_objList->insert(itr, obj);
-			obj->Start();
-			return;
-		}
-	}
 	m_objList->push_back(obj);
 	obj->Start();
 }
@@ -65,14 +56,6 @@ bool ObjectManager::UnregisterObject(GameObject* obj)
 
 void ObjectManager::RegisterObject(GameObject* obj)
 {
-	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
-	{
-		if ((*itr)->GetOrderInLayer() > obj->GetOrderInLayer())
-		{
-			m_objList->insert(itr, obj);
-			return;
-		}
-	}
 	m_objList->push_back(obj);
 }
 

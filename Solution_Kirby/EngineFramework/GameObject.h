@@ -9,7 +9,6 @@ protected:
     string m_tag = "";
     D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
     D3DXVECTOR2 m_size = { 0.0f, 0.0f };
-    float m_orderInLayer = 0.0f;
     vector<Component*>* m_vecComponent = nullptr;
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
@@ -41,8 +40,6 @@ public:
     string GetTag();
     void SetActive(bool isActive);
     bool GetActive();
-    void SetOrderInLayer(float value);
-    float GetOrderInLayer();
     Component* AddComponent(Component* component);
     void DeleteComponent(Component* component);
     vector<Component*>* GetComponentVec();

@@ -11,7 +11,7 @@
 
 void GameScene::StartGame()
 {
-	cout << "Start---0" << endl;
+	cout << "Start Game" << endl;
 	if (m_input == nullptr)
 		return;
 	string mapName = m_input->GetString();
@@ -22,7 +22,6 @@ void GameScene::StartGame()
 	}
 	m_btn->GetGameObject()->SetDestroy(true);
 	m_input->GetGameObject()->SetDestroy(true);
-
 	
 	if (!StageMaker::GetInstance()->SetMap(mapName))
 	{
@@ -32,12 +31,11 @@ void GameScene::StartGame()
 	GameObject* btnObj = new GameObject();
 	ColorButton* btn = new ColorButton();
 	btnObj->AddComponent(btn);
-	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
 	btn->SetUIPos({ -700,300, -1.0f });
 	btn->SetUISize({ 200,100 });
 	btn->SetText(TEXT("GameScene Load"));
-	btn->SetTextColor(RGB(255, 0, 255));
+	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn->SetDefaultColor(RGB(255, 255, 255));
 	btn->SetHoverColor(RGB(200, 200, 200));
 	btn->SetDownColor(RGB(150, 150, 150));
@@ -47,12 +45,11 @@ void GameScene::StartGame()
 	GameObject* btnObj2 = new GameObject();
 	ColorButton* btn2 = new ColorButton();
 	btnObj2->AddComponent(btn2);
-	btnObj2->SetOrderInLayer(10);
 	btnObj2->InitializeSet();
 	btn2->SetUIPos({ -700,200, -1.0f });
 	btn2->SetUISize({ 200,100 });
 	btn2->SetText(TEXT("StartScene Load"));
-	btn2->SetTextColor(RGB(255, 0, 255));
+	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn2->SetDefaultColor(RGB(255, 255, 255));
 	btn2->SetHoverColor(RGB(200, 200, 200));
 	btn2->SetDownColor(RGB(150, 150, 150));
@@ -79,18 +76,16 @@ void GameScene::Start()
 	GameObject* obj = new GameObject();
 	m_input = new InputString();
 	obj->AddComponent(m_input);
-	obj->SetOrderInLayer(10);
 	obj->InitializeSet();
 
 	GameObject* btnObj = new GameObject();
 	m_btn = new ColorButton();
 	btnObj->AddComponent(m_btn);
-	btnObj->SetOrderInLayer(10);
 	btnObj->InitializeSet();
 	m_btn->SetUIPos({ -700,200,-1.0f });
 	m_btn->SetUISize({ 200,100 });
 	m_btn->SetText(TEXT("Start Game"));
-	m_btn->SetTextColor(RGB(255, 0, 255));
+	m_btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	m_btn->SetDefaultColor(RGB(255, 255, 255));
 	m_btn->SetHoverColor(RGB(200, 200, 200));
 	m_btn->SetDownColor(RGB(150, 150, 150));
