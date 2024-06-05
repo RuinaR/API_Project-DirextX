@@ -26,7 +26,7 @@ void MonsterAI::Collision(Collider* other)
 			m_ar->ChangeAnim(m_anim[(int)Arrow::left]);
 			m_arrow = Arrow::left;
 		}
-		m_bo->GetBody()->SetLinearVelocity({ m_arrowVal * m_speed ,m_bo->GetBody()->GetLinearVelocity().y });
+		m_bo->GetBody()->SetLinearVelocity({ m_arrowVal * m_speed ,m_bo->GetBody()->GetLinearVelocity().y + 50 });
 	}
 }
 
