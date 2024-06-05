@@ -1,5 +1,4 @@
-﻿  pch.cpp
-  Box2D.cpp
+﻿  Box2D.cpp
   b2_broad_phase.cpp
   b2_chain_shape.cpp
   b2_circle_shape.cpp
@@ -8,15 +7,16 @@
   b2_collide_polygon.cpp
   b2_collision.cpp
   b2_distance.cpp
-  b2_dynamic_tree.cpp
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\Box2D.cpp(5,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_broad_phase.cpp(132,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_chain_shape.cpp(186,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_circle_shape.cpp(106,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_collide_circle.cpp(159,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_chain_shape.cpp(184,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_circle_shape.cpp(105,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_collide_circle.cpp(158,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_collide_edge.cpp(525,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_collide_polygon.cpp(244,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_collision.cpp(581,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_distance.cpp(745,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
+  b2_dynamic_tree.cpp
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_dynamic_tree.cpp(802,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?
   b2_edge_shape.cpp
 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Box2D\box2d\src\collision\b2_edge_shape.cpp(159,1): error C1010: 미리 컴파일된 헤더를 찾는 동안 예기치 않은 파일의 끝이 나타났습니다. '#include "pch.h"'을(를) 소스에 추가하시겠습니까?

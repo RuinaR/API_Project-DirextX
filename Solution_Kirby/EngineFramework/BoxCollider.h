@@ -6,7 +6,7 @@ protected:
 	void ColInit() final;
 	void ColRelease() final;
 public:
-	BoxCollider();
+	BoxCollider(b2BodyType type);
 	~BoxCollider() override;
 };
 

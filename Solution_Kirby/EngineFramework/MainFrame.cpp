@@ -111,12 +111,13 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
     
     Mouse::GetInstance()->Initialize();
 	ObjectManager::Create();
-	CollisionManager::Create();
+	//CollisionManager::Create();
 
 	m_scene = scene;
 	WindowFrame::GetInstance()->SetScene(m_scene);
 
     m_pWorld = new b2World(m_gravity);
+    m_pWorld->SetContactListener(&m_cListener);
 }
 
 int MainFrame::Run()
@@ -129,6 +130,8 @@ int MainFrame::Run()
     double fpsCheckTime = 0.0;
     m_timer.tick();  // 최초 시간 초기화
 
+    int32 velocityIterations = 6;
+    int32 positionIterations = 2;
     ShowWindow(m_hWnd, SW_SHOWDEFAULT);
     UpdateWindow(m_hWnd);
     while (TRUE) 
@@ -150,10 +153,9 @@ int MainFrame::Run()
 			{
 				frameCount++;
 				fpsCheckTime += m_timer.getTotalDeltaTime();
-				static int32 velocityIterations = 6;
-				static int32 positionIterations = 2;
+				
                 m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
-
+                
 				if (NULL == m_pd3dDevice)
 					return -1;
 
@@ -162,7 +164,7 @@ int MainFrame::Run()
 				{
 					//UPDATE, RENDER
 					ObjectManager::GetInstance()->Update();
-                    CollisionManager::GetInstance()->Update();
+                    //CollisionManager::GetInstance()->Update();
 					InvalidateRect(WindowFrame::GetInstance()->GetHWND(), NULL, FALSE);
 					UpdateWindow(WindowFrame::GetInstance()->GetHWND());
 
@@ -195,11 +197,16 @@ LPDIRECT3DDEVICE9 MainFrame::GetDevice()
     return m_pd3dDevice;
 }
 
+b2World* MainFrame::GetBox2dWorld()
+{
+    return m_pWorld;
+}
+
 void MainFrame::Release()
 {
 	ObjectManager::GetInstance()->Release();
 	ObjectManager::Destroy();
-	CollisionManager::Destroy();
+	//CollisionManager::Destroy();
 
     if (m_pd3dDevice != NULL)
         m_pd3dDevice->Release();
@@ -211,4 +218,55 @@ void MainFrame::Release()
         m_pFont->Release();
 
     delete m_pWorld;
+}
+
+void CollisionListener::BeginContact(b2Contact* contact)
+{
+    cout << "BeginCollision" << endl;
+    return;
+
+    b2Fixture* fixtureA = contact->GetFixtureA();
+    b2Fixture* fixtureB = contact->GetFixtureB();
+
+    // Fixture에서 사용자 정의 데이터 가져오기
+    BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
+    BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+
+    dataA->OnCollisionEnter(dataB);
+    dataB->OnCollisionEnter(dataA);
+}
+
+void CollisionListener::EndContact(b2Contact* contact)
+{
+    cout << "EndCollision" << endl;
+    return;
+
+    b2Fixture* fixtureA = contact->GetFixtureA();
+    b2Fixture* fixtureB = contact->GetFixtureB();
+
+    // Fixture에서 사용자 정의 데이터 가져오기
+    BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
+    BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+
+    dataA->OnCollisionExit(dataB);
+    dataB->OnCollisionExit(dataA);
+}
+
+void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+{
+    return;
+
+    b2Fixture* fixtureA = contact->GetFixtureA();
+    b2Fixture* fixtureB = contact->GetFixtureB();
+
+    // Fixture에서 사용자 정의 데이터 가져오기
+    BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
+    BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+
+    dataA->OnCollision(dataB);
+    dataB->OnCollision(dataA);
+}
+
+void CollisionListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+{
 }

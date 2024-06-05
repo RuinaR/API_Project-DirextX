@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "structs.h"
+#include "BoxCollider.h"
 class GameObject
 {
 protected:
@@ -12,6 +13,7 @@ protected:
     vector<Component*>* m_vecComponent = nullptr;
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
+    BoxCollider* m_box;
 public:
     GameObject();
     virtual ~GameObject();

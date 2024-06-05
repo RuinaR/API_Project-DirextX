@@ -6,7 +6,7 @@ void LandChecker::Initialize()
 	m_box = m_gameObj->GetComponent<BoxCollider>();
 	if (m_box == nullptr)
 	{
-		m_box = new BoxCollider();
+		m_box = new BoxCollider(b2BodyType::b2_kinematicBody);
 		m_box->SetTrigger(true);
 		m_gameObj->AddComponent(m_box);
 	}
@@ -27,15 +27,15 @@ void LandChecker::Update()
 
 void LandChecker::CollisionEnter(Collider* other)
 {
-	if (other->GetGameObject()->GetTag() == TAG_LAND)
-	{
-		m_isOnLand = true;
-	}
+	//if (other->GetGameObject()->GetTag() == TAG_LAND)
+	//{
+	//	m_isOnLand = true;
+	//}
 }
 
 void LandChecker::CollisionExit(Collider* other)
 {
-	for (set<Collider*>::iterator itr = m_box->SetCol()->begin(); itr != m_box->SetCol()->end(); itr++)
+	/*for (set<Collider*>::iterator itr = m_box->SetCol()->begin(); itr != m_box->SetCol()->end(); itr++)
 	{
 		if ((*itr)->GetGameObject()->GetTag() == TAG_LAND)
 		{
@@ -43,7 +43,7 @@ void LandChecker::CollisionExit(Collider* other)
 			return;
 		}
 	}
-	m_isOnLand = false;
+	m_isOnLand = false;*/
 }
 
 void LandChecker::Collision(Collider* other)

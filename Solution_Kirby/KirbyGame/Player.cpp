@@ -29,12 +29,13 @@ void Player::UpdateAnim(bool isOneTime)
 
 void Player::FlyAction()
 {
-	if (!m_rig->GetIsOnLand())
+	if (true/*!m_rig->GetIsOnLand()*/)
 	{
 		if (GetAsyncKeyState(m_atkKey)) //떨어지기
 		{
 			m_state = PlayerAState::idle;
-			m_rig->Velocity().y = 0.0f;
+			//m_rig->Velocity().y = 0.0f;
+			m_body->SetLinearVelocity({ 0, 0});
 			UpdateAnim(false);
 			return;
 		}
@@ -43,36 +44,41 @@ void Player::FlyAction()
 			m_flyTimer.tick();
 			if (m_flyTimer.getTotalDeltaTime() > m_dblTime * 2)
 			{
-				m_rig->Velocity().y = +m_speed_fly;
+				//m_rig->Velocity().y = +m_speed_fly;
+				m_body->SetLinearVelocity({ 0, m_speed_fly });
 				m_flyTimer.resetTotalDeltaTime();
 			}
 		}
 		if (GetAsyncKeyState(m_rightKey))//우측 fly 이동
 		{
-			m_rig->Velocity() = { m_speed / 2, m_rig->Velocity().y };
+			//m_rig->Velocity() = { m_speed / 2, m_rig->Velocity().y };
+			m_body->SetLinearVelocity({ m_speed / 2, m_body->GetLinearVelocity().y });
 			m_arrow = Arrow::right;
 		}
 		else if (GetAsyncKeyState(m_leftKey))//좌측 fly 이동
 		{
-			m_rig->Velocity() = { -m_speed / 2, m_rig->Velocity().y };
+			//m_rig->Velocity() = { -m_speed / 2, m_rig->Velocity().y };
+			m_body->SetLinearVelocity({ -m_speed / 2, m_body->GetLinearVelocity().y });
 			m_arrow = Arrow::left;
 		}
 		else //fly idle
 		{
-			m_rig->Velocity() = { 0.0f, m_rig->Velocity().y };
+			//m_rig->Velocity() = { 0.0f, m_rig->Velocity().y };
+			m_body->SetLinearVelocity({ 0, m_body->GetLinearVelocity().y });
 		}
 	}
 	else
 	{
 		m_state = PlayerAState::idle;
-		m_rig->Velocity() = { 0.0f, 0.0f };
+		//m_rig->Velocity() = { 0.0f, 0.0f };
+		m_body->SetLinearVelocity({0, 0 });
 	}
 	UpdateAnim(false);
 }
 
 void Player::MoveLeft()
 {
-	if (m_rig->GetIsOnLand())
+	//if (m_rig->GetIsOnLand())
 	{
 		m_arrow = Arrow::left;
 		UpdateAnim(false);
@@ -98,13 +104,14 @@ void Player::MoveLeft()
 			m_state = PlayerAState::walk;
 		}
 		UpdateAnim(false);
-		m_rig->Velocity() = { m_curXSpeed, m_rig->Velocity().y };
+		//m_rig->Velocity() = { m_curXSpeed, m_rig->Velocity().y };
+		m_body->SetLinearVelocity({ m_curXSpeed, m_body->GetLinearVelocity().y });
 	}
 }
 
 void Player::MoveRight()
 {
-	if (m_rig->GetIsOnLand())
+	//if (m_rig->GetIsOnLand())
 	{
 		m_arrow = Arrow::right;
 		UpdateAnim(false);
@@ -130,7 +137,8 @@ void Player::MoveRight()
 			m_state = PlayerAState::walk;
 		}
 		UpdateAnim(false);
-		m_rig->Velocity() = { m_curXSpeed, m_rig->Velocity().y };
+		//m_rig->Velocity() = { m_curXSpeed, m_rig->Velocity().y };
+		m_body->SetLinearVelocity({ m_curXSpeed, m_body->GetLinearVelocity().y });
 	}
 }
 
@@ -138,18 +146,19 @@ void Player::JumpAction()
 {
 	//점프
 	m_flyTimer.tick();
-	if (m_rig->GetIsOnLand())
+	if(true)//if (m_rig->GetIsOnLand())
 	{
 		if (m_state == PlayerAState::eat_idle ||
 			m_state == PlayerAState::eat_move ||
 			m_state == PlayerAState::eat_jump)
 		{
-			m_rig->Velocity() = { m_curXSpeed, -m_JumpV * 0.5f  };
+			//m_rig->Velocity() = { m_curXSpeed, -m_JumpV * 0.5f  };
 			m_state = PlayerAState::eat_jump;
 		}
 		else
 		{
-			m_rig->Velocity() = { m_curXSpeed, -m_JumpV };
+			//m_rig->Velocity() = { m_curXSpeed, -m_JumpV };
+			m_body->SetLinearVelocity({ m_body->GetLinearVelocity().x, m_JumpV });
 			m_state = PlayerAState::jump;
 		}
 		cout << "Jump" << endl;
@@ -157,12 +166,12 @@ void Player::JumpAction()
 	else if (m_flyTimer.getDeltaTime() > m_dblTime && 
 		(m_state != PlayerAState::eat_idle && 
 			m_state != PlayerAState::eat_jump && 
-			m_state != PlayerAState::eat_move && 
-			!m_rig->GetIsOnLand()))//날기 start
+			m_state != PlayerAState::eat_move /* &&
+			!m_rig->GetIsOnLand()*/))//날기 start
 	{
 		m_state = PlayerAState::fly;
-		m_rig->Velocity().y = -m_speed_fly;
-		m_rig->SetGravity(m_flyGravity);
+		//m_rig->Velocity().y = -m_speed_fly;
+		//m_rig->SetGravity(m_flyGravity);
 		cout << "Fly" << endl;
 	}
 	UpdateAnim(true);
@@ -180,18 +189,18 @@ void Player::Idle()
 	{
 		m_state = PlayerAState::idle;
 	}
-	m_rig->Velocity() = { 0.0f, 0.0f };
+	//m_rig->Velocity() = { 0.0f, 0.0f };
 	m_curXSpeed = 0.0f;
 	UpdateAnim(false);
 }
 
 void Player::Attack_default()
 {
-	if (m_rig->GetIsOnLand() &&
+	if (/*m_rig->GetIsOnLand() &&*/
 		m_state != PlayerAState::eat_idle &&
 		m_state != PlayerAState::eat_move) //흡수(기본상태)
 	{
-		m_rig->Velocity() = { 0.0f, 0.0f };
+		//m_rig->Velocity() = { 0.0f, 0.0f };
 		m_state = PlayerAState::eating;
 		UpdateAnim(false);
 		m_atkTrigger = false;
@@ -228,7 +237,7 @@ void Player::Attack_default()
 void Player::Attack_sword()
 {
 	if (m_state != PlayerAState::fly && 
-		!(m_state == PlayerAState::idle && !m_rig->GetIsOnLand()))
+		!(m_state == PlayerAState::idle /*&& !m_rig->GetIsOnLand()*/))
 	{
 		m_state = PlayerAState::attack;
 		UpdateAnim(true);
@@ -243,7 +252,7 @@ void Player::Attack_sword()
 		{
 			atk->SetPosition({ (float)m_dOffset.x + m_gameObj->Position().x + (float)m_cSize.x + 5, (float)m_dOffset.y + m_gameObj->Position().y,0 });
 		}
-		BoxCollider* newbo = new BoxCollider();
+		BoxCollider* newbo = new BoxCollider(b2BodyType::b2_kinematicBody);
 		newbo->SetTrigger(true);
 		atk->AddComponent(newbo);
 		atk->AddComponent(new AttackEvent());
@@ -265,7 +274,7 @@ void Player::Attack_stone()
 		m_state = PlayerAState::attack;
 		UpdateAnim(true);
 		m_atkTrigger = false;
-		m_rig->Velocity() = { 0.0f, m_rig->Velocity().y };
+		//m_rig->Velocity() = { 0.0f, m_rig->Velocity().y };
 	}
 }
 
@@ -281,7 +290,7 @@ void Player::StoneAttacking()
 		if (m_atkTrigger)
 		{
 			Idle();
-			m_rig->SetGravity(m_startGravity);
+			//m_rig->SetGravity(m_startGravity);
 			m_atkTrigger = false;
 		}
 	}
@@ -375,11 +384,11 @@ void Player::Collision(Collider* other)
 		UpdateAnim(true);
 		if (m_arrow == Arrow::left)
 		{
-			m_rig->Velocity() = {300,350};
+			//m_rig->Velocity() = {300,350};
 		}
 		else
 		{
-			m_rig->Velocity() = {-300,350};
+			//m_rig->Velocity() = {-300,350};
 		}
 	}
 }
@@ -435,13 +444,13 @@ void Player::Initialize()
 		}
 	}
 	m_ar = new AnimationRender(m_arrAnim[(int)PlayerMode::mDefault][(int)Arrow::right][(int)PlayerAState::idle]);
-	m_rig = new Rigidbody();
-	m_bo = new BoxCollider();
-	m_rig->SetGravity(0.0f);
+	//m_rig = new Rigidbody();
+	m_bo = new BoxCollider(b2BodyType::b2_dynamicBody);
+	//m_rig->SetGravity(0.0f);
 	m_gameObj->AddComponent(m_bo);
 	m_gameObj->AddComponent(m_ar);
-	m_gameObj->AddComponent(m_rig);
-
+	//m_gameObj->AddComponent(m_rig);
+	m_body = m_bo->GetBody();
 	m_leftKey = VK_LEFT;
 	m_rightKey = VK_RIGHT;
 	m_jumpKey = VK_SPACE;
@@ -467,16 +476,13 @@ void Player::Release()
 
 void Player::Start()
 {
-	m_rig->SetGravity(m_startGravity);
+	//m_rig->SetGravity(m_startGravity);
 	m_bo->ColOffset() = m_dOffset;
-	m_bo->ColSize() = m_cSize;
+	m_bo->SetColSize(m_cSize);
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
-	//Camera::GetInstance()->SetPos(
-	//	m_gameObj->Position().x + rect.right / 2 + m_gameObj->Size().x / 2,
-	//	m_gameObj->Position().y - rect.bottom / 2 + m_gameObj->Size().y / 2);
-	if (m_rig)
-		m_rig->SetNoFriction(true);
+	/*if (m_rig)
+		m_rig->SetNoFriction(true);*/
 
 	m_flyTimer.tick();
 	m_leftKeyTimer.tick();
@@ -485,14 +491,15 @@ void Player::Start()
 
 void Player::Update()
 {
-	if (!m_rig)	return;
+	//if (!m_rig)	return;
 	if (!m_ar)	return;
 
+	cout << "x : " << m_body->GetPosition().x << "y : " << m_body->GetPosition().y << endl;
 	D3DXVECTOR3 playerPos = m_gameObj->Position();  // 플레이어 위치
 	D3DXVECTOR3 camPos = Camera::GetInstance()->GetPos();  // 현재 카메라 위치
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
-	if (m_state != PlayerAState::fly)m_rig->SetGravity(m_startGravity);
+	//if (m_state != PlayerAState::fly)m_rig->SetGravity(m_startGravity);
 	// 선형 보간을 사용하여 카메라 위치 업데이트
 	float smoothFactor = 0.02f;  // 부드러운 이동을 위한 보간 계수
 	D3DXVECTOR2 newCamPos = {
@@ -504,7 +511,7 @@ void Player::Update()
 	if (m_mode == PlayerMode::mStone &&
 		m_state == PlayerAState::attack)
 	{
-		m_rig->SetGravity(m_stoneGravity);
+		//m_rig->SetGravity(m_stoneGravity);
 		StoneAttacking();
 		return;
 	}
@@ -546,7 +553,7 @@ void Player::Update()
 		return;
 	}
 
-	if (m_rig->GetIsOnLand() && !GetAsyncKeyState(m_leftKey) && !GetAsyncKeyState(m_rightKey) && !GetAsyncKeyState(m_atkKey)) 	//Idle
+	if (/*m_rig->GetIsOnLand() &&*/ !GetAsyncKeyState(m_leftKey) && !GetAsyncKeyState(m_rightKey) && !GetAsyncKeyState(m_atkKey)) 	//Idle
 		Idle();
 
 	if (!GetAsyncKeyState(m_atkKey))

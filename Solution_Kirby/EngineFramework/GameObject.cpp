@@ -19,6 +19,9 @@ void GameObject::SetPosition(D3DXVECTOR3 v)
 	m_position.x = v.x;
 	m_position.y = v.y;
     m_position.z = v.z;
+    if (m_box != nullptr)
+        m_box->GetBody()->SetTransform({ m_position.x, m_position.y }, 0.0f);
+    
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
 		(*itr)->AddPosition(d);
 }
@@ -28,6 +31,8 @@ void GameObject::AddPosition(D3DXVECTOR3 v)
 	m_position.x += v.x;
 	m_position.y += v.y;
     m_position.z += v.z;
+    if (m_box != nullptr)
+        m_box->GetBody()->SetTransform({ m_position.x, m_position.y }, 0.0f);
 
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
 		(*itr)->AddPosition(v);
@@ -92,6 +97,7 @@ vector<Component*>* GameObject::GetComponentVec() {
 
 void GameObject::InitializeSet() {
     m_isDestroy = false;
+    m_box = GetComponent<BoxCollider>();
 	ObjectManager::GetInstance()->AddObject(this);
 }
 

@@ -1,6 +1,17 @@
 #pragma once
 #include "Scene.h"
 #include "Timer.h"
+#include "BoxCollider.h"
+
+class CollisionListener : public b2ContactListener
+{
+public:
+	void BeginContact(b2Contact* contact) override;
+	void EndContact(b2Contact* contact) override;
+	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
+	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
+};
+
 class MainFrame
 {
 private:
@@ -13,6 +24,7 @@ private:
 
 	b2Vec2 m_gravity = { 0.0f, -10.0f };
 	b2World* m_pWorld;
+	CollisionListener m_cListener;
 private:
 
 	HWND m_hWnd;
@@ -35,6 +47,7 @@ public:
 	int Run();
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();
+	b2World* GetBox2dWorld();
 private:
 	void Release();
 };

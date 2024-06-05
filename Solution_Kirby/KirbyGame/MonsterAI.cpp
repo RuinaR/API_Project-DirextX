@@ -53,11 +53,10 @@ void MonsterAI::Initialize()
 	m_bo = m_gameObj->GetComponent<BoxCollider>();
 	if (m_bo == nullptr)
 	{
-		m_bo = new BoxCollider();
+		m_bo = new BoxCollider(b2BodyType::b2_dynamicBody);
 		m_gameObj->AddComponent(m_bo);
 	}
-	m_bo->ColSize().x = m_gameObj->Size().x / 2;
-	m_bo->ColSize().y = m_gameObj->Size().y / 2;
+	m_bo->SetColSize({ m_gameObj->Size().x / 2,  m_gameObj->Size().y / 2 });
 	m_bo->ColOffset().x = m_gameObj->Size().x / 4;
 	m_bo->ColOffset().y = m_gameObj->Size().y / 4;
 }
@@ -69,8 +68,7 @@ void MonsterAI::Release()
 void MonsterAI::Start()
 {
 	int m_arrowVal = 1;
-	m_checker->GetCollider()->ColSize().x = m_bo->ColSize().x / 4;
-	m_checker->GetCollider()->ColSize().y = m_bo->ColSize().y / 4;
+	m_checker->GetCollider()->SetColSize({ m_bo->GetColSize().x / 4 , m_bo->GetColSize().y / 4 });;
 	m_checker->GetCollider()->ColOffset().x = m_bo->ColOffset().x + m_gameObj->Size().x / 2;
 	m_checker->GetCollider()->ColOffset().y = m_bo->ColOffset().y - m_gameObj->Size().y / 2;
 }

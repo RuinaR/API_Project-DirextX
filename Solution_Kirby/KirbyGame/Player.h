@@ -2,11 +2,12 @@
 #include "Component.h"
 #include "Rigidbody.h"
 #include "game.h"
+#include "BoxCollider.h"
 
 class Player : public Component
 {
 protected:
-	Rigidbody* m_rig = nullptr;
+	//Rigidbody* m_rig = nullptr;
 	AnimationRender* m_ar = nullptr;
 	BoxCollider* m_bo = nullptr;
 	Animation m_arrAnim[(int)PlayerMode::max][(int)Arrow::max][(int)PlayerAState::max];
@@ -20,6 +21,8 @@ protected:
 	Vector2D m_dSize = { UNITSIZE,UNITSIZE };
 	Vector2D m_cSize = { 70,70 };
 	Vector2D m_dOffset = { 10,10 };
+
+	b2Body* m_body = nullptr;
 	float m_atkRange = 60.0f;
 	bool m_leftKeyTrigger = false;
 	bool m_rightKeyTrigger = false;
@@ -40,7 +43,7 @@ protected:
 	float m_speed_fly = 150.0f;
 	float m_eatSpeed = 150.0f;
 	float m_curXSpeed = 0.0f;
-	float m_JumpV = -600.0f;
+	float m_JumpV = 300.0f;
 
 	float m_startGravity = 1200.0f;
 	float m_flyGravity = 500.0f;

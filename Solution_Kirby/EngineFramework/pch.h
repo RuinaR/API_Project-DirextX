@@ -28,7 +28,7 @@
 
 #include "AnimationManager.h"
 #include "ObjectManager.h"
-#include "CollisionManager.h"
+//#include "CollisionManager.h"
 #include "MainFrame.h"
 #include "WindowFrame.h"
 #include "Mouse.h"

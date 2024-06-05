@@ -79,15 +79,13 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
                     BoxCollider* bo = (*rowGroup)[endIdx]->GetComponent<BoxCollider>();
                     if (bo == nullptr)
                     {
-                        BoxCollider* newBo = new BoxCollider();
+                        BoxCollider* newBo = new BoxCollider(b2BodyType::b2_staticBody);
                         (*rowGroup)[endIdx]->AddComponent(newBo);
-                        newBo->ColSize() =
-                        { (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE };
+                        newBo->SetColSize({ (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE });
                     }
                     else
                     {
-                        bo->ColSize() =
-                        { (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE };
+                        bo->SetColSize( { (double)(UNITSIZE * (startIdx - endIdx + 2)) ,(double)UNITSIZE });
                     }
                     for (int q = endIdx; q < startIdx + 1; q++)
                     {
@@ -154,7 +152,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup,
         door->Size() = { UNITSIZE, UNITSIZE};
         door->SetPosition({ (float)UNITSIZE * i, (float)-UNITSIZE * j,7.0f});
         door->AddComponent(new BitmapRender(m_door));
-        BoxCollider* bo = new BoxCollider();
+        BoxCollider* bo = new BoxCollider(b2BodyType::b2_kinematicBody);
         bo->SetTrigger(true);
         door->AddComponent(bo);
         door->InitializeSet();
@@ -281,9 +279,9 @@ bool StageMaker::SetMap(string mapName)
                     else
                         break;
                 }
-                BoxCollider* newBo = new BoxCollider();
+                BoxCollider* newBo = new BoxCollider(b2BodyType::b2_staticBody);
                 m_mapObj[i][j]->AddComponent(newBo);
-                newBo->ColSize() = { UNITSIZE, (double)(UNITSIZE * cnt) };
+                newBo->SetColSize({ UNITSIZE, (double)(UNITSIZE * cnt) });
             }
         }
     }
@@ -297,14 +295,14 @@ bool StageMaker::SetMap(string mapName)
                 continue;
             BoxCollider* bo = m_mapObj[i][j]->GetComponent<BoxCollider>();
 			int cnt = 1;
-			if (bo != nullptr && EqualFloat(bo->ColSize().y, UNITSIZE, 0.1f))
+			if (bo != nullptr && EqualFloat(bo->GetColSize().y, UNITSIZE, 0.1f))
 			{
 				for (int k = i + 1; k < m_mapObj.size(); k++)
 				{
                     if (m_mapObj[k][j] == nullptr || m_mapObj[k][j]->GetTag() != TAG_LAND)
                         break;
 					BoxCollider* bo2 = m_mapObj[k][j]->GetComponent<BoxCollider>();
-					if (bo2 == nullptr || !EqualFloat(bo->ColSize().x, bo2->ColSize().x, 0.1f))
+					if (bo2 == nullptr || !EqualFloat(bo->GetColSize().x, bo2->GetColSize().x, 0.1f))
 					{
 						break;
 					}
@@ -314,7 +312,7 @@ bool StageMaker::SetMap(string mapName)
                         cnt++;
 					}
 				}
-                bo->ColSize() = { bo->ColSize().x , (double)(UNITSIZE * cnt) };
+                bo->SetColSize({ bo->GetColSize().x , (double)(UNITSIZE * cnt) });
 			}
 		}
 	}
