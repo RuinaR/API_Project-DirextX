@@ -53,7 +53,8 @@ public:
     void SetParent(GameObject* obj);
     void AddChild(GameObject* obj);
     void DeleteChild(GameObject* obj);
-    float& Angle();
+    const float& GetAngle();
+    void SetAngle(float v);
 
     void OnCollisionEnter(Collider* col);
     void OnCollisionStay(Collider* col);

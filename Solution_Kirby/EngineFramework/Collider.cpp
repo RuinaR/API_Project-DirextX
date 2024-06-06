@@ -1,29 +1,59 @@
 #include "pch.h"
 #include "Collider.h"
 
+void CheckBody(b2Body* body)
+{
+	if (body->IsFixedRotation()) 
+	{
+		body->SetFixedRotation(false);  // 회전을 고정하지 않도록 설정
+	}
+
+	b2MassData massData;
+	massData = body->GetMassData();
+
+	if (massData.I < 1e-5) 
+	{
+		massData.I = 1.0f;  // 적절한 값으로 설정
+		body->SetMassData(&massData);
+	}
+
+	b2Fixture* fixture = body->GetFixtureList();
+	while (fixture)
+	{
+		float friction = fixture->GetFriction();
+		if (friction < 0.1f)
+		{
+			fixture->SetFriction(0.5f);  // 적절한 값으로 설정
+		}
+		fixture = fixture->GetNext();
+	}
+}
+
 void Collider::RenderCollider()
 {
-	D3DXMATRIX matTranslate, matScale, matWorld;
+	D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
 
 	b2Vec2 position = m_body->GetPosition();
 	
 	D3DXMatrixTranslation(&matTranslate, position.x, position.y, -9.0f);
 	D3DXMatrixScaling(&matScale, m_colSize.x + 1, m_colSize.y + 1, 1.0f);
-	matWorld = matScale * matTranslate;
+	D3DXMatrixRotationZ(&matRotate, m_body->GetAngle());
+	matWorld = matScale * matRotate * matTranslate;
 
+	MainFrame::GetInstance()->GetDevice()->SetTexture(0, nullptr);
 	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);
 	MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_DEBUGVERTEX);
 
 	DEBUGVERTEX vertices[] =
 	{
-		{-0.5f, -0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{ 0.5f, -0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{ 0.5f, -0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{ 0.5f,  0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{ 0.5f,  0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{-0.5f,  0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{-0.5f,  0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
-		{-0.5f, -0.5f, 0.0f, D3DCOLOR_XRGB(255,255,255)},
+		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
+		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
+		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
+		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
+		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
+		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
+		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
+		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
 	};
 
 	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -45,8 +75,11 @@ void Collider::Update()
 		m_body->GetPosition().y,
 		m_gameObj->Position().z });
 
+	m_gameObj->SetAngle(m_body->GetAngle());
+
 	if (DEBUGMODE)
 		RenderCollider();
+
 }
 const Vector2D& Collider::GetColSize()
 {
@@ -65,20 +98,13 @@ void Collider::CreateBody(Vector2D offset, Vector2D size)
 
 	b2BodyDef bodyDef;
 	bodyDef.type = m_type;
-	bodyDef.fixedRotation = true;
+	bodyDef.fixedRotation = false;
 	bodyDef.position.Set(
 		m_gameObj->Position().x + (float)m_colOffset.x,
 		m_gameObj->Position().y + (float)m_colOffset.y);
 	bodyDef.angle = 0.0f;
-	if (!MainFrame::GetInstance()->GetBox2dWorld()->IsLocked())
-	{
-		m_body = MainFrame::GetInstance()->GetBox2dWorld()->CreateBody(&bodyDef);
-	}
-	else 
-	{
-		cerr << "Failed to create body!" << endl;
-		return;
-	}
+	m_body = MainFrame::GetInstance()->GetBox2dWorld()->CreateBody(&bodyDef);
+	
 	b2PolygonShape box;
 	box.SetAsBox(m_colSize.x / 2.0f, m_colSize.y / 2.0f);
 
@@ -86,18 +112,21 @@ void Collider::CreateBody(Vector2D offset, Vector2D size)
 	fixtureDef.shape = &box;
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.3f;
-	fixtureDef.restitution = 0.1f;
+	fixtureDef.restitution = 0.5f;
 	m_body->CreateFixture(&fixtureDef);
 
-	float inertia = m_body->GetInertia();
+	/*float inertia = m_body->GetInertia();
 	b2MassData data;
 	data.center = b2Vec2(0, 0);
 	data.mass = 1.0f;
 	data.I = inertia;
-	m_body->SetMassData(&data);
+	m_body->SetMassData(&data);*/
 
-	m_body->SetGravityScale(30.0);
+	m_body->SetFixedRotation(false);
+	//m_body->SetGravityScale(30.0);
 	m_body->GetUserData().pointer = (uintptr_t)this;
+
+	CheckBody(m_body);
 }
 void Collider::Initialize()
 {
@@ -109,6 +138,7 @@ void Collider::Release()
 {
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
 	MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+	m_body = nullptr;
 	ColRelease();
 }
 

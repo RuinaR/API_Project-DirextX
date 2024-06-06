@@ -100,7 +100,7 @@ void WindowFrame::SetScene(Scene* scene)
 void WindowFrame::Initialize()
 {
 	BuildWindow();
-	MoveWindow(m_Pthis->m_hWnd, 100, 100, 1440, 900, TRUE);
+	//MoveWindow(m_Pthis->m_hWnd, 100, 100, 1440, 900, TRUE);
 	SetFocus(m_Pthis->m_hWnd);
 }
 

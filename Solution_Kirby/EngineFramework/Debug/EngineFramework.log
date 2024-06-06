@@ -1,16 +1,19 @@
 ﻿  Collider.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(11,60): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(39,60): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
   
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(11,43): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(39,43): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
   
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(83,47): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(109,47): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
   
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(83,27): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(109,27): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
   
+  CollisionManager.cpp
+  WindowFrame.cpp
+  코드를 생성하고 있습니다...
 d3d9.lib(d3d9.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __imp__D3DXWeldVertices@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXWeldVertices@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.

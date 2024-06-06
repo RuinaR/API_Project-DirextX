@@ -15,5 +15,5 @@ void Door::Start()
 
 void Door::Update()
 {
-	m_gameObj->Angle() += 0.01f;
+	m_gameObj->SetAngle(m_gameObj->GetAngle() + 0.001f);
 }

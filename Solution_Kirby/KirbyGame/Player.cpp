@@ -379,23 +379,23 @@ void Player::Collision(Collider* other)
 			other->GetGameObject()->SetDestroy(true);//적 데미지
 		}
 	}
-	else if (m_state != PlayerAState::eating && m_state != PlayerAState::hit &&
-		(other->GetGameObject()->GetTag() == TAG_HIT || other->GetGameObject()->GetTag() == TAG_MONSTER)) //피격
-	{
-		m_mode = PlayerMode::mDefault;
-		m_state = PlayerAState::hit;
-		UpdateAnim(true);
-		if (m_arrow == Arrow::left)
-		{
-			//m_rig->Velocity() = {300,350};
-			m_body->SetLinearVelocity({ 300, 350 });
-		}
-		else
-		{
-			//m_rig->Velocity() = {-300,350};
-			m_body->SetLinearVelocity({ -300, 350 });
-		}
-	}
+	//else if (m_state != PlayerAState::eating && m_state != PlayerAState::hit &&
+	//	(other->GetGameObject()->GetTag() == TAG_HIT || other->GetGameObject()->GetTag() == TAG_MONSTER)) //피격
+	//{
+	//	m_mode = PlayerMode::mDefault;
+	//	m_state = PlayerAState::hit;
+	//	UpdateAnim(true);
+	//	if (m_arrow == Arrow::left)
+	//	{
+	//		//m_rig->Velocity() = {300,350};
+	//		m_body->SetLinearVelocity({ 300, 350 });
+	//	}
+	//	else
+	//	{
+	//		//m_rig->Velocity() = {-300,350};
+	//		m_body->SetLinearVelocity({ -300, 350 });
+	//	}
+	//}
 }
 
 Player::Player()

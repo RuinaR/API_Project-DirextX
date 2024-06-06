@@ -12,7 +12,7 @@ void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
     D3DXMATRIX matWorld, matScale, matTrans, matRotate;
     D3DXMatrixScaling(&matScale, m_gameObj->Size().x, m_gameObj->Size().y, 1.0f);
     D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
-    D3DXMatrixRotationZ(&matRotate, m_gameObj->Angle());
+    D3DXMatrixRotationZ(&matRotate, m_gameObj->GetAngle());
     matWorld = matScale * matRotate * matTrans;
 
     m_device->SetRenderState(D3DRS_LIGHTING, FALSE);

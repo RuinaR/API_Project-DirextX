@@ -47,6 +47,10 @@ double MainFrame::DeltaTime()
 
 void MainFrame::Initialize(int targetFPS, Scene* scene)
 {
+    m_pWorld = new b2World(m_gravity);
+    m_pWorld->SetContactListener(&m_cListener);
+    m_pWorld->SetContinuousPhysics(true);
+
     WindowFrame::GetInstance()->Initialize();
     m_hWnd = WindowFrame::GetInstance()->GetHWND();
     m_width = MAXWINDOWW;
@@ -112,12 +116,8 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
 	ObjectManager::Create();
 	//CollisionManager::Create();
 
-	m_scene = scene;
-	WindowFrame::GetInstance()->SetScene(m_scene);
-
-    m_pWorld = new b2World(m_gravity);
-    m_pWorld->SetContactListener(&m_cListener);
-    m_pWorld->SetContinuousPhysics(true);
+    m_scene = scene;
+    WindowFrame::GetInstance()->SetScene(m_scene);
 }
 
 int MainFrame::Run()
@@ -130,10 +130,11 @@ int MainFrame::Run()
     double fpsCheckTime = 0.0;
     m_timer.tick();  // 최초 시간 초기화
 
-    int32 velocityIterations = 6;
-    int32 positionIterations = 2;
+    int32 velocityIterations = 8;
+    int32 positionIterations = 3;
     ShowWindow(m_hWnd, SW_SHOWDEFAULT);
     UpdateWindow(m_hWnd);
+
     while (TRUE) 
     {
         while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE))  // 메시지 처리 우선
@@ -158,6 +159,7 @@ int MainFrame::Run()
 
                 //UPDATE, RENDER
                 m_pWorld->Step(targetFrameTime, velocityIterations, positionIterations);
+
 				m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 				if (SUCCEEDED(m_pd3dDevice->BeginScene()))
 				{
