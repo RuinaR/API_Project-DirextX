@@ -482,7 +482,6 @@ inline const b2Vec2& b2Body::GetPosition() const
 {
 	return m_xf.p;
 }
-
 inline float b2Body::GetAngle() const
 {
 	return m_sweep.a;

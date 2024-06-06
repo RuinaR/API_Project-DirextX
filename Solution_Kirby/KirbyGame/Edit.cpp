@@ -85,7 +85,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_player));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -94,7 +94,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_land));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i ) ,(float)(-UNITSIZE * j ), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -103,7 +103,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_defaultObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -112,7 +112,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_swordObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -121,7 +121,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_stoneObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -130,7 +130,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
         obj = new GameObject();
         obj->AddComponent(new BitmapRender(m_door));
         obj->Size() = { UNITSIZE, UNITSIZE };
-        obj->SetPosition({ (float)(UNITSIZE * i + UNITSIZE / 2) ,(float)(-UNITSIZE * j + UNITSIZE / 2), 0.0f });
+        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
     }
     break;
@@ -250,7 +250,7 @@ void Edit::ReDrawMapObj(int indexX, int indexY, MapType type)
 	}
 
 	newObj->Size() = { UNITSIZE, UNITSIZE };
-	newObj->SetPosition({ (float)(UNITSIZE * indexX + UNITSIZE / 2) ,(float)(-UNITSIZE * indexY + UNITSIZE / 2), 0.0f });
+	newObj->SetPosition({ (float)(UNITSIZE * indexX ) ,(float)(-UNITSIZE * indexY ), 0.0f });
 	newObj->InitializeSet();
 
 	m_mapData[indexY][indexX] = newObj;
@@ -493,8 +493,8 @@ void Edit::Update()
 
         D3DVIEWPORT9 vp;
         MainFrame::GetInstance()->GetDevice()->GetViewport(&vp);
-        int x = Mouse::GetInstance()->GetWinPos().x + Camera::GetInstance()->GetPos().x - vp.Width / 2 - UNITSIZE / 2;
-        int y = Mouse::GetInstance()->GetWinPos().y - Camera::GetInstance()->GetPos().y - vp.Height / 2 + UNITSIZE / 2;
+        int x = Mouse::GetInstance()->GetWinPos().x + Camera::GetInstance()->GetPos().x - vp.Width / 2 + UNITSIZE / 2;
+        int y = Mouse::GetInstance()->GetWinPos().y - Camera::GetInstance()->GetPos().y - vp.Height / 2 + UNITSIZE - 10;
 
         int indexX = x / UNITSIZE;
         int indexY = y / UNITSIZE;

@@ -22,6 +22,7 @@
     <ClCompile Include="AttackEvent.cpp" />
     <ClCompile Include="AttakObject.cpp" />
     <ClCompile Include="ChangeObject.cpp" />
+    <ClCompile Include="Door.cpp" />
     <ClCompile Include="Edit.cpp" />
     <ClCompile Include="EditerScene.cpp" />
     <ClCompile Include="game.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="AttackEvent.h" />
     <ClInclude Include="AttakObject.h" />
     <ClInclude Include="ChangeObject.h" />
+    <ClInclude Include="Door.h" />
     <ClInclude Include="Edit.h" />
     <ClInclude Include="EditerScene.h" />
     <ClInclude Include="game.h" />

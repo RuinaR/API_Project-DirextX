@@ -12,27 +12,19 @@ void MonsterAI::CollisionExit(Collider* other)
 
 void MonsterAI::Collision(Collider* other)
 {
-	if (abs(m_bo->GetBody()->GetLinearVelocity().x) < 10)
-	{
-		if (m_arrow == Arrow::left)
-		{
-			m_arrowVal = 1;
-			m_ar->ChangeAnim(m_anim[(int)Arrow::right]);
-			m_arrow = Arrow::right;
-		}
-		else
-		{
-			m_arrowVal = -1;
-			m_ar->ChangeAnim(m_anim[(int)Arrow::left]);
-			m_arrow = Arrow::left;
-		}
-		m_bo->GetBody()->SetLinearVelocity({ m_arrowVal * m_speed ,m_bo->GetBody()->GetLinearVelocity().y + 50 });
-	}
+	
 }
 
 void MonsterAI::Initialize()
 {
 	m_arrowVal = 1;
+
+	m_bo = m_gameObj->GetComponent<BoxCollider>();
+	if (m_bo == nullptr)
+	{
+		m_bo = new BoxCollider(b2BodyType::b2_dynamicBody);
+		m_gameObj->AddComponent(m_bo);
+	}
 
 	m_ar = m_gameObj->GetComponent<AnimationRender>();
 	if (m_ar == nullptr)
@@ -41,14 +33,8 @@ void MonsterAI::Initialize()
 		m_gameObj->AddComponent(m_ar);
 	}
 
-	m_bo = m_gameObj->GetComponent<BoxCollider>();
-	if (m_bo == nullptr)
-	{
-		m_bo = new BoxCollider(b2BodyType::b2_dynamicBody);
-		m_gameObj->AddComponent(m_bo);
-	}
 	m_bo->CreateBody(
-		{ 0 ,0 },
+		{ 10 , 10 },
 		{ m_gameObj->Size().x / 2 ,m_gameObj->Size().y / 2 });
 	m_bo->GetBody()->SetLinearVelocity({ m_arrowVal * m_speed ,m_bo->GetBody()->GetLinearVelocity().y});
 }
@@ -64,6 +50,24 @@ void MonsterAI::Start()
 
 void MonsterAI::Update()
 {
+	if (m_bo->GetBody()->GetLinearVelocity().x > 0 && m_arrow == Arrow::left )
+	{
+		m_arrowVal = 1;
+		m_ar->ChangeAnim(m_anim[(int)Arrow::right]);
+		m_arrow = Arrow::right;
+		
+	}
+	else if (m_bo->GetBody()->GetLinearVelocity().x < 0 && m_arrow == Arrow::right)
+	{
+		m_arrowVal = -1;
+		m_ar->ChangeAnim(m_anim[(int)Arrow::left]);
+		m_arrow = Arrow::left;
+	}
+
+	if (abs(m_bo->GetBody()->GetLinearVelocity().x) < 10)
+	{
+		m_bo->GetBody()->SetLinearVelocity({ m_arrowVal * m_speed ,m_bo->GetBody()->GetLinearVelocity().y + 1000 });
+	}
 }
 
 

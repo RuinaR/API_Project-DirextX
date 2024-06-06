@@ -58,6 +58,9 @@
 #define DEBUGCOLOR1 (RGB((0),(0),(255)))
 #define DEBUGCOLOR2 (RGB((255),(0),(0)))
 
+#define DEBUGCOLORDX1 (D3DCOLOR_XRGB((0),(0),(255)))
+#define DEBUGCOLORDX2 (D3DCOLOR_XRGB((255),(0),(0)))
+
 struct CUSTOMVERTEX
 {
     FLOAT x, y, z;         // The transformed position for the vertex
@@ -65,6 +68,13 @@ struct CUSTOMVERTEX
     FLOAT tu, tv;
 };
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+
+struct DEBUGVERTEX
+{
+    FLOAT x, y, z;         // The transformed position for the vertex
+    DWORD color;        // The vertex color
+};
+#define D3DFVF_DEBUGVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE)
 
 using namespace std;
 

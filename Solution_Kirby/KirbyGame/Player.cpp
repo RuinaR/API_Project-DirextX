@@ -313,7 +313,6 @@ void Player::Attack_sword()
 
 void Player::CollisionEnter(Collider* other)
 {
-	cout << "PLAYER Col Enter" << endl;
 }
 
 void Player::Attack_stone()
@@ -330,7 +329,6 @@ void Player::Attack_stone()
 
 void Player::CollisionExit(Collider* other)
 {
-	cout << "PLAYER Col Exit" << endl;
 }
 
 void Player::StoneAttacking()
@@ -493,6 +491,7 @@ void Player::Start()
 	m_flyTimer.tick();
 	m_leftKeyTimer.tick();
 	m_rightKeyTimer.tick();
+	//-------------------------------------------------------------------------------------------
 }
 
 void Player::Update()
@@ -515,8 +514,8 @@ void Player::Update()
 	// 선형 보간을 사용하여 카메라 위치 업데이트
 	float smoothFactor = 0.02f;  // 부드러운 이동을 위한 보간 계수
 	D3DXVECTOR2 newCamPos = {
-		Lerp(camPos.x, m_gameObj->Position().x  /*+ m_gameObj->Size().x / 2*/, smoothFactor),
-		Lerp(camPos.y, m_gameObj->Position().y  /*- m_gameObj->Size().y / 2*/, smoothFactor)
+		Lerp(camPos.x, m_gameObj->Position().x, smoothFactor),
+		Lerp(camPos.y, m_gameObj->Position().y, smoothFactor)
 	};
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
 

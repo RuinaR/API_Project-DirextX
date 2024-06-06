@@ -9,10 +9,11 @@ void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
     SetupVertices();
 
     // Set world, view, and projection matrices here
-    D3DXMATRIX matWorld, matScale, matTrans;
+    D3DXMATRIX matWorld, matScale, matTrans, matRotate;
     D3DXMatrixScaling(&matScale, m_gameObj->Size().x, m_gameObj->Size().y, 1.0f);
     D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
-    matWorld = matScale * matTrans;
+    D3DXMatrixRotationZ(&matRotate, m_gameObj->Angle());
+    matWorld = matScale * matRotate * matTrans;
 
     m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
 
@@ -32,29 +33,29 @@ void BitmapRender::DrawBitmap(int x, int y, int z, int w, int h)
 void BitmapRender::SetupVertices()
 {
     CUSTOMVERTEX vertices[4];
-    vertices[0].x = 0.0f; // 왼쪽 상단 모서리
-    vertices[0].y = 0.0f;
+    vertices[0].x = -0.5f; // 왼쪽 상단 모서리
+    vertices[0].y = 0.5f;
     vertices[0].z = 0.0f;
     vertices[0].color = 0xffffffff;
     vertices[0].tu = 0.0f;
     vertices[0].tv = 0.0f;
 
-    vertices[1].x = 0.0f; // 왼쪽 하단 모서리
-    vertices[1].y = -1.0f;
+    vertices[1].x = -0.5f; // 왼쪽 하단 모서리
+    vertices[1].y = -0.5f;
     vertices[1].z = 0.0f;
     vertices[1].color = 0xffffffff;
     vertices[1].tu = 0.0f;
     vertices[1].tv = 1.0f;
 
-    vertices[2].x = 1.0f; // 오른쪽 상단 모서리
-    vertices[2].y = 0.0f;
+    vertices[2].x = 0.5f; // 오른쪽 상단 모서리
+    vertices[2].y = 0.5f;
     vertices[2].z = 0.0f;
     vertices[2].color = 0xffffffff;
     vertices[2].tu = 1.0f;
     vertices[2].tv = 0.0f;
 
-    vertices[3].x = 1.0f; // 오른쪽 하단 모서리
-    vertices[3].y = -1.0f;
+    vertices[3].x = 0.5f; // 오른쪽 하단 모서리
+    vertices[3].y = -0.5f;
     vertices[3].z = 0.0f;
     vertices[3].color = 0xffffffff;
     vertices[3].tu = 1.0f;

@@ -185,6 +185,11 @@ void GameObject::DeleteChild(GameObject* obj)
     }
 }
 
+float& GameObject::Angle()
+{
+    return m_angle;
+}
+
 void GameObject::OnCollisionEnter(Collider* col)
 {
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)

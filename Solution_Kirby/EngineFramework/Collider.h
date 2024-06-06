@@ -8,6 +8,7 @@ protected:
 
 	virtual void ColInit() abstract;
 	virtual void ColRelease() abstract;
+	void RenderCollider();
 
 	bool m_isTrigger = false;
 

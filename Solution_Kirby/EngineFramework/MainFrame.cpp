@@ -76,8 +76,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
         return ;
     }
 
-    // Turn off culling, so we see the front and back of the triangle
-    m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 
     // Turn off D3D lighting, since we are providing our own vertex colors
     m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -118,6 +117,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
 
     m_pWorld = new b2World(m_gravity);
     m_pWorld->SetContactListener(&m_cListener);
+    m_pWorld->SetContinuousPhysics(true);
 }
 
 int MainFrame::Run()
@@ -152,22 +152,18 @@ int MainFrame::Run()
 			if (m_timer.getTotalDeltaTime() >= targetFrameTime)
 			{
 				frameCount++;
-				fpsCheckTime += m_timer.getTotalDeltaTime();
-				
-                m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
-                
+				fpsCheckTime += m_timer.getTotalDeltaTime();                
 				if (NULL == m_pd3dDevice)
 					return -1;
 
+                //UPDATE, RENDER
+                m_pWorld->Step(targetFrameTime, velocityIterations, positionIterations);
 				m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 				if (SUCCEEDED(m_pd3dDevice->BeginScene()))
 				{
-					//UPDATE, RENDER
 					ObjectManager::GetInstance()->Update();
-                    //CollisionManager::GetInstance()->Update();
 					InvalidateRect(WindowFrame::GetInstance()->GetHWND(), NULL, FALSE);
 					UpdateWindow(WindowFrame::GetInstance()->GetHWND());
-
 					m_pd3dDevice->EndScene();
 				}
 				m_pd3dDevice->Present(NULL, NULL, NULL, NULL);
@@ -225,14 +221,11 @@ void CollisionListener::BeginContact(b2Contact* contact)
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
-    // Fixture에서 사용자 정의 데이터 가져오기
     BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
     BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
 
     dataA->GetGameObject()->OnCollisionEnter(dataB);
     dataB->GetGameObject()->OnCollisionEnter(dataA);
-
-    cout << dataA->GetGameObject()->GetTag() << " / " << dataB->GetGameObject()->GetTag() << endl;;
 }
 
 void CollisionListener::EndContact(b2Contact* contact)
@@ -240,7 +233,6 @@ void CollisionListener::EndContact(b2Contact* contact)
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
-    // Fixture에서 사용자 정의 데이터 가져오기
 	BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
 	BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
 	if (dataA)
@@ -254,7 +246,6 @@ void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifo
 	b2Fixture* fixtureA = contact->GetFixtureA();
 	b2Fixture* fixtureB = contact->GetFixtureB();
 
-	// Fixture에서 사용자 정의 데이터 가져오기
 	BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
 	BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
 

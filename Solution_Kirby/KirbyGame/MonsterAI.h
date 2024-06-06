@@ -7,7 +7,7 @@ class MonsterAI : public Component
 {
 private:
 	int m_arrowVal = 0;
-	float m_speed = 500.0f;
+	float m_speed = 700.0f;
 	Arrow m_arrow = Arrow::right;
 	Animation m_anim[(int)Arrow::max];
 private:

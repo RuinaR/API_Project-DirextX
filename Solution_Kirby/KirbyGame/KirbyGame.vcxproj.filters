@@ -61,6 +61,9 @@
     <ClCompile Include="LandChecker.cpp">
       <Filter>KirbyGame\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>KirbyGame\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackEvent.h">
@@ -100,6 +103,9 @@
       <Filter>KirbyGame\Component</Filter>
     </ClInclude>
     <ClInclude Include="LandChecker.h">
+      <Filter>KirbyGame\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
       <Filter>KirbyGame\Component</Filter>
     </ClInclude>
   </ItemGroup>

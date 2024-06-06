@@ -10,6 +10,7 @@ protected:
     string m_tag = "";
     D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
     D3DXVECTOR2 m_size = { 0.0f, 0.0f };
+    float m_angle;
     vector<Component*>* m_vecComponent = nullptr;
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
@@ -52,6 +53,7 @@ public:
     void SetParent(GameObject* obj);
     void AddChild(GameObject* obj);
     void DeleteChild(GameObject* obj);
+    float& Angle();
 
     void OnCollisionEnter(Collider* col);
     void OnCollisionStay(Collider* col);

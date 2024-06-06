@@ -25,7 +25,7 @@ void Camera::Destroy()
 
 void Camera::InitializeView()
 {
-	mPthis->m_eye = { 0.0f, 0.0f, -10.0f };
+	mPthis->m_eye = { 0.0f, 0.0f, -20.0f };
 	mPthis->m_at = { 0.0f, 0.0f, 0.0f };
 	mPthis->m_up = { 0.0f, 1.0f, 0.0f };
 
@@ -39,7 +39,7 @@ void Camera::InitializeView()
 
 void Camera::SetPos(float x, float y)
 {
-	mPthis->m_eye = { x, y, -10.0f };
+	mPthis->m_eye = { x, y, -20.0f };
 	mPthis->m_at = { x, y, 0 };
 	D3DXMATRIX matView;
 	D3DXMatrixLookAtLH(&matView, &m_eye, &m_at, &m_up);
