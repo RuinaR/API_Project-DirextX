@@ -454,7 +454,7 @@ void Player::Initialize()
 	//m_rig->SetGravity(0.0f);
 	m_gameObj->AddComponent(m_bo);
 	m_gameObj->AddComponent(m_ar);
-	m_bo->CreateBody(m_dOffset, m_cSize);
+	m_bo->CreateBody(m_dOffset, m_cSize, false);
 	//m_gameObj->AddComponent(m_rig);
 	m_body = m_bo->GetBody();
 	m_leftKey = VK_LEFT;

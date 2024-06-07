@@ -20,7 +20,7 @@ public:
 	void Update() final;
 	const Vector2D& GetColSize();
 	const Vector2D& GetColOffset();
-	void CreateBody(Vector2D offset, Vector2D size);
+	void CreateBody(Vector2D offset, Vector2D size, bool fixedRotation);
 	void Initialize() final;
 	void Release() final;
 	void SetTrigger(bool b);

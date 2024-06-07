@@ -1,34 +1,6 @@
 #include "pch.h"
 #include "Collider.h"
 
-void CheckBody(b2Body* body)
-{
-	if (body->IsFixedRotation()) 
-	{
-		body->SetFixedRotation(false);  // 회전을 고정하지 않도록 설정
-	}
-
-	b2MassData massData;
-	massData = body->GetMassData();
-
-	if (massData.I < 1e-5) 
-	{
-		massData.I = 1.0f;  // 적절한 값으로 설정
-		body->SetMassData(&massData);
-	}
-
-	b2Fixture* fixture = body->GetFixtureList();
-	while (fixture)
-	{
-		float friction = fixture->GetFriction();
-		if (friction < 0.1f)
-		{
-			fixture->SetFriction(0.5f);  // 적절한 값으로 설정
-		}
-		fixture = fixture->GetNext();
-	}
-}
-
 void Collider::RenderCollider()
 {
 	D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
@@ -91,14 +63,14 @@ const Vector2D& Collider::GetColOffset()
 	return m_colOffset;
 }
 
-void Collider::CreateBody(Vector2D offset, Vector2D size)
+void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 {
 	m_colSize = size;
 	m_colOffset = offset;
 
 	b2BodyDef bodyDef;
 	bodyDef.type = m_type;
-	bodyDef.fixedRotation = false;
+	bodyDef.fixedRotation = fixedRotation;
 	bodyDef.position.Set(
 		m_gameObj->Position().x + (float)m_colOffset.x,
 		m_gameObj->Position().y + (float)m_colOffset.y);
@@ -114,19 +86,8 @@ void Collider::CreateBody(Vector2D offset, Vector2D size)
 	fixtureDef.friction = 0.3f;
 	fixtureDef.restitution = 0.5f;
 	m_body->CreateFixture(&fixtureDef);
-
-	/*float inertia = m_body->GetInertia();
-	b2MassData data;
-	data.center = b2Vec2(0, 0);
-	data.mass = 1.0f;
-	data.I = inertia;
-	m_body->SetMassData(&data);*/
-
-	m_body->SetFixedRotation(false);
 	//m_body->SetGravityScale(30.0);
 	m_body->GetUserData().pointer = (uintptr_t)this;
-
-	CheckBody(m_body);
 }
 void Collider::Initialize()
 {

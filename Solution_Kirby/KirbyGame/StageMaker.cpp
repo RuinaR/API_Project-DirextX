@@ -67,7 +67,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         block->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,10.0f });
         BoxCollider* box = new BoxCollider(b2BodyType::b2_staticBody);
         block->AddComponent(box);
-        box->CreateBody({ 0,0 }, { block->Size().x, block->Size().y });
+        box->CreateBody({ 0,0 }, { block->Size().x, block->Size().y }, true);
         block->AddComponent(new BitmapRender(m_land));
         block->InitializeSet();
         rowGroup->push_back(block);
@@ -120,7 +120,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         door->AddComponent(new BitmapRender(m_door));
         box->SetTrigger(true);  
         door->AddComponent(new Door());
-        box->CreateBody({ 0,0 }, { door->Size().x, door->Size().y });
+        box->CreateBody({ 0,0 }, { door->Size().x, door->Size().y }, false);
         door->InitializeSet();
         rowGroup->push_back(door);
     }
