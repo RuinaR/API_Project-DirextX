@@ -219,7 +219,7 @@ bool StageMaker::SetMap(string mapName)
 
 void StageMaker::SetPlayerMode(PlayerMode mode)
 {
-    m_player->SetPlayerMode(mode);
+    //m_player->SetPlayerMode(mode);
 }
 
 void StageMaker::Initialize()

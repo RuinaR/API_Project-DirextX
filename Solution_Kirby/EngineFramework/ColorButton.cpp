@@ -70,7 +70,7 @@ void ColorButton::Update()
     D3DXMATRIX matTr, matScale, matWorld;
     D3DXMatrixScaling(&matScale, m_UISize.x, m_UISize.y, 1.0f);
     D3DXMatrixTranslation(&matTr, m_UIPos.x + Camera::GetInstance()->GetPos().x, 
-        m_UIPos.y + +Camera::GetInstance()->GetPos().y,
+        m_UIPos.y + Camera::GetInstance()->GetPos().y,
         m_UIPos.z);
     matWorld = matScale * matTr;
     MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);

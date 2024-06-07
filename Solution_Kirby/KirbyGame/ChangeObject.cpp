@@ -26,7 +26,7 @@ void ChangeObject::Start()
 
 void ChangeObject::Update()
 {
-	if (m_gameObj->GetDestroy())
+	/*if (m_gameObj->GetDestroy())
 		return;
 	if (m_player->GetState() == PlayerAState::eating)
 	{
@@ -46,7 +46,7 @@ void ChangeObject::Update()
 				m_gameObj->AddPosition({(float)(- m_speed * MainFrame::GetInstance()->DeltaTime()), 0.0f, 0.0f});
 			}
 		}
-	}
+	}*/
 }
 
 PlayerMode ChangeObject::GetMode()
