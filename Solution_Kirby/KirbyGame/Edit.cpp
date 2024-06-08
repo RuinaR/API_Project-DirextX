@@ -83,7 +83,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
     case MapType::Player:
     {
         obj = new GameObject();
-        obj->AddComponent(new BitmapRender(m_player));
+        obj->AddComponent(new ImageRender(m_player));
         obj->Size() = { UNITSIZE, UNITSIZE};
         obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
@@ -92,7 +92,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
     case MapType::Block:
     {
         obj = new GameObject();
-        obj->AddComponent(new BitmapRender(m_land));
+        obj->AddComponent(new ImageRender(m_land));
         obj->Size() = { UNITSIZE, UNITSIZE};
         obj->SetPosition({ (float)(UNITSIZE * i ) ,(float)(-UNITSIZE * j ), 0.0f });
         obj->InitializeSet();
@@ -101,7 +101,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
     case MapType::DefaultMon:
     {
         obj = new GameObject();
-        obj->AddComponent(new BitmapRender(m_defaultObj));
+        obj->AddComponent(new ImageRender(m_defaultObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
         obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
@@ -110,7 +110,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
     case MapType::SwordMon:
     {
         obj = new GameObject();
-        obj->AddComponent(new BitmapRender(m_swordObj));
+        obj->AddComponent(new ImageRender(m_swordObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
         obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
@@ -119,7 +119,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
     case MapType::StoneMon:
     {
         obj = new GameObject();
-        obj->AddComponent(new BitmapRender(m_stoneObj));
+        obj->AddComponent(new ImageRender(m_stoneObj));
         obj->Size() = { UNITSIZE, UNITSIZE};
         obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
@@ -128,7 +128,7 @@ GameObject* Edit::DrawMap(MapType t, int i, int j)
     case MapType::Door:
     {
         obj = new GameObject();
-        obj->AddComponent(new BitmapRender(m_door));
+        obj->AddComponent(new ImageRender(m_door));
         obj->Size() = { UNITSIZE, UNITSIZE };
         obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
         obj->InitializeSet();
@@ -218,10 +218,10 @@ void Edit::ReDrawMapObj(int indexX, int indexY, MapType type)
 	case MapType::None:
 		break;
 	case MapType::Block:
-		newObj->AddComponent(new BitmapRender(m_land));
+		newObj->AddComponent(new ImageRender(m_land));
 		break;
 	case MapType::Player:
-		newObj->AddComponent(new BitmapRender(m_player));
+		newObj->AddComponent(new ImageRender(m_player));
 		for (int i = 0; i < m_count; ++i)
 		{
 			for (int j = 0; j < m_count; ++j)
@@ -236,16 +236,16 @@ void Edit::ReDrawMapObj(int indexX, int indexY, MapType type)
 		}
 		break;
 	case MapType::DefaultMon:
-		newObj->AddComponent(new BitmapRender(m_defaultObj));
+		newObj->AddComponent(new ImageRender(m_defaultObj));
 		break;
 	case MapType::SwordMon:
-		newObj->AddComponent(new BitmapRender(m_swordObj));
+		newObj->AddComponent(new ImageRender(m_swordObj));
 		break;
 	case MapType::StoneMon:
-		newObj->AddComponent(new BitmapRender(m_stoneObj));
+		newObj->AddComponent(new ImageRender(m_stoneObj));
 		break;
     case MapType::Door:
-        newObj->AddComponent(new BitmapRender(m_door));
+        newObj->AddComponent(new ImageRender(m_door));
         break;
 	}
 
@@ -350,13 +350,13 @@ void Edit::Redo()
 
 void Edit::Initialize()
 {
-    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land");
-    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
-    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj");
-    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
-    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
-    m_player = AnimationManager::LoadTexture(L"Bitmaps\\obj\\player");
-	m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
+    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land.bmp");
+    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
+    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj.bmp");
+    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj.bmp");
+    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj.bmp");
+    m_player = AnimationManager::LoadTexture(L"Bitmaps\\obj\\player.bmp");
+	m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door.bmp");
 
 	for (int i = 0; i < (int)MapType::max; i++)
 	{

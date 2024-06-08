@@ -68,7 +68,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         BoxCollider* box = new BoxCollider(b2BodyType::b2_staticBody);
         block->AddComponent(box);
         box->CreateBody({ 0,0 }, { block->Size().x, block->Size().y }, true);
-        block->AddComponent(new BitmapRender(m_land));
+        block->AddComponent(new ImageRender(m_land));
         block->InitializeSet();
         rowGroup->push_back(block);
 	}
@@ -117,7 +117,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         door->SetPosition({ (float)UNITSIZE * i, (float)-UNITSIZE * j,7.0f});
         BoxCollider* box = new BoxCollider(b2BodyType::b2_kinematicBody);
         door->AddComponent(box);
-        door->AddComponent(new BitmapRender(m_door));
+        door->AddComponent(new ImageRender(m_door));
         box->SetTrigger(true);  
         door->AddComponent(new Door());
         box->CreateBody({ 0,0 }, { door->Size().x, door->Size().y }, false);
@@ -169,12 +169,12 @@ void StageMaker::StageStart()
 
 bool StageMaker::SetMap(string mapName)
 {
-    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land");
-    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
-    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj");
-    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj");
-    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj");
-    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door");
+    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land.bmp");
+    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
+    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj.bmp");
+    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj.bmp");
+    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj.bmp");
+    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door.bmp");
 
     wstring path[(int)Arrow::max];
     path[(int)Arrow::left] = L"Bitmaps\\monster\\default\\left";

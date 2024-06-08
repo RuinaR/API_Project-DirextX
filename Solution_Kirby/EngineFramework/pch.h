@@ -42,7 +42,9 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#define TRANSCOLOR (RGB((255),(0),(255)))
+#define TRANSCOLORWIN (RGB((255),(0),(255)))
+#define TRANSCOLORDX (D3DCOLOR_XRGB((255),(0),(255)))
+
 #define COLSIZEOFFSET 1.0f
 #define MAXWINDOWW 1440
 #define MAXWINDOWH 900

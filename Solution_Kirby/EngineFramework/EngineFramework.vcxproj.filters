@@ -4,7 +4,7 @@
     <ClCompile Include="AnimationRender.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="BitmapRender.cpp">
+    <ClCompile Include="ImageRender.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
@@ -63,7 +63,7 @@
     <ClInclude Include="AnimationRender.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="BitmapRender.h">
+    <ClInclude Include="ImageRender.h">
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="BoxCollider.h">

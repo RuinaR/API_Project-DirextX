@@ -66,6 +66,17 @@ void ColorButton::Update()
     vertices[3].tu = 0.0f;
     vertices[3].tv = 0.0f;
 
+
+    // 알파 블렌딩 비활성화
+    MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
+    // 기본 블렌드 상태로 설정
+    MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+    MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+
+    // 텍스처 단계 상태를 기본값으로 설정
+    MainFrame::GetInstance()->GetDevice()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+    MainFrame::GetInstance()->GetDevice()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	// Render the button
     D3DXMATRIX matTr, matScale, matWorld;
     D3DXMatrixScaling(&matScale, m_UISize.x, m_UISize.y, 1.0f);

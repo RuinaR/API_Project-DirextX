@@ -36,7 +36,7 @@ void EditerScene::StartEdit()
 }
 void EditerScene::Init()
 {
-	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
+	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
 	SceneChanger::Create();
 }
 

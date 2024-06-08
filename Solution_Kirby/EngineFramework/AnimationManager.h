@@ -5,7 +5,7 @@
 static class AnimationManager
 {
 private:
-	static bool IsBitmapFile(const wstring& filename);
+	static bool IsImageFile(const wstring& filename);
 public:
 	static Animation LoadAnimation(const wstring& folderName, float time);
 	static void ReleaseAnimation(Animation& anim);

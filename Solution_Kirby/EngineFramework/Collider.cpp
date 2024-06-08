@@ -18,14 +18,14 @@ void Collider::RenderCollider()
 
 	DEBUGVERTEX vertices[] =
 	{
-		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
-		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
-		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
-		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
-		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
-		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
-		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX2},
-		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX2},
+		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
 	};
 
 	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);

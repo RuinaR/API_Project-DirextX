@@ -1,5 +1,5 @@
 #pragma once
-#include "BitmapRender.h"
+#include "ImageRender.h"
 #include "Component.h"
 #include "structs.h"
 
@@ -7,7 +7,7 @@ class AnimationRender : public Component
 {
 private:
 	Animation m_anim;
-	BitmapRender* m_bitren;
+	ImageRender* m_bitren;
 	bool m_isPlay;
 	bool m_isOneTime = false;
 	float m_updateTimer;

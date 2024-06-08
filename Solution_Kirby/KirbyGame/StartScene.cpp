@@ -6,7 +6,7 @@
 void StartScene::Init()
 {
 	SceneChanger::Create();
-	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG");
+	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
 }
 
 void StartScene::Release()

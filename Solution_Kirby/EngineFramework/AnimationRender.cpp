@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "AnimationRender.h"
-#include "BitmapRender.h"
+#include "ImageRender.h"
 #include "GameObject.h"
 
 AnimationRender::AnimationRender(Animation anim)
@@ -11,10 +11,10 @@ AnimationRender::AnimationRender(Animation anim)
 
 void AnimationRender::Initialize()
 {
-	m_bitren = m_gameObj->GetComponent<BitmapRender>();
+	m_bitren = m_gameObj->GetComponent<ImageRender>();
 	if (m_bitren == nullptr)
 	{
-		m_bitren = new BitmapRender(nullptr);
+		m_bitren = new ImageRender(nullptr);
 		m_gameObj->AddComponent(m_bitren);
 	}
 }
@@ -33,7 +33,7 @@ void AnimationRender::ChangeAnim(Animation anim)
 	}
 	m_anim = anim;
 	m_curItr = m_anim.textures.begin();
-	m_bitren->ChangeBitmap(*m_curItr);
+	m_bitren->ChangeTexture(*m_curItr);
 }
 
 void AnimationRender::Start()
@@ -65,7 +65,7 @@ void AnimationRender::Update()
 		m_curItr = m_anim.textures.begin();
 	}
 
-	m_bitren->ChangeBitmap(*m_curItr);
+	m_bitren->ChangeTexture(*m_curItr);
 }
 
 void AnimationRender::SetPlay(bool play)
