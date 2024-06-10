@@ -1,19 +1,5 @@
-﻿  ImageRender.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(135,20): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(134,20): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(133,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(132,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(131,24): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
-  
+﻿  MainFrame.cpp
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\MainFrame.cpp(165,57): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 d3d9.lib(d3d9.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __imp__D3DXWeldVertices@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXWeldVertices@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
@@ -674,4 +660,4 @@ d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXAssembleShaderFromFileA@24이(
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __imp__D3DXAssembleShader@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXAssembleShader@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
-  EngineFramework.vcxproj -> C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\EngineFramework.lib
+  EngineFramework.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\EngineFramework.lib

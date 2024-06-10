@@ -1,13 +1,16 @@
 #include "pch.h"
 #include "ColorButton.h"
+
 void ColorButton::Initialize()
 {
     m_gameObj->SetTag("UI_ColorBtn");
     m_curColor = m_defaultColor;
+    RenderManager::GetInstance()->ResisterBtn(this);
 }
 
 void ColorButton::Release()
 {
+    RenderManager::GetInstance()->UnresisterBtn(this);
 }
 
 void ColorButton::Start()
@@ -18,8 +21,23 @@ void ColorButton::Update()
 {
     // 버튼의 위치를 UIPos에 따라 설정합니다.
     m_gameObj->SetPosition(m_UIPos);
-
     // 버튼의 위치를 계산합니다.
+    RECT rect = {
+        static_cast<LONG>(m_UIPos.x + Camera::GetInstance()->GetPos().x),
+        static_cast<LONG>(m_UIPos.y + Camera::GetInstance()->GetPos().y),
+        static_cast<LONG>(m_UIPos.x + m_UISize.x + Camera::GetInstance()->GetPos().x),
+        static_cast<LONG>(m_UIPos.y + m_UISize.y + Camera::GetInstance()->GetPos().y)
+    };
+    // 마우스 포인터가 버튼 영역 안에 있는지 확인하고, 상태를 업데이트합니다.
+    POINT point = {
+        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
+        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y };
+    if (!PtInRect(&rect, point))
+        m_curColor = m_defaultColor;
+}
+
+void ColorButton::UpdateRender()
+{
     RECT rect = {
         static_cast<LONG>(m_UIPos.x + Camera::GetInstance()->GetPos().x),
         static_cast<LONG>(m_UIPos.y + Camera::GetInstance()->GetPos().y),
@@ -28,13 +46,6 @@ void ColorButton::Update()
     };
     D3DXVECTOR3 wPos = { (float)rect.left, (float)rect.top, 0.0f };
     D3DXVECTOR3 sPos = WorldToScreen(MainFrame::GetInstance()->GetDevice(), wPos);
-    RECT mouseRect = { sPos.x, sPos.y, sPos.x + m_UISize.x, sPos.y + m_UISize.y };
-    // 마우스 포인터가 버튼 영역 안에 있는지 확인하고, 상태를 업데이트합니다.
-    POINT point = { 
-        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetDXPos().y  + Camera::GetInstance()->GetPos().y };
-    if (!PtInRect(&rect, point))
-        m_curColor = m_defaultColor;
 
     // 버텍스 좌표 설정
     CUSTOMVERTEX vertices[4];
@@ -66,42 +77,25 @@ void ColorButton::Update()
     vertices[3].tu = 0.0f;
     vertices[3].tv = 0.0f;
 
-
-    // 알파 블렌딩 비활성화
-    MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-
-    // 기본 블렌드 상태로 설정
-    MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-    MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-
-    // 텍스처 단계 상태를 기본값으로 설정
-    MainFrame::GetInstance()->GetDevice()->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-    MainFrame::GetInstance()->GetDevice()->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	// Render the button
+    // Render the button
     D3DXMATRIX matTr, matScale, matWorld;
     D3DXMatrixScaling(&matScale, m_UISize.x, m_UISize.y, 1.0f);
-    D3DXMatrixTranslation(&matTr, m_UIPos.x + Camera::GetInstance()->GetPos().x, 
+    D3DXMatrixTranslation(&matTr, m_UIPos.x + Camera::GetInstance()->GetPos().x,
         m_UIPos.y + Camera::GetInstance()->GetPos().y,
         m_UIPos.z);
     matWorld = matScale * matTr;
     MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);
+    MainFrame::GetInstance()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(CUSTOMVERTEX));
+    // Draw the text
 
-    MainFrame::GetInstance()->GetDevice()->SetTexture(0, nullptr);
-	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
-	MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_CUSTOMVERTEX);
-	MainFrame::GetInstance()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(CUSTOMVERTEX));
-
-	// Draw the text
-
-	ID3DXFont* pFont;
-	D3DXCreateFont(MainFrame::GetInstance()->GetDevice(), m_textSize, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
-		TEXT("Arial"), &pFont);
+    ID3DXFont* pFont;
+    D3DXCreateFont(MainFrame::GetInstance()->GetDevice(), m_textSize, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
+        TEXT("Arial"), &pFont);
     sPos = { sPos.x + 10, sPos.y - (rect.bottom - rect.top) / 2 , 0.0f };
-	RECT textRect = { sPos.x, sPos.y, sPos.x + 100, sPos.y + 100 };
+    RECT textRect = { sPos.x, sPos.y, sPos.x + 100, sPos.y + 100 };
     pFont->DrawText(
-		nullptr, m_text.c_str(), -1, &textRect, DT_NOCLIP, m_textColor);
-	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, TRUE);
+        nullptr, m_text.c_str(), -1, &textRect, DT_NOCLIP, m_textColor);
     pFont->Release();
 }
 

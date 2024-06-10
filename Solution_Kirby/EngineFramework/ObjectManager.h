@@ -18,6 +18,7 @@ public:
 	bool DestroyObject(string tag);
 	GameObject* FindObject(string tag);
 	bool FindObject(GameObject* obj);
+	void Initialize();
 	void Release();
 	void Update();
 	void Clear();

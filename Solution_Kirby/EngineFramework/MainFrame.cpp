@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ObjectManager.h"
 #include "CollisionManager.h"
+#include "RenderManager.h"
 #include "DebugWindow.h"
 MainFrame* MainFrame::m_Pthis = nullptr;
 
@@ -114,6 +115,9 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
     
     Mouse::GetInstance()->Initialize();
 	ObjectManager::Create();
+    ObjectManager::GetInstance()->Initialize();
+    RenderManager::Create();
+    RenderManager::GetInstance()->Initialize();
 	//CollisionManager::Create();
 
     m_scene = scene;
@@ -157,19 +161,11 @@ int MainFrame::Run()
 				if (NULL == m_pd3dDevice)
 					return -1;
 
-                //UPDATE, RENDER
-                m_pWorld->Step(targetFrameTime, velocityIterations, positionIterations);
-
-				m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-
-				if (SUCCEEDED(m_pd3dDevice->BeginScene()))
-				{
-					ObjectManager::GetInstance()->Update();
-					InvalidateRect(WindowFrame::GetInstance()->GetHWND(), NULL, FALSE);
-					UpdateWindow(WindowFrame::GetInstance()->GetHWND());
-					m_pd3dDevice->EndScene();
-				}
-				m_pd3dDevice->Present(NULL, NULL, NULL, NULL);
+                //UPDATE
+                m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
+				ObjectManager::GetInstance()->Update();
+			    //RENDER
+                RenderManager::GetInstance()->Update();
 
 				// FPS °è»ê
 				if (fpsCheckTime > 1.0)
@@ -205,6 +201,8 @@ void MainFrame::Release()
 {
 	ObjectManager::GetInstance()->Release();
 	ObjectManager::Destroy();
+    RenderManager::GetInstance()->Release();
+    RenderManager::Destroy();
 	//CollisionManager::Destroy();
 
     if (m_pd3dDevice != NULL)

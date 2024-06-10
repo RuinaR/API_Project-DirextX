@@ -63,7 +63,7 @@ void Player::Initialize()
 	//m_rig->SetGravity(0.0f);
 	m_gameObj->AddComponent(m_bo);
 	m_gameObj->AddComponent(m_ar);
-	m_bo->CreateBody({ 20.0f, 20.0f }, {50.0f, 50.0f}, false);
+	m_bo->CreateBody({ 20.0f, 20.0f}, {50.0f, 50.0f}, false);
 	//m_gameObj->AddComponent(m_rig);
 }
 

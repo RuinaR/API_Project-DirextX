@@ -8,8 +8,6 @@ void ObjectManager::Create()
 	if (!m_Pthis)
 	{
 		m_Pthis = new ObjectManager();
-		m_Pthis->m_objList = new list<GameObject*>();
-
 	}
 }
 
@@ -113,6 +111,11 @@ bool ObjectManager::FindObject(GameObject* obj)
 		}
 	}
 	return false;
+}
+
+void ObjectManager::Initialize()
+{
+	m_objList = new list<GameObject*>();
 }
 
 void ObjectManager::Release()

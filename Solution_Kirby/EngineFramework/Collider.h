@@ -1,6 +1,6 @@
 #pragma once
-
-class Collider : public Component
+#include "RenderManager.h"
+class Collider : public Component, public DebugRender
 {
 protected:
 	Vector2D m_colSize = { 0.f,0.f };
@@ -15,6 +15,7 @@ protected:
 	b2Body* m_body = nullptr;
 	b2BodyType m_type;
 public:
+	
 	Collider(b2BodyType type);
 	void Start() final;
 	void Update() final;
@@ -26,6 +27,9 @@ public:
 	void SetTrigger(bool b);
 	bool GetTrigger();
 	b2Body* GetBody();
+
+	// DebugRender을(를) 통해 상속됨
+	virtual void DebugRenderUpdate() override;
 };
 
 

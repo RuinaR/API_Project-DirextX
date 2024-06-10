@@ -178,12 +178,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ColorButton.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="AnimationRender.h" />
+    <ClInclude Include="DebugRender.h" />
     <ClInclude Include="ImageRender.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Buffer.h" />
@@ -199,6 +201,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ColorButton.h" />
+    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="structs.h" />

@@ -59,7 +59,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         rowGroup->push_back(m_playerObj);
 	}
 	break;
-	case MapType::Block: //가로줄 콜라이더를 계산해서 합친 상태로 생성
+	case MapType::Block: 
 	{
         GameObject* block = new GameObject();
         block->SetTag(TAG_LAND);
@@ -68,7 +68,9 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         BoxCollider* box = new BoxCollider(b2BodyType::b2_staticBody);
         block->AddComponent(box);
         box->CreateBody({ 0,0 }, { block->Size().x, block->Size().y }, true);
-        block->AddComponent(new ImageRender(m_land));
+        ImageRender* ir = new ImageRender(m_land);
+        block->AddComponent(ir);
+        ir->SetTrans(false);
         block->InitializeSet();
         rowGroup->push_back(block);
 	}

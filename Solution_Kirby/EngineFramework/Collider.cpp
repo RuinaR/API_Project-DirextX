@@ -3,34 +3,32 @@
 
 void Collider::RenderCollider()
 {
-	D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
+		D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
 
-	b2Vec2 position = m_body->GetPosition();
-	
-	D3DXMatrixTranslation(&matTranslate, position.x, position.y, -9.0f);
-	D3DXMatrixScaling(&matScale, m_colSize.x + 1, m_colSize.y + 1, 1.0f);
-	D3DXMatrixRotationZ(&matRotate, m_body->GetAngle());
-	matWorld = matScale * matRotate * matTranslate;
+		b2Vec2 position = m_body->GetPosition();
 
-	MainFrame::GetInstance()->GetDevice()->SetTexture(0, nullptr);
-	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);
-	MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_DEBUGVERTEX);
+		D3DXMatrixTranslation(&matTranslate, position.x, position.y, -9.0f);
+		D3DXMatrixScaling(&matScale, m_colSize.x + 1, m_colSize.y + 1, 1.0f);
+		D3DXMatrixRotationZ(&matRotate, m_body->GetAngle());
+		matWorld = matScale * matRotate * matTranslate;
 
-	DEBUGVERTEX vertices[] =
-	{
-		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-		{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-		{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-		{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-		{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-	};
+		MainFrame::GetInstance()->GetDevice()->SetTexture(0, nullptr);
+		MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);
+		MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_DEBUGVERTEX);
 
-	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, FALSE);
-	MainFrame::GetInstance()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 4, vertices, sizeof(DEBUGVERTEX));
-	MainFrame::GetInstance()->GetDevice()->SetRenderState(D3DRS_LIGHTING, TRUE);
+		DEBUGVERTEX vertices[] =
+		{
+			{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+			{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+			{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+			{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+			{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+			{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+			{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
+			{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+		};
+
+		MainFrame::GetInstance()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 4, vertices, sizeof(DEBUGVERTEX));
 }
 
 Collider::Collider(b2BodyType type)
@@ -48,9 +46,6 @@ void Collider::Update()
 		m_gameObj->Position().z });
 
 	m_gameObj->SetAngle(m_body->GetAngle());
-
-	if (DEBUGMODE)
-		RenderCollider();
 
 }
 const Vector2D& Collider::GetColSize()
@@ -93,6 +88,7 @@ void Collider::Initialize()
 {
 	//CollisionManager::GetInstance()->AddCollider(this);
 	ColInit();
+	RenderManager::GetInstance()->ResisterDebug(this);
 }
 
 void Collider::Release()
@@ -100,6 +96,8 @@ void Collider::Release()
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
 	MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
 	m_body = nullptr;
+	RenderManager::GetInstance()->UnresisterDebug(this);
+
 	ColRelease();
 }
 
@@ -116,5 +114,10 @@ bool Collider::GetTrigger()
 b2Body* Collider::GetBody()
 {
 	return m_body;
+}
+
+void Collider::DebugRenderUpdate()
+{
+	RenderCollider();
 }
 

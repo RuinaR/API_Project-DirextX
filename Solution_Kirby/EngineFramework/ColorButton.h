@@ -1,5 +1,5 @@
 #pragma once
-
+#include "RenderManager.h"
 class ColorButton : public Component
 {
 protected:
@@ -24,7 +24,7 @@ public:
     void Release() override;
     void Start() override;
     void Update() override;
-
+    void UpdateRender();
     void OnLBtnDown() final;
     void OnLBtnUp() final;
     void OnRBtnDown() final;

@@ -15,25 +15,12 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     D3DXMatrixRotationZ(&matRotate, m_gameObj->GetAngle());
     matWorld = matScale * matRotate * matTrans;
 
-    m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
-
-    m_device->SetFVF(D3DFVF_CUSTOMVERTEX);
     m_device->SetTransform(D3DTS_WORLD, &matWorld);
 
-    m_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-    m_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-    m_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-    m_device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-    m_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-
     m_device->SetTexture(0, m_texture);
-    m_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-    m_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-    m_device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE); // 색상과 텍스처를 곱하여 출력
     m_device->SetStreamSource(0, m_vertexBuffer, 0, sizeof(CUSTOMVERTEX));
 
     m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
-    m_device->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 void ImageRender::SetupVertices()
@@ -96,8 +83,38 @@ void ImageRender::SetupVertices()
 }
 
 
+float ImageRender::GetZ()
+{
+    return m_gameObj->Position().z;
+}
+
+void ImageRender::Render()
+{
+    if (m_texture == nullptr)
+    	return;
+
+    DrawImage(
+    	m_gameObj->Position().x,
+    	m_gameObj->Position().y,
+    	m_gameObj->Position().z,
+    	m_gameObj->Size().x,
+    	m_gameObj->Size().y);
+}
+
 ImageRender::ImageRender(IDirect3DTexture9* texture) : Component(), m_texture(texture)
 {
+}
+
+void ImageRender::SetTrans(bool trans)
+{
+    RenderManager::GetInstance()->Unresister(this);
+    m_isTrans = trans;
+    RenderManager::GetInstance()->Resister(this);
+}
+
+bool ImageRender::IsTrans()
+{
+    return m_isTrans;
 }
 
 void ImageRender::Initialize()
@@ -106,10 +123,14 @@ void ImageRender::Initialize()
 
 	m_device->
 		CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &m_vertexBuffer, NULL);
+
+    RenderManager::GetInstance()->Resister(this);
 }
 
 void ImageRender::Release()
 {
+    RenderManager::GetInstance()->Unresister(this);
+
     m_vertexBuffer->Release();
 }
 
@@ -124,14 +145,4 @@ void ImageRender::Start()
 
 void ImageRender::Update()
 {
-	if (m_texture == nullptr)
-		return;
-
-	DrawImage(
-		m_gameObj->Position().x,
-		m_gameObj->Position().y,
-		m_gameObj->Position().z,
-		m_gameObj->Size().x,
-		m_gameObj->Size().y);
-
 }
