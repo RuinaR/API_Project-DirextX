@@ -121,6 +121,7 @@ void RenderManager::Update()
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
 	{	
+		device->SetRenderState(D3DRS_ZENABLE, TRUE);
 		device->SetRenderState(D3DRS_LIGHTING, FALSE);
 		device->SetFVF(D3DFVF_CUSTOMVERTEX);
 		device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
@@ -154,6 +155,17 @@ void RenderManager::Update()
 		{
 			(*itr)->UpdateRender();
 		}
+
+		//imgui
+		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+		ImGui::EndFrame();
+		device->SetRenderState(D3DRS_ZENABLE, FALSE);
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+
+		ImGui::Render();
+		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
 		device->EndScene();
 	}
 	device->Present(NULL, NULL, NULL, NULL);

@@ -67,8 +67,6 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
     d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
     d3dpp.hDeviceWindow = m_hWnd;
     d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
-    d3dpp.BackBufferWidth = m_width;
-    d3dpp.BackBufferHeight = m_height;
     d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
     d3dpp.EnableAutoDepthStencil = TRUE;
     d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
@@ -94,8 +92,8 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
     //int offset = 50;
     vp.X = 0;
     vp.Y = 0;
-    vp.Width = rect.right - rect.left;// +offset;
-    vp.Height = rect.bottom - rect.top;// +offset;
+    vp.Width = m_width;//rect.right - rect.left;// +offset;
+    vp.Height = m_height;//rect.bottom - rect.top;// +offset;
     vp.MinZ = 0.0f;
     vp.MaxZ = 1.0f;
 
@@ -128,54 +126,99 @@ int MainFrame::Run()
 {
     MSG Message;
     double targetFrameTime = 1.0 / m_targetFPS;
-    WCHAR strFPS[64];
-    int frameCount = 0;
-    int fps = 0;
-    double fpsCheckTime = 0.0;
-    m_timer.tick();  // 최초 시간 초기화
+    m_timer.tick();
 
     int32 velocityIterations = 8;
     int32 positionIterations = 3;
     ShowWindow(m_hWnd, SW_SHOWDEFAULT);
     UpdateWindow(m_hWnd);
 
+
+    //imgui test
+    //set
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    ImGui::StyleColorsDark();
+    ImGui_ImplWin32_Init(m_hWnd);
+    ImGui_ImplDX9_Init(m_pd3dDevice);
+
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    //--
+
     while (TRUE) 
     {
         while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE))  // 메시지 처리 우선
         {         
+            WindowFrame::GetInstance()->Run(&Message);
             if (Message.message == WM_QUIT)
             {
+                //imgui Cleanup
+                ImGui_ImplDX9_Shutdown();
+                ImGui_ImplWin32_Shutdown();
+                ImGui::DestroyContext();
+                //--
                 Release();
                 return (int)Message.wParam;
             }    
-            WindowFrame::GetInstance()->Run(&Message);
 		}
 
 		if (WindowFrame::GetInstance()->IsFocus())
 		{
 			m_timer.tick();
 			if (m_timer.getTotalDeltaTime() >= targetFrameTime)
-			{
-				frameCount++;
-				fpsCheckTime += m_timer.getTotalDeltaTime();                
+			{               
 				if (NULL == m_pd3dDevice)
 					return -1;
 
+                //imguiTest Update--
+                ImGui_ImplDX9_NewFrame();
+                ImGui_ImplWin32_NewFrame();
+                ImGui::NewFrame();
+
+                if (show_demo_window)
+                    ImGui::ShowDemoWindow(&show_demo_window);
+                {
+                    static float f = 0.0f;
+                    static int counter = 0;
+
+                    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+                    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+                    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+                    ImGui::Checkbox("Another Window", &show_another_window);
+
+                    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+                    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+                    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                        counter++;
+                    ImGui::SameLine();
+                    ImGui::Text("counter = %d", counter);
+
+                    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+                    ImGui::End();
+                }
+                if (show_another_window)
+                {
+                    ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+                    ImGui::Text("Hello from another window!");
+                    if (ImGui::Button("Close Me"))
+                        show_another_window = false;
+                    ImGui::End();
+                }
+               //---
+               
                 //UPDATE
                 m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
 				ObjectManager::GetInstance()->Update();
 			    //RENDER
                 RenderManager::GetInstance()->Update();
-
-				// FPS 계산
-				if (fpsCheckTime > 1.0)
-				{
-					fps = frameCount;
-					frameCount = 0;
-					fpsCheckTime = 0.0;
-					swprintf_s(strFPS, _countof(strFPS), L"FPS : %d", fps);
-					SetWindowText(WindowFrame::GetInstance()->GetHWND(), strFPS);
-				}
 				m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
 			}
 		}

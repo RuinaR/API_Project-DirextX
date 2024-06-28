@@ -24,14 +24,14 @@ void ColorButton::Update()
     // 버튼의 위치를 계산합니다.
     RECT rect = {
         static_cast<LONG>(m_UIPos.x + Camera::GetInstance()->GetPos().x),
-        static_cast<LONG>(m_UIPos.y + Camera::GetInstance()->GetPos().y),
+        static_cast<LONG>(m_UIPos.y + m_UISize.y + Camera::GetInstance()->GetPos().y),
         static_cast<LONG>(m_UIPos.x + m_UISize.x + Camera::GetInstance()->GetPos().x),
-        static_cast<LONG>(m_UIPos.y + m_UISize.y + Camera::GetInstance()->GetPos().y)
+        static_cast<LONG>(m_UIPos.y + Camera::GetInstance()->GetPos().y)
     };
     // 마우스 포인터가 버튼 영역 안에 있는지 확인하고, 상태를 업데이트합니다.
     POINT point = {
         Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y };
+        -Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y };
     if (!PtInRect(&rect, point))
         m_curColor = m_defaultColor;
 }

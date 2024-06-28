@@ -25,6 +25,9 @@
 #include <d3dx9.h>
 
 #include "../Box2D/box2d/include/box2d/box2d.h"
+#include "../Imgui/imgui/imgui.h"
+#include "../Imgui/source/imgui_impl_dx9.h"
+#include "../Imgui/source/imgui_impl_win32.h"
 
 #include "DebugRender.h"
 #include "AnimationManager.h"

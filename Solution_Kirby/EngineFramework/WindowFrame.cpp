@@ -30,10 +30,17 @@ void WindowFrame::Destroy()
 	}
 }
 
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	static HDC hdc;
 	static PAINTSTRUCT ps;
+
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, iMessage, wParam, lParam))
+		return true;
+
 	switch (iMessage)
 	{
 	case WM_CREATE:
