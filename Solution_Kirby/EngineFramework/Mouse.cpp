@@ -48,13 +48,17 @@ D3DXVECTOR2 Mouse::GetDXPos()
 	D3DXVECTOR2 dxPos;
 	int clientWidth = m_viewport.Width;
 	int clientHeight = m_viewport.Height;
-	dxPos.x = this->mPos.x - (clientWidth / 2);
-	dxPos.y = (clientHeight / 2) - this->mPos.y;
+	dxPos.x = this->mPos.x - (clientWidth / 2) - RenderManager::GetInstance()->GetWinPos().x;
+	dxPos.y = (clientHeight / 2) - this->mPos.y + RenderManager::GetInstance()->GetWinPos().y;
 	return dxPos;
 }
 
 D3DXVECTOR2 Mouse::GetWinPos()
 {
+	D3DXVECTOR2 winPos;
+	winPos.x += RenderManager::GetInstance()->GetWinPos().x;
+	winPos.y += RenderManager::GetInstance()->GetWinPos().y;
+
 	return this->mPos;
 }
 

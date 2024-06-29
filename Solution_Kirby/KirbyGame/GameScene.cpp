@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "ChangeObject.h"
 #include "StageMaker.h"
-#include "ColorButton.h"
+#include "Button.h"
 #include "DebugWindow.h"
 #include "SceneChanger.h"
 
@@ -29,12 +29,12 @@ void GameScene::StartGame()
 	}
 	StageMaker::GetInstance()->StageStart();
 	GameObject* btnObj = new GameObject();
-	ColorButton* btn = new ColorButton();
+	Button* btn = new Button();
 	btnObj->AddComponent(btn);
 	btnObj->InitializeSet();
 	btn->SetUIPos({ -700,300, -1.0f });
 	btn->SetUISize({ 200,100 });
-	btn->SetText(TEXT("GameScene Load"));
+	btn->SetText("GameScene Load");
 	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn->SetDefaultColor(RGB(255, 255, 255));
 	btn->SetHoverColor(RGB(200, 200, 200));
@@ -43,12 +43,12 @@ void GameScene::StartGame()
 	btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 
 	GameObject* btnObj2 = new GameObject();
-	ColorButton* btn2 = new ColorButton();
+	Button* btn2 = new Button();
 	btnObj2->AddComponent(btn2);
 	btnObj2->InitializeSet();
 	btn2->SetUIPos({ -700,200, -1.0f });
 	btn2->SetUISize({ 200,100 });
-	btn2->SetText(TEXT("StartScene Load"));
+	btn2->SetText("StartScene Load");
 	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn2->SetDefaultColor(RGB(255, 255, 255));
 	btn2->SetHoverColor(RGB(200, 200, 200));
@@ -79,12 +79,12 @@ void GameScene::Start()
 	obj->InitializeSet();
 
 	GameObject* btnObj = new GameObject();
-	m_btn = new ColorButton();
+	m_btn = new Button();
 	btnObj->AddComponent(m_btn);
 	btnObj->InitializeSet();
 	m_btn->SetUIPos({ -700,200,-1.0f });
 	m_btn->SetUISize({ 200,100 });
-	m_btn->SetText(TEXT("Start Game"));
+	m_btn->SetText("Start Game");
 	m_btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	m_btn->SetDefaultColor(RGB(255, 255, 255));
 	m_btn->SetHoverColor(RGB(200, 200, 200));

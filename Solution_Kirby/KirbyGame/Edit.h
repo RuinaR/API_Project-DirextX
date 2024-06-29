@@ -1,12 +1,11 @@
 #pragma once
-#include "ColorButton.h"
+#include "Button.h"
 #include "game.h"
 
 class Edit : public Component
 {
 private:
 	string m_mapName = "";
-	vector<vector<GameObject*>> m_mapData = vector<vector<GameObject*>>();
 	vector<vector<MapType>> m_mapTypeData = vector<vector<MapType>>();
 
 	vector<string> ReadMapData(string mapName);
@@ -18,27 +17,14 @@ private:
 	IDirect3DTexture9* m_defaultObj = NULL;
 	IDirect3DTexture9* m_player = NULL;
 	IDirect3DTexture9* m_door = NULL;
+	int m_SelectedTileIndex = 0;
+	const char* Tileset[(int)MapType::max];
+	IDirect3DTexture9* TextureHandle[(int)MapType::max];
+	int playerI = PLAYER_DEFAULT_X;
+	int playerJ = PLAYER_DEFAULT_Y;
 
-	MapType m_select = MapType::None;
-
-	stack<UndoRedoData> m_undoStack = stack<UndoRedoData>();
-	stack<UndoRedoData> m_redoStack = stack<UndoRedoData>();
-
-	ColorButton* m_selectBtn[(int)MapType::max];
-	ColorButton* m_InitMapBtn = nullptr;
 	void WriteMapData();
-	GameObject* DrawMap(MapType t, int i, int j);
-	void SelectNone();
-	void SelectLand();
-	void SelectDefaultMon();
-	void SelectSwordMon();
-	void SelectStoneMon();
-	void SelectPlayer();
-	void SelectDoor();
 	void InitMap();
-	void ReDrawMapObj(int indexX, int indexY, MapType type);
-	void Undo();
-	void Redo();
 public:
 	void Initialize() override;
 	void Release() override;

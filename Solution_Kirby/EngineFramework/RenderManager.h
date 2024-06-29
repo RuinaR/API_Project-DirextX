@@ -1,16 +1,19 @@
 #pragma once
 
+#define WINDOWTEXT "Render Target Window"
 using namespace std;
 class ImageRender;
-class ColorButton;
+class Button;
 class RenderManager
 {
 private:
 	static RenderManager* m_Pthis;
 	vector<ImageRender*>* m_noTransVec;
 	vector<ImageRender*>* m_transVec;
-	vector<ColorButton*>* m_btnVec;
+	vector<Button*>* m_btnVec;
 	vector<DebugRender*>* m_debugVec;
+	ImVec2 m_winPos;
+	LPDIRECT3DTEXTURE9 renderTargetTexture = nullptr;
 public:
 	static void Create();
 	static RenderManager* GetInstance();
@@ -19,13 +22,15 @@ public:
 public:
 	void Resister(ImageRender* ir);
 	void Unresister(ImageRender* ir);
-	void ResisterBtn(ColorButton* btn);
-	void UnresisterBtn(ColorButton* btn);
+	void ResisterBtn(Button* btn);
+	void UnresisterBtn(Button* btn);
 	void ResisterDebug(DebugRender* db);
 	void UnresisterDebug(DebugRender* db);
 
 	void Initialize();
 	void Update();
 	void Release();
+
+	ImVec2 GetWinPos();
 };
 

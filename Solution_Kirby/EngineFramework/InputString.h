@@ -4,7 +4,7 @@
 class InputString : public Component
 {
 private:
-	HWND m_hEdit = NULL;
+	char m_inputBuffer[256] = "";
 public:
 	void Initialize() override;
 	void Release() override;
@@ -12,6 +12,5 @@ public:
 	void Update() override;
 
 	string GetString();
-	void SetSize(int x, int y, int w, int h);
 };
 

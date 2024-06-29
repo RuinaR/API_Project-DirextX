@@ -54,8 +54,8 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
 
     WindowFrame::GetInstance()->Initialize();
     m_hWnd = WindowFrame::GetInstance()->GetHWND();
-    m_width = MAXWINDOWW;
-    m_height = MAXWINDOWH;
+    m_width = DRAWWINDOWW;
+    m_height = DRAWWINDOWH;
 
     if (NULL == (m_pD3D = Direct3DCreate9(D3D_SDK_VERSION)))
         return ;
@@ -101,7 +101,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene)
 
     //float aspectRatio = (float)vp.Width / (float)vp.Height;
     //D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI / 4, aspectRatio, 1.0f, 1000.0f);
-    D3DXMatrixOrthoLH(&m_matProj, MAXWINDOWW, MAXWINDOWH, 1.0f, 1000.0f);
+    D3DXMatrixOrthoLH(&m_matProj, DRAWWINDOWW, DRAWWINDOWH, 1.0f, 1000.0f);
     m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
     m_pd3dDevice->SetViewport(&vp);
 
@@ -175,6 +175,7 @@ int MainFrame::Run()
                 ImGui_ImplDX9_NewFrame();
                 ImGui_ImplWin32_NewFrame();
                 ImGui::NewFrame();
+
                 //UPDATE
                 m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
 				ObjectManager::GetInstance()->Update();

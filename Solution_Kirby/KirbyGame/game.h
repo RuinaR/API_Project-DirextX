@@ -3,7 +3,7 @@
 using namespace std;
 
 #define UNITSIZE 100
-#define MAXUNITCNT 100
+#define MAXUNITCNT 30
 
 #define TAG_LAND "land"
 #define TAG_ATTACK "attack"

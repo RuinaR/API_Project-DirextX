@@ -11,7 +11,7 @@
 #include "DebugWindow.h"
 #include "SceneChanger.h"
 #include "StageMaker.h"
-#include "ColorButton.h"
+#include "Button.h"
 
 float Lerp(float start, float end, float t)
 {
@@ -95,7 +95,10 @@ void Player::Update()
 	};
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
 
-	D3DXVECTOR3 mousePos = { Mouse::GetInstance()->GetDXPos().x,Mouse::GetInstance()->GetDXPos().y, playerPos.z };
+	D3DXVECTOR3 mousePos = {
+		Mouse::GetInstance()->GetDXPos().x + m_gameObj->Size().x / 2,
+		Mouse::GetInstance()->GetDXPos().y + m_gameObj->Size().y / 2,
+		playerPos.z};
 	D3DXVECTOR3 newPlayerPos = {
 		Lerp(playerPos.x, mousePos.x + camPos.x, smoothFactor),
 		Lerp(playerPos.y, mousePos.y + camPos.y, smoothFactor),

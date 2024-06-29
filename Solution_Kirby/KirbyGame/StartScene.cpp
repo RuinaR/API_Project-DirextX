@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "StartScene.h"
-#include "ColorButton.h"
+#include "Button.h"
 #include "SceneChanger.h"
 
 void StartScene::Init()
@@ -18,12 +18,12 @@ void StartScene::Release()
 void StartScene::Start()
 {
 	GameObject* btnObj = new GameObject();
-	ColorButton* btn = new ColorButton();
+	Button* btn = new Button();
 	btnObj->AddComponent(btn);
 	btnObj->InitializeSet();
 	btn->SetUIPos({ -300,0, -1.0f });
 	btn->SetUISize({ 200,100 });
-	btn->SetText(TEXT("GameScene Load"));
+	btn->SetText("GameScene Load");
 	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn->SetDefaultColor(RGB(255, 255, 255));
 	btn->SetHoverColor(RGB(200, 200, 200));
@@ -32,12 +32,12 @@ void StartScene::Start()
 	btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 
 	GameObject* btnObj2 = new GameObject();
-	ColorButton* btn2 = new ColorButton();
+	Button* btn2 = new Button();
 	btnObj2->AddComponent(btn2);
 	btnObj2->InitializeSet();
 	btn2->SetUIPos({ 100,0, -1.0f });
 	btn2->SetUISize({ 200,100 });
-	btn2->SetText(TEXT("EditScene Load"));
+	btn2->SetText("EditScene Load");
 	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn2->SetDefaultColor(RGB(255, 255, 255));
 	btn2->SetHoverColor(RGB(200, 200, 200));

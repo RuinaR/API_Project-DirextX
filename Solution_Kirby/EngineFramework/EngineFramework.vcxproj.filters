@@ -13,7 +13,7 @@
     <ClCompile Include="Collider.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="ColorButton.cpp">
+    <ClCompile Include="Button.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
@@ -75,7 +75,7 @@
     <ClInclude Include="Collider.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="ColorButton.h">
+    <ClInclude Include="Button.h">
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">

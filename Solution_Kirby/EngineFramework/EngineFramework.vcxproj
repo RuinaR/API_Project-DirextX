@@ -177,7 +177,7 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ColorButton.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
@@ -200,7 +200,7 @@
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="ColorButton.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Scene.h" />

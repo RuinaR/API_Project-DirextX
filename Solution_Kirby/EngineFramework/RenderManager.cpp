@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RenderManager.h"
 #include "ImageRender.h"
-#include "ColorButton.h"
+#include "Button.h"
 RenderManager* RenderManager::m_Pthis = nullptr;
 
 void RenderManager::Create()
@@ -72,14 +72,14 @@ void RenderManager::Unresister(ImageRender* ir)
 	}
 }
 
-void RenderManager::ResisterBtn(ColorButton* btn)
+void RenderManager::ResisterBtn(Button* btn)
 {
 	m_btnVec->push_back(btn);
 }
 
-void RenderManager::UnresisterBtn(ColorButton* btn)
+void RenderManager::UnresisterBtn(Button* btn)
 {
-	for (vector<ColorButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+	for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
 	{
 		if ((*itr) == btn)
 		{
@@ -110,13 +110,35 @@ void RenderManager::Initialize()
 {
 	m_transVec = new vector<ImageRender*>();
 	m_noTransVec = new vector<ImageRender*>();
-	m_btnVec = new vector<ColorButton*>();
+	m_btnVec = new vector<Button*>();
 	m_debugVec = new vector<DebugRender*>();
+
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
+	device->CreateTexture(
+		DRAWWINDOWW,
+		DRAWWINDOWH,
+		1,
+		D3DUSAGE_RENDERTARGET,
+		D3DFMT_A8R8G8B8,
+		D3DPOOL_DEFAULT,
+		&renderTargetTexture,
+		nullptr);
 }
 
 void RenderManager::Update()
 {
+	LPDIRECT3DSURFACE9 renderTargetSurface = nullptr;
+	LPDIRECT3DSURFACE9 originalRenderTarget = nullptr;
+	LPDIRECT3DSURFACE9 originalDepthStencil = nullptr;
+
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
+	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	
+	renderTargetTexture->GetSurfaceLevel(0, &renderTargetSurface);
+
+	device->GetRenderTarget(0, &originalRenderTarget);
+	device->GetDepthStencilSurface(&originalDepthStencil);
+	device->SetRenderTarget(0, renderTargetSurface);
 
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
@@ -151,12 +173,27 @@ void RenderManager::Update()
 		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
 		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		for (vector<ColorButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
-		{
-			(*itr)->UpdateRender();
-		}
 
 		//imgui
+		device->SetRenderTarget(0, originalRenderTarget);
+		device->SetDepthStencilSurface(originalDepthStencil);
+		originalRenderTarget->Release();
+		originalDepthStencil->Release();
+
+		ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoResize );
+
+		//button/imgui
+		for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+		{
+			ImGui::SameLine();
+			(*itr)->UpdateRender();
+		}
+		
+		ImVec2 windowSize = ImGui::GetContentRegionAvail();
+		ImGui::Image((void*)renderTargetTexture, windowSize);
+		m_winPos = ImGui::GetWindowPos();
+		ImGui::End();
+
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		ImGui::EndFrame();
 		device->SetRenderState(D3DRS_ZENABLE, FALSE);
@@ -168,6 +205,7 @@ void RenderManager::Update()
 
 		device->EndScene();
 	}
+	
 	device->Present(NULL, NULL, NULL, NULL);
 }
 
@@ -181,4 +219,15 @@ void RenderManager::Release()
 	delete m_btnVec;
 	m_debugVec->clear();
 	delete m_debugVec;
+
+	if (renderTargetTexture != nullptr)
+	{
+		renderTargetTexture->Release();
+		renderTargetTexture = nullptr;
+	}
+}
+
+ImVec2 RenderManager::GetWinPos()
+{
+	return m_winPos;
 }

@@ -70,282 +70,20 @@ void Edit::WriteMapData()
     cout << "파일에 맵 데이터를 성공적으로 저장했습니다." << endl;
 }
 
-GameObject* Edit::DrawMap(MapType t, int i, int j)
-{
-    GameObject* obj = nullptr;
-    switch (t)
-    {
-    case MapType::None:
-    {
-        return nullptr;
-    }
-    break;
-    case MapType::Player:
-    {
-        obj = new GameObject();
-        obj->AddComponent(new ImageRender(m_player));
-        obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
-        obj->InitializeSet();
-    }
-    break;
-    case MapType::Block:
-    {
-        obj = new GameObject();
-        obj->AddComponent(new ImageRender(m_land));
-        obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i ) ,(float)(-UNITSIZE * j ), 0.0f });
-        obj->InitializeSet();
-    }
-    break;
-    case MapType::DefaultMon:
-    {
-        obj = new GameObject();
-        obj->AddComponent(new ImageRender(m_defaultObj));
-        obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
-        obj->InitializeSet();
-    }
-    break;
-    case MapType::SwordMon:
-    {
-        obj = new GameObject();
-        obj->AddComponent(new ImageRender(m_swordObj));
-        obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
-        obj->InitializeSet();
-    }
-    break;
-    case MapType::StoneMon:
-    {
-        obj = new GameObject();
-        obj->AddComponent(new ImageRender(m_stoneObj));
-        obj->Size() = { UNITSIZE, UNITSIZE};
-        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
-        obj->InitializeSet();
-    }
-    break;
-    case MapType::Door:
-    {
-        obj = new GameObject();
-        obj->AddComponent(new ImageRender(m_door));
-        obj->Size() = { UNITSIZE, UNITSIZE };
-        obj->SetPosition({ (float)(UNITSIZE * i) ,(float)(-UNITSIZE * j), 0.0f });
-        obj->InitializeSet();
-    }
-    break;
-    }
-    return obj;
-}
-
-void Edit::SelectNone()
-{
-    m_select = MapType::None;
-}
-
-void Edit::SelectLand()
-{
-    m_select = MapType::Block;
-}
-
-void Edit::SelectDefaultMon()
-{
-    m_select = MapType::DefaultMon;
-}
-
-void Edit::SelectSwordMon()
-{
-    m_select = MapType::SwordMon;
-}
-
-void Edit::SelectStoneMon()
-{
-    m_select = MapType::StoneMon;
-}
-
-void Edit::SelectPlayer()
-{
-    m_select = MapType::Player;
-}
-
-void Edit::SelectDoor()
-{
-    m_select = MapType::Door;
-}
-
 void Edit::InitMap()
 {
-    for (int i = 0; i < m_count; ++i)
+    m_mapTypeData.clear();
+
+    for (int i = 0; i < m_count; i++)
     {
-        for (int j = 0; j < m_count; ++j)
+        vector<MapType> row;
+        for (int j = 0; j < m_count; j++)
         {
-            if (m_mapData[i][j])
-            {
-                m_mapData[i][j]->SetDestroy(true);
-                m_mapData[i][j] = nullptr;
-            }
-			m_mapTypeData[i][j] = MapType::None;
-		}
-	}
-	while (!m_redoStack.empty())
-		m_redoStack.pop();
-	while (!m_undoStack.empty())
-		m_undoStack.pop();
-
-    m_mapData[PLAYER_DEFAULT_Y][PLAYER_DEFAULT_X] = DrawMap(MapType::Player, PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y);
-    m_mapTypeData[PLAYER_DEFAULT_Y][PLAYER_DEFAULT_X] = MapType::Player;
-}
-
-void Edit::ReDrawMapObj(int indexX, int indexY, MapType type)
-{
-    cout << "RedoStackSize : " << m_redoStack.size() << endl;
-    cout << "UndoStackSize : " << m_undoStack.size() << endl;
-
-	if (m_mapTypeData[indexY][indexX] != MapType::None)
-	{
-		m_mapData[indexY][indexX]->SetDestroy(true);
-		if (type == MapType::None)
-		{
-			m_mapData[indexY][indexX] = nullptr;
-			m_mapTypeData[indexY][indexX] = MapType::None;
-			return;
-		}
-	}
-
-	GameObject* newObj = new GameObject();
-	switch (type)
-	{
-	case MapType::None:
-		break;
-	case MapType::Block:
-		newObj->AddComponent(new ImageRender(m_land));
-		break;
-	case MapType::Player:
-		newObj->AddComponent(new ImageRender(m_player));
-		for (int i = 0; i < m_count; ++i)
-		{
-			for (int j = 0; j < m_count; ++j)
-			{
-				if (m_mapTypeData[i][j] == MapType::Player)
-				{
-					m_mapData[i][j]->SetDestroy(true);
-					m_mapData[i][j] = nullptr;
-					m_mapTypeData[i][j] = MapType::None;
-				}
-			}
-		}
-		break;
-	case MapType::DefaultMon:
-		newObj->AddComponent(new ImageRender(m_defaultObj));
-		break;
-	case MapType::SwordMon:
-		newObj->AddComponent(new ImageRender(m_swordObj));
-		break;
-	case MapType::StoneMon:
-		newObj->AddComponent(new ImageRender(m_stoneObj));
-		break;
-    case MapType::Door:
-        newObj->AddComponent(new ImageRender(m_door));
-        break;
-	}
-
-	newObj->Size() = { UNITSIZE, UNITSIZE };
-	newObj->SetPosition({ (float)(UNITSIZE * indexX ) ,(float)(-UNITSIZE * indexY ), 0.0f });
-	newObj->InitializeSet();
-
-	m_mapData[indexY][indexX] = newObj;
-	m_mapTypeData[indexY][indexX] = type;
-}
-
-void Edit::Undo()
-{
-    if (m_undoStack.empty())
-        return;
-
-    UndoRedoData data = m_undoStack.top();
-    m_undoStack.pop();
-
-    UndoRedoData newData = data; 
-    newData.isErase = !newData.isErase;
-    if (data.isErase)
-    {
-        m_redoStack.push(newData);
-        ReDrawMapObj(data.x, data.y, MapType::None);
-    }
-	else if (data.type == MapType::Player)
-	{
-		newData.isErase = false;
-		for (int i = 0; i < m_mapTypeData.size(); i++)
-		{
-			bool isFind = false;
-			for (int j = 0; j < m_mapTypeData[i].size(); j++)
-			{
-				if (m_mapTypeData[i][j] == MapType::Player)
-				{
-					newData.x = j;
-					newData.y = i;
-					isFind = true;
-					break;
-				}
-			}
-			if (isFind)
-				break;
-		}
-		newData.type = MapType::Player;
-		m_redoStack.push(newData);
-		ReDrawMapObj(data.x, data.y, data.type);
-	}
-    else
-    {
-        m_redoStack.push(newData);
-        ReDrawMapObj(data.x, data.y, data.type);
-    }
-}
-
-void Edit::Redo()
-{
-    if (m_redoStack.empty())
-        return;
-
-    UndoRedoData data = m_redoStack.top();
-    m_redoStack.pop();
-
-    UndoRedoData newData = data; 
-    newData.isErase = !newData.isErase;
-
-    if (data.isErase)
-    {
-        m_undoStack.push(newData);
-        ReDrawMapObj(data.x, data.y, MapType::None);
-    }
-    else if (data.type == MapType::Player)
-    {
-        newData.isErase = false;
-        for (int i = 0; i < m_mapTypeData.size(); i++)
-        {
-            bool isFind = false;
-            for (int j = 0; j < m_mapTypeData[i].size(); j++)
-            {
-                if (m_mapTypeData[i][j] == MapType::Player)
-                {
-                    newData.x = j;
-                    newData.y = i;
-                    isFind = true;
-                    break;
-                }
-            }
-            if (isFind)
-                break;
+            row.push_back(MapType::None);
         }
-        newData.type = MapType::Player;
-        m_undoStack.push(newData);
-        ReDrawMapObj(data.x, data.y, data.type);
+        m_mapTypeData.push_back(row);
     }
-    else
-    {
-        m_undoStack.push(newData);
-        ReDrawMapObj(data.x, data.y, data.type);
-    }
+    m_mapTypeData[PLAYER_DEFAULT_X][PLAYER_DEFAULT_Y] = MapType::Player;
 }
 
 void Edit::Initialize()
@@ -358,72 +96,22 @@ void Edit::Initialize()
     m_player = AnimationManager::LoadTexture(L"Bitmaps\\obj\\player.bmp");
 	m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door.bmp");
 
-	for (int i = 0; i < (int)MapType::max; i++)
-	{
-		GameObject* obj = new GameObject();
-		m_selectBtn[i] = new ColorButton();
-		obj->AddComponent(m_selectBtn[i]);
-        obj->InitializeSet();
-		m_selectBtn[i]->SetUIPos({ -700.0f + i * 100, 400, -1.0f });
-		m_selectBtn[i]->SetUISize({ 50,50 });
-		m_selectBtn[i]->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-		m_selectBtn[i]->SetDefaultColor(RGB(255, 255, 255));
-		m_selectBtn[i]->SetHoverColor(RGB(200, 200, 200));
-		m_selectBtn[i]->SetDownColor(RGB(150, 150, 150));
-		
-	}
-	m_selectBtn[(int)MapType::None]->SetText(TEXT("빈곳"));
-	m_selectBtn[(int)MapType::Block]->SetText(TEXT("땅"));
-	m_selectBtn[(int)MapType::Player]->SetText(TEXT("커비"));
-    m_selectBtn[(int)MapType::DefaultMon]->SetText(TEXT("기본 몹"));
-    m_selectBtn[(int)MapType::SwordMon]->SetText(TEXT("소드 몹"));
-    m_selectBtn[(int)MapType::StoneMon]->SetText(TEXT("스톤 몹"));
-    m_selectBtn[(int)MapType::Door]->SetText(TEXT("문"));
+    //타일셋 데이터
+    Tileset[(int)MapType::None] = "Empty";
+    Tileset[(int)MapType::Block] = "Block";
+    Tileset[(int)MapType::Player] = "Player";
+    Tileset[(int)MapType::DefaultMon] = "DefaultMon";
+    Tileset[(int)MapType::SwordMon] = "SwordMon";
+    Tileset[(int)MapType::StoneMon] = "StoneMon";
+    Tileset[(int)MapType::Door] = "Door";
 
-    GameObject* obj = new GameObject();
-    m_InitMapBtn = new ColorButton();
-    obj->AddComponent(m_InitMapBtn);
-    m_InitMapBtn->SetUIPos({200, 400, -1.0f});
-    m_InitMapBtn->SetUISize({ 90,50 });
-    obj->InitializeSet();
-    m_InitMapBtn->SetText(TEXT("초기화"));
-    m_InitMapBtn->SetEvent(bind(&Edit::InitMap, this));
-
-    GameObject* objUndo = new GameObject();
-    ColorButton* btnUndo = new ColorButton();
-    objUndo->AddComponent(btnUndo);
-    btnUndo->SetUIPos({ 300, 400, -1.0f });
-    btnUndo->SetUISize({ 90,50 });
-    objUndo->InitializeSet();
-    btnUndo->SetText(TEXT("UnDo"));
-    btnUndo->SetEvent(bind(&Edit::Undo, this));
-
-    GameObject* objRedo = new GameObject();
-    ColorButton* btnRedo = new ColorButton();
-    objRedo->AddComponent(btnRedo);
-    btnRedo->SetUIPos({ 400, 400, -1.0f });
-    btnRedo->SetUISize({ 90,50 });
-    objRedo->InitializeSet();
-    btnRedo->SetText(TEXT("ReDo"));
-    btnRedo->SetEvent(bind(&Edit::Redo, this));
-
-    m_selectBtn[(int)MapType::None]->SetEvent(bind(&Edit::SelectNone, this));
-    m_selectBtn[(int)MapType::Block]->SetEvent(bind(&Edit::SelectLand, this));
-    m_selectBtn[(int)MapType::Player]->SetEvent(bind(&Edit::SelectPlayer, this));
-    m_selectBtn[(int)MapType::DefaultMon]->SetEvent(bind(&Edit::SelectDefaultMon, this));
-    m_selectBtn[(int)MapType::SwordMon]->SetEvent(bind(&Edit::SelectSwordMon, this));
-    m_selectBtn[(int)MapType::StoneMon]->SetEvent(bind(&Edit::SelectStoneMon, this));
-    m_selectBtn[(int)MapType::Door]->SetEvent(bind(&Edit::SelectDoor, this));
-
-
-    m_mapData = vector<vector<GameObject*>>(m_count);
-    m_mapTypeData = vector<vector<MapType>>(m_count);
-    for (int i = 0; i < m_count; i++)
-    {
-        m_mapData[i] = vector<GameObject*>(m_count);
-        m_mapTypeData[i] = vector<MapType>(m_count);
-    }
-
+    TextureHandle[(int)MapType::None] = nullptr;
+    TextureHandle[(int)MapType::Block] = m_land;
+    TextureHandle[(int)MapType::Player] = m_player;
+    TextureHandle[(int)MapType::DefaultMon] = m_defaultObj;
+    TextureHandle[(int)MapType::SwordMon] = m_swordObj;
+    TextureHandle[(int)MapType::StoneMon] = m_stoneObj;
+    TextureHandle[(int)MapType::Door] = m_door;
 }
 
 void Edit::Release()
@@ -443,141 +131,84 @@ void Edit::Start()
 {
     RECT rect;
     GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
-    Camera::GetInstance()->SetPos(UNITSIZE * 10, -UNITSIZE * 2);
+    Camera::GetInstance()->SetPos(UNITSIZE * 10, -UNITSIZE * 5);
 }
 
 void Edit::Update()
 {
-	/*for (int i = 0; i < m_count; i++)
-	{
-        MoveToEx(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), 
-            i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().x, -Camera::GetInstance()->GetPos().y, NULL);
-        LineTo(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), 
-            i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().x, UNITSIZE * 100 - Camera::GetInstance()->GetPos().y);
-	}
-    for (int i = 0; i < m_count; i++)
+    ImGui::Begin("Tile Map Editor");
+    // 타일셋 선택 상자
+    ImGui::Text("Tileset:");
+    ImGui::SameLine();
+    ImGui::Combo("##TilesetCombo", &m_SelectedTileIndex, Tileset, (int)MapType::max);
+    ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 0.6f, 0.6f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.7f, 0.7f, 0.7f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.8f, 0.8f, 0.8f));
+    // 타일 맵 그리드
+    for (int i = 0; i < m_mapTypeData.size(); ++i)
     {
-        MoveToEx(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), 
-            - Camera::GetInstance()->GetPos().x, i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().y, NULL);
-        LineTo(WindowFrame::GetInstance()->GetBuffer()->GetHDC(), 
-            UNITSIZE * 100 - Camera::GetInstance()->GetPos().x, i * UNITSIZE - UNITSIZE / 2 - Camera::GetInstance()->GetPos().y);
-    }*/
-
-	int cameraSpd = 10;
-	if (GetAsyncKeyState(0x57)) //W
-	{
-		if (Camera::GetInstance()->GetPos().y + cameraSpd < -UNITSIZE * 2)
-			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y + cameraSpd);
-	}
-	if (GetAsyncKeyState(0x53)) //S
-	{
-		if (Camera::GetInstance()->GetPos().y - cameraSpd >= -UNITSIZE * m_count + UNITSIZE * 15)
-			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x, Camera::GetInstance()->GetPos().y - cameraSpd);
-	}
-	if (GetAsyncKeyState(0x41)) //A
-	{
-		if (Camera::GetInstance()->GetPos().x - cameraSpd >= UNITSIZE * 10)
-			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x - cameraSpd, Camera::GetInstance()->GetPos().y);
-	}
-	if (GetAsyncKeyState(0x44)) //D
-	{
-		if (Camera::GetInstance()->GetPos().x + cameraSpd <= UNITSIZE * m_count - UNITSIZE * 20)
-			Camera::GetInstance()->SetPos(Camera::GetInstance()->GetPos().x + cameraSpd, Camera::GetInstance()->GetPos().y);
-	}
-
-
-	if (Mouse::GetInstance()->IsLeftDown())
-    {
-        if (Mouse::GetInstance()->GetWinPos().y < UNITSIZE)
-            return;
-
-        D3DVIEWPORT9 vp;
-        MainFrame::GetInstance()->GetDevice()->GetViewport(&vp);
-        int x = Mouse::GetInstance()->GetWinPos().x + Camera::GetInstance()->GetPos().x - vp.Width / 2 + UNITSIZE / 2;
-        int y = Mouse::GetInstance()->GetWinPos().y - Camera::GetInstance()->GetPos().y - vp.Height / 2 + UNITSIZE / 2;
-
-        int indexX = x / UNITSIZE;
-        int indexY = y / UNITSIZE;
-        if (m_mapTypeData[indexY][indexX] == MapType::Player)
+        for (int j = 0; j < m_mapTypeData[i].size(); ++j)
         {
-            cout << "플레이어는 지울 수 없습니다." << endl;
-            return;
-        }
-        if (m_select == MapType::Player && m_mapTypeData[indexY][indexX] != MapType::None)
-        {
-            cout << "플레이어는 빈 곳에만 위치할 수 있습니다." << endl;
-            return;
-        }
-        if (m_mapTypeData[indexY][indexX] != m_select)
-        {    
-            while (!m_redoStack.empty())
+            ImGui::PushID(j * m_mapTypeData.size() + i);
+            // 각 타일을 버튼으로 그리기
+            if (m_mapTypeData[i][j] != MapType::None)
             {
-                m_redoStack.pop();
-            }
- 
-            UndoRedoData undoData;
-            undoData.x = indexX;
-            undoData.y = indexY;
-            if (m_select == MapType::None )
-            {
-                undoData.isErase = false;
-                undoData.type = m_mapTypeData[indexY][indexX];
-                m_undoStack.push(undoData);
-                ReDrawMapObj(indexX, indexY, m_select);
-            }
-            else if (m_select == MapType::Player)
-            {
-                undoData.isErase = false;
-                for (int i = 0; i < m_mapTypeData.size(); i++)
-                {
-                    bool isFind = false;
-                    for (int j = 0; j < m_mapTypeData[i].size(); j++)
+                if (ImGui::ImageButton(
+                    (ImTextureID)TextureHandle[(int)m_mapTypeData[i][j]],
+                    ImVec2(42, 42),
+                    ImVec2(0, 0),
+					ImVec2(1, 1),
+					-1,
+					ImVec4(0, 0, 0, 0),
+					ImVec4(1, 1, 1, 1)
+				))
+				{
+                    if ((MapType)m_SelectedTileIndex == MapType::Player)
                     {
-                        if (m_mapTypeData[i][j] == MapType::Player)
-                        {
-                            undoData.x = j;
-                            undoData.y = i;
-                            isFind = true;
-                            break;
-                        }
+                        m_mapTypeData[playerI][playerJ] = MapType::None;
+                        playerI = i;
+                        playerJ = j;
+                        m_mapTypeData[i][j] = MapType::Player;
                     }
-                    if (isFind)
-                        break;
-                }
-                undoData.type = MapType::Player;
-                m_undoStack.push(undoData);
-                ReDrawMapObj(indexX, indexY, m_select);
-            }
-            else
-            {
-                ReDrawMapObj(indexX, indexY, m_select);
-                undoData.isErase = true;
-                undoData.type = m_mapTypeData[indexY][indexX];
-                m_undoStack.push(undoData);
-            }
-        }
+					else if (m_mapTypeData[i][j] != MapType::Player)
+						m_mapTypeData[i][j] = (MapType)m_SelectedTileIndex;
+				}
+			}
+			else
+			{
+				if (ImGui::Button(Tileset[(int)m_mapTypeData[i][j]], ImVec2(50, 50)))
+				{
+                    if ((MapType)m_SelectedTileIndex == MapType::Player)
+                    {
+                        m_mapTypeData[playerI][playerJ] = MapType::None;
+                        playerI = i;
+                        playerJ = j;
+                        m_mapTypeData[i][j] = MapType::Player;
+                    }
+                    else if (m_mapTypeData[i][j] != MapType::Player)
+                        m_mapTypeData[i][j] = (MapType)m_SelectedTileIndex;
+				}
+			}
+
+
+            ImGui::PopID();
+			if (j + 1 != m_count)
+				ImGui::SameLine();
+		}
 	}
+    ImGui::PopStyleColor(3);
+	ImGui::End();
 }
 
 void Edit::SetMap(string mapName)
 {
+    InitMap();
     vector<string> strMapData = ReadMapData(mapName);
-    if (strMapData.empty())
+    for (int i = 0; i < strMapData.size(); i++)
     {
-        m_mapTypeData[PLAYER_DEFAULT_Y][PLAYER_DEFAULT_X] = MapType::Player;
-        m_mapData[PLAYER_DEFAULT_Y][PLAYER_DEFAULT_X] = DrawMap(MapType::Player, PLAYER_DEFAULT_X, PLAYER_DEFAULT_Y);
-        return;
+        for (int j = 0; j < strMapData[i].size(); j++)
+        {
+            m_mapTypeData[i][j] = (MapType)(strMapData[i][j] - '0');
+        }
     }
-
-	for (int i = 0; i < m_count; ++i)
-	{
-		vector<GameObject*> row;
-		for (int j = 0; j < m_count; ++j)
-		{
-			m_mapData[i][j] = DrawMap((MapType)(strMapData[i][j] - '0'), j, i);
-			m_mapTypeData[i][j] = (MapType)(strMapData[i][j] - '0');
-			if ((MapType)(strMapData[i][j] - '0') != MapType::None)
-				cout << "Draw Tile Type : " << MapTypeToString((MapType)(strMapData[i][j] - '0')) << endl;
-		}
-	}
 }
