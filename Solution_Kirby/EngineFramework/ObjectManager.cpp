@@ -1,7 +1,41 @@
 #include "pch.h"
 #include "GameObject.h"
+#include "Component.h"
 #include "DebugWindow.h"
 ObjectManager* ObjectManager::m_Pthis = nullptr;
+
+void ObjectManager::ImguiUpdate()
+{
+	char str[64];
+	
+	ImGui::Begin("Hierarchy");
+	int i = 0;
+	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	{
+		i++;
+		sprintf_s(str, 64, "-%d. %s", i, (*itr)->GetTag().c_str());
+		if (ImGui::Selectable(str, m_selected == itr))
+		{
+			m_selected = itr;
+		}
+	}
+	ImGui::End();
+
+	if (m_selected != m_objList->end() && !(*m_selected)->GetDestroy())
+	{
+		ImGui::Begin("Inspector");
+
+		sprintf_s(str, 64, "X:%.2f, Y:%.2f, Z:%.2f", (*m_selected)->Position().x, (*m_selected)->Position().y, (*m_selected)->Position().z);
+		ImGui::Text(str);
+		for (vector<Component*>::iterator itr = (*m_selected)->GetComponentVec()->begin(); itr != (*m_selected)->GetComponentVec()->end(); itr++)
+		{
+			const type_info& typeInfo = typeid(**itr);
+			ImGui::Text(typeInfo.name());
+		}
+
+		ImGui::End();
+	}
+}
 
 void ObjectManager::Create()
 {
@@ -116,6 +150,7 @@ bool ObjectManager::FindObject(GameObject* obj)
 void ObjectManager::Initialize()
 {
 	m_objList = new list<GameObject*>();
+	m_selected = m_objList->end();
 }
 
 void ObjectManager::Release()
@@ -131,8 +166,11 @@ void ObjectManager::Update()
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end();)
 	{
 		(*itr)->Update();
+
 		if (((*itr)->GetDestroy()))
 		{
+			if (m_selected == itr)
+				m_selected = m_objList->end();
 			(*itr)->Release();
 			delete(*itr);
 			(*itr) = nullptr;
@@ -144,6 +182,8 @@ void ObjectManager::Update()
 		else
 			itr++;
 	}
+
+	ImguiUpdate();
 }
 
 void ObjectManager::Clear()

@@ -6,6 +6,8 @@ class ObjectManager
 private:
 	static ObjectManager* m_Pthis;
 	list<GameObject*>* m_objList = nullptr;
+	list<GameObject*>::iterator m_selected;
+	void ImguiUpdate();
 public:
 	static void Create();
 	static ObjectManager* GetInstance();
