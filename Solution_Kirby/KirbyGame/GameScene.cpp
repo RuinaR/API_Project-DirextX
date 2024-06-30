@@ -36,10 +36,6 @@ void GameScene::StartGame()
 	btn->SetUISize({ 200,100 });
 	btn->SetText("GameScene Load");
 	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn->SetDefaultColor(RGB(255, 255, 255));
-	btn->SetHoverColor(RGB(200, 200, 200));
-	btn->SetDownColor(RGB(150, 150, 150));
-	btn->SetTextSize(20);
 	btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 
 	GameObject* btnObj2 = new GameObject();
@@ -50,10 +46,6 @@ void GameScene::StartGame()
 	btn2->SetUISize({ 200,100 });
 	btn2->SetText("StartScene Load");
 	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn2->SetDefaultColor(RGB(255, 255, 255));
-	btn2->SetHoverColor(RGB(200, 200, 200));
-	btn2->SetDownColor(RGB(150, 150, 150));
-	btn2->SetTextSize(20);
 	btn2->SetEvent(bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
 }
 
@@ -86,10 +78,6 @@ void GameScene::Start()
 	m_btn->SetUISize({ 200,100 });
 	m_btn->SetText("Start Game");
 	m_btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	m_btn->SetDefaultColor(RGB(255, 255, 255));
-	m_btn->SetHoverColor(RGB(200, 200, 200));
-	m_btn->SetDownColor(RGB(150, 150, 150));
-	m_btn->SetTextSize(20);
 	m_btn->SetEvent(bind(&GameScene::StartGame, this));
 }
 

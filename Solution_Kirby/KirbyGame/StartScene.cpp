@@ -25,10 +25,6 @@ void StartScene::Start()
 	btn->SetUISize({ 200,100 });
 	btn->SetText("GameScene Load");
 	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn->SetDefaultColor(RGB(255, 255, 255));
-	btn->SetHoverColor(RGB(200, 200, 200));
-	btn->SetDownColor(RGB(150, 150, 150));
-	btn->SetTextSize(20);
 	btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 
 	GameObject* btnObj2 = new GameObject();
@@ -39,9 +35,5 @@ void StartScene::Start()
 	btn2->SetUISize({ 200,100 });
 	btn2->SetText("EditScene Load");
 	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn2->SetDefaultColor(RGB(255, 255, 255));
-	btn2->SetHoverColor(RGB(200, 200, 200));
-	btn2->SetDownColor(RGB(150, 150, 150));
-	btn2->SetTextSize(20);
 	btn2->SetEvent(bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
 }

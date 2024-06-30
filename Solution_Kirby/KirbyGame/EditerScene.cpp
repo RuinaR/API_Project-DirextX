@@ -28,10 +28,6 @@ void EditerScene::StartEdit()
 	btn->SetUISize({ 190,50 });
 	btn->SetText("StartScene Load");
 	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn->SetDefaultColor(RGB(255, 255, 255));
-	btn->SetHoverColor(RGB(200, 200, 200));
-	btn->SetDownColor(RGB(150, 150, 150));
-	btn->SetTextSize(20);
 	btn->SetEvent(bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
 }
 void EditerScene::Init()
@@ -61,9 +57,5 @@ void EditerScene::Start()
 	m_btn->SetUISize({ 190,50 });
 	m_btn->SetText("Start Edit");
 	m_btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	m_btn->SetDefaultColor(RGB(255, 255, 255));
-	m_btn->SetHoverColor(RGB(200, 200, 200));
-	m_btn->SetDownColor(RGB(150, 150, 150));
-	m_btn->SetTextSize(20);
 	m_btn->SetEvent(bind(&EditerScene::StartEdit, this));
 }

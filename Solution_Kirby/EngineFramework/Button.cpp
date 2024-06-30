@@ -4,7 +4,6 @@
 void Button::Initialize()
 {
     m_gameObj->SetTag("UI_Button");
-    m_curColor = m_defaultColor;
     RenderManager::GetInstance()->ResisterBtn(this);
 }
 
@@ -48,7 +47,6 @@ void Button::UpdateRender()
     {
         m_isClicked = true;
     }
-
 
     //RECT rect = {
     //    static_cast<LONG>(m_UIPos.x + Camera::GetInstance()->GetPos().x),
@@ -131,34 +129,10 @@ void Button::SetUISize(D3DXVECTOR2 v)
         m_gameObj->Size() = m_UISize;
 }
 
-void Button::SetDefaultColor(COLORREF col)
-{
-    m_defaultColor = col;
-}
-
-void Button::SetHoverColor(COLORREF col)
-{
-    m_hoverColor = col;
-}
-
-void Button::SetDownColor(COLORREF col)
-{
-    m_downColor = col;
-}
-
-void Button::SetBorderColor(COLORREF col)
-{
-    m_borderColor = col;
-}
 
 void Button::SetTextColor(D3DCOLOR col)
 {
     m_textColor = col;
-}
-
-void Button::SetTextSize(int val)
-{
-    m_textSize = val;
 }
 
 void Button::SetText(string str)

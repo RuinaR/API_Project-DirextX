@@ -3,10 +3,6 @@
 class Button : public Component
 {
 protected:
-    COLORREF m_defaultColor = RGB(255, 255, 255);
-    COLORREF m_hoverColor = RGB(255, 255, 0);
-    COLORREF m_downColor = RGB(0, 255, 0);
-    COLORREF m_borderColor = RGB(0, 0, 0);
     D3DCOLOR m_textColor = D3DCOLOR_XRGB(0, 0, 0);
 
     COLORREF m_curColor = NULL;
@@ -29,12 +25,7 @@ public:
 
     void SetUIPos(D3DXVECTOR3 v);
     void SetUISize(D3DXVECTOR2 v);
-    void SetDefaultColor(COLORREF col);
-    void SetHoverColor(COLORREF col);
-    void SetDownColor(COLORREF col);
-    void SetBorderColor(COLORREF col);
     void SetTextColor(D3DCOLOR col);
-    void SetTextSize(int val);
     void SetText(string str);
 
     void SetEvent(std::function<void()> func);
