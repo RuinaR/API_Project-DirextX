@@ -204,9 +204,9 @@ void Edit::SetMap(string mapName)
 {
     InitMap();
     vector<string> strMapData = ReadMapData(mapName);
-    for (int i = 0; i < strMapData.size(); i++)
+    for (int i = 0; i < strMapData.size() && i < m_mapTypeData.size(); i++)
     {
-        for (int j = 0; j < strMapData[i].size(); j++)
+        for (int j = 0; j < strMapData[i].size() && j < m_mapTypeData.size(); j++)
         {
             m_mapTypeData[i][j] = (MapType)(strMapData[i][j] - '0');
         }

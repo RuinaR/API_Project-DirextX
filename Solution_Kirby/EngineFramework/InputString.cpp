@@ -17,7 +17,7 @@ void InputString::Start()
 
 void InputString::Update()
 {
-    ImGui::Begin("InputText Example");
+    ImGui::Begin("InputText");
 
     // InputText À§Á¬ »ý¼º
     ImGui::InputText("Input", m_inputBuffer, IM_ARRAYSIZE(m_inputBuffer));
