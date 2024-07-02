@@ -141,6 +141,7 @@ int MainFrame::Run()
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui::StyleColorsDark();
     ImGui_ImplWin32_Init(m_hWnd);
@@ -178,6 +179,7 @@ int MainFrame::Run()
                 ImGui::Begin("Frame");
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
                 ImGui::End();
+
                 //UPDATE
                 m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
 				ObjectManager::GetInstance()->Update();
