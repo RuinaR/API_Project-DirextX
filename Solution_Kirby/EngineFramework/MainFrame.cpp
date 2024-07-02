@@ -175,7 +175,9 @@ int MainFrame::Run()
                 ImGui_ImplDX9_NewFrame();
                 ImGui_ImplWin32_NewFrame();
                 ImGui::NewFrame();
-
+                ImGui::Begin("Frame");
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+                ImGui::End();
                 //UPDATE
                 m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
 				ObjectManager::GetInstance()->Update();
