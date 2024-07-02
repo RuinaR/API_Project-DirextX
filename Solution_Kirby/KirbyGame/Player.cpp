@@ -96,8 +96,8 @@ void Player::Update()
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
 
 	D3DXVECTOR3 mousePos = {
-		Mouse::GetInstance()->GetDXPos().x + m_gameObj->Size().x / 2,
-		Mouse::GetInstance()->GetDXPos().y + m_gameObj->Size().y / 2,
+		Mouse::GetInstance()->GetDXPos().x,
+		Mouse::GetInstance()->GetDXPos().y,
 		playerPos.z};
 	D3DXVECTOR3 newPlayerPos = {
 		Lerp(playerPos.x, mousePos.x + camPos.x, smoothFactor),

@@ -180,7 +180,8 @@ void RenderManager::Update()
 		originalRenderTarget->Release();
 		originalDepthStencil->Release();
 
-		ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoResize );
+		ImGui::SetNextWindowSize(ImVec2(DRAWWINDOWW, DRAWWINDOWH), ImGuiCond_Once);
+		ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize);
 
 		//button/imgui
 		for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
