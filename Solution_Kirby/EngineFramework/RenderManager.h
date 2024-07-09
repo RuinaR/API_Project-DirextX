@@ -8,10 +8,11 @@ class RenderManager
 {
 private:
 	static RenderManager* m_Pthis;
-	vector<ImageRender*>* m_noTransVec;
-	vector<ImageRender*>* m_transVec;
-	vector<Button*>* m_btnVec;
-	vector<DebugRender*>* m_debugVec;
+	SharedPointer<vector<ImageRender*>> m_noTransVec;
+	SharedPointer<vector<ImageRender*>> m_transVec;
+	SharedPointer<vector<Button*>> m_btnVec;
+	SharedPointer<vector<DebugRender*>> m_debugVec;
+
 	ImVec2 m_winPos;
 	LPDIRECT3DTEXTURE9 renderTargetTexture = nullptr;
 public:

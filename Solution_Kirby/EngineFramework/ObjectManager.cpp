@@ -59,9 +59,6 @@ void ObjectManager::Destroy()
 			delete(*itr);
 			(*itr) = nullptr;
 		}
-		delete m_Pthis->m_objList;
-		m_Pthis->m_objList = nullptr;
-
 		delete m_Pthis;
 		m_Pthis = nullptr;
 	}
@@ -204,7 +201,7 @@ int ObjectManager::Count()
 
 list<GameObject*>* ObjectManager::GetObjList()
 {
-	return m_objList;
+	return m_objList.get();
 }
 
 void ObjectManager::OnLBtnDown()

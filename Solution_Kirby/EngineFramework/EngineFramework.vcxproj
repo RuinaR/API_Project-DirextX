@@ -204,6 +204,7 @@
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SharedPointer.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="WindowFrame.h" />

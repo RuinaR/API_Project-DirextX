@@ -29,6 +29,7 @@
 #include "../Imgui/source/imgui_impl_dx9.h"
 #include "../Imgui/source/imgui_impl_win32.h"
 
+#include "SharedPointer.h"
 #include "DebugRender.h"
 #include "AnimationManager.h"
 #include "ObjectManager.h"

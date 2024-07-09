@@ -135,6 +135,9 @@
     <ClInclude Include="DebugRender.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="SharedPointer.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Component">
