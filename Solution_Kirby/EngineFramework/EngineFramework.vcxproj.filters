@@ -138,6 +138,9 @@
     <ClInclude Include="SharedPointer.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectPool.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Component">

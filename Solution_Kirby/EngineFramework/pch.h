@@ -30,6 +30,9 @@
 #include "../Imgui/source/imgui_impl_win32.h"
 
 #include "SharedPointer.h"
+
+#include "ObjectPool.h"
+
 #include "DebugRender.h"
 #include "AnimationManager.h"
 #include "ObjectManager.h"

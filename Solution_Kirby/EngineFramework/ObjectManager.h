@@ -5,7 +5,7 @@ class ObjectManager
 {
 private:
 	static ObjectManager* m_Pthis;
-	SharedPointer<list<GameObject*>> m_objList;
+	list<GameObject*>* m_objList;
 	list<GameObject*>::iterator m_selected;
 
 	void ImguiUpdate();

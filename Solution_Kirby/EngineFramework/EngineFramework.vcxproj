@@ -199,6 +199,7 @@
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="RenderManager.h" />

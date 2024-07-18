@@ -217,6 +217,11 @@ void RenderManager::Release()
 	m_btnVec->clear();
 	m_debugVec->clear();
 
+	delete m_transVec;
+	delete m_noTransVec;
+	delete m_btnVec;
+	delete m_debugVec;
+
 	if (renderTargetTexture != nullptr)
 	{
 		renderTargetTexture->Release();

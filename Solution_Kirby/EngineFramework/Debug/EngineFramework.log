@@ -1,93 +1,241 @@
 ﻿  pch.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'pch.cpp'을(를) 컴파일하는 중)
+  
   AnimationManager.cpp
   AnimationRender.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp(55,54): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp(55,54): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/AnimationRender.cpp'을(를) 컴파일하는 중)
+  
   BoxCollider.cpp
   Buffer.cpp
   Button.cpp
   Camera.cpp
   Collider.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(11,61): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(11,44): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(76,47): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(76,27): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(11,61): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(11,44): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(76,47): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp(76,27): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Collider.cpp'을(를) 컴파일하는 중)
+  
   CollisionManager.cpp
   Component.cpp
   DebugWindow.cpp
   GameObject.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(141,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(141,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(142,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(142,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(143,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(143,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(144,52): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(144,52): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(146,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(146,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(147,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(147,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(234,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(234,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(235,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(235,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(236,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(236,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(237,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(237,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(239,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(239,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(240,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(240,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(255,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(255,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(256,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(256,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(257,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(257,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(258,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(258,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(260,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(260,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(261,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(261,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(276,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(276,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(277,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(277,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(278,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(278,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(279,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(279,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(281,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(281,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(282,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(282,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(297,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(297,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(298,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(298,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(299,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(299,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(300,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(300,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(302,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(302,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(303,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(303,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(141,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(141,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(142,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(142,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(143,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(143,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(144,52): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(144,52): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(146,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(146,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(147,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(147,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(234,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(234,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(235,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(235,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(236,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(236,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(237,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(237,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(239,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(239,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(240,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(240,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(255,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(255,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(256,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(256,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(257,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(257,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(258,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(258,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(260,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(260,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(261,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(261,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(276,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(276,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(277,22): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(277,22): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(278,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(278,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(279,58): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(279,58): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(281,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(281,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(282,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(282,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(297,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(297,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(298,23): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(298,23): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(299,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(299,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(300,59): warning C4838: 'float'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(300,59): warning C4244: '초기화 중': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(302,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(302,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(303,44): warning C4838: 'FLOAT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp(303,44): warning C4244: '초기화 중': 'FLOAT'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
   ImageRender.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(101,23): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(100,23): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(99,27): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(98,27): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(97,27): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(101,23): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(100,23): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(99,27): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(98,27): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(97,27): warning C4244: '인수': 'const float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/ImageRender.cpp'을(를) 컴파일하는 중)
+  
   InputString.cpp
   MainFrame.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\MainFrame.cpp(184,57): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\MainFrame.cpp(184,57): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/MainFrame.cpp'을(를) 컴파일하는 중)
+  
   Mouse.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Mouse.cpp(37,17): warning C4244: '=': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Mouse.cpp(38,17): warning C4244: '=': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Mouse.cpp(37,17): warning C4244: '=': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Mouse.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\Mouse.cpp(38,17): warning C4244: '=': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Mouse.cpp'을(를) 컴파일하는 중)
+  
   ObjectManager.cpp
   RenderManager.cpp
   Rigidbody.cpp
@@ -753,4 +901,4 @@ d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXAssembleShaderFromFileA@24이(
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __imp__D3DXAssembleShader@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXAssembleShader@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
-  EngineFramework.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\EngineFramework.lib
+  EngineFramework.vcxproj -> C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\EngineFramework.lib
