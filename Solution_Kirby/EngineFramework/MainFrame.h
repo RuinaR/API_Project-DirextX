@@ -45,6 +45,12 @@ private:
 	int m_height;
 
 	RenderType m_type;
+
+private:
+	MSG m_message;
+	double m_targetFrameTime;
+	int32 m_velocityIterations = 8;
+	int32 m_positionIterations = 3;
 public:
 	static void Create(HINSTANCE hInstance);
 	static MainFrame* GetInstance();
@@ -53,6 +59,8 @@ public:
 	double DeltaTime();
 	void Initialize(int targetFPS, Scene* scene, RenderType type);
 	int Run();
+	void Set();
+	bool Update();
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();
 	b2World* GetBox2dWorld();

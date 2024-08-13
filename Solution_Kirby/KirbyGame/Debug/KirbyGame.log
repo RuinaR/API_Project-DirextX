@@ -1,3 +1,0 @@
-﻿  main.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Engineframework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  KirbyGame.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\KirbyGame.exe

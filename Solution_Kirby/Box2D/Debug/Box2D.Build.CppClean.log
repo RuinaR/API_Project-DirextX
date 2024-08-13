@@ -1,58 +1,56 @@
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\debug\box2d.pdb
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\debug\box2d.idb
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_body.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_timer.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_stack_allocator.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_settings.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_math.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_draw.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_block_allocator.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_polygon_shape.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_edge_shape.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_dynamic_tree.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_distance.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_collision.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_collide_polygon.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_collide_edge.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_broad_phase.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_pulley_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_prismatic_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_mouse_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_motor_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_gear_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_friction_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_fixture.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_distance_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_contact_solver.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_contact_manager.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_rope.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_world_callbacks.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_wheel_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_weld_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_revolute_joint.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_polygon_circle_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_island.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_edge_polygon_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_chain_polygon_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_chain_circle_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_time_of_impact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_collide_circle.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_circle_shape.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_chain_shape.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_world.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_polygon_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_circle_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_edge_circle_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\b2_contact.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\debug\box2d.lib
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\pch.obj
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.pch
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.command.1.tlog
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.items.tlog
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.read.1.tlog
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.write.1.tlog
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\lib-link.read.1.tlog
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\lib-link.write.1.tlog
-c:\users\user\desktop\api_project-directx\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\lib.command.1.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\debug\box2d.pdb
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\debug\box2d.idb
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_body.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_timer.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_stack_allocator.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_settings.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_math.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_draw.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_block_allocator.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_time_of_impact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_polygon_shape.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_edge_shape.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_dynamic_tree.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_distance.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_collision.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_collide_polygon.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_collide_edge.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_collide_circle.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_circle_shape.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_chain_shape.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_broad_phase.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_pulley_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_prismatic_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_polygon_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_polygon_circle_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_mouse_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_motor_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_island.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_gear_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_friction_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_fixture.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_edge_polygon_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_edge_circle_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_distance_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_contact_solver.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_contact_manager.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_circle_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_chain_polygon_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_chain_circle_contact.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_rope.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_world_callbacks.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_world.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_wheel_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_weld_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\b2_revolute_joint.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\debug\box2d.lib
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.command.1.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.items.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.read.1.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\cl.write.1.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\lib-link.read.1.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\lib-link.write.1.tlog
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\box2d\debug\box2d.tlog\lib.command.1.tlog

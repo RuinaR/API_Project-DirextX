@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "AnimationRender.h"
+#include <atlconv.h>
+
 bool AnimationManager::IsImageFile(const wstring& filename)
 {
     size_t dotIndex = filename.find_last_of('.');
@@ -13,9 +15,12 @@ bool AnimationManager::IsImageFile(const wstring& filename)
 }
 
 Animation AnimationManager::LoadAnimation(const wstring& folderName, float time) {
-    WCHAR buffer[MAX_PATH];
-    GetCurrentDirectory(MAX_PATH, buffer);
-    wstring currentDirectory = buffer;
+    wchar_t wpath[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, wpath, MAX_PATH);
+    //USES_CONVERSION;
+    std::wstring executepath = wpath;
+    executepath = executepath.substr(0, executepath.find_last_of(L"\\/"));
+    wstring currentDirectory = executepath;
     vector<IDirect3DTexture9*> textures;
     wstring searchPath = currentDirectory + L"\\" + folderName + L"\\*.*";
     WIN32_FIND_DATAW fileData;
@@ -83,9 +88,12 @@ IDirect3DTexture9* AnimationManager::LoadTexture(const wstring& path)
 {
     IDirect3DTexture9* texture;
     D3DXIMAGE_INFO imageInfo;
-    WCHAR buffer[MAX_PATH];
-    GetCurrentDirectory(MAX_PATH, buffer);
-    wstring currentDirectory = buffer;
+    wchar_t wpath[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, wpath, MAX_PATH);
+    //USES_CONVERSION;
+    std::wstring executepath = wpath;
+    executepath = executepath.substr(0, executepath.find_last_of(L"\\/"));
+    wstring currentDirectory = executepath;
     wstring searchPath = currentDirectory + L"\\" + path;
     if (FAILED(D3DXCreateTextureFromFileEx(
         MainFrame::GetInstance()->GetDevice() ,
@@ -105,11 +113,12 @@ IDirect3DTexture9* AnimationManager::LoadTexture(const wstring& path)
 	{
 		wcout << L"Failed to load texture: " << searchPath << endl;
 		return NULL;
-    }
-    return texture;
+	}
+	return texture;
 }
 
 void AnimationManager::ReleaseTexture(IDirect3DTexture9* tex)
 {
-    tex->Release();
+	if (tex)
+		tex->Release();
 }

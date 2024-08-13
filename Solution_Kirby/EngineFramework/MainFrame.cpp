@@ -190,6 +190,75 @@ int MainFrame::Run()
 	}
 }
 
+void MainFrame::Set()
+{
+    m_targetFrameTime = 1.0 / m_targetFPS;
+    m_timer.tick();
+
+    m_velocityIterations = 8;
+    m_positionIterations = 3;
+    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+    UpdateWindow(m_hWnd);
+
+
+    //imgui test
+    //set
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    ImGui::StyleColorsDark();
+    ImGui_ImplWin32_Init(m_hWnd);
+    ImGui_ImplDX9_Init(m_pd3dDevice);
+}
+
+bool MainFrame::Update()
+{
+    while (PeekMessage(&m_message, 0, 0, 0, PM_REMOVE))  // 메시지 처리 우선
+    {
+        WindowFrame::GetInstance()->Run(&m_message);
+        if (m_message.message == WM_QUIT)
+        {
+            //imgui Cleanup
+            ImGui_ImplDX9_Shutdown();
+            ImGui_ImplWin32_Shutdown();
+            ImGui::DestroyContext();
+            //--
+            Release();
+            return false;
+        }
+    }
+
+    if (WindowFrame::GetInstance()->IsFocus())
+    {
+        m_timer.tick();
+        if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
+        {
+            if (NULL == m_pd3dDevice)
+                return false;
+
+            ImGui_ImplDX9_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            ImGui::NewFrame();
+            //UPDATE
+            m_pWorld->Step(m_timer.getTotalDeltaTime(), m_velocityIterations, m_positionIterations);
+            ObjectManager::GetInstance()->Update();
+            //RENDER
+            if (m_type == RenderType::Edit)
+                RenderManager::GetInstance()->EditUpdate();
+            else if (m_type == RenderType::Game)
+                RenderManager::GetInstance()->GameUpdate();
+
+            m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
+        }
+    }
+
+    return true;
+}
+
 ID3DXFont* MainFrame::GetFont()
 {
     return m_pFont;

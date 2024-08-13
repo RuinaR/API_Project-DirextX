@@ -1,6 +1,4 @@
 #pragma once
-#pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
-#pragma comment (lib, "msimg32.lib")
 #include <cmath>
 #include <windows.h>
 #include <stdlib.h>
