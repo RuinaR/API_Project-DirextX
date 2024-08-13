@@ -104,10 +104,11 @@ void WindowFrame::SetScene(Scene* scene)
 	m_scene->Start();
 }
 
-void WindowFrame::Initialize()
+void WindowFrame::Initialize(RenderType type)
 {
 	BuildWindow();
-	//MoveWindow(m_Pthis->m_hWnd, 100, 100, 1440, 900, TRUE);
+	if(type == RenderType::Game)
+		MoveWindow(m_Pthis->m_hWnd, 100, 100, DRAWWINDOWW, DRAWWINDOWH, TRUE);
 	SetFocus(m_Pthis->m_hWnd);
 }
 

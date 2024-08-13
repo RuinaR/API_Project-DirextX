@@ -29,7 +29,8 @@ public:
 	void UnresisterDebug(DebugRender* db);
 
 	void Initialize();
-	void Update();
+	void EditUpdate();
+	void GameUpdate();
 	void Release();
 
 	ImVec2 GetWinPos();

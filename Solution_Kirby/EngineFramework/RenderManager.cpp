@@ -125,7 +125,7 @@ void RenderManager::Initialize()
 		nullptr);
 }
 
-void RenderManager::Update()
+void RenderManager::EditUpdate()
 {
 	LPDIRECT3DSURFACE9 renderTargetSurface = nullptr;
 	LPDIRECT3DSURFACE9 originalRenderTarget = nullptr;
@@ -191,8 +191,18 @@ void RenderManager::Update()
 		}
 		
 		ImVec2 windowSize = ImGui::GetContentRegionAvail();
+		//Game
 		ImGui::Image((void*)renderTargetTexture, windowSize);
 		m_winPos = ImGui::GetWindowPos();
+		ImGui::End();
+
+		//ObjMgr
+		ObjectManager::GetInstance()->ImguiUpdate();
+
+		//FrameCheck
+		ImGuiIO& io = ImGui::GetIO();
+		ImGui::Begin("Frame");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 		ImGui::End();
 
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -207,6 +217,72 @@ void RenderManager::Update()
 		device->EndScene();
 	}
 	
+	device->Present(NULL, NULL, NULL, NULL);
+}
+
+void RenderManager::GameUpdate()
+{
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
+	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	if (SUCCEEDED(device->BeginScene()))
+	{
+		device->SetRenderState(D3DRS_ZENABLE, TRUE);
+		device->SetRenderState(D3DRS_LIGHTING, FALSE);
+		device->SetFVF(D3DFVF_CUSTOMVERTEX);
+		device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
+		{
+			(*itr)->Render();
+		}
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
+		{
+			(*itr)->Render();
+		}
+		
+		device->SetTexture(0, nullptr);
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+
+		//imgui
+		//ImGui::SetNextWindowSize(ImVec2(DRAWWINDOWW, DRAWWINDOWH), ImGuiCond_Once);
+		//ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize);
+
+		//button/imgui
+		ImGui::Begin("Button");
+		for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+		{
+			ImGui::SameLine();
+			(*itr)->UpdateRender();
+		}
+
+		//ImVec2 windowSize = ImGui::GetContentRegionAvail();
+		//Game
+		//ImGui::Image((void*)renderTargetTexture, windowSize);
+		//m_winPos = ImGui::GetWindowPos();
+		ImGui::End();
+
+		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+		ImGui::EndFrame();
+		device->SetRenderState(D3DRS_ZENABLE, FALSE);
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+
+		ImGui::Render();
+		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
+		device->EndScene();
+	}
+
 	device->Present(NULL, NULL, NULL, NULL);
 }
 

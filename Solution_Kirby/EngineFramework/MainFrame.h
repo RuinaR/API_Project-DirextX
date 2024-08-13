@@ -3,6 +3,12 @@
 #include "Timer.h"
 #include "BoxCollider.h"
 
+enum class RenderType
+{
+	Edit,
+	Game
+};
+
 class CollisionListener : public b2ContactListener
 {
 public:
@@ -37,13 +43,15 @@ private:
 
 	int m_width;
 	int m_height;
+
+	RenderType m_type;
 public:
 	static void Create(HINSTANCE hInstance);
 	static MainFrame* GetInstance();
 	static void Destroy();
 	Timer& Timer();
 	double DeltaTime();
-	void Initialize(int targetFPS, Scene* scene);
+	void Initialize(int targetFPS, Scene* scene, RenderType type);
 	int Run();
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();

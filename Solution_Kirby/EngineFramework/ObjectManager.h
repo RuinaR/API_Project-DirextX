@@ -8,12 +8,13 @@ private:
 	list<GameObject*>* m_objList;
 	list<GameObject*>::iterator m_selected;
 
-	void ImguiUpdate();
+	
 public:
 	static void Create();
 	static ObjectManager* GetInstance();
 	static void Destroy();
 
+	void ImguiUpdate();
 	void AddObject(GameObject* obj);
 	bool UnregisterObject(GameObject* obj);
 	void RegisterObject(GameObject* obj);

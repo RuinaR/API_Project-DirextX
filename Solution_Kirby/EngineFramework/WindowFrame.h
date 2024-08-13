@@ -22,7 +22,7 @@ public:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
 	void SetScene(Scene* scene);
-	void Initialize();
+	void Initialize(RenderType type);
 	void BuildWindow();
 	void Run(const MSG* Message);
 	//Buffer* GetBuffer() { return this->m_buffer; }

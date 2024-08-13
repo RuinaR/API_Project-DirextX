@@ -46,13 +46,13 @@ double MainFrame::DeltaTime()
 	return m_timer.getTotalDeltaTime();
 }
 
-void MainFrame::Initialize(int targetFPS, Scene* scene)
+void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 {
     m_pWorld = new b2World(m_gravity);
     m_pWorld->SetContactListener(&m_cListener);
     m_pWorld->SetContinuousPhysics(true);
-
-    WindowFrame::GetInstance()->Initialize();
+    m_type = type;
+    WindowFrame::GetInstance()->Initialize(m_type);
     m_hWnd = WindowFrame::GetInstance()->GetHWND();
     m_width = DRAWWINDOWW;
     m_height = DRAWWINDOWH;
@@ -172,19 +172,18 @@ int MainFrame::Run()
 				if (NULL == m_pd3dDevice)
 					return -1;
 
-                //imgui Update
                 ImGui_ImplDX9_NewFrame();
                 ImGui_ImplWin32_NewFrame();
                 ImGui::NewFrame();
-                ImGui::Begin("Frame");
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-                ImGui::End();
-
-                //UPDATE
-                m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
+				//UPDATE
+				m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
 				ObjectManager::GetInstance()->Update();
-			    //RENDER
-                RenderManager::GetInstance()->Update();
+				//RENDER
+				if (m_type == RenderType::Edit)
+					RenderManager::GetInstance()->EditUpdate();
+				else if (m_type == RenderType::Game)
+					RenderManager::GetInstance()->GameUpdate();
+
 				m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
 			}
 		}

@@ -7,7 +7,7 @@ ObjectManager* ObjectManager::m_Pthis = nullptr;
 void ObjectManager::ImguiUpdate()
 {
 	char str[64];
-	
+
 	ImGui::Begin("Hierarchy");
 	int i = 0;
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
@@ -180,8 +180,7 @@ void ObjectManager::Update()
 		else
 			itr++;
 	}
-
-	ImguiUpdate();
+	//ImguiUpdate();
 }
 
 void ObjectManager::Clear()
