@@ -39,4 +39,5 @@ void BuildLoopCls::Release()
 	{
 		PluginManager::GetInstance()->GetPlugin(i)->AllRelease();
 	}
+	PluginManager::GetInstance()->UnloadAllPlugins();
 }

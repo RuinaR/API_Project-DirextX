@@ -1,12 +1,30 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: 중간 디렉터리(Debug\)에 다른 프로젝트(BuildResultGame.vcxproj)에서 공유하는 파일이 포함되어 있습니다.  이로 인해 잘못된 정리 및 다시 빌드 동작이 수행될 수 있습니다.
   PluginManager.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(2765,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 '../include/PluginManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xutility(4537,18): warning C4244: '=': 'wchar_t'에서 'char'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '../include/PluginManager.cpp'을(를) 컴파일하는 중)
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xutility(4537,18):
+  템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
+  	C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,8):
+  	컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(const _Iter,const _Iter)'에 대한 참조를 확인하세요.
           with
           [
-              _Elem=char
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>
           ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(2621,17): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
+  		C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,15):
+  		'PluginManager::GetFileNames'에서 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign'에 대한 첫 번째 참조를 확인하세요.
+  	C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring(3463,32):
+  	컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<wchar_t*,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Iter=wchar_t *,
+              _Alloc=std::allocator<char>
+          ]
+  	C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring(2600,17):
+  	컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
           with
           [
               _Size_type=unsigned int,
@@ -14,20 +32,20 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.3253
               _Sent=wchar_t *,
               _Size=unsigned int
           ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(3464,32): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<wchar_t*,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
+  	C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring(2756,18):
+  	컴파일되는 함수 템플릿 인스턴스화 '_OutIt *std::_Copy_n_unchecked4<wchar_t*,_Size,char*>(_InIt,_SizeTy,_OutIt)'에 대한 참조를 확인하세요.
           with
           [
-              _Iter=wchar_t *,
-              _Alloc=std::allocator<char>
+              _OutIt=char *,
+              _Size=unsigned int,
+              _InIt=wchar_t *,
+              _SizeTy=unsigned int
           ]
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,8): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(const _Iter,const _Iter)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>
-          ]
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,15): message : 'PluginManager::GetFileNames'에서 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign'에 대한 첫 번째 참조를 확인하세요.
+  
   BuildLoopCls.cpp
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'BuildLoopCls.cpp'을(를) 컴파일하는 중)
+  
+  main.cpp
   코드를 생성하고 있습니다...
-  BuildEdit.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\BuildEdit.exe
+  BuildEdit.vcxproj -> C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\BuildEdit.exe
