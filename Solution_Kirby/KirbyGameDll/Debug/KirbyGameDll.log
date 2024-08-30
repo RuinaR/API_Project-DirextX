@@ -1,29 +1,11 @@
 ﻿  PluginManager.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 '../include/PluginManager.cpp'을(를) 컴파일하는 중)
-  
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xutility(4537,18): warning C4244: '=': 'wchar_t'에서 'char'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 '../include/PluginManager.cpp'을(를) 컴파일하는 중)
-  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xutility(4537,18):
-  템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
-  	C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,8):
-  	컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(const _Iter,const _Iter)'에 대한 참조를 확인하세요.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(2765,53): warning C4244: '인수': 'wchar_t'에서 'const _Elem'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
           [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>
+              _Elem=char
           ]
-  		C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,15):
-  		'PluginManager::GetFileNames'에서 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign'에 대한 첫 번째 참조를 확인하세요.
-  	C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring(3463,32):
-  	컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<wchar_t*,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
-          with
-          [
-              _Iter=wchar_t *,
-              _Alloc=std::allocator<char>
-          ]
-  	C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring(2600,17):
-  	컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(2621,17): message : 컴파일되는 함수 템플릿 인스턴스화 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)'에 대한 참조를 확인하세요.
           with
           [
               _Size_type=unsigned int,
@@ -31,84 +13,190 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.3351
               _Sent=wchar_t *,
               _Size=unsigned int
           ]
-  	C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring(2756,18):
-  	컴파일되는 함수 템플릿 인스턴스화 '_OutIt *std::_Copy_n_unchecked4<wchar_t*,_Size,char*>(_InIt,_SizeTy,_OutIt)'에 대한 참조를 확인하세요.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xstring(3464,32): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<wchar_t*,0>(_Iter,_Iter,const _Alloc &)'에 대한 참조를 확인하세요.
           with
           [
-              _OutIt=char *,
-              _Size=unsigned int,
-              _InIt=wchar_t *,
-              _SizeTy=unsigned int
+              _Iter=wchar_t *,
+              _Alloc=std::allocator<char>
           ]
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,8): message : 컴파일되는 함수 템플릿 인스턴스화 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(const _Iter,const _Iter)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>
+          ]
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,15): message : 'PluginManager::GetFileNames'에서 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign'에 대한 첫 번째 참조를 확인하세요.
   AttackEvent.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'AttackEvent.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   AttakObject.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'AttakObject.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   ChangeObject.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'ChangeObject.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   dllmain.cpp
   Door.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'Door.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   Edit.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'Edit.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(62,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(65,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(159,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(161,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(218,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(218,48): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(220,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(220,55): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(62,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(65,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(159,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(161,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(218,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(218,48): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(220,27): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp(220,55): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   EditerScene.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'EditerScene.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   game.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'game.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   GameScene.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'GameScene.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   KirbyGame.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'KirbyGame.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   LandChecker.cpp
   MonsterAI.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'MonsterAI.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   Player.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'Player.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   SceneChanger.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'SceneChanger.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   StageMaker.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'StageMaker.cpp'을(를) 컴파일하는 중)
-  
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp(216,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp(219,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp(216,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp(219,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   StartScene.cpp
-C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  (소스 파일 'StartScene.cpp'을(를) 컴파일하는 중)
-  
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   코드를 생성하고 있습니다...
-     C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.lib 라이브러리 및 C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.exp 개체를 생성하고 있습니다.
-  KirbyGameDll.vcxproj -> C:\Users\user\Desktop\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.dll
+     C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.lib 라이브러리 및 C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.exp 개체를 생성하고 있습니다.
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::_FbxAssert(char const *,char const *,unsigned int,bool,char const *,...)" (?_FbxAssert@fbxsdk@@YAXPBD0I_N0ZZ)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "unsigned int __cdecl fbxsdk::FbxAllocSize(unsigned int,unsigned int)" (?FbxAllocSize@fbxsdk@@YAIII@Z)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "void * __cdecl fbxsdk::FbxMalloc(unsigned int)" (?FbxMalloc@fbxsdk@@YAPAXI@Z)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "void __cdecl fbxsdk::FbxFree(void *)" (?FbxFree@fbxsdk@@YAXPAX@Z)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::FbxString(class fbxsdk::FbxString const &)" (??0FbxString@fbxsdk@@QAE@ABV01@@Z)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::~FbxString(void)" (??1FbxString@fbxsdk@@QAE@XZ)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: __thiscall fbxsdk::FbxString::operator char const *(void)const " (??BFbxString@fbxsdk@@QBEPBDXZ)
+SceneChanger.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+StageMaker.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+StartScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+EngineFramework.lib(pch.obj) : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+GameScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+KirbyGame.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+MonsterAI.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+Player.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+Door.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+Edit.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+EditerScene.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+game.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+PluginManager.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+AttackEvent.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+AttakObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+ChangeObject.obj : error LNK2001: 확인할 수 없는 외부 기호 "public: int __thiscall fbxsdk::FbxString::Compare(char const *)const " (?Compare@FbxString@fbxsdk@@QBEHPBD@Z)
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Lib\libfbxsdk.lib : warning LNK4272: 'ARM64' 라이브러리 컴퓨터 종류가 'x86' 대상 컴퓨터 종류와 충돌합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Lib\libxml2.lib : warning LNK4272: 'ARM64' 라이브러리 컴퓨터 종류가 'x86' 대상 컴퓨터 종류와 충돌합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Lib\zlib.lib : warning LNK4272: 'ARM64' 라이브러리 컴퓨터 종류가 'x86' 대상 컴퓨터 종류와 충돌합니다.
+C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.dll : fatal error LNK1120: 8개의 확인할 수 없는 외부 참조입니다.

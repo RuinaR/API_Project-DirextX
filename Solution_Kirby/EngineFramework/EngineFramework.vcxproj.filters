@@ -61,6 +61,9 @@
     <ClCompile Include="RenderManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="FbxTool.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationRender.h">
@@ -141,6 +144,12 @@
     <ClInclude Include="ObjectPool.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="..\fbxsdk\fbxsdk.h">
+      <Filter>Fbxsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxTool.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Component">
@@ -172,6 +181,12 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{ec01aace-cb20-4a7d-9db3-dd13b775942b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fbxsdk">
+      <UniqueIdentifier>{6c5336c8-6dde-4b4a-a432-0f40ccff6a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FBX">
+      <UniqueIdentifier>{aa8ed7c0-d7c7-4751-8eab-924323c863c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

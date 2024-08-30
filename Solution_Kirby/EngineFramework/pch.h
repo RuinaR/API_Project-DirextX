@@ -21,11 +21,14 @@
 #include <functional>
 #include <stack>
 #include <d3dx9.h>
+#include <directxmath.h>
 
 #include "../Box2D/box2d/include/box2d/box2d.h"
 #include "../Imgui/imgui/imgui.h"
 #include "../Imgui/source/imgui_impl_dx9.h"
 #include "../Imgui/source/imgui_impl_win32.h"
+
+#include "../fbxsdk/fbxsdk.h"
 
 #include "SharedPointer.h"
 
@@ -70,6 +73,8 @@
 
 #define DEBUGCOLORDX1 (D3DCOLOR_XRGB((0),(0),(255)))
 #define DEBUGCOLORDX2 (D3DCOLOR_XRGB((255),(0),(0)))
+
+using namespace DirectX;
 
 struct CUSTOMVERTEX
 {
