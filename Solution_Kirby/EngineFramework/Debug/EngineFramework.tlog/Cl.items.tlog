@@ -1,21 +1,22 @@
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\AnimationManager.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\AnimationRender.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\FbxTool.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\FbxTool.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\ImageRender.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\BoxCollider.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\BoxCollider.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Buffer.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Buffer.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Camera.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Camera.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Collider.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\CollisionManager.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Component.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Component.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\DebugWindow.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\GameObject.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\InputString.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\InputString.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\MainFrame.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\MainFrame.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Mouse.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Mouse.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\ObjectManager.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\ObjectManager.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\pch.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Button.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Button.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\RenderManager.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\RenderManager.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Rigidbody.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Rigidbody.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\WindowFrame.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\AnimationManager.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\AnimationRender.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\FBXRender.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\FBXRender.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\FbxTool.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\FbxTool.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\ImageRender.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\BoxCollider.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\BoxCollider.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Buffer.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Buffer.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Camera.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Camera.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Collider.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Collider.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\CollisionManager.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\CollisionManager.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Component.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Component.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\DebugWindow.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\DebugWindow.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\GameObject.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\GameObject.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\InputString.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\InputString.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\MainFrame.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\MainFrame.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Mouse.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Mouse.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\ObjectManager.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\ObjectManager.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\pch.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\pch.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Button.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Button.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\RenderManager.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\RenderManager.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Rigidbody.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\Rigidbody.obj
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp;C:\API_Project-DirextX\Solution_Kirby\EngineFramework\Debug\WindowFrame.obj

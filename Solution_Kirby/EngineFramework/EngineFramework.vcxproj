@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="AnimationRender.cpp" />
+    <ClCompile Include="FBXRender.cpp" />
     <ClCompile Include="FbxTool.cpp" />
     <ClCompile Include="ImageRender.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="AnimationRender.h" />
     <ClInclude Include="DebugRender.h" />
+    <ClInclude Include="FBXRender.h" />
     <ClInclude Include="FbxTool.h" />
     <ClInclude Include="ImageRender.h" />
     <ClInclude Include="BoxCollider.h" />

@@ -2,7 +2,6 @@ c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\enginefr
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\debug\engineframework.pdb
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\debug\engineframework.idb
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\pch.obj
-c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\windowframe.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\rigidbody.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\rendermanager.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\button.obj
@@ -20,8 +19,10 @@ c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\enginefr
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\boxcollider.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\imagerender.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\fbxtool.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\fbxrender.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\animationrender.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\animationmanager.obj
+c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\windowframe.obj
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\debug\engineframework.lib
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\engineframework.tlog\cl.command.1.tlog
 c:\users\asus\onedrive\바탕 화면\api_project-dirextx\solution_kirby\engineframework\debug\engineframework.tlog\cl.items.tlog

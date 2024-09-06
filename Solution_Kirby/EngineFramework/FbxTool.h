@@ -17,6 +17,7 @@ public:
     size_t GetVertexCount() const { return m_vertexCount; }
     size_t GetIndexCount() const { return m_indexCount; }
 
+    void ImguiUpdate();
 private:
     bool InitializeSdkObjects();
     void DestroySdkObjects();

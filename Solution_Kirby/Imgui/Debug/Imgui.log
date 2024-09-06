@@ -6,4 +6,4 @@
   imgui_impl_dx9.cpp
   imgui_impl_win32.cpp
   코드를 생성하고 있습니다...
-  Imgui.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\Imgui.lib
+  Imgui.vcxproj -> C:\API_Project-DirextX\Solution_Kirby\Debug\Imgui.lib

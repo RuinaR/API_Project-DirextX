@@ -1,17 +1,17 @@
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\PluginManager.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\AttackEvent.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\AttackEvent.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\AttakObject.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\AttakObject.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\ChangeObject.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\ChangeObject.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\dllmain.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\dllmain.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Door.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\Door.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\Edit.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\EditerScene.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\EditerScene.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\game.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\game.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\GameScene.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\GameScene.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\KirbyGame.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\KirbyGame.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\LandChecker.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\LandChecker.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\MonsterAI.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\MonsterAI.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Player.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\Player.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\SceneChanger.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\SceneChanger.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\StageMaker.obj
-C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StartScene.cpp;C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\StartScene.obj
+C:\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\PluginManager.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\AttackEvent.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\AttackEvent.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\AttakObject.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\AttakObject.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\ChangeObject.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\ChangeObject.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\dllmain.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\dllmain.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Door.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\Door.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Edit.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\Edit.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\EditerScene.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\EditerScene.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\game.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\game.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\GameScene.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\GameScene.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\KirbyGame.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\KirbyGame.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\LandChecker.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\LandChecker.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\MonsterAI.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\MonsterAI.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Player.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\Player.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\SceneChanger.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\SceneChanger.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\StageMaker.obj
+C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StartScene.cpp;C:\API_Project-DirextX\Solution_Kirby\KirbyGameDll\Debug\StartScene.obj

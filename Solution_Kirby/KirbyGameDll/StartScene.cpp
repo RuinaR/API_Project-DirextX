@@ -2,6 +2,7 @@
 #include "StartScene.h"
 #include "Button.h"
 #include "SceneChanger.h"
+#include "FBXRender.h"
 
 void StartScene::Init()
 {
@@ -36,4 +37,11 @@ void StartScene::Start()
 	btn2->SetText("EditScene Load");
 	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
 	btn2->SetEvent(bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
+
+	//FBX TEST
+
+	GameObject* fbxSample = new GameObject();
+	FBXRender* fbxRender = new FBXRender("fbxSample");
+	fbxSample->AddComponent(fbxRender);
+	fbxSample->InitializeSet();
 }
