@@ -30,4 +30,4 @@ C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\include\
 C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   main.cpp
   코드를 생성하고 있습니다...
-LINK : fatal error LNK1104: 'EngineFramework.lib' 파일을 열 수 없습니다.
+  BuildResultGame.vcxproj -> C:\Users\ASUS\OneDrive\바탕 화면\API_Project-DirextX\Solution_Kirby\Debug\BuildResultGame.exe

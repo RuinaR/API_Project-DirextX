@@ -1,0 +1,5 @@
+https://github.com/erincatto/box2d/releases/tag/v3.0.0
+
+https://github.com/ocornut/imgui/tree/docking
+
+https://aps.autodesk.com/developer/overview/fbx-sdk   (2018 1.1)

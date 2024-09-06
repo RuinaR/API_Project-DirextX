@@ -16,8 +16,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KirbyGameDll", "KirbyGameDll\KirbyGameDll.vcxproj", "{35A6FEE5-1B0D-4006-B2A5-B5F424D4E35C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BuildResultGame", "BuildResultGame\BuildResultGame.vcxproj", "{BFBCC41D-5314-45D3-B285-0DE71C51CE0B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35A6FEE5-1B0D-4006-B2A5-B5F424D4E35C} = {35A6FEE5-1B0D-4006-B2A5-B5F424D4E35C}
+		{AFEF9603-4EC1-4B69-803D-ACBA84BB6D41} = {AFEF9603-4EC1-4B69-803D-ACBA84BB6D41}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BuildEdit", "BuildEdit\BuildEdit.vcxproj", "{FDE07F4B-5D54-45E3-ABD0-9641AB845D48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35A6FEE5-1B0D-4006-B2A5-B5F424D4E35C} = {35A6FEE5-1B0D-4006-B2A5-B5F424D4E35C}
+		{AFEF9603-4EC1-4B69-803D-ACBA84BB6D41} = {AFEF9603-4EC1-4B69-803D-ACBA84BB6D41}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
