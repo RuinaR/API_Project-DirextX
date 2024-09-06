@@ -100,7 +100,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -122,7 +122,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -162,7 +162,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

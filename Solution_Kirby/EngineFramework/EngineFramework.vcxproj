@@ -103,7 +103,7 @@
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference />
@@ -125,7 +125,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference />
@@ -142,7 +142,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -162,7 +162,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;libxml2.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>

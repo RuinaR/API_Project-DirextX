@@ -15,7 +15,6 @@
 
 #include <fbxsdk/fbxsdk_def.h>
 
-#include <fbxsdk/core/base/fbxset.h>
 #include <fbxsdk/core/base/fbxstringlist.h>
 #include <fbxsdk/core/fbxobject.h>
 #include <fbxsdk/core/fbxsymbol.h>
@@ -964,32 +963,21 @@ public:
     {
 		FbxPropertyEntry*    lDstEntry = ChangePropertyEntryState(pDstId,FbxPropertyFlags::eOverride);
 		FbxPropertyEntry*    lSrcEntry = pSrcPage->ChangePropertyEntryState(pSrcId,FbxPropertyFlags::eOverride);
-
-        // Make sure we have a connection point on both sides of the connection.
-        //
-        // In the case lDstEntry == lSrcEntry, we don't want to create different
-        // connection points (FbxPropertyConnect) since the call to lSrcEntry->Set(...) 
-        // would delete the lDstConnect and we can't test for the validity of lDstConnect
-        // because the pointer is != nullptr but its content have already been destroyed.
-        // 
-        // Having lDstEntry == lSrcEntry is not a valid operation anyway and is "trapped" 
-        // by the call lDstConnect->ConnectSrc(lSrcConnect, pType); so we just need to
-        // make sure we can call it!
-
 		FbxPropertyConnect*  lDstConnect= lDstEntry->Get( FBX_TYPE(FbxPropertyConnect) );
+		FbxPropertyConnect*  lSrcConnect= lSrcEntry->Get( FBX_TYPE(FbxPropertyConnect) );
+
+        // Make sure we have a connection point on both sides of the connection
         if (!lDstConnect) {
             lDstConnect = FbxPropertyConnect::Create( this,pDstId );
             lDstEntry->Set( lDstConnect );
         }
-
-        FbxPropertyConnect* lSrcConnect = lSrcEntry->Get(FBX_TYPE(FbxPropertyConnect));
         if (!lSrcConnect) {
             lSrcConnect = FbxPropertyConnect::Create( pSrcPage,pSrcId );
             lSrcEntry->Set( lSrcConnect );
         }
 
         // Must @@@@@@@ Propagate to inherited children
-        return (lDstConnect) ? lDstConnect->ConnectSrc(lSrcConnect, pType) : false;
+        return lDstConnect->ConnectSrc(lSrcConnect,pType);
 
     }
 
@@ -1137,11 +1125,7 @@ public:
         {
             FbxPropertyPage*   lReferencePage  = NULL;
             FbxPropertyValue*  lPropertyValue  = GetPropertyItem( FBX_TYPE(FbxPropertyValue),pId,&lReferencePage );
-            union {
-                void* lCurrentValue;
-                char buffer[sizeof(FbxDouble4x4)];
-            };
-            FBX_ASSERT(sizeof(buffer) >= FbxTypeSizeOf(pValueType));
+            void* lCurrentValue = FbxTypeAllocate( pValueType );
             bool lValuesEqual = false;
             bool lValueChanged = false;
             if( lReferencePage && lReferencePage != this )
@@ -1149,10 +1133,8 @@ public:
                 // this page inherits, so check if we have to override the value.
                 if( lPropertyValue )
                 {
-                    FbxTypeAllocate(pValueType, lCurrentValue, sizeof(buffer));
-                    lPropertyValue->Get( &lCurrentValue, pValueType );
-                    lValuesEqual = FbxTypeCompare( pValue, &lCurrentValue, pValueType );
-                    FbxTypeDeallocate(pValueType, lCurrentValue, sizeof(buffer));
+                    lPropertyValue->Get( lCurrentValue, pValueType );
+                    lValuesEqual = FbxTypeCompare( pValue, lCurrentValue, pValueType );
                 }
             }
             else
@@ -1161,11 +1143,9 @@ public:
                 FbxPropertyValue*  lPropertyValue2 = mInstanceOf ? mInstanceOf->GetPropertyItem( FBX_TYPE(FbxPropertyValue),pId,&lReferencePage2 ) : NULL;
                 if( lReferencePage2 && lPropertyValue2 )
                 {
-                    FbxTypeAllocate(pValueType, lCurrentValue, sizeof(buffer));
                     // this page is an override, but there is another page before us that overrides the value
-                    lPropertyValue2->Get( &lCurrentValue, pValueType );
-                    lValuesEqual = FbxTypeCompare( pValue, &lCurrentValue, pValueType );
-                    FbxTypeDeallocate(pValueType, lCurrentValue, sizeof(buffer));
+                    lPropertyValue2->Get( lCurrentValue, pValueType );
+                    lValuesEqual = FbxTypeCompare( pValue, lCurrentValue, pValueType );
 
                     if( lValuesEqual )
                     {
@@ -1176,6 +1156,9 @@ public:
                 }
                 // else this page is the originator of the property, so no need to check,
             }
+
+            FbxTypeDeallocate(pValueType, lCurrentValue);
+            lCurrentValue = NULL;
 
             if( lValuesEqual )
                 return lValueChanged;
@@ -1299,7 +1282,9 @@ public:
 	inline const FbxPropertyPage*  GetInstanceOf() const   { return mInstanceOf; }
 	inline FbxPropertyPage*        GetInstanceOf()         { return mInstanceOf; }
 
-	inline const FbxSet<FbxPropertyPage*>&     GetInstances() const    { return mInstances; }
+	inline const FbxArray<FbxPropertyPage*>&     GetInstances() const    { return mInstances; }
+	inline FbxArray<FbxPropertyPage*>&           GetInstances()          { return mInstances; }
+
 
 	// Flags
 	// ------------------------------------------
@@ -1487,7 +1472,7 @@ protected:
         // ------------------------
         mInstanceOf = pInstanceOf;
         if (mInstanceOf) {
-            mInstanceOf->mInstances.Insert(this);
+            mInstanceOf->mInstances.Add(this);
 
             mPropNextId = mInstanceOf->mPropNextId;
             mPropNextId->IncRef();
@@ -1524,32 +1509,35 @@ protected:
     ~FbxPropertyPage()
     {
         // Propagate our property entries.
-        for (FbxSet<FbxPropertyPage*>::Iterator iter = mInstances.Begin(); iter != mInstances.End(); ++iter)
+        int i = 0, j = 0;
+        for( i = 0; i < mInstances.GetCount(); ++i )
         {
-            FbxPropertyPage* lPage = iter->GetValue();
-            for (int j = 0; j < GetPropertyEntryCount(); ++j)
+            for( j = 0; j < GetPropertyEntryCount(); ++j )
             {
-                if (lPage->ChangePropertyEntryState((FbxInt)j, FbxPropertyFlags::eOverride))
+                if( mInstances[i]->ChangePropertyEntryState((FbxInt)j, FbxPropertyFlags::eOverride) )
                 {
                     // Clone the info and values. Don't clone the connections,
                     // since they aren't propagated.
-                    lPage->ChangePropertyItemState(FBX_TYPE(FbxPropertyInfo), (FbxInt)j, FbxPropertyFlags::eOverride);
-                    lPage->ChangePropertyItemState(FBX_TYPE(FbxPropertyValue), (FbxInt)j, FbxPropertyFlags::eOverride);
+                    mInstances[i]->ChangePropertyItemState( FBX_TYPE(FbxPropertyInfo), (FbxInt)j, FbxPropertyFlags::eOverride );
+                    mInstances[i]->ChangePropertyItemState( FBX_TYPE(FbxPropertyValue), (FbxInt)j, FbxPropertyFlags::eOverride );
 
                     // Since all entries have their own flags, just override the ones in the instance.
-                    lPage->SetFlagsInheritType(FbxPropertyFlags::eOverride, FbxPropertyFlags::eAllFlags, (FbxInt)j);
+                    mInstances[i]->SetFlagsInheritType(FbxPropertyFlags::eOverride, FbxPropertyFlags::eAllFlags, (FbxInt)j );
                 }
             }
 
             // Instances become their own copies.
-            lPage->mInstanceOf = NULL;
+            mInstances[i]->mInstanceOf = NULL;
         }
 
-        FbxMapDestroy(mEntryMap);
-        
-        if (mInstanceOf)
-        {
-            mInstanceOf->mInstances.Remove(this);
+		FbxMapDestroy(mEntryMap);
+
+        if (mInstanceOf) {
+            int lIndex = mInstanceOf->mInstances.Find(this);
+            mInstanceOf->mInstances.SetAt(lIndex, mInstanceOf->mInstances[mInstanceOf->mInstances.GetCount()-1]);
+            mInstanceOf->mInstances.RemoveAt(mInstanceOf->mInstances.GetCount()-1);
+
+            //mInstanceOf->mInstances.RemoveIt(this);
         }
 
         mPropNextId->DecRef();
@@ -1740,7 +1728,7 @@ private:
 
     // instance management
     FbxPropertyPage*				mInstanceOf;
-    FbxSet<FbxPropertyPage*>		mInstances;
+    FbxArray<FbxPropertyPage*>		mInstances;
 
     void*							mDataPtr;
 

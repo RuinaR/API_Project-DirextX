@@ -65,7 +65,7 @@ public:
         EScheme pScheme = eCatmullClark, 
         ETesselationPattern pPattern = ePower2);
 
-    FbxNodeAttribute::EType GetAttributeType() const override;
+    virtual FbxNodeAttribute::EType GetAttributeType() const;
 
 
     //max subdivision level number
@@ -115,10 +115,6 @@ public:
 	FbxSubDiv::EDisplaySmoothness GetDisplaySmoothness() const;
 
 	void SetDisplaySmoothness(FbxSubDiv::EDisplaySmoothness pSmoothness);
-    void Reset() { /* no-op*/ };
-
-protected:
-	void Construct(const FbxObject* pFrom) override;
 
 private:
 
