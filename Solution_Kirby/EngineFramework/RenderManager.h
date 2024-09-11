@@ -1,6 +1,9 @@
 #pragma once
+#include "FBXRender.h"
+#include "ImageRender.h"
 
 #define WINDOWTEXT "Render Target Window"
+
 using namespace std;
 class ImageRender;
 class Button;
@@ -9,6 +12,7 @@ class RenderManager
 private:
 	static RenderManager* m_Pthis;
 	vector<ImageRender*>* m_noTransVec;
+	vector<FBXRender*>* m_fbxVec;
 	vector<ImageRender*>* m_transVec;
 	vector<Button*>* m_btnVec;
 	vector<DebugRender*>* m_debugVec;
@@ -23,6 +27,8 @@ public:
 public:
 	void Resister(ImageRender* ir);
 	void Unresister(ImageRender* ir);
+	void Resister(FBXRender* fbxr);
+	void Unresister(FBXRender* fbxr);
 	void ResisterBtn(Button* btn);
 	void UnresisterBtn(Button* btn);
 	void ResisterDebug(DebugRender* db);

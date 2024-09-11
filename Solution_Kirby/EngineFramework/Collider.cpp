@@ -45,7 +45,7 @@ void Collider::Update()
 		m_body->GetPosition().y,
 		m_gameObj->Position().z });
 
-	m_gameObj->SetAngle(m_body->GetAngle());
+	m_gameObj->SetAngleZ(m_body->GetAngle());
 
 }
 const Vector2D& Collider::GetColSize()

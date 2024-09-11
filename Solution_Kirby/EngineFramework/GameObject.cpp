@@ -38,8 +38,15 @@ void GameObject::AddPosition(D3DXVECTOR3 v)
 		(*itr)->AddPosition(v);
 }
 
-D3DXVECTOR2& GameObject::Size() {
-	return m_size;
+D3DXVECTOR2 GameObject::Size2D() 
+{
+    D3DXVECTOR2 size2d = { m_size.x, m_size.y };
+	return size2d;
+}
+
+D3DXVECTOR3& GameObject::Size3D()
+{
+    return m_size;
 }
 
 void GameObject::SetDestroy(bool destroy) {
@@ -185,19 +192,45 @@ void GameObject::DeleteChild(GameObject* obj)
     }
 }
 
-const float& GameObject::GetAngle()
+const float& GameObject::GetAngleZ()
 {
-    return m_angle;
+    return m_angleZ;
 }
 
-void GameObject::SetAngle(float v)
+const float& GameObject::GetAngleX()
 {
-    m_angle = v;
+    return m_angleX;
+}
+
+const float& GameObject::GetAngleY()
+{
+    return m_angleY;
+}
+
+void GameObject::SetAngleZ(float v)
+{
+    m_angleZ = v;
     if (m_box != nullptr)
         m_box->GetBody()->SetTransform(m_box->GetBody()->GetPosition(), v);
 
     for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngle(v);
+        (*itr)->SetAngleZ(v);
+}
+
+void GameObject::SetAngleX(float v)
+{
+    m_angleX = v;
+
+    for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
+        (*itr)->SetAngleX(v);
+}
+
+void GameObject::SetAngleY(float v)
+{
+    m_angleY = v;
+
+    for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
+        (*itr)->SetAngleY(v);
 }
 
 void GameObject::OnCollisionEnter(Collider* col)

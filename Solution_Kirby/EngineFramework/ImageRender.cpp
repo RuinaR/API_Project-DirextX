@@ -9,11 +9,16 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     SetupVertices();
 
     // Set world, view, and projection matrices here
-    D3DXMATRIX matWorld, matScale, matTrans, matRotate;
-    D3DXMatrixScaling(&matScale, m_gameObj->Size().x, m_gameObj->Size().y, 1.0f);
+    D3DXMATRIX matWorld, matScale, matTrans, matRotation;
+    D3DXMATRIX matRotationX, matRotationY, matRotationZ;
+    D3DXMatrixScaling(&matScale, m_gameObj->Size2D().x, m_gameObj->Size2D().y, 1.0f);
     D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
-    D3DXMatrixRotationZ(&matRotate, m_gameObj->GetAngle());
-    matWorld = matScale * matRotate * matTrans;
+
+    D3DXMatrixRotationX(&matRotationX, m_gameObj->GetAngleX());
+    D3DXMatrixRotationY(&matRotationY, m_gameObj->GetAngleY());
+    D3DXMatrixRotationZ(&matRotationZ, m_gameObj->GetAngleZ());
+    matRotation = matRotationX * matRotationY * matRotationZ;
+    matWorld = matScale * matRotation * matTrans;
 
     m_device->SetTransform(D3DTS_WORLD, &matWorld);
 
@@ -67,19 +72,17 @@ void ImageRender::SetupVertices()
         2, 1, 3     // Second triangle
     };
 
-    // Create and lock the index buffer
-    IDirect3DIndexBuffer9* indexBuffer;
-    m_device->CreateIndexBuffer(6 * sizeof(WORD), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &indexBuffer, nullptr);
+    // index buffer
     WORD* pIndices;
-    indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0);
+    m_indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0);
     memcpy(pIndices, indices, sizeof(indices));
-    indexBuffer->Unlock();
+    m_indexBuffer->Unlock();
 
     // Set the index buffer
-    m_device->SetIndices(indexBuffer);
+    m_device->SetIndices(m_indexBuffer);
 
     // Release the index buffer
-    indexBuffer->Release();
+    //m_indexBuffer->Release();
 }
 
 
@@ -97,8 +100,8 @@ void ImageRender::Render()
     	m_gameObj->Position().x,
     	m_gameObj->Position().y,
     	m_gameObj->Position().z,
-    	m_gameObj->Size().x,
-    	m_gameObj->Size().y);
+    	m_gameObj->Size2D().x,
+    	m_gameObj->Size2D().y);
 }
 
 ImageRender::ImageRender(IDirect3DTexture9* texture) : Component(), m_texture(texture)
@@ -123,7 +126,8 @@ void ImageRender::Initialize()
 
 	m_device->
 		CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &m_vertexBuffer, NULL);
-
+    m_device->
+        CreateIndexBuffer(6 * sizeof(WORD), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_indexBuffer, nullptr);
     RenderManager::GetInstance()->Resister(this);
 }
 
@@ -132,6 +136,7 @@ void ImageRender::Release()
     RenderManager::GetInstance()->Unresister(this);
 
     m_vertexBuffer->Release();
+    m_indexBuffer->Release();
 }
 
 void ImageRender::ChangeTexture(IDirect3DTexture9* texture)

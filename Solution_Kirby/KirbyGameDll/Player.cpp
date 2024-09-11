@@ -49,7 +49,7 @@ Player::~Player()
 void Player::Initialize()
 {
 	m_gameObj->SetTag(TAG_PLAYER);
-	m_gameObj->Size() = {(float)80.0f, (float)80.0f};
+	m_gameObj->Size3D() = {(float)80.0f, (float)80.0f,1.0f};
 	wstring arrowStr[(int)Arrow::max] = { L"left", L"right" };
 	for (int i = 0; i < (int)Arrow::max; i++)
 	{

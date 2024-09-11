@@ -9,6 +9,7 @@ private:
 	IDirect3DDevice9* m_device = nullptr;
 	IDirect3DTexture9* m_texture = nullptr;
 	IDirect3DVertexBuffer9* m_vertexBuffer = nullptr;
+	IDirect3DIndexBuffer9* m_indexBuffer = nullptr;
 	bool m_isTrans = true;
 	
 

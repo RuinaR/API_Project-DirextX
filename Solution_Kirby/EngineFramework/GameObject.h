@@ -9,8 +9,11 @@ protected:
     bool m_setActive = true;
     string m_tag = "";
     D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
-    D3DXVECTOR2 m_size = { 0.0f, 0.0f };
-    float m_angle;
+    D3DXVECTOR3 m_size = { 0.0f, 0.0f, 0.0f };
+    float m_angleZ;
+    float m_angleX;
+    float m_angleY;
+
     vector<Component*>* m_vecComponent = nullptr;
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
@@ -23,7 +26,9 @@ public:
     void SetPosition(D3DXVECTOR3 v);
 	void AddPosition(D3DXVECTOR3 v);
 
-    D3DXVECTOR2& Size();
+    D3DXVECTOR2 Size2D();
+    D3DXVECTOR3& Size3D();
+
     template <typename T>
     T* GetComponent() 
     {
@@ -53,8 +58,14 @@ public:
     void SetParent(GameObject* obj);
     void AddChild(GameObject* obj);
     void DeleteChild(GameObject* obj);
-    const float& GetAngle();
-    void SetAngle(float v);
+    const float& GetAngleZ();
+    const float& GetAngleX();
+    const float& GetAngleY();
+
+    void SetAngleZ(float v);
+    void SetAngleX(float v);
+    void SetAngleY(float v);
+
 
     void OnCollisionEnter(Collider* col);
     void OnCollisionStay(Collider* col);

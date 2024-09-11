@@ -71,11 +71,11 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
 	{
         GameObject* block = new GameObject();
         block->SetTag(TAG_LAND);
-        block->Size() = { UNITSIZE, UNITSIZE };
+        block->Size3D() = { UNITSIZE, UNITSIZE, 1.0f };
         block->SetPosition({ (float)UNITSIZE * i,(float)-UNITSIZE * j,10.0f });
         BoxCollider* box = new BoxCollider(b2BodyType::b2_staticBody);
         block->AddComponent(box);
-        box->CreateBody({ 0,0 }, { block->Size().x, block->Size().y }, true);
+        box->CreateBody({ 0,0 }, { block->Size3D().x, block->Size3D().y }, true);
         ImageRender* ir = new ImageRender(m_land);
         block->AddComponent(ir);
         ir->SetTrans(false);
@@ -87,7 +87,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
 	{
        GameObject* defaultMon = new GameObject();
        defaultMon->SetTag(TAG_MONSTER);
-       defaultMon->Size() = { UNITSIZE, UNITSIZE};
+       defaultMon->Size3D() = { UNITSIZE, UNITSIZE, 1.0f};
        defaultMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f });
        defaultMon->AddComponent(new ChangeObject(PlayerMode::mDefault, m_player));
        defaultMon->AddComponent(new MonsterAI(m_defaultMobAnim[(int)Arrow::left], m_defaultMobAnim[(int)Arrow::right]));
@@ -99,7 +99,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
     {
         GameObject* swordMon = new GameObject();
         swordMon->SetTag(TAG_MONSTER);
-        swordMon->Size() = { UNITSIZE, UNITSIZE};
+        swordMon->Size3D() = { UNITSIZE, UNITSIZE, 1.0f};
         swordMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4 ,(float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f});
         swordMon->AddComponent(new ChangeObject(PlayerMode::mSword, m_player));
         swordMon->AddComponent(new MonsterAI(m_swordMobAnim[(int)Arrow::left], m_swordMobAnim[(int)Arrow::right]));
@@ -111,7 +111,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
 	{
 		GameObject* stoneMon = new GameObject();
 		stoneMon->SetTag(TAG_MONSTER);
-		stoneMon->Size() = { UNITSIZE, UNITSIZE};
+		stoneMon->Size3D() = { UNITSIZE, UNITSIZE, 1.0f};
 		stoneMon->SetPosition({ (float)UNITSIZE * i + UNITSIZE / 4, (float)-UNITSIZE * j - UNITSIZE / 4 - 2,7.0f});
 		stoneMon->AddComponent(new ChangeObject(PlayerMode::mStone, m_player));
         stoneMon->AddComponent(new MonsterAI(m_stoneMobAnim[(int)Arrow::left], m_stoneMobAnim[(int)Arrow::right]));
@@ -123,14 +123,14 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
     {
         GameObject* door = new GameObject();
         door->SetTag(TAG_DOOR);
-        door->Size() = { UNITSIZE, UNITSIZE};
+        door->Size3D() = { UNITSIZE, UNITSIZE, 1.0f};
         door->SetPosition({ (float)UNITSIZE * i, (float)-UNITSIZE * j,7.0f});
         BoxCollider* box = new BoxCollider(b2BodyType::b2_kinematicBody);
         door->AddComponent(box);
         door->AddComponent(new ImageRender(m_door));
         box->SetTrigger(true);  
         door->AddComponent(new Door());
-        box->CreateBody({ 0,0 }, { door->Size().x, door->Size().y }, false);
+        box->CreateBody({ 0,0 }, { door->Size3D().x, door->Size3D().y }, false);
         door->InitializeSet();
         rowGroup->push_back(door);
     }

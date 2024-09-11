@@ -33,7 +33,7 @@
 #include "SharedPointer.h"
 
 #include "ObjectPool.h"
-
+#include "FbxTool.h"
 #include "DebugRender.h"
 #include "AnimationManager.h"
 #include "ObjectManager.h"
@@ -75,6 +75,7 @@
 #define DEBUGCOLORDX2 (D3DCOLOR_XRGB((255),(0),(0)))
 
 using namespace DirectX;
+using namespace std;
 
 struct CUSTOMVERTEX
 {
@@ -91,7 +92,7 @@ struct DEBUGVERTEX
 };
 #define D3DFVF_DEBUGVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE)
 
-using namespace std;
+
 
 D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& worldPos);
 D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& screenPos);

@@ -35,7 +35,7 @@ void MonsterAI::Initialize()
 
 	m_bo->CreateBody(
 		{ 10 , 10 },
-		{ m_gameObj->Size().x / 2 ,m_gameObj->Size().y / 2 },
+		{ m_gameObj->Size3D().x / 2 ,m_gameObj->Size3D().y / 2 },
 		false);
 	m_bo->GetBody()->SetLinearVelocity({ m_arrowVal * m_speed ,m_bo->GetBody()->GetLinearVelocity().y});
 }

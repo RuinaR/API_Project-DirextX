@@ -24,7 +24,7 @@ AttakObject::~AttakObject()
 void AttakObject::Initialize()
 {
 	m_texture = AnimationManager::LoadTexture(L"Bitmaps\\obj\\attack.bmp");
-	m_gameObj->Size() = { 30,30 };
+	m_gameObj->Size3D() = { 30,30,1 };
 	m_gameObj->SetTag(TAG_ATTACK);
 	m_gameObj->AddComponent(new ImageRender(m_texture));
 	m_gameObj->AddComponent(new BoxCollider(b2BodyType::b2_kinematicBody));

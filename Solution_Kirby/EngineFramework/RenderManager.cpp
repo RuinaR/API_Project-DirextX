@@ -72,6 +72,23 @@ void RenderManager::Unresister(ImageRender* ir)
 	}
 }
 
+void RenderManager::Resister(FBXRender* fbxr)
+{
+	m_fbxVec->push_back(fbxr);
+}
+
+void RenderManager::Unresister(FBXRender* fbxr)
+{
+	for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
+	{
+		if ((*itr) == fbxr)
+		{
+			m_fbxVec->erase(itr);
+			return;
+		}
+	}
+}
+
 void RenderManager::ResisterBtn(Button* btn)
 {
 	m_btnVec->push_back(btn);
@@ -112,6 +129,7 @@ void RenderManager::Initialize()
 	m_noTransVec = new vector<ImageRender*>();
 	m_btnVec = new vector<Button*>();
 	m_debugVec = new vector<DebugRender*>();
+	m_fbxVec = new vector<FBXRender*>();
 
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
 	device->CreateTexture(
@@ -159,6 +177,11 @@ void RenderManager::EditUpdate()
 		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
+		{
+			(*itr)->Render();
+		}
+		//FBX Render
+		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
 		{
 			(*itr)->Render();
 		}
@@ -297,6 +320,7 @@ void RenderManager::Release()
 	delete m_noTransVec;
 	delete m_btnVec;
 	delete m_debugVec;
+	delete m_fbxVec;
 
 	if (renderTargetTexture != nullptr)
 	{

@@ -126,7 +126,7 @@ void Button::SetUISize(D3DXVECTOR2 v)
 {
     m_UISize = v;
     if (m_gameObj)
-        m_gameObj->Size() = m_UISize;
+        m_gameObj->Size2D() = m_UISize;
 }
 
 

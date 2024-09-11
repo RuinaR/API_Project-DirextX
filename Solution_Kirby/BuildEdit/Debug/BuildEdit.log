@@ -29,6 +29,5 @@ C:\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,8): message :
 C:\API_Project-DirextX\Solution_Kirby\include\PluginManager.cpp(64,15): message : 'PluginManager::GetFileNames'에서 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::assign'에 대한 첫 번째 참조를 확인하세요.
   BuildLoopCls.cpp
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  main.cpp
   코드를 생성하고 있습니다...
   BuildEdit.vcxproj -> C:\API_Project-DirextX\Solution_Kirby\Debug\BuildEdit.exe
