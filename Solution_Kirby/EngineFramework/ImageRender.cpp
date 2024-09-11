@@ -14,9 +14,9 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     D3DXMatrixScaling(&matScale, m_gameObj->Size2D().x, m_gameObj->Size2D().y, 1.0f);
     D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
 
-    D3DXMatrixRotationX(&matRotationX, m_gameObj->GetAngleX());
-    D3DXMatrixRotationY(&matRotationY, m_gameObj->GetAngleY());
-    D3DXMatrixRotationZ(&matRotationZ, m_gameObj->GetAngleZ());
+    D3DXMatrixRotationX(&matRotationX, D3DXToRadian(m_gameObj->GetAngleX()));
+    D3DXMatrixRotationY(&matRotationY, D3DXToRadian(m_gameObj->GetAngleY()));
+    D3DXMatrixRotationZ(&matRotationZ, D3DXToRadian(m_gameObj->GetAngleZ()));
     matRotation = matRotationX * matRotationY * matRotationZ;
     matWorld = matScale * matRotation * matTrans;
 

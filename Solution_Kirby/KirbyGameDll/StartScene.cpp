@@ -43,12 +43,13 @@ void StartScene::Start()
 	GameObject* fbxSample = new GameObject();
 	FBXRender* fbxRender = new FBXRender("fbxSample");
 	
-	fbxSample->SetAngleX(5.0f);
-	//fbxSample->SetAngleY(30.0f);
-	fbxSample->SetAngleZ(30.0f);
+	fbxSample->SetAngleX(270.0f);
+	fbxSample->SetAngleY(180.0f);
+	fbxSample->SetAngleZ(0.0f);
 
-	fbxSample->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	fbxSample->Size3D() = D3DXVECTOR3(15.0f, 15.0f,15.0f);
+	fbxSample->SetTag("3D OBJ");
+	fbxSample->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 100.0f));
+	fbxSample->Size3D() = D3DXVECTOR3(2.0f, 2.0f,2.0f);
 	fbxSample->AddComponent(fbxRender);
 	fbxSample->InitializeSet();
 }

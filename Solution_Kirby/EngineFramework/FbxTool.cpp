@@ -6,22 +6,22 @@ FbxTool::FbxTool() {}
 
 FbxTool::~FbxTool() {}
 
-bool FbxTool::Initialize() 
+bool FbxTool::Initialize()
 {
     return InitializeSdkObjects();
 }
 
 void FbxTool::ImguiUpdate()
 {
-    if (ImGui::Begin("FBX Vertex/Index Data")) 
+    if (ImGui::Begin("FBX Vertex/Index Data"))
     {
         // Display vertex count
         ImGui::Text("Vertex Count: %llu", (unsigned long long)m_vertexCount);
 
         // Display each vertex position
-        if (ImGui::TreeNode("Vertices")) 
+        if (ImGui::TreeNode("Vertices"))
         {
-            for (size_t i = 0; i < m_vertexCount; ++i) 
+            for (size_t i = 0; i < m_vertexCount; ++i)
             {
                 ImGui::Text("Vertex %llu: (%.3f, %.3f, %.3f)",
                     (unsigned long long)i,
@@ -34,9 +34,9 @@ void FbxTool::ImguiUpdate()
         ImGui::Text("Index Count: %llu", (unsigned long long)m_indexCount);
 
         // Display each index
-        if (ImGui::TreeNode("Indices")) 
+        if (ImGui::TreeNode("Indices"))
         {
-            for (size_t i = 0; i < m_indexCount; ++i) 
+            for (size_t i = 0; i < m_indexCount; ++i)
             {
                 ImGui::Text("Index %llu: %u", (unsigned long long)i, m_idx[i]);
             }
@@ -46,10 +46,10 @@ void FbxTool::ImguiUpdate()
     ImGui::End();
 }
 
-bool FbxTool::InitializeSdkObjects() 
+bool FbxTool::InitializeSdkObjects()
 {
     m_sdkManager = FbxManager::Create();
-    if (!m_sdkManager) 
+    if (!m_sdkManager)
     {
         std::cerr << "Error: Unable to create FBX Manager!" << std::endl;
         return false;
@@ -66,7 +66,7 @@ bool FbxTool::InitializeSdkObjects()
     m_sdkManager->SetIOSettings(ios);
 
     m_scene = FbxScene::Create(m_sdkManager, "MyScene");
-    if (!m_scene) 
+    if (!m_scene)
     {
         std::cerr << "Error: Unable to create FBX scene!" << std::endl;
         return false;
@@ -75,108 +75,136 @@ bool FbxTool::InitializeSdkObjects()
     return true;
 }
 
-void FbxTool::DestroySdkObjects() 
+void FbxTool::DestroySdkObjects()
 {
-    if (m_sdkManager) 
+    if (m_sdkManager)
     {
         m_sdkManager->Destroy();
         m_sdkManager = nullptr;
     }
 }
 
-bool FbxTool::Load(const char* fileName) 
+bool FbxTool::Load(const char* fileName)
 {
-
-    if (!m_sdkManager || !m_scene) 
+    if (!m_sdkManager || !m_scene)
     {
-		std::cerr << "Error: FBX SDK not initialized!" << std::endl;
-		return false;
-	}
+        std::cerr << "Error: FBX SDK not initialized!" << std::endl;
+        return false;
+    }
 
-	wchar_t path[MAX_PATH] = { 0 };
-	GetModuleFileName(NULL, path, MAX_PATH);
-	USES_CONVERSION;
-	std::string executepath = W2A(path);
-	executepath = executepath.substr(0, executepath.find_last_of("\\/"));
-	//파일 경로 설정
-	string FilePath = executepath + "\\FBX\\" + fileName + ".fbx";
+    wchar_t path[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, path, MAX_PATH);
+    USES_CONVERSION;
+    std::string executepath = W2A(path);
+    executepath = executepath.substr(0, executepath.find_last_of("\\/"));
+    // 파일 경로 설정
+    std::string FilePath = executepath + "\\FBX\\" + fileName + ".fbx";
 
-	FbxImporter* importer = FbxImporter::Create(m_sdkManager, "");
-	if (!importer->Initialize(FilePath.c_str(), -1, m_sdkManager->GetIOSettings()))
-	{
+    FbxImporter* importer = FbxImporter::Create(m_sdkManager, "");
+    if (!importer->Initialize(FilePath.c_str(), -1, m_sdkManager->GetIOSettings()))
+    {
         std::cerr << "Error: Unable to open FBX file! : " << importer->GetStatus().GetErrorString() << std::endl;
         return false;
     }
 
-    if (!importer->Import(m_scene)) 
+    if (!importer->Import(m_scene))
     {
         std::cerr << "Error: Failed to import scene!" << std::endl;
         return false;
     }
 
-    importer->Destroy();
-
-    // Process the loaded scene
+    // 루트 노드를 처리
     FbxNode* rootNode = m_scene->GetRootNode();
-    if (rootNode) 
-    {
-        for (int i = 0; i < rootNode->GetChildCount(); ++i)
-        {
-            ProcessNode(rootNode->GetChild(i));
+    if (rootNode) {
+        std::vector<CUSTOMVERTEX> vertices;
+        std::vector<unsigned int> indices;
+
+        // 초기 부모 변환 행렬을 단위 행렬로 설정
+        FbxMatrix identityMatrix;
+
+        ProcessNode(rootNode, vertices, indices, identityMatrix);
+
+        // 병합된 버텍스 및 인덱스를 하나의 버퍼로 변환
+        m_vertexCount = vertices.size();
+        m_pos = new CUSTOMVERTEX[m_vertexCount];
+        for (size_t i = 0; i < m_vertexCount; i++) {
+            m_pos[i] = vertices[i];
+        }
+
+        m_indexCount = indices.size();
+        m_idx = new unsigned int[m_indexCount];
+        for (size_t i = 0; i < m_indexCount; i++) {
+            m_idx[i] = indices[i];
         }
     }
 
+    importer->Destroy();
     return true;
 }
 
-void FbxTool::ProcessNode(FbxNode* node) 
+void FbxTool::ProcessNode(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, FbxMatrix parentTransform)
 {
-    FbxMesh* mesh = node->GetMesh();
-    if (mesh) 
-    {
-        ProcessMesh(mesh);
+    // 현재 노드의 글로벌 변환 행렬 계산
+    FbxMatrix nodeTransform = node->EvaluateGlobalTransform();
+    FbxMatrix globalTransform = parentTransform * nodeTransform;
+
+    FbxNodeAttribute* attribute = node->GetNodeAttribute();
+    if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh) {
+        ProcessMesh(node->GetMesh(), vertices, indices, globalTransform);
     }
 
-    for (int i = 0; i < node->GetChildCount(); ++i) 
-    {
-        ProcessNode(node->GetChild(i));
+    // 자식 노드들도 처리
+    for (int i = 0; i < node->GetChildCount(); i++) {
+        ProcessNode(node->GetChild(i), vertices, indices, globalTransform);
     }
 }
 
-void FbxTool::ProcessMesh(FbxMesh* mesh) 
+void FbxTool::ProcessMesh(FbxMesh* mesh, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, const FbxMatrix& transform)
 {
-    m_vertexCount = mesh->GetControlPointsCount();
-    m_pos = new XMFLOAT3[m_vertexCount];
+    if (!mesh) return;
 
-    // Copy vertex positions
-    for (int i = 0; i < m_vertexCount; ++i) 
-    {
-        FbxVector4 position = mesh->GetControlPointAt(i);
-        m_pos[i] = XMFLOAT3(static_cast<float>(position[0]),
-            static_cast<float>(position[1]),
-            static_cast<float>(position[2]));
+    // FBX 메쉬를 삼각형으로 변환
+    FbxGeometryConverter converter(m_sdkManager);
+    if (!mesh->IsTriangleMesh()) {
+        mesh = static_cast<FbxMesh*>(converter.Triangulate(mesh, true));
     }
 
-    m_indexCount = mesh->GetPolygonVertexCount();
-    m_idx = new unsigned int[m_indexCount];
+    // 기존 버텍스 개수 저장 (인덱스 병합을 위해)
+    size_t vertexOffset = vertices.size();
 
-    // Copy indices
-    const int* indices = mesh->GetPolygonVertices();
-    for (int i = 0; i < m_indexCount; ++i) 
-    {
-        m_idx[i] = static_cast<unsigned int>(indices[i]);
+    // 버텍스 데이터 추가
+    int vertexCount = mesh->GetControlPointsCount();
+    for (int i = 0; i < vertexCount; i++) {
+        FbxVector4 pos = mesh->GetControlPointAt(i);
+        FbxVector4 transformedPos = transform.MultNormalize(pos);
+        CUSTOMVERTEX vertex = {
+            static_cast<FLOAT>(transformedPos[0]),
+            static_cast<FLOAT>(transformedPos[1]),
+            static_cast<FLOAT>(transformedPos[2]),
+            0xFFFFFFFF,    // 기본 흰색 (색상 처리)
+            0.0f, 0.0f     // 기본 텍스처 좌표
+        };
+        vertices.push_back(vertex);
+    }
+
+    // 인덱스 데이터 추가
+    int polygonCount = mesh->GetPolygonCount();
+    for (int i = 0; i < polygonCount; i++) {
+        for (int j = 0; j < 3; j++) {
+            indices.push_back(vertexOffset + static_cast<unsigned int>(mesh->GetPolygonVertex(i, j)));
+        }
     }
 }
 
-bool FbxTool::Release() 
+bool FbxTool::Release()
 {
-    if (m_pos) 
+    if (m_pos)
     {
         delete[] m_pos;
         m_pos = nullptr;
     }
 
-    if (m_idx) 
+    if (m_idx)
     {
         delete[] m_idx;
         m_idx = nullptr;

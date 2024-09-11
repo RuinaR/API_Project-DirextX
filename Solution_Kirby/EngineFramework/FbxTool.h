@@ -1,5 +1,6 @@
 #pragma once
 #include <fbxsdk.h>
+struct CUSTOMVERTEX;
 class FbxTool
 {
 public:
@@ -10,8 +11,7 @@ public:
     bool Load(const char* fileName);
     bool Release();
 
-    // Getters to access vertex and index data
-    DirectX::XMFLOAT3* GetPositions() const { return m_pos; }
+    CUSTOMVERTEX* GetPositions() const { return m_pos; }
     unsigned int* GetIndices() const { return m_idx; }
     size_t GetVertexCount() const { return m_vertexCount; }
     size_t GetIndexCount() const { return m_indexCount; }
@@ -21,11 +21,11 @@ private:
     bool InitializeSdkObjects();
     void DestroySdkObjects();
 
-    void ProcessNode(FbxNode* node);
-    void ProcessMesh(FbxMesh* mesh);
+    void ProcessNode(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, FbxMatrix parentTransform);
+    void ProcessMesh(FbxMesh* mesh, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, const FbxMatrix& transform);
 
     // Variables to store vertex and index data
-    DirectX::XMFLOAT3* m_pos = nullptr;
+    CUSTOMVERTEX* m_pos = nullptr;
     unsigned int* m_idx = nullptr;
     size_t m_vertexCount = 0;
     size_t m_indexCount = 0;

@@ -181,6 +181,8 @@ void RenderManager::EditUpdate()
 			(*itr)->Render();
 		}
 		//FBX Render
+		device->SetFVF(D3DFVF_CUSTOMVERTEX);
+		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
 		{
 			(*itr)->Render();
