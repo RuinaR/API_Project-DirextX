@@ -270,7 +270,13 @@ void RenderManager::GameUpdate()
 		{
 			(*itr)->Render();
 		}
-		
+		//FBX Render
+		device->SetFVF(D3DFVF_CUSTOMVERTEX);
+		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
+		{
+			(*itr)->Render();
+		}
 		device->SetTexture(0, nullptr);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
