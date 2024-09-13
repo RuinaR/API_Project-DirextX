@@ -16,7 +16,7 @@ void FBXRender::Initialize()
 
     // VertexBuffer와 IndexBuffer 생성
     MainFrame::GetInstance()->GetDevice()->CreateVertexBuffer(
-        m_vertexCount * sizeof(CUSTOMVERTEX), // XMFLOAT3 대신 CUSTOMVERTEX 사용
+        m_vertexCount * sizeof(CUSTOMVERTEX),
         0,
         D3DFVF_CUSTOMVERTEX,
         D3DPOOL_MANAGED,
@@ -80,7 +80,7 @@ void FBXRender::Render()
     D3DXMatrixRotationY(&matRotationY, D3DXToRadian(m_gameObj->GetAngleY()));
     D3DXMatrixRotationZ(&matRotationZ, D3DXToRadian(m_gameObj->GetAngleZ()));
 
-    matRotation = matRotationX * matRotationY * matRotationZ;
+    matRotation = matRotationZ * matRotationX * matRotationY;
     matWorld = matScale * matRotation * matTrans;
 
     MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);

@@ -17,7 +17,7 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     D3DXMatrixRotationX(&matRotationX, D3DXToRadian(m_gameObj->GetAngleX()));
     D3DXMatrixRotationY(&matRotationY, D3DXToRadian(m_gameObj->GetAngleY()));
     D3DXMatrixRotationZ(&matRotationZ, D3DXToRadian(m_gameObj->GetAngleZ()));
-    matRotation = matRotationX * matRotationY * matRotationZ;
+    matRotation = matRotationZ * matRotationX * matRotationY;
     matWorld = matScale * matRotation * matTrans;
 
     m_device->SetTransform(D3DTS_WORLD, &matWorld);

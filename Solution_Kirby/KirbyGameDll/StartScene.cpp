@@ -40,16 +40,26 @@ void StartScene::Start()
 
 	//FBX TEST
 
-	GameObject* fbxSample = new GameObject();
-	FBXRender* fbxRender = new FBXRender("fbxSample");
-	
-	fbxSample->SetAngleX(270.0f);
-	fbxSample->SetAngleY(180.0f);
-	fbxSample->SetAngleZ(0.0f);
+	GameObject* fbxSample1 = new GameObject();
+	FBXRender* fbxRender1 = new FBXRender("fbxSample1");
+	fbxSample1->SetAngleX(270.0f);
+	fbxSample1->SetAngleY(180.0f);
+	fbxSample1->SetAngleZ(0.0f);
+	fbxSample1->SetTag("3D_OBJ");
+	fbxSample1->SetPosition(D3DXVECTOR3(0.0f, -180.0f, 100.0f));
+	fbxSample1->Size3D() = D3DXVECTOR3(2.0f, 2.0f,2.0f);
+	fbxSample1->AddComponent(fbxRender1);
+	fbxSample1->InitializeSet();
 
-	fbxSample->SetTag("3D OBJ");
-	fbxSample->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 100.0f));
-	fbxSample->Size3D() = D3DXVECTOR3(2.0f, 2.0f,2.0f);
-	fbxSample->AddComponent(fbxRender);
-	fbxSample->InitializeSet();
+
+	GameObject* fbxSample2 = new GameObject();
+	FBXRender* fbxRender2 = new FBXRender("fbxSample2");
+	fbxSample2->SetAngleX(00.0f);
+	fbxSample2->SetAngleY(90.0f);
+	fbxSample2->SetAngleZ(15.0f);
+	fbxSample2->SetTag("3D_OBJ");
+	fbxSample2->SetPosition(D3DXVECTOR3(160.0f, 180.0f, 100.0f));
+	fbxSample2->Size3D() = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	fbxSample2->AddComponent(fbxRender2);
+	fbxSample2->InitializeSet();
 }
