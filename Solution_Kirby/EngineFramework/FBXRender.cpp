@@ -86,11 +86,30 @@ void FBXRender::Render()
     MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);
 
     // DirectX 장비 설정
-    MainFrame::GetInstance()->GetDevice()->SetStreamSource(0, m_pVertexBuffer, 0, sizeof(CUSTOMVERTEX));
-    MainFrame::GetInstance()->GetDevice()->SetIndices(m_pIndexBuffer);
     MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_CUSTOMVERTEX);
 
-    MainFrame::GetInstance()->GetDevice()->DrawIndexedPrimitive(
-        D3DPT_TRIANGLELIST, 0, 0, m_vertexCount, 0, m_indexCount / 3
-    );
+
+    for (const auto& material : m_tool.GetMaterial())
+    {
+        if (!material.textures.empty())
+        {
+            MainFrame::GetInstance()->GetDevice()->SetTexture(0, material.textures[0]);
+        }
+        else
+        {
+            MainFrame::GetInstance()->GetDevice()->SetTexture(0, nullptr); // 텍스처가 없는 경우
+        }
+
+        MainFrame::GetInstance()->GetDevice()->DrawIndexedPrimitiveUP(
+            D3DPT_TRIANGLELIST,
+            0,
+            m_tool.GetVertexCount(),
+            m_tool.GetIndexCount() / 3,
+            m_tool.GetIndices(),
+            D3DFMT_INDEX32,
+            m_tool.GetPositions(),
+            sizeof(CUSTOMVERTEX)
+        );
+    }
+    
 }

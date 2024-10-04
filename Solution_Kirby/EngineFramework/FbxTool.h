@@ -1,6 +1,14 @@
 #pragma once
 #include <fbxsdk.h>
 struct CUSTOMVERTEX;
+
+struct sMaterial
+{
+    std::vector<std::string> texturePaths;
+    std::vector<IDirect3DTexture9*> textures;
+    //std::vector<std::pair<float, float>> uvs; 
+};
+
 class FbxTool
 {
 public:
@@ -15,6 +23,12 @@ public:
     unsigned int* GetIndices() const { return m_idx; }
     size_t GetVertexCount() const { return m_vertexCount; }
     size_t GetIndexCount() const { return m_indexCount; }
+
+    // UV 좌표와 텍스처를 가져오는 함수
+    //std::vector<std::pair<float, float>> GetUVs() const { return m_uvs; }
+    //std::vector<std::string> GetTexturePaths() const { return m_texturePaths; }
+    //std::vector<IDirect3DTexture9*> GetTextures() const { return m_textures; }
+    std::vector<sMaterial> GetMaterial() const { return m_sMats; }
 
     void ImguiUpdate();
 private:
@@ -35,6 +49,6 @@ private:
     FbxManager* m_sdkManager = nullptr;
     FbxScene* m_scene = nullptr;
 
-    std::vector<std::string> m_texturePaths;
+    std::vector<sMaterial> m_sMats;
 };
 
