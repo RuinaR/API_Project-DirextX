@@ -179,12 +179,12 @@ void StageMaker::StageStart()
 
 bool StageMaker::SetMap(string mapName)
 {
-    m_land = AnimationManager::LoadTexture(L"Bitmaps\\obj\\land.bmp");
-    m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
-    m_defaultObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\defaultObj.bmp");
-    m_swordObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\swordObj.bmp");
-    m_stoneObj = AnimationManager::LoadTexture(L"Bitmaps\\obj\\stoneObj.bmp");
-    m_door = AnimationManager::LoadTexture(L"Bitmaps\\obj\\door.bmp");
+    m_land = AnimationManager::LoadTexture("Bitmaps\\obj\\land.bmp");
+    m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
+    m_defaultObj = AnimationManager::LoadTexture("Bitmaps\\obj\\defaultObj.bmp");
+    m_swordObj = AnimationManager::LoadTexture("Bitmaps\\obj\\swordObj.bmp");
+    m_stoneObj = AnimationManager::LoadTexture("Bitmaps\\obj\\stoneObj.bmp");
+    m_door = AnimationManager::LoadTexture("Bitmaps\\obj\\door.bmp");
 
     wstring path[(int)Arrow::max];
     path[(int)Arrow::left] = L"Bitmaps\\monster\\default\\left";

@@ -16,7 +16,7 @@ bool AnimationManager::IsImageFile(const wstring& filename)
 
 Animation AnimationManager::LoadAnimation(const wstring& folderName, float time) {
     wchar_t wpath[MAX_PATH] = { 0 };
-    GetModuleFileName(NULL, wpath, MAX_PATH);
+    GetModuleFileNameW(NULL, wpath, MAX_PATH);
     //USES_CONVERSION;
     std::wstring executepath = wpath;
     executepath = executepath.substr(0, executepath.find_last_of(L"\\/"));
@@ -25,7 +25,7 @@ Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
     wstring searchPath = currentDirectory + L"\\" + folderName + L"\\*.*";
     WIN32_FIND_DATAW fileData;
     D3DXIMAGE_INFO imageInfo;
-    HANDLE hFind = FindFirstFile(searchPath.c_str(), &fileData);
+    HANDLE hFind = FindFirstFileW(searchPath.c_str(), &fileData);
 
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
@@ -35,7 +35,7 @@ Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
                 cout << "텍스처 로딩 중: " << filePath.c_str() << endl; // 디버그 출력
 
                 IDirect3DTexture9* texture = nullptr;
-                HRESULT hr = D3DXCreateTextureFromFileEx(
+                HRESULT hr = D3DXCreateTextureFromFileExW(
                     MainFrame::GetInstance()->GetDevice(),
                     filePath.c_str(),
                     D3DX_DEFAULT,
@@ -58,7 +58,7 @@ Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
                     cout << "텍스처 로딩 실패: " << filePath.c_str() << ", HRESULT: " << hr << endl;
                 }
             }
-        } while (FindNextFile(hFind, &fileData) != 0);
+        } while (FindNextFileW(hFind, &fileData) != 0);
         FindClose(hFind);
     }
     else {
@@ -84,17 +84,17 @@ void AnimationManager::ReleaseAnimation(Animation& anim)
     anim.textures.clear();
 }
 
-IDirect3DTexture9* AnimationManager::LoadTexture(const wstring& path)
+IDirect3DTexture9* AnimationManager::LoadTexture(const string& path)
 {
     IDirect3DTexture9* texture;
     D3DXIMAGE_INFO imageInfo;
-    wchar_t wpath[MAX_PATH] = { 0 };
+    char wpath[MAX_PATH] = { 0 };
     GetModuleFileName(NULL, wpath, MAX_PATH);
     //USES_CONVERSION;
-    std::wstring executepath = wpath;
-    executepath = executepath.substr(0, executepath.find_last_of(L"\\/"));
-    wstring currentDirectory = executepath;
-    wstring searchPath = currentDirectory + L"\\" + path;
+    string executepath = wpath;
+    executepath = executepath.substr(0, executepath.find_last_of("\\/"));
+    string currentDirectory = executepath;
+    string searchPath = currentDirectory + "\\" + path;
     if (FAILED(D3DXCreateTextureFromFileEx(
         MainFrame::GetInstance()->GetDevice() ,
         searchPath.c_str(),
@@ -111,7 +111,7 @@ IDirect3DTexture9* AnimationManager::LoadTexture(const wstring& path)
 		NULL,
 		&texture)))
 	{
-		wcout << L"Failed to load texture: " << searchPath << endl;
+		cout << "Failed to load texture: " << searchPath << endl;
 		return NULL;
 	}
 	return texture;

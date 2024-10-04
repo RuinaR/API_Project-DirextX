@@ -51,7 +51,7 @@ void GameScene::StartGame()
 
 void GameScene::Init()
 {
-	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
+	m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
 	SceneChanger::Create();
 	StageMaker::Create();
 }

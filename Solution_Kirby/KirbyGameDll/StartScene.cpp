@@ -7,7 +7,7 @@
 void StartScene::Init()
 {
 	SceneChanger::Create();
-	m_bg = AnimationManager::LoadTexture(L"Bitmaps\\obj\\BG.bmp");
+	m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
 }
 
 void StartScene::Release()
@@ -52,14 +52,14 @@ void StartScene::Start()
 	fbxSample1->InitializeSet();
 
 
-	GameObject* fbxSample2 = new GameObject();
-	FBXRender* fbxRender2 = new FBXRender("fbxSample2");
-	fbxSample2->SetAngleX(00.0f);
-	fbxSample2->SetAngleY(90.0f);
-	fbxSample2->SetAngleZ(15.0f);
-	fbxSample2->SetTag("3D_OBJ");
-	fbxSample2->SetPosition(D3DXVECTOR3(160.0f, 180.0f, 100.0f));
-	fbxSample2->Size3D() = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	fbxSample2->AddComponent(fbxRender2);
-	fbxSample2->InitializeSet();
+	//GameObject* fbxSample2 = new GameObject();
+	//FBXRender* fbxRender2 = new FBXRender("fbxSample2");
+	//fbxSample2->SetAngleX(00.0f);
+	//fbxSample2->SetAngleY(90.0f);
+	//fbxSample2->SetAngleZ(15.0f);
+	//fbxSample2->SetTag("3D_OBJ");
+	//fbxSample2->SetPosition(D3DXVECTOR3(160.0f, 180.0f, 100.0f));
+	//fbxSample2->Size3D() = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//fbxSample2->AddComponent(fbxRender2);
+	//fbxSample2->InitializeSet();
 }

@@ -23,7 +23,7 @@ AttakObject::~AttakObject()
 
 void AttakObject::Initialize()
 {
-	m_texture = AnimationManager::LoadTexture(L"Bitmaps\\obj\\attack.bmp");
+	m_texture = AnimationManager::LoadTexture("Bitmaps\\obj\\attack.bmp");
 	m_gameObj->Size3D() = { 30,30,1 };
 	m_gameObj->SetTag(TAG_ATTACK);
 	m_gameObj->AddComponent(new ImageRender(m_texture));

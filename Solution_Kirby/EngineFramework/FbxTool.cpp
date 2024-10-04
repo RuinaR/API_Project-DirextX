@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FbxTool.h"
+#include <fbxsdk/fileio/fbximporter.h>
 #include <atlconv.h>
 
 FbxTool::FbxTool() {}
@@ -93,7 +94,7 @@ bool FbxTool::Load(const char* fileName)
     }
 
     wchar_t path[MAX_PATH] = { 0 };
-    GetModuleFileName(NULL, path, MAX_PATH);
+    GetModuleFileNameW(NULL, path, MAX_PATH);
     USES_CONVERSION;
     std::string executepath = W2A(path);
     executepath = executepath.substr(0, executepath.find_last_of("\\/"));
@@ -220,6 +221,8 @@ void FbxTool::ProcessMaterial(FbxSurfaceMaterial* material)
         if (texture)
         {
             const char* texturePath = texture->GetFileName();
+            const char* texturePath2 = texture->GetRelativeFileName();
+
             m_texturePaths.push_back(texturePath); // 텍스처 경로 저장
         }
     }

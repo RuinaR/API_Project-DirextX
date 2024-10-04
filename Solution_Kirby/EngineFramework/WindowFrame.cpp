@@ -118,13 +118,13 @@ void WindowFrame::BuildWindow()
 	{
 	sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
 	GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
-	L"MyWindow", NULL
+	"MyWindow", NULL
 	};
 
 	RegisterClassEx(&WndClass);
 
 	m_Pthis->m_hWnd =
-		CreateWindow(WndClass.lpszClassName, L"최원준",
+		CreateWindow(WndClass.lpszClassName, "최원준",
 			WS_OVERLAPPED | 
 			WS_CAPTION | 
 			WS_SYSMENU | 
