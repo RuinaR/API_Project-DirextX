@@ -1,3 +1,4 @@
-﻿  StartScene.cpp
-C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  KirbyGameDll.vcxproj -> C:\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.dll
+﻿     C:\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.lib 라이브러리 및 C:\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.exp 개체를 생성하고 있습니다.
+EngineFramework.lib(FbxTool.obj) : error LNK2001: 확인할 수 없는 외부 기호 "public: static char const * const fbxsdk::FbxSurfaceMaterial::sDiffuse" (?sDiffuse@FbxSurfaceMaterial@fbxsdk@@2PBDB)
+EngineFramework.lib(FbxTool.obj) : error LNK2001: 확인할 수 없는 외부 기호 "public: static class fbxsdk::FbxClassId fbxsdk::FbxFileTexture::ClassId" (?ClassId@FbxFileTexture@fbxsdk@@2VFbxClassId@2@A)
+C:\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.dll : fatal error LNK1120: 2개의 확인할 수 없는 외부 참조입니다.

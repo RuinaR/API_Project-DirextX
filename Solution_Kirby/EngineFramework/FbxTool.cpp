@@ -149,12 +149,20 @@ void FbxTool::ProcessNode(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices, st
     FbxMatrix globalTransform = parentTransform * nodeTransform;
 
     FbxNodeAttribute* attribute = node->GetNodeAttribute();
-    if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh) {
+    if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh) 
+    {
         ProcessMesh(node->GetMesh(), vertices, indices, globalTransform);
+
+        // 노드에 재질(Material)이 있으면 처리
+        for (int i = 0; i < node->GetMaterialCount(); ++i)
+        {
+            ProcessMaterial(node->GetMaterial(i));  // 텍스처 처리
+        }
     }
 
     // 자식 노드들도 처리
-    for (int i = 0; i < node->GetChildCount(); i++) {
+    for (int i = 0; i < node->GetChildCount(); i++) 
+    {
         ProcessNode(node->GetChild(i), vertices, indices, globalTransform);
     }
 }
@@ -194,6 +202,30 @@ void FbxTool::ProcessMesh(FbxMesh* mesh, std::vector<CUSTOMVERTEX>& vertices, st
             indices.push_back(vertexOffset + static_cast<unsigned int>(mesh->GetPolygonVertex(i, j)));
         }
     }
+}
+
+void FbxTool::ProcessMaterial(FbxSurfaceMaterial* material)
+{
+    if (!material) return;
+
+    /*732 에러 확인*/
+    // 디퓨즈 텍스처 속성을 처리
+    // EngineFramework 빌드 이후 -> KirbyGameDll lib사용시 빌드 에러 생김
+    // LNK2001 에러
+    FbxProperty prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+    int textureCount = prop.GetSrcObjectCount<FbxFileTexture>();
+    for (int i = 0; i < textureCount; ++i)
+    {
+        FbxFileTexture* texture = FbxCast<FbxFileTexture>(prop.GetSrcObject<FbxFileTexture>(i));
+        if (texture)
+        {
+            const char* texturePath = texture->GetFileName();
+            m_texturePaths.push_back(texturePath); // 텍스처 경로 저장
+        }
+    }
+    
+    /*732 에러 확인 end*/
+    
 }
 
 bool FbxTool::Release()

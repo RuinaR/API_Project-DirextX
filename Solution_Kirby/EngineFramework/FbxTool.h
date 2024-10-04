@@ -23,6 +23,7 @@ private:
 
     void ProcessNode(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, FbxMatrix parentTransform);
     void ProcessMesh(FbxMesh* mesh, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, const FbxMatrix& transform);
+    void ProcessMaterial(FbxSurfaceMaterial* material);
 
     // Variables to store vertex and index data
     CUSTOMVERTEX* m_pos = nullptr;
@@ -33,5 +34,7 @@ private:
     // FBX SDK objects
     FbxManager* m_sdkManager = nullptr;
     FbxScene* m_scene = nullptr;
+
+    std::vector<std::string> m_texturePaths;
 };
 
