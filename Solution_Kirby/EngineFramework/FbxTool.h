@@ -9,6 +9,8 @@ struct sMaterial
     //std::vector<std::pair<float, float>> uvs; 
 };
 
+//메테리얼들, 메시들 가져와서 
+//각 메테리얼이 연결된 메시들을 랜더링하도록 수정할 것
 class FbxTool
 {
 public:
