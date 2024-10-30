@@ -3,6 +3,7 @@
 #include "Button.h"
 #include "SceneChanger.h"
 #include "FBXRender.h"
+#include "FBXRotateObj.h"
 
 void StartScene::Init()
 {
@@ -46,20 +47,22 @@ void StartScene::Start()
 	fbxSample1->SetAngleY(0.0f);
 	fbxSample1->SetAngleZ(0.0f);
 	fbxSample1->SetTag("3D_OBJ");
-	fbxSample1->SetPosition(D3DXVECTOR3(0.0f, -180.0f, 100.0f));
-	fbxSample1->Size3D() = D3DXVECTOR3(2.0f, 2.0f,2.0f);
+	fbxSample1->SetPosition(D3DXVECTOR3(300.0f, 0.0f, 500.0f));
+	fbxSample1->Size3D() = D3DXVECTOR3(0.5f, 0.5f, 0.5f);
 	fbxSample1->AddComponent(fbxRender1);
+	fbxSample1->AddComponent(new FBXRotateObj());
 	fbxSample1->InitializeSet();
 
 
-	//GameObject* fbxSample2 = new GameObject();
-	//FBXRender* fbxRender2 = new FBXRender("fbxSample2");
-	//fbxSample2->SetAngleX(00.0f);
-	//fbxSample2->SetAngleY(90.0f);
-	//fbxSample2->SetAngleZ(15.0f);
-	//fbxSample2->SetTag("3D_OBJ");
-	//fbxSample2->SetPosition(D3DXVECTOR3(160.0f, 180.0f, 100.0f));
-	//fbxSample2->Size3D() = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	//fbxSample2->AddComponent(fbxRender2);
-	//fbxSample2->InitializeSet();
+	GameObject* fbxSample2 = new GameObject();
+	FBXRender* fbxRender2 = new FBXRender("fbxSample");
+	fbxSample2->SetAngleX(00.0f);
+	fbxSample2->SetAngleY(0.0f);
+	fbxSample2->SetAngleZ(0.0f);
+	fbxSample2->SetTag("3D_OBJ");
+	fbxSample2->SetPosition(D3DXVECTOR3(-300.0f, 0.0f, 500.0f));
+	fbxSample2->Size3D() = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	fbxSample2->AddComponent(fbxRender2);
+	fbxSample2->AddComponent(new FBXRotateObj());
+	fbxSample2->InitializeSet();
 }

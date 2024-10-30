@@ -75,6 +75,9 @@
     <ClInclude Include="KirbyGame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="FBXRotateObj.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="..\include\PluginManager.cpp">
       <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXRotateObj.cpp">
+      <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

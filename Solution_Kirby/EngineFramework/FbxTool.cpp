@@ -2,283 +2,342 @@
 #include "FbxTool.h"
 #include <fbxsdk/fileio/fbximporter.h>
 #include <atlconv.h>
+#include <utility>
 
-FbxTool::FbxTool() {}
-
-FbxTool::~FbxTool() {}
-
-bool FbxTool::Initialize()
-{
-    return InitializeSdkObjects();
-}
-
-void FbxTool::ImguiUpdate()
-{
-    if (ImGui::Begin("FBX Vertex/Index Data"))
-    {
-        // Display vertex count
-        ImGui::Text("Vertex Count: %llu", (unsigned long long)m_vertexCount);
-
-        // Display each vertex position
-        if (ImGui::TreeNode("Vertices"))
-        {
-            for (size_t i = 0; i < m_vertexCount; ++i)
-            {
-                ImGui::Text("Vertex %llu: (%.3f, %.3f, %.3f)",
-                    (unsigned long long)i,
-                    m_pos[i].x, m_pos[i].y, m_pos[i].z);
-            }
-            ImGui::TreePop();
-        }
-
-        // Display index count
-        ImGui::Text("Index Count: %llu", (unsigned long long)m_indexCount);
-
-        // Display each index
-        if (ImGui::TreeNode("Indices"))
-        {
-            for (size_t i = 0; i < m_indexCount; ++i)
-            {
-                ImGui::Text("Index %llu: %u", (unsigned long long)i, m_idx[i]);
-            }
-            ImGui::TreePop();
+// FBX 행렬을 DirectX 행렬로 변환
+D3DXMATRIX FbxToD3DXMatrix(const FbxAMatrix& fbxMatrix) {
+    D3DXMATRIX d3dMatrix;
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            d3dMatrix.m[i][j] = static_cast<FLOAT>(fbxMatrix.Get(i, j));
         }
     }
-    ImGui::End();
+    return d3dMatrix;
 }
 
-bool FbxTool::InitializeSdkObjects()
-{
+// 글로벌 변환을 모든 정점에 적용
+void ApplyGlobalTransform(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices) {
+    FbxAMatrix globalTransform = node->EvaluateGlobalTransform();
+    D3DXMATRIX worldMatrix = FbxToD3DXMatrix(globalTransform);
+
+    for (auto& vertex : vertices) {
+        D3DXVECTOR3 position(vertex.x, vertex.y, vertex.z);
+        D3DXVec3TransformCoord(&position, &position, &worldMatrix);
+        vertex.x = position.x;
+        vertex.y = position.y;
+        vertex.z = position.z;
+    }
+}
+
+bool FbxTool::Initialize() {
     m_sdkManager = FbxManager::Create();
-    if (!m_sdkManager)
-    {
+    if (!m_sdkManager) {
         std::cerr << "Error: Unable to create FBX Manager!" << std::endl;
         return false;
     }
 
     FbxIOSettings* ios = FbxIOSettings::Create(m_sdkManager, IOSROOT);
-    ios->SetBoolProp(IMP_FBX_MATERIAL, true);
-    ios->SetBoolProp(IMP_FBX_TEXTURE, true);
-    ios->SetBoolProp(IMP_FBX_LINK, true);
-    ios->SetBoolProp(IMP_FBX_SHAPE, true);
-    ios->SetBoolProp(IMP_FBX_GOBO, true);
-    ios->SetBoolProp(IMP_FBX_ANIMATION, true);
-    ios->SetBoolProp(IMP_FBX_GLOBAL_SETTINGS, true);
     m_sdkManager->SetIOSettings(ios);
-
     m_scene = FbxScene::Create(m_sdkManager, "MyScene");
-    if (!m_scene)
-    {
-        std::cerr << "Error: Unable to create FBX scene!" << std::endl;
-        return false;
-    }
 
+    converter = new FbxGeometryConverter(m_sdkManager);
+    converter->Triangulate(m_scene, true);
     return true;
 }
 
-void FbxTool::DestroySdkObjects()
-{
-    if (m_sdkManager)
-    {
-        m_sdkManager->Destroy();
-        m_sdkManager = nullptr;
-    }
-}
-
-bool FbxTool::Load(const char* fileName)
-{
-    if (!m_sdkManager || !m_scene)
-    {
+bool FbxTool::Load(const char* fileName, std::vector<Model>& outModels) {
+    if (!m_sdkManager || !m_scene) {
         std::cerr << "Error: FBX SDK not initialized!" << std::endl;
         return false;
     }
 
+    // FBX 파일 경로 구성
     wchar_t path[MAX_PATH] = { 0 };
     GetModuleFileNameW(NULL, path, MAX_PATH);
     USES_CONVERSION;
     std::string executepath = W2A(path);
     executepath = executepath.substr(0, executepath.find_last_of("\\/"));
-    // 파일 경로 설정
     std::string FilePath = executepath + "\\FBX\\" + fileName + ".fbx";
 
+    // FBX 파일 로드
     FbxImporter* importer = FbxImporter::Create(m_sdkManager, "");
-    if (!importer->Initialize(FilePath.c_str(), -1, m_sdkManager->GetIOSettings()))
-    {
-        std::cerr << "Error: Unable to open FBX file! : " << importer->GetStatus().GetErrorString() << std::endl;
+    if (!importer->Initialize(FilePath.c_str(), -1, m_sdkManager->GetIOSettings())) {
+        std::cerr << "Error: Unable to open FBX file! : "
+            << importer->GetStatus().GetErrorString() << std::endl;
         return false;
     }
 
-    if (!importer->Import(m_scene))
-    {
-        std::cerr << "Error: Failed to import scene!" << std::endl;
+    if (!importer->Import(m_scene)) {
+        std::cerr << "Error: Failed to import FBX scene!" << std::endl;
         return false;
     }
+    importer->Destroy();
 
-    // 루트 노드를 처리
+    // 루트 노드에서 시작하여 모든 노드 탐색
     FbxNode* rootNode = m_scene->GetRootNode();
     if (rootNode) {
-        std::vector<CUSTOMVERTEX> vertices;
-        std::vector<unsigned int> indices;
-
-        // 초기 부모 변환 행렬을 단위 행렬로 설정
-        FbxMatrix identityMatrix;
-
-        ProcessNode(rootNode, vertices, indices, identityMatrix);
-
-        // 병합된 버텍스 및 인덱스를 하나의 버퍼로 변환
-        m_vertexCount = vertices.size();
-        m_pos = new CUSTOMVERTEX[m_vertexCount];
-        for (size_t i = 0; i < m_vertexCount; i++) {
-            m_pos[i] = vertices[i];
-        }
-
-        m_indexCount = indices.size();
-        m_idx = new unsigned int[m_indexCount];
-        for (size_t i = 0; i < m_indexCount; i++) {
-            m_idx[i] = indices[i];
-        }
+        ProcessNode(rootNode, outModels);
     }
-
-    importer->Destroy();
     return true;
 }
 
-void FbxTool::ProcessNode(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, FbxMatrix parentTransform)
+
+void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
 {
-    // 현재 노드의 글로벌 변환 행렬 계산
-    FbxMatrix nodeTransform = node->EvaluateGlobalTransform();
-    FbxMatrix globalTransform = parentTransform * nodeTransform; // 부모-자식 변환 누적
+    // 노드가 메쉬 속성을 가지고 있는지 확인
+    if (node->GetNodeAttribute() &&
+        node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh) {
 
-    FbxNodeAttribute* attribute = node->GetNodeAttribute();
-    if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh)
-    {
-        ProcessMesh(node->GetMesh(), vertices, indices, globalTransform);
+        Model model;
+        converter->Triangulate(node->GetNodeAttribute(), true);
+        ProcessMesh(node->GetMesh(), model);
 
-        // 노드에 재질(Material)이 있으면 처리
-        for (int i = 0; i < node->GetMaterialCount(); ++i)
-        {
-            m_sMats.push_back(sMaterial());
-            ProcessMaterial(node->GetMaterial(i));  // 텍스처 처리
+        // 글로벌 변환 적용
+        ApplyGlobalTransform(node, model.vertices);
+
+        // Material 로드 및 할당
+        int materialCount = node->GetMaterialCount();
+        int subMeshCount = model.subMeshes.size();
+
+        for (int i = 0; i < materialCount; ++i) {
+            if (i < subMeshCount) {  // 인덱스 범위 체크
+                LoadMaterial(node->GetMaterial(i), model.subMeshes[i]);
+            }
+            else {
+                std::cerr << "Warning: Material index " << i << " exceeds subMesh count." << std::endl;
+            }
+        }
+
+        // 모델이 유효할 경우에만 추가
+        if (model.vertexCount > 0 && model.indexCount > 0) {
+            outModels.push_back(std::move(model));
+        }
+        else {
+            std::cerr << "Warning: Model has no vertices or indices." << std::endl;
         }
     }
 
-    // 자식 노드들도 처리
-    for (int i = 0; i < node->GetChildCount(); i++)
-    {
-        ProcessNode(node->GetChild(i), vertices, indices, globalTransform);
+    // 재귀적으로 자식 노드 탐색
+    for (int i = 0; i < node->GetChildCount(); ++i) {
+        ProcessNode(node->GetChild(i), outModels);
     }
 }
 
-void FbxTool::ProcessMesh(FbxMesh* mesh, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, const FbxMatrix& transform)
-{
-    if (!mesh) return;
 
-    // FBX 메쉬를 삼각형으로 변환
-    FbxGeometryConverter converter(m_sdkManager);
-    if (!mesh->IsTriangleMesh()) {
-        mesh = static_cast<FbxMesh*>(converter.Triangulate(mesh, true));
-    }
+void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
+    std::vector<CUSTOMVERTEX> vertices;
+    std::vector<unsigned int> indices;
+    std::unordered_map<int, SubMesh> subMeshMap;
 
-    size_t vertexOffset = vertices.size();
+    FbxVector4* controlPoints = mesh->GetControlPoints();
     int polygonCount = mesh->GetPolygonCount();
-    FbxStringList uvSetNameList;
-    mesh->GetUVSetNames(uvSetNameList);
+
+    // UV 좌표 가져오기
+    FbxLayerElementUV* uvElement = (mesh->GetElementUVCount() > 0) ? mesh->GetElementUV(0) : nullptr;
+    bool hasUV = (uvElement != nullptr);
+
+    FbxLayerElementMaterial* materialElement = mesh->GetElementMaterial();
+
+    std::map<std::tuple<int, int, int>, unsigned int> vertexMap;  // 중복 제거를 위한 맵
+    int nextIndex = 0;
 
     for (int i = 0; i < polygonCount; ++i) {
-        for (int j = 0; j < 3; ++j) {
+        int polygonSize = mesh->GetPolygonSize(i);
+        int materialIndex = materialElement ? materialElement->GetIndexArray().GetAt(i) : 0;
+
+        // 서브메쉬 초기화
+        if (subMeshMap.find(materialIndex) == subMeshMap.end()) {
+            subMeshMap[materialIndex] = { static_cast<unsigned int>(indices.size()), 0, 0 };
+        }
+
+        for (int j = 0; j < polygonSize; ++j) {
             int controlPointIndex = mesh->GetPolygonVertex(i, j);
-            FbxVector4 pos = mesh->GetControlPointAt(controlPointIndex);
-            FbxVector4 transformedPos = transform.MultNormalize(pos);
 
-            // DirectX 좌표계로 변환
-            CUSTOMVERTEX vertex = {
-                static_cast<FLOAT>(transformedPos[0]),
-                static_cast<FLOAT>(transformedPos[1]),
-                static_cast<FLOAT>(-transformedPos[2]),  // Z축 뒤집기
-                0xFFFFFFFF,  // 기본 색상
-                0.0f, 0.0f   // 기본 UV 좌표
-            };
-
-            if (uvSetNameList.GetCount() > 0) {
-                FbxLayerElementUV* uvElement = mesh->GetElementUV(uvSetNameList[0]);
-                if (uvElement) {
-                    FbxVector2 uv;
-                    bool unmapped;
-                    mesh->GetPolygonVertexUV(i, j, uvSetNameList[0], uv, unmapped);
-
-                    vertex.tu = static_cast<FLOAT>(uv[0]);
-                    vertex.tv = 1.0f - static_cast<FLOAT>(uv[1]); // DirectX Y축 반전
+            // UV 인덱스 확인 (폴리곤 정점 기준)
+            int uvIndex = -1;
+            if (hasUV) {
+                if (uvElement->GetMappingMode() == FbxLayerElement::eByPolygonVertex) {
+                    uvIndex = uvElement->GetIndexArray().GetAt(i * polygonSize + j);
+                }
+                else if (uvElement->GetMappingMode() == FbxLayerElement::eByControlPoint) {
+                    uvIndex = controlPointIndex; // 정점 인덱스를 사용
                 }
             }
 
-            vertices.push_back(vertex);
-            indices.push_back(vertexOffset + i * 3 + j);
+            // UV 인덱스가 유효한지 확인
+            if (hasUV && (uvIndex != -1) && (uvIndex < uvElement->GetDirectArray().GetCount())) {
+                FbxVector2 uv = uvElement->GetDirectArray().GetAt(uvIndex);
+
+                // 새로운 정점 생성
+
+                //DirectX에서는 Y축이 반대 방향으로 매핑
+                uv[1] = 1.0f - uv[1];
+                FbxVector4 pos = controlPoints[controlPointIndex];
+                CUSTOMVERTEX vertex = {
+                    static_cast<FLOAT>(pos[0]),
+                    static_cast<FLOAT>(pos[1]),
+                    static_cast<FLOAT>(pos[2]),
+                    D3DCOLOR_XRGB(255, 255, 255), // 기본 색상
+                    static_cast<FLOAT>(uv[0]), // UV 좌표 설정
+                    static_cast<FLOAT>(uv[1])  // UV 좌표 설정
+                };
+
+                // UV 인덱스를 포함하여 키 생성
+                auto key = std::make_tuple(controlPointIndex, uvIndex, materialIndex);
+                if (vertexMap.find(key) == vertexMap.end()) {
+                    // 정점 추가
+                    vertices.push_back(vertex);
+                    vertexMap[key] = nextIndex++;
+                }
+
+                // 인덱스 추가
+                indices.push_back(vertexMap[key]);
+                subMeshMap[materialIndex].indexCount++;
+            }
+            else {
+                // UV가 없는 경우 기본값 설정
+                CUSTOMVERTEX vertex = {
+                    static_cast<FLOAT>(controlPoints[controlPointIndex][0]),
+                    static_cast<FLOAT>(controlPoints[controlPointIndex][1]),
+                    static_cast<FLOAT>(controlPoints[controlPointIndex][2]),
+                    D3DCOLOR_XRGB(255, 255, 255), // 기본 색상
+                    0.0f, 0.0f                    // 기본 UV 좌표
+                };
+
+                auto key = std::make_tuple(controlPointIndex, -1, materialIndex);
+                if (vertexMap.find(key) == vertexMap.end()) {
+                    // 정점 추가
+                    vertices.push_back(vertex);
+                    vertexMap[key] = nextIndex++;
+                }
+
+                // 인덱스 추가
+                indices.push_back(vertexMap[key]);
+                subMeshMap[materialIndex].indexCount++;
+            }
         }
     }
+
+    // 서브메쉬 정점 수 계산
+    for (auto& pair : subMeshMap) {
+        pair.second.vertexCount = static_cast<unsigned int>(vertexMap.size());
+        model.subMeshes.push_back(pair.second);
+    }
+
+    // 모델에 최종 정점 및 인덱스 정보 저장
+    model.vertices = std::move(vertices);
+    model.indices = std::move(indices);
+    model.vertexCount = static_cast<unsigned int>(model.vertices.size());
+    model.indexCount = static_cast<unsigned int>(model.indices.size());
 }
 
-void FbxTool::ProcessMaterial(FbxSurfaceMaterial* material)
+
+
+void FbxTool::CreateVertexBuffer(Model& model)
 {
-    if (!material) return;
+    MainFrame::GetInstance()->GetDevice()->CreateVertexBuffer(
+        model.vertexCount * sizeof(CUSTOMVERTEX),
+        0,
+        D3DFVF_CUSTOMVERTEX,
+        D3DPOOL_MANAGED,
+        &model.vertexBuffer,
+        nullptr
+    );
+
+    void* pVertices;
+    model.vertexBuffer->Lock(0, model.vertexCount * sizeof(CUSTOMVERTEX), (void**)&pVertices, 0);
+    memcpy(pVertices, model.vertices.data(), model.vertexCount * sizeof(CUSTOMVERTEX));
+    model.vertexBuffer->Unlock();
+}
+
+void FbxTool::CreateIndexBuffer(Model& model)
+{
+    MainFrame::GetInstance()->GetDevice()->CreateIndexBuffer(
+        model.indexCount * sizeof(unsigned int),
+        0,
+        D3DFMT_INDEX32,
+        D3DPOOL_MANAGED,
+        &model.indexBuffer,
+        nullptr
+    );
+
+    void* pIndices;
+    model.indexBuffer->Lock(0, model.indexCount * sizeof(unsigned int), (void**)&pIndices, 0);
+    memcpy(pIndices, model.indices.data(), model.indexCount * sizeof(unsigned int));
+    model.indexBuffer->Unlock();
+}
 
 
-    FbxProperty prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
-    int textureCount = prop.GetSrcObjectCount<FbxFileTexture>();
-    for (int i = 0; i < textureCount; ++i)
-    {
-        FbxFileTexture* texture = FbxCast<FbxFileTexture>(prop.GetSrcObject<FbxFileTexture>(i));
-        if (texture)
-        {
-            const char* texturePath = texture->GetFileName();
-            const char* texturePath2 = texture->GetRelativeFileName();
+void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
+    if (!material) {
+        std::cerr << "Error: Material is null!" << std::endl;
+        return; // 유효하지 않은 재질 처리
+    }
 
-            m_sMats[m_sMats.size() - 1].texturePaths.push_back(texturePath); // 텍스처 경로 
-            // TODO: 리소스 매니저 만들것
-            // 
-            // 텍스처 로드
+    FbxProperty diffuseProp = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+    if (diffuseProp.IsValid()) {
+        FbxDouble3 color = diffuseProp.Get<FbxDouble3>();
+        subMesh.diffuseColor = D3DCOLOR_COLORVALUE(
+            static_cast<float>(color[0]),
+            static_cast<float>(color[1]),
+            static_cast<float>(color[2]),
+            1.0f
+        );
+    }
+    else {
+        std::cerr << "Warning: Diffuse property is not valid for material." << std::endl;
+    }
+
+    int textureCount = diffuseProp.GetSrcObjectCount<FbxFileTexture>();
+    for (int i = 0; i < textureCount; ++i) {
+        FbxFileTexture* texture = diffuseProp.GetSrcObject<FbxFileTexture>(i);
+        if (texture) {
+            std::string texturePath = texture->GetFileName();
+
+            // 이미 로드된 텍스처가 있는지 확인
+            auto it = textureCache.find(texturePath);
+            if (it != textureCache.end()) {
+                subMesh.textures.push_back(it->second);
+                std::cout << "Using cached texture: " << texturePath << std::endl;
+                continue; // 캐시된 텍스처 사용
+            }
+
+            // 텍스처 로드 시도
             IDirect3DTexture9* d3dTexture = nullptr;
-            if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), texturePath, &d3dTexture)))
-            {
-                m_sMats[m_sMats.size() - 1].textures.push_back(d3dTexture); // 텍스처 추가
+            HRESULT result = D3DXCreateTextureFromFileA(
+                MainFrame::GetInstance()->GetDevice(), texturePath.c_str(), &d3dTexture
+            );
+
+            if (SUCCEEDED(result)) {
+                subMesh.textures.push_back(d3dTexture);
+                textureCache[texturePath] = d3dTexture; // 텍스처 캐시에 추가
+                std::cout << "Loaded texture: " << texturePath << std::endl;
+            }
+            else {
+                std::cerr << "Error: Failed to load texture from " << texturePath << std::endl;
             }
         }
+        else {
+            std::cerr << "Warning: Texture is null for material." << std::endl;
+        }
     }
-    
 }
 
-bool FbxTool::Release()
-{
-    if (m_pos)
-    {
-        delete[] m_pos;
-        m_pos = nullptr;
-    }
 
-    if (m_idx)
-    {
-        delete[] m_idx;
-        m_idx = nullptr;
-    }
-
-    // 텍스처 해제
-    for (auto& mat : m_sMats)
-    {
-        for (auto& tex : mat.textures)
-        {
-            if (tex)
-            {
-                tex->Release();
-                tex = nullptr; // 벡터 내 포인터를 직접 nullptr로 초기화
-            }
+void FbxTool::Cleanup() {
+    // 텍스처 캐시 메모리 해제
+    for (auto& pair : textureCache) {
+        if (pair.second) {
+            pair.second->Release();
+            pair.second = nullptr;
         }
-        mat.textures.clear();
     }
-    m_sMats.clear();
+    textureCache.clear(); // 캐시 비우기
 
-    m_vertexCount = 0;
-    m_indexCount = 0;
-
-    DestroySdkObjects();
-
-    return true;
+    if (m_scene) m_scene->Destroy();
+    if (m_sdkManager) m_sdkManager->Destroy();
+    m_scene = nullptr;
+    m_sdkManager = nullptr;
+    delete converter;
+    converter = nullptr;
 }

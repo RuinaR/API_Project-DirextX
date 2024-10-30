@@ -1,56 +1,41 @@
 #pragma once
 #include <fbxsdk.h>
+#include <d3d9.h>
+#include <d3dx9.h>
+#include <map>
+#include <string>
+#include <vector>
+#include <unordered_map> 
+
 struct CUSTOMVERTEX;
+struct Material;
+struct SubMesh;
+struct Model;
 
-struct sMaterial
-{
-    std::vector<std::string> texturePaths;
-    std::vector<IDirect3DTexture9*> textures;
-    //std::vector<std::pair<float, float>> uvs; 
-};
-
-//메테리얼들, 메시들 가져와서 
-//각 메테리얼이 연결된 메시들을 랜더링하도록 수정할 것
 class FbxTool
 {
 public:
-    FbxTool();
-    ~FbxTool();
+    FbxTool() : m_sdkManager(nullptr), m_scene(nullptr) {}
+    ~FbxTool() { Cleanup(); }
 
     bool Initialize();
-    bool Load(const char* fileName);
-    bool Release();
+    bool Load(const char* fileName, std::vector<Model>& outModels);
 
-    CUSTOMVERTEX* GetPositions() const { return m_pos; }
-    unsigned int* GetIndices() const { return m_idx; }
-    size_t GetVertexCount() const { return m_vertexCount; }
-    size_t GetIndexCount() const { return m_indexCount; }
+    std::vector<std::string> m_vertexInfo;
+    std::vector<std::string> m_indexInfo;
 
-    // UV 좌표와 텍스처를 가져오는 함수
-    //std::vector<std::pair<float, float>> GetUVs() const { return m_uvs; }
-    //std::vector<std::string> GetTexturePaths() const { return m_texturePaths; }
-    //std::vector<IDirect3DTexture9*> GetTextures() const { return m_textures; }
-    std::vector<sMaterial> GetMaterial() const { return m_sMats; }
-
-    void ImguiUpdate();
+    void CreateIndexBuffer(Model& model);
+    void CreateVertexBuffer(Model& model);
 private:
-    bool InitializeSdkObjects();
-    void DestroySdkObjects();
+    FbxManager* m_sdkManager;
+    FbxScene* m_scene;
+    FbxGeometryConverter* converter;
 
-    void ProcessNode(FbxNode* node, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, FbxMatrix parentTransform);
-    void ProcessMesh(FbxMesh* mesh, std::vector<CUSTOMVERTEX>& vertices, std::vector<unsigned int>& indices, const FbxMatrix& transform);
-    void ProcessMaterial(FbxSurfaceMaterial* material);
+    void ProcessNode(FbxNode* node, std::vector<Model>& outModels);
+    void ProcessMesh(FbxMesh* mesh, Model& model);
+    void LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh);
+    void Cleanup();
 
-    // Variables to store vertex and index data
-    CUSTOMVERTEX* m_pos = nullptr;
-    unsigned int* m_idx = nullptr;
-    size_t m_vertexCount = 0;
-    size_t m_indexCount = 0;
-
-    // FBX SDK objects
-    FbxManager* m_sdkManager = nullptr;
-    FbxScene* m_scene = nullptr;
-
-    std::vector<sMaterial> m_sMats;
+    std::unordered_map<std::string, IDirect3DTexture9*> textureCache; // 텍스처 캐시 추가
 };
 

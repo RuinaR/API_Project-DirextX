@@ -79,7 +79,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
         return ;
     }
 
-    m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+    m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
     // Turn off D3D lighting, since we are providing our own vertex colors
     m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);

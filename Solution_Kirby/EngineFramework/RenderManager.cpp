@@ -183,6 +183,12 @@ void RenderManager::EditUpdate()
 		//FBX Render
 		device->SetFVF(D3DFVF_CUSTOMVERTEX);
 		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+		device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+
 		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
 		{
 			(*itr)->Render();

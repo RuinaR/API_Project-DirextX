@@ -1,23 +1,40 @@
 #pragma once
+#include <string>
+#include <vector>
 
-
-class FBXRender :public Component
-{
-private:
-	FbxTool m_tool;
-	std::string m_name;
-
-	IDirect3DVertexBuffer9* m_pVertexBuffer = nullptr;
-	IDirect3DIndexBuffer9* m_pIndexBuffer = nullptr;
-	int m_vertexCount = 0;
-	int m_indexCount = 0;
-
+class LogSystem {
 public:
-	FBXRender(std::string name);
-	void Initialize() override;
-	void Release() override;
-	void Start() override;
-	void Update() override;
-	void Render();
+    void AddLog(const std::string& log) {
+        logs.push_back(log);
+    }
+
+    void ShowLogWindow() {
+        if (ImGui::Begin("Log Window")) {
+            for (const auto& log : logs) {
+                ImGui::Text("%s", log.c_str());
+            }
+            ImGui::End();
+        }
+    }
+
+private:
+    std::vector<std::string> logs;
 };
 
+class FBXRender : public Component {
+private:
+    FbxTool m_tool;
+    std::string m_fbxFileName;  // 로드할 FBX 파일 이름
+    std::vector<Model> m_models;
+
+    LogSystem m_logSystem;
+    void SetWorldTransform(D3DXMATRIX& matWorld);
+
+public:
+    FBXRender(std::string name);
+    void Initialize() override;
+    void Release() override;
+    void Start() override;
+    void Update() override;
+    void Render();
+};

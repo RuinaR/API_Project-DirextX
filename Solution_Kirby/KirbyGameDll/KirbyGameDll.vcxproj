@@ -175,6 +175,7 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="Edit.h" />
     <ClInclude Include="EditerScene.h" />
+    <ClInclude Include="FBXRotateObj.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="KirbyGame.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Edit.cpp" />
     <ClCompile Include="EditerScene.cpp" />
+    <ClCompile Include="FBXRotateObj.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="KirbyGame.cpp" />

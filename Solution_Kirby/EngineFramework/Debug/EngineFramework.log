@@ -1,4 +1,4 @@
-﻿  FBXRender.cpp
+﻿  FbxTool.cpp
 d3d9.lib(d3d9.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: __imp__D3DXWeldVertices@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
 d3dx9d.lib(d3dx9d_43.dll) : warning LNK4006: _D3DXWeldVertices@28이(가) d3dx9.lib(d3dx9_43.dll)에 이미 정의되어 있습니다. 초 정의가 무시됩니다.
