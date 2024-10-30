@@ -39,14 +39,15 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 	static PAINTSTRUCT ps;
 
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, iMessage, wParam, lParam))
-		return true;
+	{
+		return true; // 메시지가 ImGui에 의해 처리되었음을 나타냄
+	}
 
 	switch (iMessage)
 	{
 	case WM_CREATE:
 		return 0;
 	case WM_LBUTTONDOWN:
-		SetFocus(hWnd);
 		Mouse::GetInstance()->SetLeftBtn(true);
 		Mouse::GetInstance()->SetPos(LOWORD(lParam), HIWORD(lParam));
 		ObjectManager::GetInstance()->OnLBtnDown();
@@ -71,12 +72,8 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 		Mouse::GetInstance()->SetPos(LOWORD(lParam), HIWORD(lParam));
 		return 0;
 	case WM_KILLFOCUS:
-		m_Pthis->m_isFocus = false;
 		return 0;
 	case WM_SETFOCUS:
-		MainFrame::GetInstance()->Timer().tick();
-		MainFrame::GetInstance()->Timer().resetTotalDeltaTime();
-		m_Pthis->m_isFocus = true;
 		return 0;
 	case WM_SIZE:
 		return 0;
@@ -130,7 +127,8 @@ void WindowFrame::BuildWindow()
 			WS_SYSMENU | 
 			WS_MINIMIZEBOX | 
 			WS_CLIPSIBLINGS | 
-			WS_CLIPCHILDREN,
+			WS_CLIPCHILDREN |
+			WS_SIZEBOX,
 			0, 0, MAXWINDOWW, MAXWINDOWH,
 			NULL, (HMENU)NULL, m_Pthis->m_Instance, NULL);
 

@@ -10,7 +10,6 @@ private:
 	HINSTANCE m_Instance = NULL;
 	//Buffer* m_buffer = nullptr;
 	Scene* m_scene = nullptr;
-	bool m_isFocus = true;
 	WindowFrame() {}
 	~WindowFrame() {}
 public:
@@ -28,5 +27,4 @@ public:
 	//Buffer* GetBuffer() { return this->m_buffer; }
 	HINSTANCE GetHInst() { return this->m_Instance; }
 	HWND GetHWND() { return this->m_hWnd; }
-	bool IsFocus() { return m_isFocus; }
 };

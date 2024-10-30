@@ -5,16 +5,17 @@
 class LogSystem {
 public:
     void AddLog(const std::string& log) {
-        logs.push_back(log);
+        //logs.push_back(log);
     }
 
-    void ShowLogWindow() {
-        if (ImGui::Begin("Log Window")) {
+    void ShowLogWindow() 
+    {
+        /*if (ImGui::Begin("Log Window")) {
             for (const auto& log : logs) {
                 ImGui::Text("%s", log.c_str());
             }
             ImGui::End();
-        }
+        }*/
     }
 
 private:

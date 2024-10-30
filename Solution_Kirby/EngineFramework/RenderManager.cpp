@@ -221,7 +221,10 @@ void RenderManager::EditUpdate()
 			(*itr)->UpdateRender();
 		}
 		
-		ImVec2 windowSize = ImGui::GetContentRegionAvail();
+		ImVec2 windowSize;// = ImGui::GetContentRegionAvail();
+		windowSize.x = DRAWWINDOWW;
+		windowSize.y = DRAWWINDOWH;
+
 		//Game
 		ImGui::Image((void*)renderTargetTexture, windowSize);
 		m_winPos = ImGui::GetWindowPos();
@@ -237,13 +240,21 @@ void RenderManager::EditUpdate()
 		ImGui::End();
 
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-		ImGui::EndFrame();
+		//ImGui::EndFrame();
 		device->SetRenderState(D3DRS_ZENABLE, FALSE);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
 		ImGui::Render();
 		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
+		// Update and Render additional Platform Windows
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			// TODO for OpenGL: restore current GL context.
+		}
 
 		device->EndScene();
 	}
@@ -309,14 +320,23 @@ void RenderManager::GameUpdate()
 		ImGui::End();
 
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-		ImGui::EndFrame();
+		//ImGui::EndFrame();
 		device->SetRenderState(D3DRS_ZENABLE, FALSE);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
 		ImGui::Render();
 		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-
+		
+		// Update and Render additional Platform Windows
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			// TODO for OpenGL: restore current GL context.
+		}
+		
 		device->EndScene();
 	}
 

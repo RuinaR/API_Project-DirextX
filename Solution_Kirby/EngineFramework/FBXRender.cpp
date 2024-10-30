@@ -60,7 +60,7 @@ void FBXRender::Start() {}
 
 // 로그 표시
 void FBXRender::Update() {
-    m_logSystem.ShowLogWindow();
+    //m_logSystem.ShowLogWindow();
 }
 
 void FBXRender::Render() {

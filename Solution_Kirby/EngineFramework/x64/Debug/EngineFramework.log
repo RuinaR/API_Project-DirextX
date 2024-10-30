@@ -1,5 +1,21 @@
 ﻿  AnimationManager.cpp
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp(92,5): error C2664: 'DWORD GetModuleFileNameW(HMODULE,LPWSTR,DWORD)': 인수 2을(를) 'char [260]'에서 'LPWSTR'(으)로 변환할 수 없습니다.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp(92,29): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 괄호가 있는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\libloaderapi.h(219,1): message : 'GetModuleFileNameW' 선언을 참조하십시오.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp(92,5): message : 인수 목록 '(int, char [260], int)'을(를) 일치시키는 동안
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp(98,9): error C2664: 'HRESULT D3DXCreateTextureFromFileExW(LPDIRECT3DDEVICE9,LPCWSTR,UINT,UINT,UINT,DWORD,D3DFORMAT,D3DPOOL,DWORD,DWORD,D3DCOLOR,D3DXIMAGE_INFO *,PALETTEENTRY *,LPDIRECT3DTEXTURE9 *)': 인수 2을(를) 'const _Elem *'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+          with
+          [
+              _Elem=char
+          ]
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp(98,9): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 괄호가 있는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\d3dx9tex.h(1211,5): message : 'D3DXCreateTextureFromFileExW' 선언을 참조하십시오.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.cpp(98,9): message : 인수 목록 '(LPDIRECT3DDEVICE9, const _Elem *, UINT, UINT, UINT, int, _D3DFORMAT, _D3DPOOL, UINT, UINT, int, D3DXIMAGE_INFO *, int, IDirect3DTexture9 **)'을(를) 일치시키는 동안
+          with
+          [
+              _Elem=char
+          ]
   AnimationRender.cpp
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp(55,54): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -7,11 +23,7 @@ C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationRender.cpp(55,54)
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   FbxTool.cpp
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-C:\API_Project-DirextX\Solution_Kirby\EngineFramework\FbxTool.cpp(194,44): warning C4267: '인수': 'size_t'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-          with
-          [
-              _Ty=unsigned int
-          ]
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\FbxTool.cpp(100,26): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   ImageRender.cpp
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\ImageRender.cpp(104,25): warning C4244: '인수': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
@@ -124,6 +136,10 @@ C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): 
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   WindowFrame.cpp
 C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(14,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp(121,2): error C2440: '초기화 중': 'const char [9]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp(121,2): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 괄호가 있는 함수 스타일 캐스트가 필요합니다.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp(127,3): error C2664: 'HWND CreateWindowExW(DWORD,LPCWSTR,LPCWSTR,DWORD,int,int,int,int,HWND,HMENU,HINSTANCE,LPVOID)': 인수 3을(를) 'const char [7]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp(127,3): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 괄호가 있는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winuser.h(4433,1): message : 'CreateWindowExW' 선언을 참조하십시오.
+C:\API_Project-DirextX\Solution_Kirby\EngineFramework\WindowFrame.cpp(127,3): message : 인수 목록 '(long, LPCWSTR, const char [7], long, int, int, int, int, int, HMENU, HINSTANCE, int)'을(를) 일치시키는 동안
   코드를 생성하고 있습니다...
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(1575,5): error MSB6006: "Lib.exe"이(가) 종료되었습니다(코드: 1181).
-LINK : fatal error LNK1181: 'Box2D.lib' 입력 파일을 열 수 없습니다.

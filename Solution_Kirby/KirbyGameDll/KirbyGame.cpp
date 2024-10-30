@@ -16,7 +16,7 @@ bool KirbyGame::Initialize(HINSTANCE hInst, RenderType type)
 {
 	MainFrame::Create(hInst);
 	MainFrame::GetInstance()->Initialize(TARGETFPS, new StartScene(), type);
-	MainFrame::GetInstance()->Set();
+	//MainFrame::GetInstance()->Set();
 	return true;
 }
 

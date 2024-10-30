@@ -64,6 +64,7 @@ public:
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();
 	b2World* GetBox2dWorld();
+	void ProcessMouseInput();
 private:
 	void Release();
 };

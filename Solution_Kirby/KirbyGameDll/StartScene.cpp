@@ -19,6 +19,8 @@ void StartScene::Release()
 
 void StartScene::Start()
 {
+	Camera::GetInstance()->SetPos(0.0f, 0.0f);
+
 	GameObject* btnObj = new GameObject();
 	Button* btn = new Button();
 	btnObj->AddComponent(btn);
@@ -61,7 +63,7 @@ void StartScene::Start()
 	fbxSample2->SetAngleZ(0.0f);
 	fbxSample2->SetTag("3D_OBJ");
 	fbxSample2->SetPosition(D3DXVECTOR3(-300.0f, 0.0f, 500.0f));
-	fbxSample2->Size3D() = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	fbxSample2->Size3D() = D3DXVECTOR3(0.5f, 0.5f, 0.5f);
 	fbxSample2->AddComponent(fbxRender2);
 	fbxSample2->AddComponent(new FBXRotateObj());
 	fbxSample2->InitializeSet();

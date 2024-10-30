@@ -3,6 +3,8 @@
 #include "CollisionManager.h"
 #include "RenderManager.h"
 #include "DebugWindow.h"
+#include "..\Imgui\source\imgui_impl_win32.h"
+#include "..\Imgui\source\imgui_impl_dx9.h"
 MainFrame* MainFrame::m_Pthis = nullptr;
 
 void MainFrame::Create(HINSTANCE hInstance)
@@ -110,6 +112,14 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
         TEXT("Arial"), &m_pFont);
 
 	m_targetFPS = targetFPS;
+
+    m_targetFrameTime = 1.0 / m_targetFPS;
+    m_timer.tick();
+
+    m_velocityIterations = 8;
+    m_positionIterations = 3;
+    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+    UpdateWindow(m_hWnd);
     
     Mouse::GetInstance()->Initialize();
 	ObjectManager::Create();
@@ -120,21 +130,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 
     m_scene = scene;
     WindowFrame::GetInstance()->SetScene(m_scene);
-}
 
-int MainFrame::Run()
-{
-    MSG Message;
-    double targetFrameTime = 1.0 / m_targetFPS;
-    m_timer.tick();
-
-    int32 velocityIterations = 8;
-    int32 positionIterations = 3;
-    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-    UpdateWindow(m_hWnd);
-
-
-    //imgui test
     //set
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -142,10 +138,32 @@ int MainFrame::Run()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    io.ConfigWindowsResizeFromEdges = false;
+    //io.ConfigFlags |= 
     ImGui::StyleColorsDark();
     ImGui_ImplWin32_Init(m_hWnd);
     ImGui_ImplDX9_Init(m_pd3dDevice);
+}
+
+void MainFrame::ProcessMouseInput() {
+	// 마우스 클릭 시 메인 윈도우에 포커스를 주기
+	if (ImGui::IsMouseClicked(0)) {
+		// 메인 윈도우에 포커스를 설정
+		SetForegroundWindow(m_hWnd);
+	}
+}
+
+
+int MainFrame::Run()
+{
+    MSG Message;
+    m_timer.tick();
+
+    int32 velocityIterations = 8;
+    int32 positionIterations = 3;
+    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+    UpdateWindow(m_hWnd);
 
     while (TRUE) 
     {
@@ -164,10 +182,10 @@ int MainFrame::Run()
             }    
 		}
 
-		if (WindowFrame::GetInstance()->IsFocus())
+		//if (WindowFrame::GetInstance()->IsFocus())
 		{
 			m_timer.tick();
-			if (m_timer.getTotalDeltaTime() >= targetFrameTime)
+			if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
 			{               
 				if (NULL == m_pd3dDevice)
 					return -1;
@@ -184,35 +202,36 @@ int MainFrame::Run()
 				else if (m_type == RenderType::Game)
 					RenderManager::GetInstance()->GameUpdate();
 
+                //ProcessMouseInput();
+
 				m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
 			}
 		}
 	}
 }
 
-void MainFrame::Set()
+void MainFrame::Set() //테스트용
 {
-    m_targetFrameTime = 1.0 / m_targetFPS;
-    m_timer.tick();
+    //m_targetFrameTime = 1.0 / m_targetFPS;
+    //m_timer.tick();
 
-    m_velocityIterations = 8;
-    m_positionIterations = 3;
-    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-    UpdateWindow(m_hWnd);
+    //m_velocityIterations = 8;
+    //m_positionIterations = 3;
+    //ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+    //UpdateWindow(m_hWnd);
 
 
-    //imgui test
-    //set
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    ////imgui set
+    //IMGUI_CHECKVERSION();
+    //ImGui::CreateContext();
+    //ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui::StyleColorsDark();
-    ImGui_ImplWin32_Init(m_hWnd);
-    ImGui_ImplDX9_Init(m_pd3dDevice);
+    //ImGui::StyleColorsDark();
+    //ImGui_ImplWin32_Init(m_hWnd);
+    //ImGui_ImplDX9_Init(m_pd3dDevice);
 }
 
 bool MainFrame::Update()
@@ -231,9 +250,6 @@ bool MainFrame::Update()
             return false;
         }
     }
-
-    if (WindowFrame::GetInstance()->IsFocus())
-    {
         m_timer.tick();
         if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
         {
@@ -254,7 +270,6 @@ bool MainFrame::Update()
 
             m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
         }
-    }
 
     return true;
 }
