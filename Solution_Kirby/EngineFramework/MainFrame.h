@@ -51,6 +51,8 @@ private:
 	double m_targetFrameTime;
 	int32 m_velocityIterations = 8;
 	int32 m_positionIterations = 3;
+
+	list<std::function<void()>> m_listBtnEvent;
 public:
 	static void Create(HINSTANCE hInstance);
 	static MainFrame* GetInstance();
@@ -58,13 +60,15 @@ public:
 	Timer& Timer();
 	double DeltaTime();
 	void Initialize(int targetFPS, Scene* scene, RenderType type);
-	int Run();
-	void Set();
+	//int Run();
+	//void Set();
 	bool Update();
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();
 	b2World* GetBox2dWorld();
 	void ProcessMouseInput();
+
+	void AddBtnEvent(std::function<void()> p_event);
 private:
 	void Release();
 };

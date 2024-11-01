@@ -88,7 +88,7 @@ void Collider::Initialize()
 {
 	//CollisionManager::GetInstance()->AddCollider(this);
 	ColInit();
-	RenderManager::GetInstance()->ResisterDebug(this);
+	RenderManager::GetInstance()->RegisterDebug(this);
 }
 
 void Collider::Release()
@@ -96,7 +96,7 @@ void Collider::Release()
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
 	MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
 	m_body = nullptr;
-	RenderManager::GetInstance()->UnresisterDebug(this);
+	RenderManager::GetInstance()->UnregisterDebug(this);
 
 	ColRelease();
 }

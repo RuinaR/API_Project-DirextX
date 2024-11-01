@@ -8,8 +8,6 @@ private:
 	static bool IsImageFile(const wstring& filename);
 public:
 	static Animation LoadAnimation(const wstring& folderName, float time);
-	static void ReleaseAnimation(Animation& anim);
 	static IDirect3DTexture9* LoadTexture(const string& folderName);
-	static void ReleaseTexture(IDirect3DTexture9* tex);
 };
 

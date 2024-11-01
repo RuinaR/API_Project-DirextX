@@ -18,7 +18,7 @@ public:
 	
 	Collider(b2BodyType type);
 	void Start() final;
-	void Update() final;
+	void Update() override;
 	const Vector2D& GetColSize();
 	const Vector2D& GetColOffset();
 	void CreateBody(Vector2D offset, Vector2D size, bool fixedRotation);

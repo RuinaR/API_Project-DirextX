@@ -194,6 +194,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +225,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SharedPointer.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="WindowFrame.h" />
   </ItemGroup>

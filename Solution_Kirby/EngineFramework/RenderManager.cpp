@@ -2,7 +2,10 @@
 #include "RenderManager.h"
 #include "ImageRender.h"
 #include "Button.h"
+
 RenderManager* RenderManager::m_Pthis = nullptr;
+
+int RenderManager::FrameCount = 0;
 
 void RenderManager::Create()
 {
@@ -26,7 +29,7 @@ void RenderManager::Destroy()
 	}
 }
 
-void RenderManager::Resister(ImageRender* ir)
+void RenderManager::Register(ImageRender* ir)
 {
 	if (ir->IsTrans())
 	{
@@ -46,7 +49,7 @@ void RenderManager::Resister(ImageRender* ir)
 	}
 }
 
-void RenderManager::Unresister(ImageRender* ir)
+void RenderManager::Unregister(ImageRender* ir)
 {
 	if (ir->IsTrans())
 	{
@@ -72,12 +75,12 @@ void RenderManager::Unresister(ImageRender* ir)
 	}
 }
 
-void RenderManager::Resister(FBXRender* fbxr)
+void RenderManager::Register(FBXRender* fbxr)
 {
 	m_fbxVec->push_back(fbxr);
 }
 
-void RenderManager::Unresister(FBXRender* fbxr)
+void RenderManager::Unregister(FBXRender* fbxr)
 {
 	for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
 	{
@@ -89,12 +92,12 @@ void RenderManager::Unresister(FBXRender* fbxr)
 	}
 }
 
-void RenderManager::ResisterBtn(Button* btn)
+void RenderManager::RegisterBtn(Button* btn)
 {
 	m_btnVec->push_back(btn);
 }
 
-void RenderManager::UnresisterBtn(Button* btn)
+void RenderManager::UnregisterBtn(Button* btn)
 {
 	for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
 	{
@@ -106,12 +109,12 @@ void RenderManager::UnresisterBtn(Button* btn)
 	}
 }
 
-void RenderManager::ResisterDebug(DebugRender* db)
+void RenderManager::RegisterDebug(DebugRender* db)
 {
 	m_debugVec->push_back(db);
 }
 
-void RenderManager::UnresisterDebug(DebugRender* db)
+void RenderManager::UnregisterDebug(DebugRender* db)
 {
 	for (vector<DebugRender*>::iterator itr = m_debugVec->begin(); itr != m_debugVec->end(); itr++)
 	{
@@ -245,9 +248,9 @@ void RenderManager::EditUpdate()
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
+
 		ImGui::Render();
 		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-
 		// Update and Render additional Platform Windows
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -255,10 +258,8 @@ void RenderManager::EditUpdate()
 			ImGui::RenderPlatformWindowsDefault();
 			// TODO for OpenGL: restore current GL context.
 		}
-
 		device->EndScene();
 	}
-	
 	device->Present(NULL, NULL, NULL, NULL);
 }
 
@@ -325,18 +326,17 @@ void RenderManager::GameUpdate()
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
+		ImGuiIO& io = ImGui::GetIO();
 		ImGui::Render();
 		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-		
 		// Update and Render additional Platform Windows
-		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			// TODO for OpenGL: restore current GL context.
 		}
-		
+
 		device->EndScene();
 	}
 

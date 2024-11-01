@@ -25,14 +25,14 @@ public:
 	static void Destroy();
 
 public:
-	void Resister(ImageRender* ir);
-	void Unresister(ImageRender* ir);
-	void Resister(FBXRender* fbxr);
-	void Unresister(FBXRender* fbxr);
-	void ResisterBtn(Button* btn);
-	void UnresisterBtn(Button* btn);
-	void ResisterDebug(DebugRender* db);
-	void UnresisterDebug(DebugRender* db);
+	void Register(ImageRender* ir);
+	void Unregister(ImageRender* ir);
+	void Register(FBXRender* fbxr);
+	void Unregister(FBXRender* fbxr);
+	void RegisterBtn(Button* btn);
+	void UnregisterBtn(Button* btn);
+	void RegisterDebug(DebugRender* db);
+	void UnregisterDebug(DebugRender* db);
 
 	void Initialize();
 	void EditUpdate();
@@ -40,5 +40,7 @@ public:
 	void Release();
 
 	ImVec2 GetWinPos();
+
+	static int FrameCount;
 };
 

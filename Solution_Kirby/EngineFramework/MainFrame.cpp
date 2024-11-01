@@ -15,6 +15,7 @@ void MainFrame::Create(HINSTANCE hInstance)
 		WindowFrame::Create(hInstance);
 		Mouse::Create();
 		Camera::Create();
+        TextureManager::Create();
 	}
 }
 
@@ -27,6 +28,7 @@ void MainFrame::Destroy()
 {
 	if (m_Pthis)
 	{
+        TextureManager::Destroy();
 		Camera::Destroy();
 		Mouse::Destroy();
 		WindowFrame::Destroy();
@@ -154,85 +156,91 @@ void MainFrame::ProcessMouseInput() {
 	}
 }
 
-
-int MainFrame::Run()
+void MainFrame::AddBtnEvent(std::function<void()> p_event)
 {
-    MSG Message;
-    m_timer.tick();
-
-    int32 velocityIterations = 8;
-    int32 positionIterations = 3;
-    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-    UpdateWindow(m_hWnd);
-
-    while (TRUE) 
-    {
-        while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE))  // 메시지 처리 우선
-        {         
-            WindowFrame::GetInstance()->Run(&Message);
-            if (Message.message == WM_QUIT)
-            {
-                //imgui Cleanup
-                ImGui_ImplDX9_Shutdown();
-                ImGui_ImplWin32_Shutdown();
-                ImGui::DestroyContext();
-                //--
-                Release();
-                return (int)Message.wParam;
-            }    
-		}
-
-		//if (WindowFrame::GetInstance()->IsFocus())
-		{
-			m_timer.tick();
-			if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
-			{               
-				if (NULL == m_pd3dDevice)
-					return -1;
-
-                ImGui_ImplDX9_NewFrame();
-                ImGui_ImplWin32_NewFrame();
-                ImGui::NewFrame();
-				//UPDATE
-				m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
-				ObjectManager::GetInstance()->Update();
-				//RENDER
-				if (m_type == RenderType::Edit)
-					RenderManager::GetInstance()->EditUpdate();
-				else if (m_type == RenderType::Game)
-					RenderManager::GetInstance()->GameUpdate();
-
-                //ProcessMouseInput();
-
-				m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
-			}
-		}
-	}
+    m_listBtnEvent.push_back(p_event);
 }
 
-void MainFrame::Set() //테스트용
-{
-    //m_targetFrameTime = 1.0 / m_targetFPS;
-    //m_timer.tick();
 
-    //m_velocityIterations = 8;
-    //m_positionIterations = 3;
-    //ShowWindow(m_hWnd, SW_SHOWDEFAULT);
-    //UpdateWindow(m_hWnd);
+//int MainFrame::Run()
+//{
+//    MSG Message;
+//    m_timer.tick();
+//
+//    int32 velocityIterations = 8;
+//    int32 positionIterations = 3;
+//    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+//    UpdateWindow(m_hWnd);
+//
+//    while (TRUE) 
+//    {
+//        while (PeekMessage(&Message, 0, 0, 0, PM_REMOVE))  // 메시지 처리 우선
+//        {         
+//            WindowFrame::GetInstance()->Run(&Message);
+//            if (Message.message == WM_QUIT)
+//            {
+//                //imgui Cleanup
+//                ImGui_ImplDX9_Shutdown();
+//                ImGui_ImplWin32_Shutdown();
+//                ImGui::DestroyContext();
+//                //--
+//                Release();
+//                return (int)Message.wParam;
+//			}
+//		}
+//
+//		m_timer.tick();
+//		if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
+//		{
+//			if (NULL == m_pd3dDevice)
+//				return -1;
+//
+//			if (m_FrameStartEvent)
+//			{
+//				m_FrameStartEvent();
+//				m_FrameStartEvent = NULL;
+//			}
+//
+//			ImGui_ImplDX9_NewFrame();
+//			ImGui_ImplWin32_NewFrame();
+//			ImGui::NewFrame();
+//			//UPDATE
+//			m_pWorld->Step(m_timer.getTotalDeltaTime(), velocityIterations, positionIterations);
+//			ObjectManager::GetInstance()->Update();
+//			//RENDER
+//			if (m_type == RenderType::Edit)
+//				RenderManager::GetInstance()->EditUpdate();
+//			else if (m_type == RenderType::Game)
+//				RenderManager::GetInstance()->GameUpdate();
+//
+//			m_timer.resetTotalDeltaTime(); // 업데이트, 랜더 후 토탈 델타 타임 리셋
+//		}
+//	}
+//}
 
-
-    ////imgui set
-    //IMGUI_CHECKVERSION();
-    //ImGui::CreateContext();
-    //ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-    //ImGui::StyleColorsDark();
-    //ImGui_ImplWin32_Init(m_hWnd);
-    //ImGui_ImplDX9_Init(m_pd3dDevice);
-}
+//void MainFrame::Set() //테스트용
+//{
+//    m_targetFrameTime = 1.0 / m_targetFPS;
+//    m_timer.tick();
+//
+//    m_velocityIterations = 8;
+//    m_positionIterations = 3;
+//    ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+//    UpdateWindow(m_hWnd);
+//
+//
+//    //imgui set
+//    IMGUI_CHECKVERSION();
+//    ImGui::CreateContext();
+//    ImGuiIO& io = ImGui::GetIO(); (void)io;
+//    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+//    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+//    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+//
+//    ImGui::StyleColorsDark();
+//    ImGui_ImplWin32_Init(m_hWnd);
+//    ImGui_ImplDX9_Init(m_pd3dDevice);
+//}
 
 bool MainFrame::Update()
 {
@@ -253,15 +261,25 @@ bool MainFrame::Update()
         m_timer.tick();
         if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
         {
-            if (NULL == m_pd3dDevice)
-                return false;
+			if (NULL == m_pd3dDevice)
+				return false;
 
-            ImGui_ImplDX9_NewFrame();
+            //버튼이벤트 일괄 처리
+            for (auto itr = m_listBtnEvent.begin(); itr != m_listBtnEvent.end();)
+            {
+                (*itr)();
+                itr = m_listBtnEvent.erase(itr);
+            }
+
+            //ImGui
+			ImGui_ImplDX9_NewFrame();
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
+
             //UPDATE
             m_pWorld->Step(m_timer.getTotalDeltaTime(), m_velocityIterations, m_positionIterations);
             ObjectManager::GetInstance()->Update();
+
             //RENDER
             if (m_type == RenderType::Edit)
                 RenderManager::GetInstance()->EditUpdate();

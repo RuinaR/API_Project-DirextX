@@ -26,13 +26,13 @@ void FBXRender::Initialize() {
         m_tool.CreateIndexBuffer(model);
     }
 
-    RenderManager::GetInstance()->Resister(this);  // Register로 수정
+    RenderManager::GetInstance()->Register(this);  // Register로 수정
 }
 
 // 자원 해제 함수
 void FBXRender::Release() {
     m_logSystem.AddLog("FBXRender resources released.");
-    RenderManager::GetInstance()->Unresister(this);  // Unregister로 수정
+    RenderManager::GetInstance()->Unregister(this);  // Unregister로 수정
 
     for (auto& model : m_models) {
         if (model.vertexBuffer) {
@@ -42,16 +42,6 @@ void FBXRender::Release() {
         if (model.indexBuffer) {
             model.indexBuffer->Release();
             model.indexBuffer = nullptr;
-        }
-
-        // 서브 메시 텍스처 해제
-        for (auto& subMesh : model.subMeshes) {
-            for (auto* texture : subMesh.textures) {
-                if (texture) {
-                    texture->Release();
-                    texture = nullptr;
-                }
-            }
         }
     }
 }

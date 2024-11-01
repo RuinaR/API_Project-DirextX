@@ -10,6 +10,10 @@ void BoxCollider::ColRelease()
 {
 }
 
+//void BoxCollider::Update()
+//{
+//}
+
 BoxCollider::BoxCollider(b2BodyType type) :Collider(type)
 {
 }

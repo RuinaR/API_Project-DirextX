@@ -3,7 +3,8 @@ x86으로 변경 후 BuildEdit 혹은 BuildResultGame를 시작프로젝트로 �
 
 
 TODO LIST:
-1. 리소스 관리 매니저
-2. 카메라 transform을 기준으로 한 오브젝트들의 z축정렬 랜더링
-3. 카메라 시스템 개편
-4. UI 관련 기본 Component 추가
+- 카메라 transform을 기준으로 한 오브젝트들의 z축정렬 랜더링
+- 카메라 시스템 개편
+- UI 관련 기본 Component 추가
+- 3d fbx 에니메이션
+- 2d 장면 전황 에니메이션 아틀라스 좌표만 가져와서 하는 방식으로 변경

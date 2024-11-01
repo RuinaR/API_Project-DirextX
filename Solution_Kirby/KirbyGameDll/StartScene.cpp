@@ -14,7 +14,6 @@ void StartScene::Init()
 void StartScene::Release()
 {
 	SceneChanger::Destroy();
-	AnimationManager::ReleaseTexture(m_bg);
 }
 
 void StartScene::Start()

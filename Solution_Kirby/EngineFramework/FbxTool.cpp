@@ -304,11 +304,9 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
 
             // 텍스처 로드 시도
             IDirect3DTexture9* d3dTexture = nullptr;
-            HRESULT result = D3DXCreateTextureFromFileA(
-                MainFrame::GetInstance()->GetDevice(), texturePath.c_str(), &d3dTexture
-            );
+            d3dTexture = TextureManager::GetInstance()->GetTexture(texturePath.c_str());
 
-            if (SUCCEEDED(result)) {
+            if (d3dTexture) {
                 subMesh.textures.push_back(d3dTexture);
                 textureCache[texturePath] = d3dTexture; // 텍스처 캐시에 추가
                 std::cout << "Loaded texture: " << texturePath << std::endl;
@@ -326,12 +324,6 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
 
 void FbxTool::Cleanup() {
     // 텍스처 캐시 메모리 해제
-    for (auto& pair : textureCache) {
-        if (pair.second) {
-            pair.second->Release();
-            pair.second = nullptr;
-        }
-    }
     textureCache.clear(); // 캐시 비우기
 
     if (m_scene) m_scene->Destroy();

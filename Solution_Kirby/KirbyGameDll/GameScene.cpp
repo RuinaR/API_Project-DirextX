@@ -58,7 +58,6 @@ void GameScene::Init()
 
 void GameScene::Release()
 {
-	AnimationManager::ReleaseTexture(m_bg);
 	SceneChanger::Destroy();
 	StageMaker::Destroy();
 }

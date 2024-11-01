@@ -4,12 +4,12 @@
 void Button::Initialize()
 {
     m_gameObj->SetTag("UI_Button");
-    RenderManager::GetInstance()->ResisterBtn(this);
+    RenderManager::GetInstance()->RegisterBtn(this);
 }
 
 void Button::Release()
 {
-    RenderManager::GetInstance()->UnresisterBtn(this);
+    RenderManager::GetInstance()->UnregisterBtn(this);
 }
 
 void Button::Start()
@@ -113,7 +113,8 @@ void Button::ButtonEvent()
 {
     if (m_event)
     {
-        m_event();
+        //m_event();
+        MainFrame::GetInstance()->AddBtnEvent(m_event);
     }
 }
 

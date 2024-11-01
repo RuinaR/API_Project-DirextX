@@ -67,6 +67,14 @@ wstring ConvertToWideString(const std::string& narrowStr)
     return converter.from_bytes(narrowStr);
 }
 
+string ConvertToString(const std::wstring& wstr)
+{
+    int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    std::string str(len, 0);
+    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], len, nullptr, nullptr);
+    return str;
+}
+
 void FillRectWithColor(HDC hdc, const RECT& rect, COLORREF color)
 {
     if (hdc != NULL)

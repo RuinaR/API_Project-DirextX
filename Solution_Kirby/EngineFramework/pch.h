@@ -37,6 +37,7 @@
 #include "DebugRender.h"
 #include "AnimationManager.h"
 #include "ObjectManager.h"
+#include "TextureManager.h"
 //#include "CollisionManager.h"
 #include "MainFrame.h"
 #include "WindowFrame.h"
@@ -145,6 +146,7 @@ D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& scree
 void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT& rect);
 
 wstring ConvertToWideString(const std::string& narrowStr);
+string ConvertToString(const std::wstring& wstr);
 
 void FillRectWithColor(HDC hdc, const RECT& rect, COLORREF color);
 

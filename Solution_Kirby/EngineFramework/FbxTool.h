@@ -15,7 +15,7 @@ struct Model;
 class FbxTool
 {
 public:
-    FbxTool() : m_sdkManager(nullptr), m_scene(nullptr) {}
+    FbxTool() : m_sdkManager(nullptr), m_scene(nullptr), converter(nullptr), textureCache(){}
     ~FbxTool() { Cleanup(); }
 
     bool Initialize();

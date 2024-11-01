@@ -244,23 +244,6 @@ void StageMaker::Initialize()
 
 void StageMaker::Release()
 {
-
-    if(m_land)AnimationManager::ReleaseTexture(m_land);
-    if(m_bg)AnimationManager::ReleaseTexture(m_bg);
-    if(m_defaultObj)AnimationManager::ReleaseTexture(m_defaultObj);
-    if(m_swordObj)AnimationManager::ReleaseTexture(m_swordObj);
-    if(m_stoneObj)AnimationManager::ReleaseTexture(m_stoneObj);
-    if(m_door)AnimationManager::ReleaseTexture(m_door);
- 
-   AnimationManager::ReleaseAnimation(m_defaultMobAnim[(int)Arrow::left]);
-   AnimationManager::ReleaseAnimation(m_defaultMobAnim[(int)Arrow::right]);
-
-   AnimationManager::ReleaseAnimation(m_swordMobAnim[(int)Arrow::left]);
-   AnimationManager::ReleaseAnimation(m_swordMobAnim[(int)Arrow::right]);
-   
-   AnimationManager::ReleaseAnimation(m_stoneMobAnim[(int)Arrow::left]);
-   AnimationManager::ReleaseAnimation(m_stoneMobAnim[(int)Arrow::right]);
-
 }
 
 void StageMaker::Start()

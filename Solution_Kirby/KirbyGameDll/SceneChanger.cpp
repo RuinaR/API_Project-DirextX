@@ -69,3 +69,4 @@ void SceneChanger::ChangeEditScene()
 {
 	WindowFrame::GetInstance()->SetScene(new EditerScene());
 }
+

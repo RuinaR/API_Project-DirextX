@@ -14,9 +14,9 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     D3DXMatrixScaling(&matScale, m_gameObj->Size2D().x, m_gameObj->Size2D().y, 1.0f);
     D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
 
-    D3DXMatrixRotationX(&matRotationX, D3DXToRadian(m_gameObj->GetAngleX()));
-    D3DXMatrixRotationY(&matRotationY, D3DXToRadian(m_gameObj->GetAngleY()));
-    D3DXMatrixRotationZ(&matRotationZ, D3DXToRadian(m_gameObj->GetAngleZ()));
+    D3DXMatrixRotationX(&matRotationX, m_gameObj->GetAngleX());
+    D3DXMatrixRotationY(&matRotationY, m_gameObj->GetAngleY());
+    D3DXMatrixRotationZ(&matRotationZ, m_gameObj->GetAngleZ());
     matRotation = matRotationZ * matRotationX * matRotationY;
     matWorld = matScale * matRotation * matTrans;
 
@@ -110,9 +110,9 @@ ImageRender::ImageRender(IDirect3DTexture9* texture) : Component(), m_texture(te
 
 void ImageRender::SetTrans(bool trans)
 {
-    RenderManager::GetInstance()->Unresister(this);
+    RenderManager::GetInstance()->Unregister(this);
     m_isTrans = trans;
-    RenderManager::GetInstance()->Resister(this);
+    RenderManager::GetInstance()->Register(this);
 }
 
 bool ImageRender::IsTrans()
@@ -128,12 +128,12 @@ void ImageRender::Initialize()
 		CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &m_vertexBuffer, NULL);
     m_device->
         CreateIndexBuffer(6 * sizeof(WORD), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_indexBuffer, nullptr);
-    RenderManager::GetInstance()->Resister(this);
+    RenderManager::GetInstance()->Register(this);
 }
 
 void ImageRender::Release()
 {
-    RenderManager::GetInstance()->Unresister(this);
+    RenderManager::GetInstance()->Unregister(this);
 
     m_vertexBuffer->Release();
     m_indexBuffer->Release();

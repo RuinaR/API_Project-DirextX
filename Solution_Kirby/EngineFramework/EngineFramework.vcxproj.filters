@@ -67,6 +67,9 @@
     <ClCompile Include="FBXRender.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationRender.h">
@@ -155,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="FBXRender.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -94,6 +94,7 @@ void WindowFrame::SetScene(Scene* scene)
 	{
 		m_scene->Release();
 		ObjectManager::GetInstance()->Clear();
+		TextureManager::GetInstance()->ReleaseAllTextures();
 		delete m_scene;
 	}
 	m_scene = scene;

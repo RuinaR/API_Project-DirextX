@@ -69,10 +69,6 @@ void Player::Initialize()
 
 void Player::Release()
 {
-	for (int i = 0; i < (int)Arrow::max; i++)
-	{
-		AnimationManager::ReleaseAnimation(m_arrAnim[i]);
-	}
 }
 
 void Player::Start()

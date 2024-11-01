@@ -38,7 +38,6 @@ void EditerScene::Init()
 
 void EditerScene::Release()
 {
-	AnimationManager::ReleaseTexture(m_bg);
 	SceneChanger::Destroy();
 }
 

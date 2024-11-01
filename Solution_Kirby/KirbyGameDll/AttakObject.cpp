@@ -32,7 +32,6 @@ void AttakObject::Initialize()
 
 void AttakObject::Release()
 {
-	AnimationManager::ReleaseTexture(m_texture);
 }
 
 void AttakObject::Start()
