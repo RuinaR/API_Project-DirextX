@@ -180,7 +180,6 @@ void ObjectManager::Update()
 		else
 			itr++;
 	}
-	//ImguiUpdate();
 }
 
 void ObjectManager::Clear()

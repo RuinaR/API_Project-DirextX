@@ -13,20 +13,18 @@ private:
 
     void release()
     {
-        if (m_refCnt && --(*m_refCnt) == 0)
+        if (!m_myPool && m_refCnt && --(*m_refCnt) == 0)
         {
             delete m_ptr;
             delete m_refCnt;
             m_ptr = nullptr;
             m_refCnt = nullptr;
+            m_myPool = nullptr;
         }
         else if (m_myPool && (*m_refCnt) == 1)
         {
             m_myPool->ReleaseObject(this);
         }
-        m_ptr = nullptr;
-        m_refCnt = nullptr;
-        m_myPool = nullptr;
     }
 
 public:
