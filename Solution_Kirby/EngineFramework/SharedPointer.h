@@ -21,7 +21,7 @@ private:
             m_refCnt = nullptr;
             m_myPool = nullptr;
         }
-        else if (m_myPool && (*m_refCnt) == 1)
+        else if (m_myPool && m_refCnt && (*m_refCnt) == 1)
         {
             m_myPool->ReleaseObject(this);
         }
