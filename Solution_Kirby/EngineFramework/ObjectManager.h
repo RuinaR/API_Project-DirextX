@@ -6,7 +6,7 @@ class ObjectManager
 private:
 	static ObjectManager* m_Pthis;
 	list<GameObject*>* m_objList;
-	list<GameObject*>::iterator m_selected;
+	GameObject* m_selected;
 
 	
 public:
@@ -14,6 +14,7 @@ public:
 	static ObjectManager* GetInstance();
 	static void Destroy();
 
+	void ProcessChildNode(GameObject* obj, int depth);
 	void ImguiUpdate();
 	void AddObject(GameObject* obj);
 	bool UnregisterObject(GameObject* obj);

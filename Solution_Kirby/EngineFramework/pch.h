@@ -1,4 +1,6 @@
 #pragma once
+#define FBXSDK_SHARED
+
 #include <cmath>
 #include <windows.h>
 #include <stdlib.h>

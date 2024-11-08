@@ -66,6 +66,9 @@ public:
     void SetAngleX(float v);
     void SetAngleY(float v);
 
+    GameObject* GetParent() { return m_parent; }
+    vector<GameObject*>* GetChild() { return m_children; }
+
 
     void OnCollisionEnter(Collider* col);
     void OnCollisionStay(Collider* col);

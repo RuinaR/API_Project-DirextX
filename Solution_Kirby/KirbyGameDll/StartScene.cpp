@@ -66,4 +66,18 @@ void StartScene::Start()
 	fbxSample2->AddComponent(fbxRender2);
 	fbxSample2->AddComponent(new FBXRotateObj());
 	fbxSample2->InitializeSet();
+
+
+	fbxSample2->SetParent(fbxSample1);
+
+
+	GameObject* test1 = new GameObject();
+	test1->SetTag("TEST_1");
+	test1->InitializeSet();
+	GameObject* test2 = new GameObject();
+	test2->SetTag("TEST_2");
+	test2->InitializeSet();
+
+	test1->AddChild(test2);
+
 }

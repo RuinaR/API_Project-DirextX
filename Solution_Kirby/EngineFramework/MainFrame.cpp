@@ -136,13 +136,13 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     //set
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO(); 
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigWindowsResizeFromEdges = false;
-    //io.ConfigFlags |= 
+
     ImGui::StyleColorsDark();
     ImGui_ImplWin32_Init(m_hWnd);
     ImGui_ImplDX9_Init(m_pd3dDevice);
