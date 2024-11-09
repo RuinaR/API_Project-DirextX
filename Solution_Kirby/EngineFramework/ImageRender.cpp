@@ -28,6 +28,11 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
 }
 
+void ImageRender::LoadTextureCallback(IDirect3DTexture9* tex)
+{
+    m_texture = tex;
+}
+
 void ImageRender::SetupVertices()
 {
     CUSTOMVERTEX vertices[4];

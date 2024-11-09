@@ -76,9 +76,12 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         BoxCollider* box = new BoxCollider(b2BodyType::b2_staticBody);
         block->AddComponent(box);
         box->CreateBody({ 0,0 }, { block->Size3D().x, block->Size3D().y }, true);
-        ImageRender* ir = new ImageRender(m_land);
-        block->AddComponent(ir);
+        ImageRender* ir = new ImageRender(nullptr);
         ir->SetTrans(false);
+        AnimationManager::LoadTexture("Bitmaps\\obj\\land.bmp", ir);
+        block->AddComponent(ir);
+       
+        
         block->InitializeSet();
         rowGroup->push_back(block);
 	}
@@ -179,8 +182,6 @@ void StageMaker::StageStart()
 
 bool StageMaker::SetMap(string mapName)
 {
-    m_land = AnimationManager::LoadTexture("Bitmaps\\obj\\land.bmp");
-    m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
     m_defaultObj = AnimationManager::LoadTexture("Bitmaps\\obj\\defaultObj.bmp");
     m_swordObj = AnimationManager::LoadTexture("Bitmaps\\obj\\swordObj.bmp");
     m_stoneObj = AnimationManager::LoadTexture("Bitmaps\\obj\\stoneObj.bmp");

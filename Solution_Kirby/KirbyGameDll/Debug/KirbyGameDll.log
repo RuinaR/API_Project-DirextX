@@ -1,3 +1,28 @@
-﻿  StartScene.cpp
-C:\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(12,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
-  KirbyGameDll.vcxproj -> C:\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.dll
+﻿  GameScene.cpp
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'GameScene.cpp'을(를) 컴파일하는 중)
+  
+  KirbyGame.cpp
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'KirbyGame.cpp'을(를) 컴파일하는 중)
+  
+  Player.cpp
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'Player.cpp'을(를) 컴파일하는 중)
+  
+  SceneChanger.cpp
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'SceneChanger.cpp'을(를) 컴파일하는 중)
+  
+  StageMaker.cpp
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'StageMaker.cpp'을(를) 컴파일하는 중)
+  
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp(215,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\KirbyGameDll\StageMaker.cpp(218,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  StartScene.cpp
+C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
+  (소스 파일 'StartScene.cpp'을(를) 컴파일하는 중)
+  
+  코드를 생성하고 있습니다...
+  KirbyGameDll.vcxproj -> C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\KirbyGameDll.dll

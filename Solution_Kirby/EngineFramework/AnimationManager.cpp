@@ -80,3 +80,27 @@ IDirect3DTexture9* AnimationManager::LoadTexture(const string& path)
 	}
 	return texture;
 }
+
+void AnimationManager::LoadTexture(const string& path, std::function<void(IDirect3DTexture9*)> func)
+{
+    char wpath[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, wpath, MAX_PATH);
+    //USES_CONVERSION;
+    string executepath = wpath;
+    executepath = executepath.substr(0, executepath.find_last_of("\\/"));
+    string currentDirectory = executepath;
+    string searchPath = currentDirectory + "\\" + path;
+    TextureManager::GetInstance()->GetTexture(searchPath, func);
+}
+
+void AnimationManager::LoadTexture(const string& path, ImageRender* ir)
+{
+    char wpath[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, wpath, MAX_PATH);
+    //USES_CONVERSION;
+    string executepath = wpath;
+    executepath = executepath.substr(0, executepath.find_last_of("\\/"));
+    string currentDirectory = executepath;
+    string searchPath = currentDirectory + "\\" + path;
+    TextureManager::GetInstance()->GetTexture(searchPath, bind(&ImageRender::LoadTextureCallback, ir, std::placeholders::_1));
+}

@@ -9,8 +9,6 @@ protected:
 	vector<string> ReadMapData(string mapName);
 	void MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup);
 
-	IDirect3DTexture9* m_bg = NULL;
-	IDirect3DTexture9* m_land = NULL;
 	IDirect3DTexture9* m_swordObj = NULL;
 	IDirect3DTexture9* m_stoneObj = NULL;
 	IDirect3DTexture9* m_defaultObj = NULL;

@@ -18,6 +18,9 @@ public:
     IDirect3DTexture9* GetTexture(const std::string& filepath);
     IDirect3DTexture9* GetTexture(const std::wstring& filepath);
 
+    //비동기 텍스처 로딩 함수
+    void GetTexture(const std::string& filepath, std::function<void(IDirect3DTexture9*)> func);
+    void GetTexture(const std::wstring& filepath, std::function<void(IDirect3DTexture9*)> func);
 
     // 모든 텍스처 해제 함수
     void ReleaseAllTextures();

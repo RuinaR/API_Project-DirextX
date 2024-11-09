@@ -15,7 +15,9 @@ private:
 
 	void SetupVertices();
 	void DrawImage(int x, int y, int z, int w, int h);
+
 public:
+	void LoadTextureCallback(IDirect3DTexture9* tex);
 	float GetZ();
 	void Render();
 	ImageRender(IDirect3DTexture9* texture);
