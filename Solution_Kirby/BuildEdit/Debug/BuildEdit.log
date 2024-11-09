@@ -46,6 +46,5 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.3351
 C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\EngineFramework\AnimationManager.h(15,2): warning C4091: 'static ': 변수를 선언하지 않으면 'AnimationManager' 왼쪽은 무시됩니다.
   (소스 파일 'BuildLoopCls.cpp'을(를) 컴파일하는 중)
   
-  main.cpp
   코드를 생성하고 있습니다...
   BuildEdit.vcxproj -> C:\API_Project-DirectX\API_Project-DirextX\Solution_Kirby\Debug\BuildEdit.exe

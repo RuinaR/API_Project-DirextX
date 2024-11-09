@@ -22,7 +22,7 @@ public:
 	void OnCollisionEnter(Collider* other) { CollisionEnter(other); }
 	void OnCollisionExit(Collider* other) { CollisionExit(other); }
 	void OnCollision(Collider* other) { Collision(other); }
-	void InitGameObj(GameObject* obj);
+	virtual void InitGameObj(GameObject* obj);
 	GameObject* GetGameObject();
 
 	virtual void OnLBtnDown();

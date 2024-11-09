@@ -28,6 +28,13 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     m_device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 4, 0, 2);
 }
 
+void ImageRender::InitGameObj(GameObject* obj)
+{
+    Component::InitGameObj(obj);
+
+    //추가 잡업 필요?
+}
+
 void ImageRender::LoadTextureCallback(IDirect3DTexture9* tex)
 {
     m_texture = tex;
@@ -115,6 +122,9 @@ ImageRender::ImageRender(IDirect3DTexture9* texture) : Component(), m_texture(te
 
 void ImageRender::SetTrans(bool trans)
 {
+    if (m_isTrans == trans)
+        return;
+
     RenderManager::GetInstance()->Unregister(this);
     m_isTrans = trans;
     RenderManager::GetInstance()->Register(this);

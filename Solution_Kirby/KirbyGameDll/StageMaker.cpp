@@ -77,10 +77,9 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         block->AddComponent(box);
         box->CreateBody({ 0,0 }, { block->Size3D().x, block->Size3D().y }, true);
         ImageRender* ir = new ImageRender(nullptr);
-        ir->SetTrans(false);
         AnimationManager::LoadTexture("Bitmaps\\obj\\land.bmp", ir);
         block->AddComponent(ir);
-       
+        ir->SetTrans(false);
         
         block->InitializeSet();
         rowGroup->push_back(block);

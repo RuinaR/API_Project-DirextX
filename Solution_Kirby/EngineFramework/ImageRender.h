@@ -17,6 +17,7 @@ private:
 	void DrawImage(int x, int y, int z, int w, int h);
 
 public:
+	void InitGameObj(GameObject* obj) override;
 	void LoadTextureCallback(IDirect3DTexture9* tex);
 	float GetZ();
 	void Render();
