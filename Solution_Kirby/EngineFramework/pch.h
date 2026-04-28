@@ -80,6 +80,26 @@
 using namespace DirectX;
 using namespace std;
 
+inline std::string WideToAnsi(const wchar_t* value)
+{
+    if (!value)
+    {
+        return std::string();
+    }
+
+    const int size = WideCharToMultiByte(CP_ACP, 0, value, -1, nullptr, 0, nullptr, nullptr);
+    if (size <= 0)
+    {
+        return std::string();
+    }
+
+    std::string result(static_cast<size_t>(size - 1), '\0');
+    WideCharToMultiByte(CP_ACP, 0, value, -1, &result[0], size, nullptr, nullptr);
+    return result;
+}
+
+#define USES_CONVERSION
+#define W2A(value) WideToAnsi(value).c_str()
 struct CUSTOMVERTEX
 {
     FLOAT x, y, z;         // The transformed position for the vertex

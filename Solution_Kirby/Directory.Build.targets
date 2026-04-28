@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+
+  <Target Name="CopyKirbyRuntimeAssets" AfterTargets="Build" Condition="'$(ConfigurationType)' == 'Application'">
+    <ItemGroup>
+      <KirbyRuntimeAsset Include="$(SolutionDir)Debug\Bitmaps\**\*.*">
+        <RuntimeSubDir>Bitmaps\%(RecursiveDir)</RuntimeSubDir>
+      </KirbyRuntimeAsset>
+      <KirbyRuntimeAsset Include="$(SolutionDir)Debug\Map\**\*.*">
+        <RuntimeSubDir>Map\%(RecursiveDir)</RuntimeSubDir>
+      </KirbyRuntimeAsset>
+      <KirbyRuntimeAsset Include="$(SolutionDir)Debug\FBX\**\*.*">
+        <RuntimeSubDir>FBX\%(RecursiveDir)</RuntimeSubDir>
+      </KirbyRuntimeAsset>
+      <KirbyRuntimeAsset Include="$(SolutionDir)Lib\libfbxsdk.dll" Condition="Exists('$(SolutionDir)Lib\libfbxsdk.dll')">
+        <RuntimeSubDir></RuntimeSubDir>
+      </KirbyRuntimeAsset>
+    </ItemGroup>
+    <Copy SourceFiles="@(KirbyRuntimeAsset)"
+          DestinationFiles="@(KirbyRuntimeAsset->'$(OutDir)%(RuntimeSubDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+  </Target>
+</Project>

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Edit.h"
-#include <atlconv.h>
 
 vector<string> Edit::ReadMapData(string mapName)
 {

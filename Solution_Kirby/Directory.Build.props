@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <KirbySolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</KirbySolutionDir>
+    <KirbySolutionDir Condition="'$(KirbySolutionDir)' == ''">$(MSBuildThisFileDirectory)</KirbySolutionDir>
+    <DXSDK_DIR Condition="Exists('$(KirbySolutionDir)External\DirectXSDK\Include\d3dx9.h')">$(KirbySolutionDir)External\DirectXSDK\</DXSDK_DIR>
+    <OutDir>$(KirbySolutionDir)Bin\$(Configuration)_$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+</Project>

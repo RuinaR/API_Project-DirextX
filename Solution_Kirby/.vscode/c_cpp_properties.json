@@ -1,0 +1,44 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Win32",
+      "intelliSenseMode": "windows-msvc-x86",
+      "compilerPath": "cl.exe",
+      "cppStandard": "c++17",
+      "includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}\\EngineFramework",
+        "${workspaceFolder}\\include",
+        "${workspaceFolder}\\Box2D",
+        "${workspaceFolder}\\fbxsdk",
+        "${workspaceFolder}\\External\\DirectXSDK\\Include",
+        "${env:DXSDK_DIR}Include"
+      ],
+      "defines": [
+        "WIN32",
+        "_DEBUG",
+        "_WINDOWS"
+      ]
+    },
+    {
+      "name": "x64",
+      "intelliSenseMode": "windows-msvc-x64",
+      "compilerPath": "cl.exe",
+      "cppStandard": "c++17",
+      "includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}\\EngineFramework",
+        "${workspaceFolder}\\include",
+        "${workspaceFolder}\\Box2D",
+        "${workspaceFolder}\\fbxsdk",
+        "${workspaceFolder}\\External\\DirectXSDK\\Include",
+        "${env:DXSDK_DIR}Include"
+      ],
+      "defines": [
+        "_DEBUG",
+        "_WINDOWS"
+      ]
+    }
+  ]
+}

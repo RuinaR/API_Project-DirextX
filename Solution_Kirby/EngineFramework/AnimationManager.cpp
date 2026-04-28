@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "AnimationRender.h"
-#include <atlconv.h>
 
 bool AnimationManager::IsImageFile(const wstring& filename)
 {
