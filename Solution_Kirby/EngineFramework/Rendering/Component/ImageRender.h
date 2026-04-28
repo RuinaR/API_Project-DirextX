@@ -17,6 +17,7 @@ private:
 	int m_orderInLayer = 0;
 	D3DCOLOR m_color = 0xffffffff;
 	std::string m_texturePath;
+	D3DXVECTOR3 m_positionOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	
 
 	void SetupVertices();
@@ -40,6 +41,8 @@ public:
 	bool IsUseTexture();
 	void SetColor(D3DCOLOR color);
 	D3DCOLOR GetColor();
+	void SetPositionOffset(const D3DXVECTOR3& offset);
+	D3DXVECTOR3 GetRenderPosition() const;
 	void Initialize() override;
 	void Release() override;
 	void ChangeTexture(IDirect3DTexture9* texture);

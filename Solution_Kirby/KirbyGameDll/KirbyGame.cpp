@@ -3,6 +3,8 @@
 #include "../include/PluginManager.h"
 
 #include "StartScene.h"
+#include "ComponentFactory.h"
+#include "GameComponentRegistry.h"
 
 
 KirbyGame::KirbyGame(PluginManager& p_mgr) :
@@ -14,6 +16,8 @@ KirbyGame::KirbyGame(PluginManager& p_mgr) :
 
 bool KirbyGame::Initialize(HINSTANCE hInst, RenderType type)
 {
+	RegisterEngineComponents();
+	RegisterGameComponents(ComponentFactory::GetInstance());
 	MainFrame::Create(hInst);
 	MainFrame::GetInstance()->Initialize(TARGETFPS, new StartScene(), type);
 	//MainFrame::GetInstance()->Set();

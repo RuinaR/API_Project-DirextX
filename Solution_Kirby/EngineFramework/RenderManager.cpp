@@ -226,7 +226,7 @@ bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2* point)
 		}
 
 		GameObject* obj = render->GetGameObject();
-		D3DXVECTOR3 position = obj->Position();
+		D3DXVECTOR3 position = render->GetRenderPosition();
 		D3DXVECTOR2 size = obj->Size2D();
 		RECT rect =
 		{

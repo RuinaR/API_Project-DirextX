@@ -197,28 +197,43 @@ void GameObject::InitializeSet() {
 
 void GameObject::Release() {
 
-	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+	if (m_vecComponent != nullptr)
 	{
-        if ((*itr) != nullptr)
-        {
-            (*itr)->Release();
-            delete(*itr);
-            (*itr) = nullptr;
-        }
+		for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+		{
+			if ((*itr) != nullptr)
+			{
+				(*itr)->Release();
+				delete(*itr);
+				(*itr) = nullptr;
+			}
+		}
+		delete m_vecComponent;
+		m_vecComponent = nullptr;
 	}
-	delete m_vecComponent;
-    m_vecComponent = nullptr;
 
-    for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-    {
-        (*itr)->SetParent(nullptr);
-        (*itr)->SetDestroy(true);
-    }
-    delete m_children;
-    m_children = nullptr;
+	if (m_children != nullptr)
+	{
+        while (!m_children->empty())
+        {
+            GameObject* child = m_children->back();
+            m_children->pop_back();
+            if (child != nullptr)
+            {
+                if (child->m_parent == this)
+                    child->m_parent = nullptr;
+                child->SetDestroy(true);
+            }
+        }
+		delete m_children;
+		m_children = nullptr;
+	}
 
     if (m_parent != nullptr)
+    {
         m_parent->DeleteChild(this);
+        m_parent = nullptr;
+    }
 }
 
 void GameObject::Start() {
@@ -252,6 +267,23 @@ void GameObject::Update() {
 
 void GameObject::SetParent(GameObject* obj)
 {
+    if (obj == this)
+        return;
+
+    for (GameObject* parent = obj; parent != nullptr; parent = parent->GetParent())
+    {
+        if (parent == this)
+            return;
+    }
+
+    if (m_parent == obj)
+        return;
+
+    if (m_parent != nullptr)
+    {
+        m_parent->DeleteChild(this);
+    }
+
     m_parent = obj;
     if (obj == nullptr)
         return;
@@ -260,6 +292,23 @@ void GameObject::SetParent(GameObject* obj)
 
 void GameObject::AddChild(GameObject* obj)
 {
+    if (obj == nullptr || obj == this)
+        return;
+
+    for (GameObject* parent = this; parent != nullptr; parent = parent->GetParent())
+    {
+        if (parent == obj)
+            return;
+    }
+
+    if (obj->m_parent == this)
+        return;
+
+    if (obj->m_parent != nullptr)
+    {
+        obj->m_parent->DeleteChild(obj);
+    }
+
     m_children->push_back(obj);
     obj->m_parent = this;
 }

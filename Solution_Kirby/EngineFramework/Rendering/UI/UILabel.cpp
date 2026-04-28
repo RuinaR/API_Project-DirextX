@@ -163,10 +163,13 @@ const char* UILabel::GetSerializableType() const
 
 std::string UILabel::Serialize() const
 {
+	D3DXVECTOR2 position = GetPosition();
+	D3DXVECTOR2 size = GetSize();
+
 	std::ostringstream oss;
 	oss << "{ ";
-	oss << "\"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << " }, ";
-	oss << "\"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << " }, ";
+	oss << "\"position\": { \"x\": " << position.x << ", \"y\": " << position.y << " }, ";
+	oss << "\"size\": { \"x\": " << size.x << ", \"y\": " << size.y << " }, ";
 	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
 	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
 	oss << "\"orderInLayer\": " << m_orderInLayer << ", ";

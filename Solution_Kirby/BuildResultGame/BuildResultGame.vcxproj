@@ -79,11 +79,11 @@
     <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
     <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
     <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -94,12 +94,13 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Rendering\UI;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -112,14 +113,15 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Rendering\UI;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,7 +135,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -152,7 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;d3dx9d.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

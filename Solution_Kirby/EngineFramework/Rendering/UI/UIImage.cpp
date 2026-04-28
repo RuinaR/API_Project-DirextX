@@ -90,11 +90,19 @@ ImageRender* UIImage::GetImageRender()
 void UIImage::SetPosition(const D3DXVECTOR2* position)
 {
 	UIElement::SetPosition(position);
+	ApplyRenderState();
+}
+
+void UIImage::SetLocalOffset(const D3DXVECTOR2* offset)
+{
+	UIElement::SetLocalOffset(offset);
+	ApplyRenderState();
 }
 
 void UIImage::SetSize(const D3DXVECTOR2* size)
 {
 	UIElement::SetSize(size);
+	ApplyRenderState();
 }
 
 void UIImage::SetVisible(bool visible)
@@ -119,12 +127,12 @@ void UIImage::SetOrderInLayer(int orderInLayer)
 
 void UIImage::ApplyRenderState()
 {
-	SetPosition(&m_position);
-	SetSize(&m_size);
+	ApplyPendingTransform();
 
 	if (m_imageRender)
 	{
 		m_imageRender->SetUIRender(true);
+		m_imageRender->SetPositionOffset(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		m_imageRender->SetOrderInLayer(m_orderInLayer);
 		m_imageRender->SetRenderEnabled(m_visible);
 		if (!m_texturePath.empty())
@@ -160,10 +168,13 @@ const char* UIImage::GetSerializableType() const
 
 std::string UIImage::Serialize() const
 {
+	D3DXVECTOR2 position = GetPosition();
+	D3DXVECTOR2 size = GetSize();
+
 	std::ostringstream oss;
 	oss << "{ ";
-	oss << "\"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << " }, ";
-	oss << "\"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << " }, ";
+	oss << "\"position\": { \"x\": " << position.x << ", \"y\": " << position.y << " }, ";
+	oss << "\"size\": { \"x\": " << size.x << ", \"y\": " << size.y << " }, ";
 	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
 	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
 	oss << "\"orderInLayer\": " << m_orderInLayer << ", ";

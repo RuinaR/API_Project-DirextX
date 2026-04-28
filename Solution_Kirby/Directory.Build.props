@@ -5,6 +5,8 @@
     <KirbySolutionDir Condition="'$(KirbySolutionDir)' == ''">$(MSBuildThisFileDirectory)</KirbySolutionDir>
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(KirbySolutionDir)</SolutionDir>
     <DXSDK_DIR Condition="Exists('$(KirbySolutionDir)External\DirectXSDK\Include\d3dx9.h')">$(KirbySolutionDir)External\DirectXSDK\</DXSDK_DIR>
+    <DXSDK_DIR Condition="'$(DXSDK_DIR)' == '' and Exists('$(ProgramFiles)\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h')">$(ProgramFiles)\Microsoft DirectX SDK (June 2010)\</DXSDK_DIR>
+    <DXSDK_DIR Condition="'$(DXSDK_DIR)' == '' and Exists('$(ProgramFiles(x86))\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h')">$(ProgramFiles(x86))\Microsoft DirectX SDK (June 2010)\</DXSDK_DIR>
     <OutDir>$(KirbySolutionDir)Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>

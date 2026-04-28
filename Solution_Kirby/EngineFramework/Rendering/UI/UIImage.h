@@ -27,6 +27,7 @@ public:
 	ImageRender* GetImageRender();
 
 	void SetPosition(const D3DXVECTOR2* position);
+	void SetLocalOffset(const D3DXVECTOR2* offset) override;
 	void SetSize(const D3DXVECTOR2* size);
 	void SetVisible(bool visible);
 	void SetOrderInLayer(int orderInLayer);

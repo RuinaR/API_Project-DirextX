@@ -2,10 +2,10 @@
 <Project>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>$(OutDir);$(KirbySolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(KirbySolutionDir)Lib\$(Platform);$(KirbySolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(OutDir);$(KirbySolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(KirbySolutionDir)Lib\$(Platform);$(KirbySolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
 
@@ -21,6 +21,10 @@
         <RuntimeSubDir>FBX\%(RecursiveDir)</RuntimeSubDir>
       </KirbyRuntimeAsset>
       <KirbyRuntimeAsset Include="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="Exists('$(KirbySolutionDir)Lib\libfbxsdk.dll')">
+        <RuntimeSubDir></RuntimeSubDir>
+      </KirbyRuntimeAsset>
+      <KirbyRuntimeAsset Remove="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')" />
+      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Lib\x64\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')">
         <RuntimeSubDir></RuntimeSubDir>
       </KirbyRuntimeAsset>
     </ItemGroup>

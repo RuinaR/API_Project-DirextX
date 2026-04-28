@@ -15,10 +15,20 @@ private:
 	bool IsPendingAdd(GameObject* obj);
 	bool IsPendingRemove(GameObject* obj);
 	void QueueDestroyObject(GameObject* obj);
+	void QueueDestroyObjectTree(GameObject* obj);
+	bool IsSameOrChild(GameObject* root, GameObject* target);
 	void ReleaseAndDeleteObject(GameObject* obj);
+	bool IsGameObjectNameUsed(const string& name);
+	string CreateUniqueGameObjectName(const string& baseName);
+	GameObject* CreateEmptyGameObject();
+	GameObject* CreateSpriteGameObject();
+	GameObject* CreateUIImageGameObject();
+	GameObject* CreateUIButtonGameObject();
+	GameObject* CreateUITextGameObject();
 	void DrawHierarchy();
+	void DrawGameObjectDeleteControls(GameObject* obj);
 	void DrawGameObjectInspector(GameObject* obj);
-	void DrawComponentInspector(Component* component);
+	bool DrawComponentInspector(Component* component);
 	
 public:
 	static void Create();

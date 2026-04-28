@@ -78,6 +78,9 @@
     <ClInclude Include="FBXRotateObj.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="GameComponentRegistry.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -132,6 +135,9 @@
       <Filter>Include</Filter>
     </ClCompile>
     <ClCompile Include="FBXRotateObj.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponentRegistry.cpp">
       <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>

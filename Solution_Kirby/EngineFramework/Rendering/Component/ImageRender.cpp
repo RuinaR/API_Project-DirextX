@@ -13,7 +13,8 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     D3DXMATRIX matWorld, matScale, matTrans, matRotation;
     D3DXMATRIX matRotationX, matRotationY, matRotationZ;
     D3DXMatrixScaling(&matScale, m_gameObj->Size2D().x, m_gameObj->Size2D().y, 1.0f);
-    D3DXMatrixTranslation(&matTrans, m_gameObj->Position().x, m_gameObj->Position().y, m_gameObj->Position().z);
+    const D3DXVECTOR3 renderPosition = GetRenderPosition();
+    D3DXMatrixTranslation(&matTrans, renderPosition.x, renderPosition.y, renderPosition.z);
 
     D3DXMatrixRotationX(&matRotationX, m_gameObj->GetAngleX());
     D3DXMatrixRotationY(&matRotationY, m_gameObj->GetAngleY());
@@ -229,6 +230,25 @@ void ImageRender::SetColor(D3DCOLOR color)
 D3DCOLOR ImageRender::GetColor()
 {
     return m_color;
+}
+
+void ImageRender::SetPositionOffset(const D3DXVECTOR3& offset)
+{
+    m_positionOffset = offset;
+}
+
+D3DXVECTOR3 ImageRender::GetRenderPosition() const
+{
+    if (m_gameObj == nullptr)
+    {
+        return m_positionOffset;
+    }
+
+    D3DXVECTOR3 position = m_gameObj->Position();
+    position.x += m_positionOffset.x;
+    position.y += m_positionOffset.y;
+    position.z += m_positionOffset.z;
+    return position;
 }
 
 void ImageRender::Initialize()

@@ -11,7 +11,13 @@
 #include "UIButton.h"
 #include "UILabel.h"
 #include "SceneDataManager.h"
+#include "ComponentFactory.h"
 ObjectManager* ObjectManager::m_Pthis = nullptr;
+
+namespace
+{
+	void ApplyDefaultComponentValues(GameObject* obj, Component* component);
+}
 
 bool ObjectManager::IsInObjectList(GameObject* obj)
 {
@@ -55,6 +61,52 @@ void ObjectManager::QueueDestroyObject(GameObject* obj)
 	m_pendingRemoveObjects.push_back(obj);
 }
 
+void ObjectManager::QueueDestroyObjectTree(GameObject* obj)
+{
+	if (obj == nullptr)
+		return;
+
+	vector<GameObject*> children;
+	vector<GameObject*>* childList = obj->GetChild();
+	if (childList != nullptr)
+	{
+		for (vector<GameObject*>::iterator itr = childList->begin(); itr != childList->end(); itr++)
+		{
+			if ((*itr) != nullptr)
+			{
+				children.push_back(*itr);
+			}
+		}
+	}
+
+	for (vector<GameObject*>::iterator itr = children.begin(); itr != children.end(); itr++)
+	{
+		QueueDestroyObjectTree(*itr);
+	}
+
+	QueueDestroyObject(obj);
+}
+
+bool ObjectManager::IsSameOrChild(GameObject* root, GameObject* target)
+{
+	if (root == nullptr || target == nullptr)
+		return false;
+
+	if (root == target)
+		return true;
+
+	vector<GameObject*>* childList = root->GetChild();
+	if (childList == nullptr)
+		return false;
+
+	for (vector<GameObject*>::iterator itr = childList->begin(); itr != childList->end(); itr++)
+	{
+		if (IsSameOrChild(*itr, target))
+			return true;
+	}
+	return false;
+}
+
 void ObjectManager::ReleaseAndDeleteObject(GameObject* obj)
 {
 	if (obj == nullptr)
@@ -65,6 +117,119 @@ void ObjectManager::ReleaseAndDeleteObject(GameObject* obj)
 
 	obj->Release();
 	delete obj;
+}
+
+bool ObjectManager::IsGameObjectNameUsed(const string& name)
+{
+	if (m_objList != nullptr)
+	{
+		for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+		{
+			if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == name)
+			{
+				return true;
+			}
+		}
+	}
+
+	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == name)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+string ObjectManager::CreateUniqueGameObjectName(const string& baseName)
+{
+	if (!IsGameObjectNameUsed(baseName))
+	{
+		return baseName;
+	}
+
+	int index = 1;
+	while (true)
+	{
+		std::ostringstream oss;
+		oss << baseName << " (" << index << ")";
+		const string candidate = oss.str();
+		if (!IsGameObjectNameUsed(candidate))
+		{
+			return candidate;
+		}
+		index++;
+	}
+}
+
+GameObject* ObjectManager::CreateEmptyGameObject()
+{
+	GameObject* obj = new GameObject();
+	obj->SetTag(CreateUniqueGameObjectName("New GameObject"));
+	obj->InitializeSet();
+	return obj;
+}
+
+GameObject* ObjectManager::CreateSpriteGameObject()
+{
+	GameObject* obj = CreateEmptyGameObject();
+	if (obj == nullptr)
+	{
+		return nullptr;
+	}
+
+	obj->SetTag(CreateUniqueGameObjectName("Sprite"));
+	ImageRender* imageRender = new ImageRender(nullptr);
+	Component* addedComponent = obj->AddComponent(imageRender);
+	ApplyDefaultComponentValues(obj, addedComponent);
+	return obj;
+}
+
+GameObject* ObjectManager::CreateUIImageGameObject()
+{
+	GameObject* obj = CreateEmptyGameObject();
+	if (obj == nullptr)
+	{
+		return nullptr;
+	}
+
+	obj->SetTag(CreateUniqueGameObjectName("UI Image"));
+	UIImage* image = new UIImage();
+	Component* addedComponent = obj->AddComponent(image);
+	ApplyDefaultComponentValues(obj, addedComponent);
+	return obj;
+}
+
+GameObject* ObjectManager::CreateUIButtonGameObject()
+{
+	GameObject* obj = CreateEmptyGameObject();
+	if (obj == nullptr)
+	{
+		return nullptr;
+	}
+
+	obj->SetTag(CreateUniqueGameObjectName("UI Button"));
+	UIButton* button = new UIButton();
+	Component* addedComponent = obj->AddComponent(button);
+	ApplyDefaultComponentValues(obj, addedComponent);
+	return obj;
+}
+
+GameObject* ObjectManager::CreateUITextGameObject()
+{
+	GameObject* obj = CreateEmptyGameObject();
+	if (obj == nullptr)
+	{
+		return nullptr;
+	}
+
+	obj->SetTag(CreateUniqueGameObjectName("UI Text"));
+	UILabel* label = new UILabel();
+	Component* addedComponent = obj->AddComponent(label);
+	ApplyDefaultComponentValues(obj, addedComponent);
+	return obj;
 }
 
 void ObjectManager::ProcessChildNode(GameObject* obj, int depth)
@@ -86,10 +251,25 @@ void ObjectManager::ProcessChildNode(GameObject* obj, int depth)
 
 		sprintf_s(str, 64, "%s %s", d.c_str(), (*node)->GetTag().c_str());
 		ProcessChildNode(*node, depth + 1);
+		ImGui::PushID(*node);
 		if (ImGui::Selectable(str, m_selected == (*node)))
 		{
 			m_selected = *node;
 		}
+		if (ImGui::BeginPopupContextItem("GameObjectContext"))
+		{
+			if (ImGui::MenuItem("Delete"))
+			{
+				GameObject* deleteTarget = *node;
+				if (IsSameOrChild(deleteTarget, m_selected))
+				{
+					m_selected = nullptr;
+				}
+				DestroyObject(deleteTarget);
+			}
+			ImGui::EndPopup();
+		}
+		ImGui::PopID();
 	}
 }
 
@@ -125,6 +305,44 @@ void ObjectManager::DrawHierarchy()
 				std::cout << (saved ? "Save Scene succeeded: " : "Save Scene failed: ") << sceneName << std::endl;
 			}
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Create"))
+		{
+			ImGui::OpenPopup("CreateGameObjectPopup");
+		}
+		ImGui::SameLine();
+		DrawGameObjectDeleteControls(m_selected);
+
+		if (ImGui::BeginPopup("CreateGameObjectPopup"))
+		{
+			GameObject* newObj = nullptr;
+			if (ImGui::MenuItem("Create Empty"))
+			{
+				newObj = CreateEmptyGameObject();
+			}
+			if (ImGui::MenuItem("Create Sprite"))
+			{
+				newObj = CreateSpriteGameObject();
+			}
+			if (ImGui::MenuItem("Create UI Image"))
+			{
+				newObj = CreateUIImageGameObject();
+			}
+			if (ImGui::MenuItem("Create UI Button"))
+			{
+				newObj = CreateUIButtonGameObject();
+			}
+			if (ImGui::MenuItem("Create UI Text"))
+			{
+				newObj = CreateUITextGameObject();
+			}
+
+			if (newObj != nullptr)
+			{
+				m_selected = newObj;
+			}
+			ImGui::EndPopup();
+		}
 		ImGui::Separator();
 	}
 
@@ -138,13 +356,236 @@ void ObjectManager::DrawHierarchy()
 		if ((*itr)->GetParent() != nullptr)
 			continue;
 		sprintf_s(str, 64, "-%d. %s", i, (*itr)->GetTag().c_str());
+		ImGui::PushID(*itr);
 		if (ImGui::Selectable(str, m_selected == (*itr)))
 		{
 			m_selected = (*itr);
 		}
+		if (ImGui::BeginPopupContextItem("GameObjectContext"))
+		{
+			if (ImGui::MenuItem("Delete"))
+			{
+				GameObject* deleteTarget = *itr;
+				if (IsSameOrChild(deleteTarget, m_selected))
+				{
+					m_selected = nullptr;
+				}
+				DestroyObject(deleteTarget);
+			}
+			ImGui::EndPopup();
+		}
+		ImGui::PopID();
 		ProcessChildNode((*itr), 1);
 	}
 	ImGui::End();
+}
+
+void ObjectManager::DrawGameObjectDeleteControls(GameObject* obj)
+{
+	if (obj == nullptr || obj->GetDestroy())
+	{
+		ImGui::BeginDisabled();
+		ImGui::Button("Delete");
+		ImGui::EndDisabled();
+		return;
+	}
+
+	if (ImGui::Button("Delete"))
+	{
+		GameObject* deleteTarget = obj;
+		if (IsSameOrChild(deleteTarget, m_selected))
+		{
+			m_selected = nullptr;
+		}
+		DestroyObject(deleteTarget);
+	}
+}
+
+namespace
+{
+	void ApplyDefaultComponentValues(GameObject* obj, Component* component)
+	{
+		if (obj == nullptr || component == nullptr)
+		{
+			return;
+		}
+
+		if (UIButton* button = dynamic_cast<UIButton*>(component))
+		{
+			const D3DXVECTOR2 size(180.0f, 48.0f);
+			button->SetSize(&size);
+			button->SetUseTexture(false);
+			button->SetStateColors(
+				D3DCOLOR_ARGB(255, 80, 120, 220),
+				D3DCOLOR_ARGB(255, 100, 145, 240),
+				D3DCOLOR_ARGB(255, 55, 90, 180));
+			button->SetActionKey("");
+			return;
+		}
+
+		if (UIImage* image = dynamic_cast<UIImage*>(component))
+		{
+			const D3DXVECTOR2 size(128.0f, 128.0f);
+			image->SetSize(&size);
+			image->SetUseTexture(false);
+			image->SetColor(D3DCOLOR_ARGB(255, 80, 180, 220));
+			return;
+		}
+
+		if (UILabel* label = dynamic_cast<UILabel*>(component))
+		{
+			const D3DXVECTOR2 size(240.0f, 48.0f);
+			label->SetSize(&size);
+			label->SetText(L"Text");
+			label->SetFontSize(24);
+			label->SetColor(D3DCOLOR_ARGB(255, 255, 255, 255));
+			return;
+		}
+
+		if (ImageRender* imageRender = dynamic_cast<ImageRender*>(component))
+		{
+			obj->Size3D() = D3DXVECTOR3(128.0f, 128.0f, 1.0f);
+			imageRender->SetUseTexture(false);
+			imageRender->SetColor(D3DCOLOR_ARGB(255, 255, 255, 255));
+			imageRender->SetRenderEnabled(true);
+			return;
+		}
+	}
+
+	bool IsSameComponentType(Component* component, const std::string& typeName)
+	{
+		if (component == nullptr)
+		{
+			return false;
+		}
+
+		const char* serializableType = component->GetSerializableType();
+		if (serializableType != nullptr && strlen(serializableType) > 0)
+		{
+			return typeName == serializableType;
+		}
+
+		const std::string inspectorName = component->GetInspectorName();
+		return inspectorName == typeName
+			|| inspectorName == "class " + typeName
+			|| inspectorName == "struct " + typeName;
+	}
+
+	bool HasComponentType(GameObject* obj, const std::string& typeName)
+	{
+		if (obj == nullptr)
+		{
+			return false;
+		}
+
+		vector<Component*>* components = obj->GetComponentVec();
+		if (components == nullptr)
+		{
+			return false;
+		}
+
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
+		{
+			if (IsSameComponentType(*itr, typeName))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool IsRequiredComponent(Component* component)
+	{
+		if (component == nullptr)
+		{
+			return true;
+		}
+
+		const char* serializableType = component->GetSerializableType();
+		if (serializableType != nullptr && strcmp(serializableType, "Transform") == 0)
+		{
+			return true;
+		}
+
+		const std::string inspectorName = component->GetInspectorName();
+		return inspectorName == "Transform"
+			|| inspectorName == "class Transform"
+			|| inspectorName == "struct Transform";
+	}
+
+	void DrawAddComponentMenu(GameObject* obj)
+	{
+		if (obj == nullptr)
+		{
+			return;
+		}
+
+		if (ImGui::Button("Add Component"))
+		{
+			ImGui::OpenPopup("AddComponentPopup");
+		}
+
+		if (!ImGui::BeginPopup("AddComponentPopup"))
+		{
+			return;
+		}
+
+		ComponentFactory& factory = ComponentFactory::GetInstance();
+		const std::vector<ComponentFactory::ComponentInfo>& registeredComponents = factory.GetRegisteredComponents();
+		std::map<std::string, std::vector<const ComponentFactory::ComponentInfo*>> categorizedComponents;
+
+		for (std::vector<ComponentFactory::ComponentInfo>::const_iterator itr = registeredComponents.begin(); itr != registeredComponents.end(); itr++)
+		{
+			if (!itr->canAddFromEditor)
+			{
+				continue;
+			}
+			categorizedComponents[itr->category].push_back(&(*itr));
+		}
+
+		if (categorizedComponents.empty())
+		{
+			ImGui::TextDisabled("No components registered");
+			ImGui::EndPopup();
+			return;
+		}
+
+		for (std::map<std::string, std::vector<const ComponentFactory::ComponentInfo*>>::iterator categoryItr = categorizedComponents.begin(); categoryItr != categorizedComponents.end(); categoryItr++)
+		{
+			if (!ImGui::BeginMenu(categoryItr->first.c_str()))
+			{
+				continue;
+			}
+
+			for (std::vector<const ComponentFactory::ComponentInfo*>::iterator infoItr = categoryItr->second.begin(); infoItr != categoryItr->second.end(); infoItr++)
+			{
+				const ComponentFactory::ComponentInfo* info = *infoItr;
+				if (info == nullptr)
+				{
+					continue;
+				}
+
+				const bool alreadyAdded = HasComponentType(obj, info->typeName);
+				if (ImGui::MenuItem(info->displayName.c_str(), alreadyAdded ? "Added" : nullptr, false, !alreadyAdded))
+				{
+					Component* component = factory.Create(info->typeName, "{}");
+					if (component != nullptr)
+					{
+						Component* addedComponent = obj->AddComponent(component);
+						ApplyDefaultComponentValues(obj, addedComponent);
+					}
+					else
+					{
+						std::cout << "Add Component failed: " << info->typeName << std::endl;
+					}
+				}
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndPopup();
+	}
 }
 
 void ObjectManager::DrawGameObjectInspector(GameObject* obj)
@@ -192,29 +633,61 @@ void ObjectManager::DrawGameObjectInspector(GameObject* obj)
 	ImGui::Text("Components");
 
 	vector<Component*>* components = obj->GetComponentVec();
+	Component* componentToRemove = nullptr;
 	if (components != nullptr)
 	{
 		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
 		{
-			DrawComponentInspector(*itr);
+			if (DrawComponentInspector(*itr))
+			{
+				componentToRemove = *itr;
+				break;
+			}
 		}
 	}
+
+	if (componentToRemove != nullptr)
+	{
+		obj->DeleteComponent(componentToRemove);
+	}
+
+	DrawAddComponentMenu(obj);
 
 	ImGui::End();
 }
 
-void ObjectManager::DrawComponentInspector(Component* component)
+bool ObjectManager::DrawComponentInspector(Component* component)
 {
 	if (component == nullptr)
-		return;
+		return false;
 
 	ImGui::PushID(component);
-	if (ImGui::TreeNodeEx(component->GetInspectorName(), ImGuiTreeNodeFlags_DefaultOpen))
+	const bool isRequired = IsRequiredComponent(component);
+	const bool isOpen = ImGui::TreeNodeEx(component->GetInspectorName(), ImGuiTreeNodeFlags_DefaultOpen);
+	bool removeRequested = false;
+
+	ImGui::SameLine();
+	if (isRequired)
 	{
-		component->DrawInspector();
+		ImGui::BeginDisabled();
+	}
+	removeRequested = ImGui::SmallButton("Remove");
+	if (isRequired)
+	{
+		ImGui::EndDisabled();
+	}
+
+	if (isOpen)
+	{
+		if (!removeRequested)
+		{
+			component->DrawInspector();
+		}
 		ImGui::TreePop();
 	}
 	ImGui::PopID();
+
+	return removeRequested && !isRequired;
 }
 
 void ObjectManager::Create()
@@ -298,7 +771,11 @@ bool ObjectManager::DestroyObject(GameObject* obj)
 	if (!IsInObjectList(obj) && !IsPendingAdd(obj))
 		return false;
 
-	QueueDestroyObject(obj);
+	if (IsSameOrChild(obj, m_selected))
+	{
+		m_selected = nullptr;
+	}
+	QueueDestroyObjectTree(obj);
 	return true;
 }
 
@@ -308,7 +785,7 @@ bool ObjectManager::DestroyObject(string tag)
 	{
 		if ((*itr) != nullptr && (*itr)->GetTag() == tag)
 		{
-			QueueDestroyObject(*itr);
+			DestroyObject(*itr);
 			return true;
 		}
 	}
@@ -317,7 +794,7 @@ bool ObjectManager::DestroyObject(string tag)
 	{
 		if ((*itr) != nullptr && (*itr)->GetTag() == tag)
 		{
-			QueueDestroyObject(*itr);
+			DestroyObject(*itr);
 			return true;
 		}
 	}
@@ -503,31 +980,6 @@ std::string ObjectManager::SerializeObjects()
 	return oss.str();
 }
 
-static Component* CreateSerializableComponent(const std::string& type, const std::string& dataJson)
-{
-	if (type == "ImageRender")
-		return new ImageRender(nullptr);
-	if (type == "AnimationRender")
-		return new AnimationRender(Animation());
-	if (type == "FBXRender")
-	{
-		std::string fbxPath;
-		SceneJson::ReadString(dataJson, "fbxPath", fbxPath);
-		return new FBXRender(fbxPath);
-	}
-	if (type == "BoxCollider")
-		return new BoxCollider(b2_staticBody);
-	if (type == "UIImage")
-		return new UIImage();
-	if (type == "UIButton")
-		return new UIButton();
-	if (type == "UILabel")
-		return new UILabel();
-
-	std::cout << "SceneData unknown component type: " << type << std::endl;
-	return nullptr;
-}
-
 static bool DeserializeComponents(GameObject* obj, const std::string& objectJson)
 {
 	std::string componentsArray;
@@ -553,9 +1005,10 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 			return false;
 		}
 
-		Component* component = CreateSerializableComponent(type, dataJson);
+		Component* component = ComponentFactory::GetInstance().Create(type, dataJson);
 		if (component == nullptr)
 		{
+			std::cout << "SceneData unknown component type: " << type << std::endl;
 			continue;
 		}
 
@@ -571,6 +1024,8 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 
 bool ObjectManager::DeserializeObjects(const std::string& sceneJson)
 {
+	RegisterEngineComponents();
+
 	std::string objectsArray;
 	if (!SceneJson::ExtractArray(sceneJson, "objects", objectsArray))
 	{

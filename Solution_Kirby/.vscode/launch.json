@@ -8,7 +8,7 @@
       "program": "${workspaceFolder}\\Bin\\Debug_Win32\\BuildResultGame.exe",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}\\Bin\\Debug_Win32",
       "environment": [],
       "console": "integratedTerminal",
       "preLaunchTask": "Build Debug Win32"
@@ -20,7 +20,7 @@
       "program": "${workspaceFolder}\\Bin\\Debug_Win32\\BuildEdit.exe",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}\\Bin\\Debug_Win32",
       "environment": [],
       "console": "integratedTerminal",
       "preLaunchTask": "Build Debug Win32"
@@ -32,7 +32,19 @@
       "program": "${workspaceFolder}\\Bin\\Debug_x64\\BuildResultGame.exe",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}\\Bin\\Debug_x64",
+      "environment": [],
+      "console": "integratedTerminal",
+      "preLaunchTask": "Build Debug x64"
+    },
+    {
+      "name": "Debug Editor (x64)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}\\Bin\\Debug_x64\\BuildEdit.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}\\Bin\\Debug_x64",
       "environment": [],
       "console": "integratedTerminal",
       "preLaunchTask": "Build Debug x64"

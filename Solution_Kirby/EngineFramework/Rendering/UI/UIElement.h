@@ -4,13 +4,15 @@
 class UIElement : public Component
 {
 protected:
-	D3DXVECTOR2 m_position = D3DXVECTOR2(0.0f, 0.0f);
-	D3DXVECTOR2 m_size = D3DXVECTOR2(0.0f, 0.0f);
+	D3DXVECTOR2 m_pendingPosition = D3DXVECTOR2(0.0f, 0.0f);
+	D3DXVECTOR2 m_pendingSize = D3DXVECTOR2(0.0f, 0.0f);
+	bool m_hasPendingPosition = false;
+	bool m_hasPendingSize = false;
 	bool m_visible = true;
 	bool m_enabled = true;
 	int m_orderInLayer = 0;
 
-	void ApplyTransform();
+	void ApplyPendingTransform();
 
 public:
 	void Initialize() override;
@@ -18,9 +20,12 @@ public:
 	void Start() override;
 	void Update() override;
 	virtual void RenderUI();
+	void InitGameObj(GameObject* obj) override;
 
 	virtual void SetPosition(const D3DXVECTOR2* position);
 	D3DXVECTOR2 GetPosition() const;
+	virtual void SetLocalOffset(const D3DXVECTOR2* offset);
+	D3DXVECTOR2 GetLocalOffset() const;
 	virtual void SetSize(const D3DXVECTOR2* size);
 	D3DXVECTOR2 GetSize() const;
 
