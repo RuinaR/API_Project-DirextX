@@ -57,6 +57,10 @@ void FBXRender::Update() {
 }
 
 void FBXRender::Render() {
+    if (m_gameObj == nullptr || !m_gameObj->GetActive() || m_gameObj->GetDestroy() || !m_loaded) {
+        return;
+    }
+
     auto device = MainFrame::GetInstance()->GetDevice();
     if (!device) {
         m_logSystem.AddLog("Error: Direct3D device is null!");

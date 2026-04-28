@@ -9,6 +9,20 @@ RenderManager* RenderManager::m_Pthis = nullptr;
 
 int RenderManager::FrameCount = 0;
 
+namespace
+{
+	bool CanRenderComponent(Component* component)
+	{
+		if (component == nullptr || component->GetGameObject() == nullptr)
+		{
+			return false;
+		}
+
+		GameObject* obj = component->GetGameObject();
+		return obj->GetActive() && !obj->GetDestroy();
+	}
+}
+
 void RenderManager::Create()
 {
 	if (!m_Pthis)
@@ -220,7 +234,7 @@ bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2* point)
 	for (vector<UIRenderEntry>::reverse_iterator itr = m_uiRenderVec->rbegin(); itr != m_uiRenderVec->rend(); itr++)
 	{
 		ImageRender* render = itr->render;
-		if (!render || !render->IsRenderEnabled() || !render->GetGameObject())
+		if (!render || !render->IsRenderEnabled() || !CanRenderComponent(render))
 		{
 			continue;
 		}
@@ -358,6 +372,8 @@ void RenderManager::EditUpdate()
 		device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE); 
 		for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
 		{
+			if (!CanRenderComponent(*itr))
+				continue;
 			(*itr)->Render();
 		}	
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -367,6 +383,8 @@ void RenderManager::EditUpdate()
 		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
 		{
+			if (!CanRenderComponent(*itr))
+				continue;
 			(*itr)->Render();
 		}
 		//FBX Render
@@ -380,6 +398,8 @@ void RenderManager::EditUpdate()
 
 		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
 		{
+			if (!CanRenderComponent(*itr))
+				continue;
 			(*itr)->Render();
 		}
 		//DebugRender
@@ -481,6 +501,8 @@ void RenderManager::GameUpdate()
 		device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 		for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
 		{
+			if (!CanRenderComponent(*itr))
+				continue;
 			(*itr)->Render();
 		}
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -490,6 +512,8 @@ void RenderManager::GameUpdate()
 		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
 		{
+			if (!CanRenderComponent(*itr))
+				continue;
 			(*itr)->Render();
 		}
 		//FBX Render
@@ -497,6 +521,8 @@ void RenderManager::GameUpdate()
 		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
 		{
+			if (!CanRenderComponent(*itr))
+				continue;
 			(*itr)->Render();
 		}
 		RenderUIQueue();
@@ -686,10 +712,14 @@ void RenderManager::RenderUIQueue()
 	{
 		if (itr->render)
 		{
+			if (!CanRenderComponent(itr->render))
+				continue;
 			itr->render->Render();
 		}
 		else if (itr->element)
 		{
+			if (!CanRenderComponent(itr->element))
+				continue;
 			itr->element->RenderUI();
 		}
 	}
