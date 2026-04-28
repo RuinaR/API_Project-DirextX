@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "Collider.h"
+#include "SceneJsonUtility.h"
 
 void Collider::RenderCollider()
 {
+		if (m_body == nullptr)
+			return;
+
 		D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
 
 		b2Vec2 position = m_body->GetPosition();
@@ -40,6 +44,9 @@ void Collider::Start()
 }
 void Collider::Update()
 {
+	if (m_body == nullptr)
+		return;
+
 	m_gameObj->SetPosition({
 		m_body->GetPosition().x,
 		m_body->GetPosition().y,
@@ -94,8 +101,11 @@ void Collider::Initialize()
 void Collider::Release()
 {
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
-	MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
-	m_body = nullptr;
+	if (m_body != nullptr)
+	{
+		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+		m_body = nullptr;
+	}
 	RenderManager::GetInstance()->UnregisterDebug(this);
 
 	ColRelease();
@@ -119,5 +129,70 @@ b2Body* Collider::GetBody()
 void Collider::DebugRenderUpdate()
 {
 	RenderCollider();
+}
+
+const char* Collider::GetInspectorName() const
+{
+	return "Collider";
+}
+
+void Collider::DrawInspector()
+{
+	ImGui::Text("Type: %d", static_cast<int>(m_type));
+	ImGui::Text("Trigger: %s", m_isTrigger ? "true" : "false");
+	ImGui::Text("Size: %.2f, %.2f", m_colSize.x, m_colSize.y);
+	ImGui::Text("Offset: %.2f, %.2f", m_colOffset.x, m_colOffset.y);
+	ImGui::Text("Body: %s", m_body ? "Created" : "None");
+
+	if (m_body)
+	{
+		const b2Vec2 position = m_body->GetPosition();
+		const b2Vec2 velocity = m_body->GetLinearVelocity();
+		ImGui::Text("Body Active: %s", m_body->IsEnabled() ? "true" : "false");
+		ImGui::Text("Fixed Rotation: %s", m_body->IsFixedRotation() ? "true" : "false");
+		ImGui::Text("Body Position: %.2f, %.2f", position.x, position.y);
+		ImGui::Text("Body Angle: %.3f", m_body->GetAngle());
+		ImGui::Text("Linear Velocity: %.2f, %.2f", velocity.x, velocity.y);
+	}
+}
+
+std::string Collider::Serialize() const
+{
+	std::ostringstream oss;
+	oss << "{ ";
+	oss << "\"bodyType\": " << static_cast<int>(m_type) << ", ";
+	oss << "\"trigger\": " << (m_isTrigger ? "true" : "false") << ", ";
+	oss << "\"size\": { \"x\": " << m_colSize.x << ", \"y\": " << m_colSize.y << " }, ";
+	oss << "\"offset\": { \"x\": " << m_colOffset.x << ", \"y\": " << m_colOffset.y << " }, ";
+	oss << "\"fixedRotation\": " << (m_body != nullptr && m_body->IsFixedRotation() ? "true" : "false");
+	oss << " }";
+	return oss.str();
+}
+
+bool Collider::Deserialize(const std::string& componentJson)
+{
+	int bodyType = static_cast<int>(m_type);
+	SceneJson::ReadInt(componentJson, "bodyType", bodyType);
+	m_type = static_cast<b2BodyType>(bodyType);
+	SceneJson::ReadBool(componentJson, "trigger", m_isTrigger);
+
+	D3DXVECTOR2 size = { static_cast<float>(m_colSize.x), static_cast<float>(m_colSize.y) };
+	D3DXVECTOR2 offset = { static_cast<float>(m_colOffset.x), static_cast<float>(m_colOffset.y) };
+	SceneJson::ReadVector2(componentJson, "size", &size);
+	SceneJson::ReadVector2(componentJson, "offset", &offset);
+
+	bool fixedRotation = false;
+	SceneJson::ReadBool(componentJson, "fixedRotation", fixedRotation);
+
+	if (size.x > 0.0f && size.y > 0.0f && m_gameObj != nullptr && m_body == nullptr)
+	{
+		CreateBody({ offset.x, offset.y }, { size.x, size.y }, fixedRotation);
+	}
+	else
+	{
+		m_colSize = { size.x, size.y };
+		m_colOffset = { offset.x, offset.y };
+	}
+	return true;
 }
 

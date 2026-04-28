@@ -2,6 +2,7 @@
 #include "AnimationRender.h"
 #include "ImageRender.h"
 #include "GameObject.h"
+#include "SceneJsonUtility.h"
 
 AnimationRender::AnimationRender(Animation anim)
 	:Component(), m_isPlay(true), m_updateTimer(0.0f), m_curItr(), m_bitren(nullptr)
@@ -89,4 +90,62 @@ bool AnimationRender::IsFinishAnim()
 const Animation& AnimationRender::GetCurrentAnim()
 {
 	return m_anim;
+}
+
+const char* AnimationRender::GetInspectorName() const
+{
+	return "AnimationRender";
+}
+
+void AnimationRender::DrawInspector()
+{
+	ImGui::Text("Texture Count: %d", static_cast<int>(m_anim.textures.size()));
+	ImGui::Text("Frame Time: %.3f", m_anim.time);
+	ImGui::Text("Source Path: %s", m_anim.sourcePath.empty() ? "(none)" : m_anim.sourcePath.c_str());
+	ImGui::Text("Update Timer: %.3f", m_updateTimer);
+	ImGui::Checkbox("Play", &m_isPlay);
+	ImGui::Checkbox("One Time", &m_isOneTime);
+	ImGui::Text("ImageRender: %s", m_bitren ? "Linked" : "None");
+}
+
+const char* AnimationRender::GetSerializableType() const
+{
+	return "AnimationRender";
+}
+
+std::string AnimationRender::Serialize() const
+{
+	std::ostringstream oss;
+	oss << "{ ";
+	oss << "\"play\": " << (m_isPlay ? "true" : "false") << ", ";
+	oss << "\"oneTime\": " << (m_isOneTime ? "true" : "false") << ", ";
+	oss << "\"frameTime\": " << m_anim.time << ", ";
+	oss << "\"sourcePath\": \"" << SceneJson::EscapeString(m_anim.sourcePath) << "\"";
+	oss << " }";
+	return oss.str();
+}
+
+bool AnimationRender::Deserialize(const std::string& componentJson)
+{
+	SceneJson::ReadBool(componentJson, "play", m_isPlay);
+	SceneJson::ReadBool(componentJson, "oneTime", m_isOneTime);
+	SceneJson::ReadFloat(componentJson, "frameTime", m_anim.time);
+
+	std::string sourcePath;
+	if (SceneJson::ReadString(componentJson, "sourcePath", sourcePath) && !sourcePath.empty())
+	{
+		m_anim = AnimationManager::LoadAnimation(ConvertToWideString(sourcePath), m_anim.time);
+		m_anim.sourcePath = sourcePath;
+	}
+	else
+	{
+		std::cout << "AnimationRender deserialize: sourcePath missing. Animation frames are not restored." << std::endl;
+	}
+
+	m_curItr = m_anim.textures.begin();
+	if (m_bitren != nullptr && !m_anim.textures.empty())
+	{
+		m_bitren->ChangeTexture(*m_curItr);
+	}
+	return true;
 }

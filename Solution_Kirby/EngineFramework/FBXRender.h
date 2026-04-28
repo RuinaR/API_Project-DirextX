@@ -27,9 +27,10 @@ private:
     FbxTool m_tool;
     std::string m_fbxFileName;  // 로드할 FBX 파일 이름
     std::vector<Model> m_models;
+    bool m_loaded = false;
 
     LogSystem m_logSystem;
-    void SetWorldTransform(D3DXMATRIX& matWorld);
+    void SetWorldTransform(D3DXMATRIX* matWorld);
 
 public:
     FBXRender(std::string name);
@@ -38,4 +39,9 @@ public:
     void Start() override;
     void Update() override;
     void Render();
+    const char* GetInspectorName() const override;
+    void DrawInspector() override;
+    const char* GetSerializableType() const override;
+    std::string Serialize() const override;
+    bool Deserialize(const std::string& componentJson) override;
 };

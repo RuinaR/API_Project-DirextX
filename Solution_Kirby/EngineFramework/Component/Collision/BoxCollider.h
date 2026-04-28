@@ -9,5 +9,6 @@ protected:
 public:
 	BoxCollider(b2BodyType type);
 	~BoxCollider() override;
+	const char* GetInspectorName() const override;
+	const char* GetSerializableType() const override;
 };
-

@@ -25,5 +25,9 @@ public:
 	void SetOneTime(bool b);
 	bool IsFinishAnim(); //oneTime옵션이 켜져있을 때 마지막까지 애니메이션이 재생되었으면 true 반환
 	const Animation& GetCurrentAnim();
+	const char* GetInspectorName() const override;
+	void DrawInspector() override;
+	const char* GetSerializableType() const override;
+	std::string Serialize() const override;
+	bool Deserialize(const std::string& componentJson) override;
 };
-

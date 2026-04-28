@@ -126,6 +126,7 @@ Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
     Animation newAnim;
     newAnim.textures = textures;
     newAnim.time = time;
+    newAnim.sourcePath = ConvertToString(folderName);
 
     static int identity = 1000;
     newAnim.identity = identity;

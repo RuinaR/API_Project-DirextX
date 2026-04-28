@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "ImageRender.h"
+#include "SceneJsonUtility.h"
 
 void ImageRender::DrawImage(int x, int y, int z, int w, int h)
 {
@@ -8,7 +9,7 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
 
     SetupVertices();
 
-    // Set world, view, and projection matrices here
+    // 월드 변환 행렬을 구성한다.
     D3DXMATRIX matWorld, matScale, matTrans, matRotation;
     D3DXMATRIX matRotationX, matRotationY, matRotationZ;
     D3DXMatrixScaling(&matScale, m_gameObj->Size2D().x, m_gameObj->Size2D().y, 1.0f);
@@ -86,29 +87,29 @@ void ImageRender::SetupVertices()
     vertices[3].tu = 1.0f;
     vertices[3].tv = lowerV;
 
-    // Lock the vertex buffer
+    // 정점 버퍼에 사각형 정점 정보를 갱신한다.
     VOID* pVertices;
     m_vertexBuffer->Lock(0, sizeof(CUSTOMVERTEX) * 4, (void**)&pVertices, 0);
     memcpy(pVertices, vertices, sizeof(CUSTOMVERTEX) * 4);
     m_vertexBuffer->Unlock();
 
-    // Define indices
+    // 사각형을 삼각형 두 개로 그리기 위한 인덱스
     WORD indices[] =
     {
-        0, 1, 2,    // First triangle
-        2, 1, 3     // Second triangle
+        0, 1, 2,    // 첫 번째 삼각형
+        2, 1, 3     // 두 번째 삼각형
     };
 
-    // index buffer
+    // 인덱스 버퍼에 인덱스 정보를 갱신한다.
     WORD* pIndices;
     m_indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0);
     memcpy(pIndices, indices, sizeof(indices));
     m_indexBuffer->Unlock();
 
-    // Set the index buffer
+    // 갱신된 인덱스 버퍼를 장치에 바인딩한다.
     m_device->SetIndices(m_indexBuffer);
 
-    // Release the index buffer
+    // 인덱스 버퍼 해제는 Release에서 처리한다.
     //m_indexBuffer->Release();
 }
 
@@ -268,10 +269,128 @@ void ImageRender::ChangeTexture(IDirect3DTexture9* texture)
     m_texture = texture;
 }
 
+void ImageRender::SetTexturePath(const std::string& path)
+{
+    m_texturePath = path;
+    if (!m_texturePath.empty())
+    {
+        m_texture = TextureManager::GetInstance()->GetTexture(m_texturePath);
+    }
+}
+
+const std::string& ImageRender::GetTexturePath() const
+{
+    return m_texturePath;
+}
+
 void ImageRender::Start()
 {
 }
 
 void ImageRender::Update()
 {
+}
+
+const char* ImageRender::GetInspectorName() const
+{
+    return "ImageRender";
+}
+
+void ImageRender::DrawInspector()
+{
+    bool uiRender = m_isUIRender;
+    if (ImGui::Checkbox("UI Render", &uiRender))
+    {
+        SetUIRender(uiRender);
+    }
+
+    bool renderEnabled = m_renderEnabled;
+    if (ImGui::Checkbox("Render Enabled", &renderEnabled))
+    {
+        SetRenderEnabled(renderEnabled);
+    }
+
+    bool useTexture = m_useTexture;
+    if (ImGui::Checkbox("Use Texture", &useTexture))
+    {
+        SetUseTexture(useTexture);
+    }
+
+    bool trans = m_isTrans;
+    if (ImGui::Checkbox("Transparent Queue", &trans))
+    {
+        SetTrans(trans);
+    }
+
+    int orderInLayer = m_orderInLayer;
+    if (ImGui::DragInt("Order In Layer", &orderInLayer))
+    {
+        SetOrderInLayer(orderInLayer);
+    }
+
+    float color[4] =
+    {
+        static_cast<float>((m_color >> 16) & 0xff) / 255.0f,
+        static_cast<float>((m_color >> 8) & 0xff) / 255.0f,
+        static_cast<float>(m_color & 0xff) / 255.0f,
+        static_cast<float>((m_color >> 24) & 0xff) / 255.0f
+    };
+    if (ImGui::ColorEdit4("Color", color))
+    {
+        SetColor(D3DCOLOR_COLORVALUE(color[0], color[1], color[2], color[3]));
+    }
+
+    ImGui::Text("Texture: %s", m_texture ? "Loaded" : "None");
+    ImGui::Text("Texture Path: %s", m_texturePath.empty() ? "(none)" : m_texturePath.c_str());
+}
+
+const char* ImageRender::GetSerializableType() const
+{
+    return "ImageRender";
+}
+
+std::string ImageRender::Serialize() const
+{
+    std::ostringstream oss;
+    oss << "{ ";
+    oss << "\"renderEnabled\": " << (m_renderEnabled ? "true" : "false") << ", ";
+    oss << "\"useTexture\": " << (m_useTexture ? "true" : "false") << ", ";
+    oss << "\"color\": " << static_cast<DWORD>(m_color) << ", ";
+    oss << "\"isUIRender\": " << (m_isUIRender ? "true" : "false") << ", ";
+    oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
+    oss << "\"trans\": " << (m_isTrans ? "true" : "false") << ", ";
+    oss << "\"texturePath\": \"" << SceneJson::EscapeString(m_texturePath) << "\"";
+    oss << " }";
+    return oss.str();
+}
+
+bool ImageRender::Deserialize(const std::string& componentJson)
+{
+    bool renderEnabled = m_renderEnabled;
+    bool useTexture = m_useTexture;
+    bool isUIRender = m_isUIRender;
+    bool trans = m_isTrans;
+    int orderInLayer = m_orderInLayer;
+    DWORD color = static_cast<DWORD>(m_color);
+    std::string texturePath;
+
+    SceneJson::ReadBool(componentJson, "renderEnabled", renderEnabled);
+    SceneJson::ReadBool(componentJson, "useTexture", useTexture);
+    SceneJson::ReadBool(componentJson, "isUIRender", isUIRender);
+    SceneJson::ReadBool(componentJson, "trans", trans);
+    SceneJson::ReadInt(componentJson, "orderInLayer", orderInLayer);
+    SceneJson::ReadDword(componentJson, "color", color);
+    SceneJson::ReadString(componentJson, "texturePath", texturePath);
+
+    SetRenderEnabled(renderEnabled);
+    SetUseTexture(useTexture);
+    SetColor(static_cast<D3DCOLOR>(color));
+    SetTrans(trans);
+    SetOrderInLayer(orderInLayer);
+    if (!texturePath.empty())
+    {
+        SetTexturePath(texturePath);
+    }
+    SetUIRender(isUIRender);
+    return true;
 }

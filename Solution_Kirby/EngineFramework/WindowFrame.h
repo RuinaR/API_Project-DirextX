@@ -10,6 +10,7 @@ private:
 	HINSTANCE m_Instance = NULL;
 	//Buffer* m_buffer = nullptr;
 	Scene* m_scene = nullptr;
+	RenderType m_type = RenderType::Game;
 	WindowFrame() {}
 	~WindowFrame() {}
 public:
@@ -27,4 +28,6 @@ public:
 	//Buffer* GetBuffer() { return this->m_buffer; }
 	HINSTANCE GetHInst() { return this->m_Instance; }
 	HWND GetHWND() { return this->m_hWnd; }
+	RenderType GetRenderType() const { return m_type; }
+	const char* GetCurrentSceneName() const { return m_scene ? m_scene->GetSceneName() : ""; }
 };

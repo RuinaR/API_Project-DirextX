@@ -3,29 +3,29 @@
 #include <Windows.h>
 
 BOOL WINAPI DllMain(
-    HINSTANCE hinstDLL,  // handle to DLL module
-    DWORD fdwReason,     // reason for calling function
-    LPVOID lpReserved)  // reserved
+    HINSTANCE hinstDLL,  // DLL 모듈 핸들
+    DWORD fdwReason,     // 호출 사유
+    LPVOID lpReserved)   // 예약 인자
 {
-    // Perform actions based on the reason for calling.
+    // 호출 사유에 따라 필요한 처리를 수행한다.
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
-        // Initialize once for each new process.
-        // Return FALSE to fail DLL load.
+        // 새 프로세스에 대해 한 번 초기화한다.
+        // FALSE를 반환하면 DLL 로드가 실패한다.
         break;
 
     case DLL_THREAD_ATTACH:
-        // Do thread-specific initialization.
+        // 스레드별 초기화가 필요하면 여기서 처리한다.
         break;
 
     case DLL_THREAD_DETACH:
-        // Do thread-specific cleanup.
+        // 스레드별 정리가 필요하면 여기서 처리한다.
         break;
 
     case DLL_PROCESS_DETACH:
-        // Perform any necessary cleanup.
+        // DLL 해제 시 필요한 정리를 수행한다.
         break;
     }
-    return TRUE;  // Successful DLL_PROCESS_ATTACH.
+    return TRUE;  // DLL_PROCESS_ATTACH 성공
 }

@@ -15,5 +15,7 @@ public:
 	void Init() override;
 	void Release() override;
 	void Start() override;
+	const char* GetSceneName() const override;
+	void BuildInitialSceneObjects() override;
 };
 

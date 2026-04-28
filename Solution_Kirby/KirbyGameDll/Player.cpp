@@ -118,7 +118,7 @@ void Player::Update()
 		Lerp(cameraRotation.y, targetRotation.y, rotationSmoothFactor),
 		Lerp(cameraRotation.z, targetRotation.z, rotationSmoothFactor));
 
-	D3DXVECTOR3 mouseWorldPos = Mouse::GetInstance()->GetWorldPos(newCamPos, playerPos.z);
+	D3DXVECTOR3 mouseWorldPos = Mouse::GetInstance()->GetWorldPos(&newCamPos, playerPos.z);
 	D3DXVECTOR3 newPlayerPos = {
 		Lerp(playerPos.x, mouseWorldPos.x, smoothFactor),
 		Lerp(playerPos.y, mouseWorldPos.y, smoothFactor),

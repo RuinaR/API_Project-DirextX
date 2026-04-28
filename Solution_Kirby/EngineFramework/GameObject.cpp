@@ -1,9 +1,14 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "DebugWindow.h"
+#include "SceneJsonUtility.h"
 GameObject::GameObject() {
     m_vecComponent = new vector<Component*>();
     m_children = new vector<GameObject*>();
+    m_angleX = 0.0f;
+    m_angleY = 0.0f;
+    m_angleZ = 0.0f;
+    m_box = nullptr;
 }
 
 GameObject::~GameObject() {
@@ -19,7 +24,7 @@ void GameObject::SetPosition(D3DXVECTOR3 v)
 	m_position.x = v.x;
 	m_position.y = v.y;
     m_position.z = v.z;
-    if (m_box != nullptr)
+    if (m_box != nullptr && m_box->GetBody() != nullptr)
         m_box->GetBody()->SetTransform({ m_position.x, m_position.y }, m_box->GetBody()->GetAngle());
     
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
@@ -31,7 +36,7 @@ void GameObject::AddPosition(D3DXVECTOR3 v)
 	m_position.x += v.x;
 	m_position.y += v.y;
     m_position.z += v.z;
-    if (m_box != nullptr)
+    if (m_box != nullptr && m_box->GetBody() != nullptr)
         m_box->GetBody()->SetTransform({ m_position.x, m_position.y }, m_box->GetBody()->GetAngle());
 
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
@@ -71,6 +76,88 @@ void GameObject::SetActive(bool isActive) {
 
 bool GameObject::GetActive() {
 	return m_setActive;
+}
+
+std::string GameObject::Serialize() const
+{
+    return Serialize(-1, -1);
+}
+
+std::string GameObject::Serialize(int objectId, int parentId) const
+{
+    std::ostringstream oss;
+    oss << "{\n";
+    if (objectId >= 0)
+    {
+        oss << "      \"objectId\": " << objectId << ",\n";
+        oss << "      \"parentId\": " << parentId << ",\n";
+    }
+    oss << "      \"tag\": \"" << SceneJson::EscapeString(m_tag) << "\",\n";
+    oss << "      \"active\": " << (m_setActive ? "true" : "false") << ",\n";
+    oss << "      \"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << ", \"z\": " << m_position.z << " },\n";
+    oss << "      \"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << ", \"z\": " << m_size.z << " },\n";
+    oss << "      \"angle\": { \"x\": " << m_angleX << ", \"y\": " << m_angleY << ", \"z\": " << m_angleZ << " },\n";
+    oss << "      \"components\": [";
+
+    bool isFirstComponent = true;
+    if (m_vecComponent != nullptr)
+    {
+        for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        {
+            Component* component = *itr;
+            if (component == nullptr || strlen(component->GetSerializableType()) == 0)
+                continue;
+
+            if (!isFirstComponent)
+            {
+                oss << ",";
+            }
+            oss << "\n";
+            oss << "        { \"type\": \"" << component->GetSerializableType() << "\", \"data\": " << component->Serialize() << " }";
+            isFirstComponent = false;
+        }
+    }
+
+    if (!isFirstComponent)
+    {
+        oss << "\n      ";
+    }
+    oss << "]\n";
+    oss << "    }";
+    return oss.str();
+}
+
+bool GameObject::Deserialize(const std::string& objectJson, GameObjectSerializedData& outData)
+{
+    GameObjectSerializedData data;
+    SceneJson::ReadInt(objectJson, "objectId", data.objectId);
+    SceneJson::ReadInt(objectJson, "parentId", data.parentId);
+    if (!SceneJson::ReadString(objectJson, "tag", data.tag))
+        return false;
+    if (!SceneJson::ReadBool(objectJson, "active", data.active))
+        return false;
+    if (!SceneJson::ReadVector3(objectJson, "position", &data.position))
+		return false;
+    if (!SceneJson::ReadVector3(objectJson, "size", &data.size))
+		return false;
+    if (!SceneJson::ReadVector3(objectJson, "angle", &data.angle))
+		return false;
+
+    outData = data;
+    return true;
+}
+
+GameObject* GameObject::CreateFromSerializedData(const GameObjectSerializedData& data)
+{
+    GameObject* obj = new GameObject();
+    obj->SetTag(data.tag);
+    obj->SetActive(data.active);
+    obj->SetPosition(data.position);
+    obj->Size3D() = data.size;
+    obj->SetAngleX(data.angle.x);
+    obj->SetAngleY(data.angle.y);
+    obj->SetAngleZ(data.angle.z);
+    return obj;
 }
 
 Component* GameObject::AddComponent(Component* component) {
@@ -210,7 +297,7 @@ const float& GameObject::GetAngleY()
 void GameObject::SetAngleZ(float v)
 {
     m_angleZ = v;
-    if (m_box != nullptr)
+    if (m_box != nullptr && m_box->GetBody() != nullptr)
         m_box->GetBody()->SetTransform(m_box->GetBody()->GetPosition(), v);
 
     for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)

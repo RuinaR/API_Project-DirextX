@@ -11,6 +11,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include <map>
 #include <string>
 #include <math.h>
 #include <mmsystem.h>
@@ -163,14 +164,14 @@ struct Model
     }
 };
 
-D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& worldPos);
-D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& screenPos);
+D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3* worldPos);
+D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3* screenPos);
 
-void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT& rect);
+void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT* rect);
 
 wstring ConvertToWideString(const std::string& narrowStr);
 string ConvertToString(const std::wstring& wstr);
 
-void FillRectWithColor(HDC hdc, const RECT& rect, COLORREF color);
+void FillRectWithColor(HDC hdc, const RECT* rect, COLORREF color);
 
 

@@ -210,8 +210,13 @@ void RenderManager::SortUIQueue()
 		});
 }
 
-bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2& point)
+bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2* point)
 {
+	if (!point)
+	{
+		return false;
+	}
+
 	for (vector<UIRenderEntry>::reverse_iterator itr = m_uiRenderVec->rbegin(); itr != m_uiRenderVec->rend(); itr++)
 	{
 		ImageRender* render = itr->render;
@@ -232,8 +237,8 @@ bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2& point)
 		};
 		POINT winPoint =
 		{
-			static_cast<LONG>(point.x),
-			static_cast<LONG>(point.y)
+			static_cast<LONG>(point->x),
+			static_cast<LONG>(point->y)
 		};
 
 		if (PtInRect(&rect, winPoint))
@@ -570,12 +575,17 @@ ImVec2 RenderManager::GetWinPos()
 	return m_winPos;
 }
 
-D3DXVECTOR2 RenderManager::ScreenToUICoordinate(const D3DXVECTOR2& screenPosition)
+D3DXVECTOR2 RenderManager::ScreenToUICoordinate(const D3DXVECTOR2* screenPosition)
 {
+	if (!screenPosition)
+	{
+		return D3DXVECTOR2(0.0f, 0.0f);
+	}
+
 	D3DXVECTOR2 uiPosition =
 	{
-		screenPosition.x - m_gameViewPos.x,
-		screenPosition.y - m_gameViewPos.y
+		screenPosition->x - m_gameViewPos.x,
+		screenPosition->y - m_gameViewPos.y
 	};
 
 	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)

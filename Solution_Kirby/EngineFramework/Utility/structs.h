@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include <Windows.h>
 #include <d3dx9.h>
 
@@ -13,6 +14,7 @@ struct Vector2D
 struct Animation
 {
 	vector<IDirect3DTexture9*> textures;
-	float time;
-	int identity;
+	float time = 0.0f;
+	int identity = 0;
+	std::string sourcePath;
 };

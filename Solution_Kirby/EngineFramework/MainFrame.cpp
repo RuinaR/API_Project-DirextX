@@ -85,7 +85,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 
     m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-    // Turn off D3D lighting, since we are providing our own vertex colors
+    // 정점 색상을 직접 사용하므로 Direct3D 조명은 끈다.
     m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
     m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
     m_pd3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
@@ -133,12 +133,12 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     m_scene = scene;
     WindowFrame::GetInstance()->SetScene(m_scene);
 
-    //set
+    // ImGui 컨텍스트와 입력 옵션을 설정한다.
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); 
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // 키보드 조작 활성화
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // 게임패드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigWindowsResizeFromEdges = false;

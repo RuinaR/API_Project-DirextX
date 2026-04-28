@@ -84,10 +84,15 @@ D3DXVECTOR2 Mouse::GetGameViewPos()
 	return localPos;
 }
 
-D3DXVECTOR3 Mouse::GetWorldPos(const D3DXVECTOR2& cameraPos, float z)
+D3DXVECTOR3 Mouse::GetWorldPos(const D3DXVECTOR2* cameraPos, float z)
 {
+	if (!cameraPos)
+	{
+		return D3DXVECTOR3(0.0f, 0.0f, z);
+	}
+
 	D3DXVECTOR2 dxPos = GetDXPos();
-	return D3DXVECTOR3(dxPos.x + cameraPos.x, dxPos.y + cameraPos.y, z);
+	return D3DXVECTOR3(dxPos.x + cameraPos->x, dxPos.y + cameraPos->y, z);
 }
 
 void Mouse::SetLeftBtn(bool isDown)

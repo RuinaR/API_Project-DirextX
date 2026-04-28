@@ -37,8 +37,8 @@ private:
 	void RefreshTileButton(int i, int j);
 	void SetTile(int i, int j);
 	void SelectTileType(int tileType);
-	UIButton* CreateUIButton(const D3DXVECTOR2& position, const D3DXVECTOR2& size, int orderInLayer);
-	UILabel* CreateUILabel(const D3DXVECTOR2& position, const D3DXVECTOR2& size, const wchar_t* text, int orderInLayer);
+	UIButton* CreateUIButton(const D3DXVECTOR2* position, const D3DXVECTOR2* size, int orderInLayer);
+	UILabel* CreateUILabel(const D3DXVECTOR2* position, const D3DXVECTOR2* size, const wchar_t* text, int orderInLayer);
 	D3DCOLOR GetTileColor(MapType type);
 public:
 	void Initialize() override;

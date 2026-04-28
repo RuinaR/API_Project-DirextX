@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Scene.h"
+#include "SceneDataManager.h"
 
 WindowFrame* WindowFrame::m_Pthis = nullptr;
 
@@ -30,7 +31,7 @@ void WindowFrame::Destroy()
 	}
 }
 
-// Forward declare message handler from imgui_impl_win32.cpp
+// imgui_impl_win32.cpp에 구현된 메시지 처리 함수를 미리 선언한다.
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
@@ -99,11 +100,39 @@ void WindowFrame::SetScene(Scene* scene)
 	}
 	m_scene = scene;
 	m_scene->Init();
+	const std::string sceneName = m_scene->GetSceneName();
+	const bool useSceneData = m_scene->ShouldUseSceneData();
+	const bool sceneDataExists = useSceneData && SceneDataManager::Exists(sceneName);
+	bool sceneDataLoaded = false;
+	if (sceneDataExists)
+	{
+		sceneDataLoaded = SceneDataManager::LoadSceneData(sceneName);
+		if (sceneDataLoaded)
+		{
+			std::cout << "SceneData loaded: " << sceneName << std::endl;
+		}
+		else
+		{
+			std::cout << "SceneData load fallback: " << sceneName << std::endl;
+		}
+	}
+
+	if (!sceneDataLoaded)
+	{
+		m_scene->BuildInitialSceneObjects();
+	}
+	ObjectManager::GetInstance()->FlushPendingObjects();
 	m_scene->Start();
+
+	if (m_type == RenderType::Edit && m_scene->ShouldSaveInitialSceneData())
+	{
+		SceneDataManager::CaptureSceneSnapshot(sceneName);
+	}
 }
 
 void WindowFrame::Initialize(RenderType type)
 {
+	m_type = type;
 	BuildWindow();
 	if(type == RenderType::Game)
 		MoveWindow(m_Pthis->m_hWnd, 100, 100, DRAWWINDOWW, DRAWWINDOWH, TRUE);

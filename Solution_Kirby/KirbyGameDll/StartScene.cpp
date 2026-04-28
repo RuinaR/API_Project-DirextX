@@ -5,19 +5,34 @@
 #include "FBXRotateObj.h"
 #include "UIButton.h"
 #include "UILabel.h"
+#include "UIActionRegistry.h"
 
 void StartScene::Init()
 {
+	Camera::GetInstance()->SetPos(0.0f, 0.0f);
 	SceneChanger::Create();
+	UIActionRegistry::RegisterAction("ChangeGameScene", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
+	UIActionRegistry::RegisterAction("ChangeEditScene", bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
 	m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
 }
 
 void StartScene::Release()
 {
+	UIActionRegistry::UnregisterAction("ChangeGameScene");
+	UIActionRegistry::UnregisterAction("ChangeEditScene");
 	SceneChanger::Destroy();
 }
 
 void StartScene::Start()
+{
+}
+
+const char* StartScene::GetSceneName() const
+{
+	return "StartScene";
+}
+
+void StartScene::BuildInitialSceneObjects()
 {
 	Camera::GetInstance()->SetPos(0.0f, 0.0f);
 
@@ -25,19 +40,24 @@ void StartScene::Start()
 	UIButton* gameButton = new UIButton();
 	gameButtonObj->AddComponent(gameButton);
 	gameButtonObj->InitializeSet();
-	gameButton->SetPosition(D3DXVECTOR2(40.0f, 40.0f));
-	gameButton->SetSize(D3DXVECTOR2(220.0f, 90.0f));
+	D3DXVECTOR2 gameButtonPosition(40.0f, 40.0f);
+	D3DXVECTOR2 gameButtonSize(220.0f, 90.0f);
+	gameButton->SetPosition(&gameButtonPosition);
+	gameButton->SetSize(&gameButtonSize);
 	gameButton->SetUseTexture(false);
 	gameButton->SetStateColors(D3DCOLOR_ARGB(255, 245, 245, 245), D3DCOLOR_ARGB(255, 215, 235, 255), D3DCOLOR_ARGB(255, 180, 205, 230));
 	gameButton->SetOrderInLayer(10);
+	gameButton->SetActionKey("ChangeGameScene");
 	gameButton->SetOnClick(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 
 	GameObject* gameLabelObj = new GameObject();
 	UILabel* gameLabel = new UILabel();
 	gameLabelObj->AddComponent(gameLabel);
 	gameLabelObj->InitializeSet();
-	gameLabel->SetPosition(D3DXVECTOR2(68.0f, 72.0f));
-	gameLabel->SetSize(D3DXVECTOR2(180.0f, 34.0f));
+	D3DXVECTOR2 gameLabelPosition(68.0f, 72.0f);
+	D3DXVECTOR2 gameLabelSize(180.0f, 34.0f);
+	gameLabel->SetPosition(&gameLabelPosition);
+	gameLabel->SetSize(&gameLabelSize);
 	gameLabel->SetText(L"GameScene Load");
 	gameLabel->SetColor(D3DCOLOR_ARGB(255, 40, 40, 40));
 	gameLabel->SetFontSize(22);
@@ -47,25 +67,30 @@ void StartScene::Start()
 	UIButton* editButton = new UIButton();
 	editButtonObj->AddComponent(editButton);
 	editButtonObj->InitializeSet();
-	editButton->SetPosition(D3DXVECTOR2(300.0f, 40.0f));
-	editButton->SetSize(D3DXVECTOR2(220.0f, 90.0f));
+	D3DXVECTOR2 editButtonPosition(300.0f, 40.0f);
+	D3DXVECTOR2 editButtonSize(220.0f, 90.0f);
+	editButton->SetPosition(&editButtonPosition);
+	editButton->SetSize(&editButtonSize);
 	editButton->SetUseTexture(false);
 	editButton->SetStateColors(D3DCOLOR_ARGB(255, 245, 245, 245), D3DCOLOR_ARGB(255, 225, 240, 220), D3DCOLOR_ARGB(255, 190, 215, 185));
 	editButton->SetOrderInLayer(10);
+	editButton->SetActionKey("ChangeEditScene");
 	editButton->SetOnClick(bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
 
 	GameObject* editLabelObj = new GameObject();
 	UILabel* editLabel = new UILabel();
 	editLabelObj->AddComponent(editLabel);
 	editLabelObj->InitializeSet();
-	editLabel->SetPosition(D3DXVECTOR2(338.0f, 72.0f));
-	editLabel->SetSize(D3DXVECTOR2(170.0f, 34.0f));
+	D3DXVECTOR2 editLabelPosition(338.0f, 72.0f);
+	D3DXVECTOR2 editLabelSize(170.0f, 34.0f);
+	editLabel->SetPosition(&editLabelPosition);
+	editLabel->SetSize(&editLabelSize);
 	editLabel->SetText(L"EditScene Load");
 	editLabel->SetColor(D3DCOLOR_ARGB(255, 40, 40, 40));
 	editLabel->SetFontSize(22);
 	editLabel->SetOrderInLayer(20);
 
-	//FBX TEST
+	// FBX 테스트용 오브젝트
 
 	GameObject* fbxSample1 = new GameObject();
 	FBXRender* fbxRender1 = new FBXRender("fbxSample1");

@@ -21,3 +21,13 @@ BoxCollider::BoxCollider(b2BodyType type) :Collider(type)
 BoxCollider::~BoxCollider()
 {
 }
+
+const char* BoxCollider::GetInspectorName() const
+{
+	return "BoxCollider";
+}
+
+const char* BoxCollider::GetSerializableType() const
+{
+	return "BoxCollider";
+}

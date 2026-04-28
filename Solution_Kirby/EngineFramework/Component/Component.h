@@ -30,5 +30,9 @@ public:
 	virtual void OnRBtnDown();
 	virtual void OnRBtnUp();
 	virtual void OnMouseHover();
+	virtual const char* GetInspectorName() const;
+	virtual void DrawInspector();
+	virtual const char* GetSerializableType() const;
+	virtual std::string Serialize() const;
+	virtual bool Deserialize(const std::string& componentJson);
 };
-

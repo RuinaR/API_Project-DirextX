@@ -66,6 +66,7 @@ public:
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();
 	b2World* GetBox2dWorld();
+	RenderType GetRenderType() const { return m_type; }
 	void ProcessMouseInput();
 
 	void AddBtnEvent(std::function<void()> p_event);

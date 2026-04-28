@@ -16,6 +16,7 @@ private:
 	bool m_useTexture = true;
 	int m_orderInLayer = 0;
 	D3DCOLOR m_color = 0xffffffff;
+	std::string m_texturePath;
 	
 
 	void SetupVertices();
@@ -42,7 +43,13 @@ public:
 	void Initialize() override;
 	void Release() override;
 	void ChangeTexture(IDirect3DTexture9* texture);
+	void SetTexturePath(const std::string& path);
+	const std::string& GetTexturePath() const;
 	void Start() override;
 	void Update() override;
+	const char* GetInspectorName() const override;
+	void DrawInspector() override;
+	const char* GetSerializableType() const override;
+	std::string Serialize() const override;
+	bool Deserialize(const std::string& componentJson) override;
 };
-

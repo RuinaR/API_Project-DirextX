@@ -2,25 +2,25 @@
 <Project>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(KirbySolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(KirbySolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
 
   <Target Name="CopyKirbyRuntimeAssets" AfterTargets="Build" Condition="'$(ConfigurationType)' == 'Application'">
     <ItemGroup>
-      <KirbyRuntimeAsset Include="$(SolutionDir)Debug\Bitmaps\**\*.*">
+      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Debug\Bitmaps\**\*.*">
         <RuntimeSubDir>Bitmaps\%(RecursiveDir)</RuntimeSubDir>
       </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(SolutionDir)Debug\Map\**\*.*">
+      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Debug\Map\**\*.*">
         <RuntimeSubDir>Map\%(RecursiveDir)</RuntimeSubDir>
       </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(SolutionDir)Debug\FBX\**\*.*">
+      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Debug\FBX\**\*.*">
         <RuntimeSubDir>FBX\%(RecursiveDir)</RuntimeSubDir>
       </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(SolutionDir)Lib\libfbxsdk.dll" Condition="Exists('$(SolutionDir)Lib\libfbxsdk.dll')">
+      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="Exists('$(KirbySolutionDir)Lib\libfbxsdk.dll')">
         <RuntimeSubDir></RuntimeSubDir>
       </KirbyRuntimeAsset>
     </ItemGroup>

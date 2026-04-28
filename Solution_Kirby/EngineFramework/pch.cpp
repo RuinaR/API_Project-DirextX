@@ -1,7 +1,12 @@
 ﻿#include "pch.h"
 
-D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& worldPos)
+D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3* worldPos)
 {
+    if (!pd3dDevice || !worldPos)
+    {
+        return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
+
     D3DXMATRIX matView, matProj;
     D3DVIEWPORT9 viewport;
 
@@ -16,13 +21,18 @@ D3DXVECTOR3 WorldToScreen(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& world
     D3DXVECTOR3 screenPos;
 
     // 월드 좌표를 스크린 좌표로 변환
-    D3DXVec3Project(&screenPos, &worldPos, &viewport, &matProj, &matView, NULL);
+    D3DXVec3Project(&screenPos, worldPos, &viewport, &matProj, &matView, NULL);
 
     return screenPos;
 }
 
-D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& screenPos)
+D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3* screenPos)
 {
+    if (!pd3dDevice || !screenPos)
+    {
+        return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
+
     D3DXMATRIX matView, matProj, matWorld;
     D3DVIEWPORT9 viewport;
 
@@ -41,9 +51,9 @@ D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& scree
 
     // 스크린 좌표를 NDC 좌표로 변환합니다.
     D3DXVECTOR3 ndcPos;
-    ndcPos.x = ((2.0f * screenPos.x) / viewport.Width) - 1.0f;
-    ndcPos.y = 1.0f - ((2.0f * screenPos.y) / viewport.Height);
-    ndcPos.z = screenPos.z;
+    ndcPos.x = ((2.0f * screenPos->x) / viewport.Width) - 1.0f;
+    ndcPos.y = 1.0f - ((2.0f * screenPos->y) / viewport.Height);
+    ndcPos.z = screenPos->z;
 
     // NDC 좌표를 월드 좌표로 변환
     D3DXVec3TransformCoord(&ndcPos, &ndcPos, &matProjInv);
@@ -52,12 +62,12 @@ D3DXVECTOR3 ScreenToWorld(LPDIRECT3DDEVICE9 pd3dDevice, const D3DXVECTOR3& scree
     return ndcPos;
 }
 
-void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT& rect)
+void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT* rect)
 {
-    if (hdc != NULL)
+    if (hdc != NULL && rect != nullptr)
     {
         // 사각형 내부에 텍스트 출력
-        DrawTextW(hdc, text.c_str(), -1, (LPRECT)&rect, DT_CENTER | DT_WORDBREAK | DT_VCENTER);
+        DrawTextW(hdc, text.c_str(), -1, (LPRECT)rect, DT_CENTER | DT_WORDBREAK | DT_VCENTER);
     }
 }
 
@@ -70,19 +80,27 @@ wstring ConvertToWideString(const std::string& narrowStr)
 string ConvertToString(const std::wstring& wstr)
 {
     int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-    std::string str(len, 0);
-    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], len, nullptr, nullptr);
+    if (len <= 0)
+    {
+        return std::string();
+    }
+
+    std::string str(static_cast<size_t>(len - 1), 0);
+    if (!str.empty())
+    {
+        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.length()), &str[0], len - 1, nullptr, nullptr);
+    }
     return str;
 }
 
-void FillRectWithColor(HDC hdc, const RECT& rect, COLORREF color)
+void FillRectWithColor(HDC hdc, const RECT* rect, COLORREF color)
 {
-    if (hdc != NULL)
+    if (hdc != NULL && rect != nullptr)
     {
         HBRUSH hBrush = CreateSolidBrush(color);
         if (hBrush != NULL)
         {
-            FillRect(hdc, &rect, hBrush);
+            FillRect(hdc, rect, hBrush);
             DeleteObject(hBrush);
         }
     }

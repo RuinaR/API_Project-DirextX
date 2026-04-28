@@ -2,6 +2,15 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "DebugWindow.h"
+#include "SceneJsonUtility.h"
+#include "ImageRender.h"
+#include "AnimationRender.h"
+#include "FBXRender.h"
+#include "BoxCollider.h"
+#include "UIImage.h"
+#include "UIButton.h"
+#include "UILabel.h"
+#include "SceneDataManager.h"
 ObjectManager* ObjectManager::m_Pthis = nullptr;
 
 bool ObjectManager::IsInObjectList(GameObject* obj)
@@ -86,9 +95,39 @@ void ObjectManager::ProcessChildNode(GameObject* obj, int depth)
 
 void ObjectManager::ImguiUpdate()
 {
+	DrawHierarchy();
+
+	if (m_selected != nullptr && !m_selected->GetDestroy())
+	{
+		DrawGameObjectInspector(m_selected);
+	}
+}
+
+void ObjectManager::DrawHierarchy()
+{
 	char str[64];
 
 	ImGui::Begin("Hierarchy");
+	if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
+	{
+		const char* sceneName = WindowFrame::GetInstance()->GetCurrentSceneName();
+		const std::string sceneNameString = sceneName != nullptr ? sceneName : "";
+		const bool isDirty = !sceneNameString.empty() && SceneDataManager::IsSceneDirty(sceneNameString);
+		ImGui::Text("Scene: %s", sceneName != nullptr ? sceneName : "");
+		ImGui::SameLine();
+		ImGui::TextColored(isDirty ? ImVec4(1.0f, 0.75f, 0.15f, 1.0f) : ImVec4(0.35f, 1.0f, 0.35f, 1.0f), isDirty ? "Dirty" : "Saved");
+
+		if (ImGui::Button("Save Scene"))
+		{
+			if (sceneName != nullptr && strlen(sceneName) > 0)
+			{
+				const bool saved = SceneDataManager::SaveCurrentSceneData(sceneNameString);
+				std::cout << (saved ? "Save Scene succeeded: " : "Save Scene failed: ") << sceneName << std::endl;
+			}
+		}
+		ImGui::Separator();
+	}
+
 	int i = 0;
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 	{
@@ -106,21 +145,76 @@ void ObjectManager::ImguiUpdate()
 		ProcessChildNode((*itr), 1);
 	}
 	ImGui::End();
+}
 
-	if (m_selected != nullptr && !m_selected->GetDestroy())
+void ObjectManager::DrawGameObjectInspector(GameObject* obj)
+{
+	if (obj == nullptr)
+		return;
+
+	ImGui::Begin("Inspector");
+
+	char tagBuffer[128] = {};
+	strcpy_s(tagBuffer, obj->GetTag().c_str());
+	if (ImGui::InputText("Tag", tagBuffer, IM_ARRAYSIZE(tagBuffer)))
 	{
-		ImGui::Begin("Inspector");
-
-		sprintf_s(str, 64, "X:%.2f, Y:%.2f, Z:%.2f", m_selected->Position().x, m_selected->Position().y, m_selected->Position().z);
-		ImGui::Text(str);
-		for (vector<Component*>::iterator itr = m_selected->GetComponentVec()->begin(); itr != m_selected->GetComponentVec()->end(); itr++)
-		{
-			const type_info& typeInfo = typeid(**itr);
-			ImGui::Text(typeInfo.name());
-		}
-
-		ImGui::End();
+		obj->SetTag(tagBuffer);
 	}
+
+	bool active = obj->GetActive();
+	if (ImGui::Checkbox("Active", &active))
+	{
+		obj->SetActive(active);
+	}
+
+	D3DXVECTOR3 position = obj->Position();
+	if (ImGui::DragFloat3("Position", &position.x, 1.0f))
+	{
+		obj->SetPosition(position);
+	}
+
+	D3DXVECTOR3 size = obj->Size3D();
+	if (ImGui::DragFloat3("Size", &size.x, 1.0f, 0.0f, 10000.0f))
+	{
+		// TODO: Collider/Box2D body size is not automatically rebuilt when Size3D changes.
+		obj->Size3D() = size;
+	}
+
+	D3DXVECTOR3 angle = { obj->GetAngleX(), obj->GetAngleY(), obj->GetAngleZ() };
+	if (ImGui::DragFloat3("Angle", &angle.x, 0.1f))
+	{
+		obj->SetAngleX(angle.x);
+		obj->SetAngleY(angle.y);
+		obj->SetAngleZ(angle.z);
+	}
+
+	ImGui::Separator();
+	ImGui::Text("Components");
+
+	vector<Component*>* components = obj->GetComponentVec();
+	if (components != nullptr)
+	{
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
+		{
+			DrawComponentInspector(*itr);
+		}
+	}
+
+	ImGui::End();
+}
+
+void ObjectManager::DrawComponentInspector(Component* component)
+{
+	if (component == nullptr)
+		return;
+
+	ImGui::PushID(component);
+	if (ImGui::TreeNodeEx(component->GetInspectorName(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		component->DrawInspector();
+		ImGui::TreePop();
+	}
+	ImGui::PopID();
 }
 
 void ObjectManager::Create()
@@ -360,6 +454,193 @@ int ObjectManager::Count()
 list<GameObject*>* ObjectManager::GetObjList()
 {
 	return m_objList;
+}
+
+std::string ObjectManager::SerializeObjects()
+{
+	std::ostringstream oss;
+	oss << "[\n";
+
+	std::map<GameObject*, int> objectIds;
+	int nextObjectId = 1;
+	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	{
+		GameObject* obj = *itr;
+		if (obj == nullptr || obj->GetDestroy())
+			continue;
+		if (obj->GetTag() == "SceneChanger")
+			continue;
+
+		objectIds[obj] = nextObjectId;
+		nextObjectId++;
+	}
+
+	bool isFirst = true;
+	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	{
+		GameObject* obj = *itr;
+		if (obj == nullptr || obj->GetDestroy())
+			continue;
+		if (obj->GetTag() == "SceneChanger")
+			continue;
+
+		if (!isFirst)
+		{
+			oss << ",\n";
+		}
+		int parentId = -1;
+		std::map<GameObject*, int>::iterator parentItr = objectIds.find(obj->GetParent());
+		if (parentItr != objectIds.end())
+		{
+			parentId = parentItr->second;
+		}
+
+		oss << "    " << obj->Serialize(objectIds[obj], parentId);
+		isFirst = false;
+	}
+
+	oss << "\n  ]";
+	return oss.str();
+}
+
+static Component* CreateSerializableComponent(const std::string& type, const std::string& dataJson)
+{
+	if (type == "ImageRender")
+		return new ImageRender(nullptr);
+	if (type == "AnimationRender")
+		return new AnimationRender(Animation());
+	if (type == "FBXRender")
+	{
+		std::string fbxPath;
+		SceneJson::ReadString(dataJson, "fbxPath", fbxPath);
+		return new FBXRender(fbxPath);
+	}
+	if (type == "BoxCollider")
+		return new BoxCollider(b2_staticBody);
+	if (type == "UIImage")
+		return new UIImage();
+	if (type == "UIButton")
+		return new UIButton();
+	if (type == "UILabel")
+		return new UILabel();
+
+	std::cout << "SceneData unknown component type: " << type << std::endl;
+	return nullptr;
+}
+
+static bool DeserializeComponents(GameObject* obj, const std::string& objectJson)
+{
+	std::string componentsArray;
+	if (!SceneJson::ExtractArray(objectJson, "components", componentsArray))
+	{
+		return true;
+	}
+
+	vector<std::string> componentJsonList;
+	if (!SceneJson::ExtractObjectsFromArray(componentsArray, componentJsonList))
+	{
+		std::cout << "SceneData load failed: invalid components array." << std::endl;
+		return false;
+	}
+
+	for (vector<std::string>::iterator itr = componentJsonList.begin(); itr != componentJsonList.end(); itr++)
+	{
+		std::string type;
+		std::string dataJson;
+		if (!SceneJson::ReadString(*itr, "type", type) || !SceneJson::ExtractObject(*itr, "data", dataJson))
+		{
+			std::cout << "SceneData load failed: invalid component data." << std::endl;
+			return false;
+		}
+
+		Component* component = CreateSerializableComponent(type, dataJson);
+		if (component == nullptr)
+		{
+			continue;
+		}
+
+		obj->AddComponent(component);
+		if (!component->Deserialize(dataJson))
+		{
+			std::cout << "SceneData load failed: component deserialize failed: " << type << std::endl;
+			return false;
+		}
+	}
+	return true;
+}
+
+bool ObjectManager::DeserializeObjects(const std::string& sceneJson)
+{
+	std::string objectsArray;
+	if (!SceneJson::ExtractArray(sceneJson, "objects", objectsArray))
+	{
+		std::cout << "SceneData load failed: objects array not found." << std::endl;
+		return false;
+	}
+
+	vector<std::string> objectJsonList;
+	if (!SceneJson::ExtractObjectsFromArray(objectsArray, objectJsonList))
+	{
+		std::cout << "SceneData load failed: invalid objects array." << std::endl;
+		return false;
+	}
+
+	vector<GameObjectSerializedData> objectDataList;
+	for (vector<std::string>::iterator itr = objectJsonList.begin(); itr != objectJsonList.end(); itr++)
+	{
+		GameObjectSerializedData data;
+		if (!GameObject::Deserialize(*itr, data))
+		{
+			std::cout << "SceneData load failed: invalid GameObject data." << std::endl;
+			return false;
+		}
+		objectDataList.push_back(data);
+	}
+
+	vector<GameObject*> createdObjects;
+	std::map<int, GameObject*> objectMap;
+	for (size_t i = 0; i < objectDataList.size(); i++)
+	{
+		GameObject* obj = GameObject::CreateFromSerializedData(objectDataList[i]);
+		if (!DeserializeComponents(obj, objectJsonList[i]))
+		{
+			obj->Release();
+			delete obj;
+			for (vector<GameObject*>::iterator cleanupItr = createdObjects.begin(); cleanupItr != createdObjects.end(); cleanupItr++)
+			{
+				(*cleanupItr)->Release();
+				delete (*cleanupItr);
+			}
+			return false;
+		}
+
+		if (objectDataList[i].objectId >= 0)
+		{
+			objectMap[objectDataList[i].objectId] = obj;
+		}
+		createdObjects.push_back(obj);
+	}
+
+	for (size_t i = 0; i < objectDataList.size(); i++)
+	{
+		if (objectDataList[i].parentId < 0)
+			continue;
+
+		std::map<int, GameObject*>::iterator parentItr = objectMap.find(objectDataList[i].parentId);
+		if (parentItr == objectMap.end())
+		{
+			std::cout << "SceneData parent not found. Object is loaded as root: " << objectDataList[i].tag << std::endl;
+			continue;
+		}
+
+		createdObjects[i]->SetParent(parentItr->second);
+	}
+
+	for (vector<GameObject*>::iterator itr = createdObjects.begin(); itr != createdObjects.end(); itr++)
+	{
+		(*itr)->InitializeSet();
+	}
+	return true;
 }
 
 void ObjectManager::OnLBtnDown()

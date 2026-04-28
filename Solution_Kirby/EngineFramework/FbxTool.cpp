@@ -223,7 +223,11 @@ bool FbxTool::Initialize() {
     return true;
 }
 
-bool FbxTool::Load(const char* fileName, std::vector<Model>& outModels) {
+bool FbxTool::Load(const char* fileName, std::vector<Model>* outModels) {
+    if (!outModels) {
+        return false;
+    }
+
     if (!m_sdkManager || !m_scene) {
         std::cerr << "Error: FBX SDK not initialized!" << std::endl;
         return false;
@@ -258,15 +262,20 @@ bool FbxTool::Load(const char* fileName, std::vector<Model>& outModels) {
 }
 
 
-void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
+void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>* outModels)
 {
+    if (!node || !outModels)
+    {
+        return;
+    }
+
     // 노드가 메쉬 속성을 가지고 있는지 확인
     if (node->GetNodeAttribute() &&
         node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh) {
 
         Model model;
         converter->Triangulate(node->GetNodeAttribute(), true);
-        ProcessMesh(node->GetMesh(), model);
+        ProcessMesh(node->GetMesh(), &model);
 
         // 글로벌 변환 적용
         ApplyGlobalTransform(node, model.vertices);
@@ -276,7 +285,7 @@ void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
 
         for (auto& subMesh : model.subMeshes) {
             if (subMesh.materialIndex < static_cast<unsigned int>(materialCount)) {
-                LoadMaterial(node->GetMaterial(subMesh.materialIndex), subMesh);
+                LoadMaterial(node->GetMaterial(subMesh.materialIndex), &subMesh);
             }
             else {
                 std::cerr << "Warning: Material index " << subMesh.materialIndex << " exceeds material count." << std::endl;
@@ -285,7 +294,7 @@ void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
 
         // 모델이 유효할 경우에만 추가
         if (model.vertexCount > 0 && model.indexCount > 0) {
-            outModels.push_back(std::move(model));
+            outModels->push_back(std::move(model));
         }
         else {
             std::cerr << "Warning: Model has no vertices or indices." << std::endl;
@@ -299,7 +308,12 @@ void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
 }
 
 
-void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
+void FbxTool::ProcessMesh(FbxMesh* mesh, Model* model) {
+    if (!mesh || !model)
+    {
+        return;
+    }
+
     std::vector<CUSTOMVERTEX> vertices;
     std::vector<unsigned int> indices;
     std::map<int, std::vector<unsigned int>> materialIndices;
@@ -395,54 +409,68 @@ void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
         subMesh.uvOffsetV = 0.0f;
 
         indices.insert(indices.end(), pair.second.begin(), pair.second.end());
-        model.subMeshes.push_back(subMesh);
+        model->subMeshes.push_back(subMesh);
     }
 
     // 모델에 최종 정점 및 인덱스 정보 저장
-    model.vertices = std::move(vertices);
-    model.indices = std::move(indices);
-    model.vertexCount = static_cast<unsigned int>(model.vertices.size());
-    model.indexCount = static_cast<unsigned int>(model.indices.size());
+    model->vertices = std::move(vertices);
+    model->indices = std::move(indices);
+    model->vertexCount = static_cast<unsigned int>(model->vertices.size());
+    model->indexCount = static_cast<unsigned int>(model->indices.size());
 }
 
 
 
-void FbxTool::CreateVertexBuffer(Model& model)
+void FbxTool::CreateVertexBuffer(Model* model)
 {
+    if (!model)
+    {
+        return;
+    }
+
     MainFrame::GetInstance()->GetDevice()->CreateVertexBuffer(
-        model.vertexCount * sizeof(CUSTOMVERTEX),
+        model->vertexCount * sizeof(CUSTOMVERTEX),
         0,
         D3DFVF_CUSTOMVERTEX,
         D3DPOOL_MANAGED,
-        &model.vertexBuffer,
+        &model->vertexBuffer,
         nullptr
     );
 
     void* pVertices;
-    model.vertexBuffer->Lock(0, model.vertexCount * sizeof(CUSTOMVERTEX), (void**)&pVertices, 0);
-    memcpy(pVertices, model.vertices.data(), model.vertexCount * sizeof(CUSTOMVERTEX));
-    model.vertexBuffer->Unlock();
+    model->vertexBuffer->Lock(0, model->vertexCount * sizeof(CUSTOMVERTEX), (void**)&pVertices, 0);
+    memcpy(pVertices, model->vertices.data(), model->vertexCount * sizeof(CUSTOMVERTEX));
+    model->vertexBuffer->Unlock();
 }
 
-void FbxTool::CreateIndexBuffer(Model& model)
+void FbxTool::CreateIndexBuffer(Model* model)
 {
+    if (!model)
+    {
+        return;
+    }
+
     MainFrame::GetInstance()->GetDevice()->CreateIndexBuffer(
-        model.indexCount * sizeof(unsigned int),
+        model->indexCount * sizeof(unsigned int),
         0,
         D3DFMT_INDEX32,
         D3DPOOL_MANAGED,
-        &model.indexBuffer,
+        &model->indexBuffer,
         nullptr
     );
 
     void* pIndices;
-    model.indexBuffer->Lock(0, model.indexCount * sizeof(unsigned int), (void**)&pIndices, 0);
-    memcpy(pIndices, model.indices.data(), model.indexCount * sizeof(unsigned int));
-    model.indexBuffer->Unlock();
+    model->indexBuffer->Lock(0, model->indexCount * sizeof(unsigned int), (void**)&pIndices, 0);
+    memcpy(pIndices, model->indices.data(), model->indexCount * sizeof(unsigned int));
+    model->indexBuffer->Unlock();
 }
 
 
-void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
+void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh* subMesh) {
+    if (!subMesh) {
+        return;
+    }
+
     if (!material) {
         std::cerr << "Error: Material is null!" << std::endl;
         return; // 유효하지 않은 재질 처리
@@ -451,7 +479,7 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
     FbxProperty diffuseProp = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
     if (diffuseProp.IsValid()) {
         FbxDouble3 color = diffuseProp.Get<FbxDouble3>();
-        subMesh.diffuseColor = D3DCOLOR_COLORVALUE(
+        subMesh->diffuseColor = D3DCOLOR_COLORVALUE(
             static_cast<float>(color[0]),
             static_cast<float>(color[1]),
             static_cast<float>(color[2]),
@@ -471,7 +499,7 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
             // 이미 로드된 텍스처가 있는지 확인
             auto it = textureCache.find(texturePath);
             if (it != textureCache.end()) {
-                subMesh.textures.push_back(it->second);
+                subMesh->textures.push_back(it->second);
                 std::cout << "Using cached texture: " << texturePath << std::endl;
                 continue; // 캐시된 텍스처 사용
             }
@@ -481,7 +509,7 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
             d3dTexture = TextureManager::GetInstance()->GetTexture(texturePath.c_str());
 
             if (d3dTexture) {
-                subMesh.textures.push_back(d3dTexture);
+                subMesh->textures.push_back(d3dTexture);
                 textureCache[texturePath] = d3dTexture; // 텍스처 캐시에 추가
                 std::cout << "Loaded texture: " << texturePath << std::endl;
             }

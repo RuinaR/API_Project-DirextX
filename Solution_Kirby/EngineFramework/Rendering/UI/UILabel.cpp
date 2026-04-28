@@ -2,6 +2,7 @@
 #include "UILabel.h"
 #include "RenderManager.h"
 #include "MainFrame.h"
+#include "SceneJsonUtility.h"
 
 void UILabel::Initialize()
 {
@@ -129,4 +130,71 @@ void UILabel::RecreateFont()
 	D3DXCreateFontW(device, fontHeight, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
 		L"Malgun Gothic", &m_font);
+}
+
+const char* UILabel::GetInspectorName() const
+{
+	return "UILabel";
+}
+
+void UILabel::DrawInspector()
+{
+	UIElement::DrawInspector();
+	std::string text = ConvertToString(m_text);
+	ImGui::Text("Text: %s", text.c_str());
+	ImGui::Text("Font Size: %d", m_fontSize);
+	ImGui::Text("Scale: %.2f", m_scale);
+	ImGui::Text("Font: %s", m_font ? "Created" : "None");
+
+	float color[4] =
+	{
+		static_cast<float>((m_color >> 16) & 0xff) / 255.0f,
+		static_cast<float>((m_color >> 8) & 0xff) / 255.0f,
+		static_cast<float>(m_color & 0xff) / 255.0f,
+		static_cast<float>((m_color >> 24) & 0xff) / 255.0f
+	};
+	ImGui::ColorButton("Color", ImVec4(color[0], color[1], color[2], color[3]));
+}
+
+const char* UILabel::GetSerializableType() const
+{
+	return "UILabel";
+}
+
+std::string UILabel::Serialize() const
+{
+	std::ostringstream oss;
+	oss << "{ ";
+	oss << "\"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << " }, ";
+	oss << "\"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << " }, ";
+	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
+	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
+	oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
+	oss << "\"text\": \"" << SceneJson::EscapeString(ConvertToString(m_text)) << "\", ";
+	oss << "\"color\": " << static_cast<DWORD>(m_color) << ", ";
+	oss << "\"fontSize\": " << m_fontSize << ", ";
+	oss << "\"scale\": " << m_scale;
+	oss << " }";
+	return oss.str();
+}
+
+bool UILabel::Deserialize(const std::string& componentJson)
+{
+	UIElement::Deserialize(componentJson);
+
+	std::string text;
+	DWORD color = static_cast<DWORD>(m_color);
+	int fontSize = m_fontSize;
+	float scale = m_scale;
+
+	SceneJson::ReadString(componentJson, "text", text);
+	SceneJson::ReadDword(componentJson, "color", color);
+	SceneJson::ReadInt(componentJson, "fontSize", fontSize);
+	SceneJson::ReadFloat(componentJson, "scale", scale);
+
+	SetText(ConvertToWideString(text));
+	SetColor(static_cast<D3DCOLOR>(color));
+	SetFontSize(fontSize);
+	SetScale(scale);
+	return true;
 }

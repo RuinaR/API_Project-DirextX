@@ -30,6 +30,8 @@ public:
 
 	// DebugRender을(를) 통해 상속됨
 	virtual void DebugRenderUpdate() override;
+	const char* GetInspectorName() const override;
+	void DrawInspector() override;
+	std::string Serialize() const override;
+	bool Deserialize(const std::string& componentJson) override;
 };
-
-

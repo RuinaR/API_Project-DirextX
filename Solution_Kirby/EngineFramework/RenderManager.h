@@ -54,7 +54,7 @@ public:
 	void RegisterUI(UIElement* element);
 	void UnregisterUI(UIElement* element);
 	void RefreshUIOrder(UIElement* element);
-	bool IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2& point);
+	bool IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2* point);
 	void Register(FBXRender* fbxr);
 	void Unregister(FBXRender* fbxr);
 	void RegisterBtn(ImguiButton* btn);
@@ -68,7 +68,7 @@ public:
 	void Release();
 
 	ImVec2 GetWinPos();
-	D3DXVECTOR2 ScreenToUICoordinate(const D3DXVECTOR2& screenPosition);
+	D3DXVECTOR2 ScreenToUICoordinate(const D3DXVECTOR2* screenPosition);
 	D3DXVECTOR2 GetMouseUICoordinate();
 	bool IsUIMouseLeftDown();
 	D3DXVECTOR2 GetGameViewPos();

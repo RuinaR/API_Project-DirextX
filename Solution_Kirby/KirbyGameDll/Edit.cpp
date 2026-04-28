@@ -204,11 +204,15 @@ void Edit::CreatePaletteUI()
 	for (int i = 0; i < (int)MapType::max; i++)
 	{
 		const float x = kPaletteX + (i * (kPaletteButtonW + kPaletteGap));
-		UIButton* button = CreateUIButton(D3DXVECTOR2(x, kPaletteY), D3DXVECTOR2(kPaletteButtonW, kPaletteButtonH), 100);
+		D3DXVECTOR2 buttonPosition(x, kPaletteY);
+		D3DXVECTOR2 buttonSize(kPaletteButtonW, kPaletteButtonH);
+		UIButton* button = CreateUIButton(&buttonPosition, &buttonSize, 100);
 		button->SetOnClick(bind(&Edit::SelectTileType, this, i));
 		m_paletteButtons.push_back(button);
 
-		UILabel* label = CreateUILabel(D3DXVECTOR2(x + 10.0f, kPaletteY + 8.0f), D3DXVECTOR2(kPaletteButtonW - 20.0f, 20.0f), ToWideTileName((MapType)i), 110);
+		D3DXVECTOR2 labelPosition(x + 10.0f, kPaletteY + 8.0f);
+		D3DXVECTOR2 labelSize(kPaletteButtonW - 20.0f, 20.0f);
+		UILabel* label = CreateUILabel(&labelPosition, &labelSize, ToWideTileName((MapType)i), 110);
 		m_paletteLabels.push_back(label);
 	}
 
@@ -231,7 +235,9 @@ void Edit::CreateTileMapUI()
 			const int index = i * m_count + j;
 			const float x = kGridX + (j * (kTileSize + kTileGap));
 			const float y = kGridY + (i * (kTileSize + kTileGap));
-			UIButton* button = CreateUIButton(D3DXVECTOR2(x, y), D3DXVECTOR2(kTileSize, kTileSize), 90);
+			D3DXVECTOR2 buttonPosition(x, y);
+			D3DXVECTOR2 buttonSize(kTileSize, kTileSize);
+			UIButton* button = CreateUIButton(&buttonPosition, &buttonSize, 90);
 			button->SetOnClick(bind(&Edit::SetTile, this, i, j));
 			m_tileButtons[index] = button;
 			RefreshTileButton(i, j);
@@ -341,8 +347,13 @@ void Edit::SelectTileType(int tileType)
 	RefreshPaletteUI();
 }
 
-UIButton* Edit::CreateUIButton(const D3DXVECTOR2& position, const D3DXVECTOR2& size, int orderInLayer)
+UIButton* Edit::CreateUIButton(const D3DXVECTOR2* position, const D3DXVECTOR2* size, int orderInLayer)
 {
+	if (!position || !size)
+	{
+		return nullptr;
+	}
+
 	GameObject* obj = new GameObject();
 	UIButton* button = new UIButton();
 	obj->AddComponent(button);
@@ -355,8 +366,13 @@ UIButton* Edit::CreateUIButton(const D3DXVECTOR2& position, const D3DXVECTOR2& s
 	return button;
 }
 
-UILabel* Edit::CreateUILabel(const D3DXVECTOR2& position, const D3DXVECTOR2& size, const wchar_t* text, int orderInLayer)
+UILabel* Edit::CreateUILabel(const D3DXVECTOR2* position, const D3DXVECTOR2* size, const wchar_t* text, int orderInLayer)
 {
+	if (!position || !size)
+	{
+		return nullptr;
+	}
+
 	GameObject* obj = new GameObject();
 	UILabel* label = new UILabel();
 	obj->AddComponent(label);

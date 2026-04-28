@@ -31,4 +31,9 @@ public:
 
 	void SetVisible(bool visible) override;
 	void SetOrderInLayer(int orderInLayer) override;
+	const char* GetInspectorName() const override;
+	void DrawInspector() override;
+	const char* GetSerializableType() const override;
+	std::string Serialize() const override;
+	bool Deserialize(const std::string& componentJson) override;
 };

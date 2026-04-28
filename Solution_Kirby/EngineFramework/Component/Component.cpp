@@ -42,3 +42,27 @@ void Component::OnMouseHover()
 {
 	
 }
+
+const char* Component::GetInspectorName() const
+{
+	return typeid(*this).name();
+}
+
+void Component::DrawInspector()
+{
+}
+
+const char* Component::GetSerializableType() const
+{
+	return "";
+}
+
+std::string Component::Serialize() const
+{
+	return "{}";
+}
+
+bool Component::Deserialize(const std::string& componentJson)
+{
+	return true;
+}

@@ -14,7 +14,7 @@ private:
 	D3DXVECTOR3 m_rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	float m_distance = 20.0f;
 
-	D3DXVECTOR3 RotateDirection(const D3DXVECTOR3& direction);
+	D3DXVECTOR3 RotateDirection(const D3DXVECTOR3* direction);
 	void UpdateViewMatrix();
 public:
 	static void Create();
@@ -25,10 +25,10 @@ public:
 	void SetPos(float x, float y);
 	D3DXVECTOR3 GetPos();
 	void SetRotation(float x, float y, float z);
-	void SetRotation(const D3DXVECTOR3& rotation);
+	void SetRotation(const D3DXVECTOR3* rotation);
 	D3DXVECTOR3 GetRotation();
 	void AddRotation(float x, float y, float z);
-	void AddRotation(const D3DXVECTOR3& rotation);
+	void AddRotation(const D3DXVECTOR3* rotation);
 	D3DXVECTOR3 GetForward();
 	D3DXVECTOR3 GetRight();
 	D3DXVECTOR3 GetUp();

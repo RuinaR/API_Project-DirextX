@@ -19,9 +19,9 @@ public:
 	void Update() override;
 	virtual void RenderUI();
 
-	virtual void SetPosition(const D3DXVECTOR2& position);
+	virtual void SetPosition(const D3DXVECTOR2* position);
 	D3DXVECTOR2 GetPosition() const;
-	virtual void SetSize(const D3DXVECTOR2& size);
+	virtual void SetSize(const D3DXVECTOR2* size);
 	D3DXVECTOR2 GetSize() const;
 
 	virtual void SetVisible(bool visible);
@@ -33,5 +33,9 @@ public:
 	int GetOrderInLayer() const;
 
 	RECT GetRect() const;
-	bool ContainsPoint(const D3DXVECTOR2& point) const;
+	bool ContainsPoint(const D3DXVECTOR2* point) const;
+	const char* GetInspectorName() const override;
+	void DrawInspector() override;
+	std::string Serialize() const override;
+	bool Deserialize(const std::string& componentJson) override;
 };

@@ -57,16 +57,25 @@ void SceneChanger::Destroy()
 
 void SceneChanger::ChangeGameScene()
 {
-	WindowFrame::GetInstance()->SetScene(new GameScene());
+	MainFrame::GetInstance()->AddBtnEvent([]()
+	{
+		WindowFrame::GetInstance()->SetScene(new GameScene());
+	});
 }
 
 void SceneChanger::ChangeStartScene()
 {
-	WindowFrame::GetInstance()->SetScene(new StartScene());
+	MainFrame::GetInstance()->AddBtnEvent([]()
+	{
+		WindowFrame::GetInstance()->SetScene(new StartScene());
+	});
 }
 
 void SceneChanger::ChangeEditScene()
 {
-	WindowFrame::GetInstance()->SetScene(new EditerScene());
+	MainFrame::GetInstance()->AddBtnEvent([]()
+	{
+		WindowFrame::GetInstance()->SetScene(new EditerScene());
+	});
 }
 

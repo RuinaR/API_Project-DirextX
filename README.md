@@ -1,184 +1,223 @@
 # API_Project-DirextX
 
-DirectX9 기반의 2D 게임 제작 툴 프로젝트입니다.  
-유니티 엔진의 구조를 참고하여, **엔진 프레임워크와 게임 로직을 분리한 구조**로 제작했으며  
-툴 실행용 빌드와 결과 게임 빌드를 구분해 개발했습니다.
+DirectX9, Win32API 기반의 2D/3D 혼합 게임 엔진 및 에디터 프로젝트입니다.  
+Visual Studio 솔루션 구조를 유지하면서 VSCode에서도 MSBuild 기반으로 빌드하고 실행할 수 있도록 정리했습니다.
 
-**C++, Win32API, DirectX9, Box2D, ImGui, FBXSDK**를 사용해  
-렌더링, 물리 처리, 툴 UI, FBX 파싱, 리소스 관리 시스템 등을 직접 구현했습니다.
+## 프로젝트 개요
 
----
+이 프로젝트는 게임 플레이 코드와 엔진 프레임워크를 분리하고, 에디터 모드와 결과 게임 모드를 함께 운용하는 구조를 목표로 합니다.
 
-## 프로젝트 소개
+- `EngineFramework`: 오브젝트, 컴포넌트, 렌더링, 입력, 리소스, 씬 데이터 등 공통 엔진 기능
+- `KirbyGameDll`: 실제 게임 씬, 플레이어, 몬스터, 스테이지 편집/생성 로직
+- `BuildEdit`: 에디터 모드 실행 프로젝트
+- `BuildResultGame`: 게임 실행 프로젝트
+- `SceneData`: 에디터에서 저장한 씬 JSON 데이터
 
-이 프로젝트는 단순히 2D 게임을 만드는 것에 그치지 않고,  
-**게임을 제작할 수 있는 툴 구조 자체를 구현하는 것**을 목표로 진행한 프로젝트입니다.
+사용 기술은 C++, Win32API, DirectX9, Box2D, ImGui, FBX SDK입니다.
 
-유니티 엔진의 구조를 참고하여 다음과 같이 계층을 나누었습니다.
+## 최근 리팩토링 요약
 
-- **EngineFramework**: 엔진 공통 기능
-- **Game**: 실제 게임 로직
-- **Build(Edit, Result)**: 툴 실행 및 결과 게임 빌드
+2026-04-28 기준으로 다음 구조 개선과 기능 추가를 진행했습니다.
 
-또한 외부 SDK를 연동해 직접 구현한 시스템을 확장했습니다.
+- VSCode용 MSBuild 빌드/실행 설정 추가
+- 출력 폴더를 `Bin/$(Configuration)_$(Platform)` 구조로 정리
+- 소스 인코딩을 UTF-8 BOM 기준으로 통일하고 `/utf-8` 컴파일 옵션 적용
+- `ObjectManager`의 pending add/remove 구조 도입
+- 일부 엔진 파일을 역할별 폴더로 이동
+- DirectX 기반 UI 시스템 추가
+- 기존 인게임 ImGui 버튼을 `UIButton`, `UILabel`, `UIImage` 기반 UI로 교체
+- UI 렌더 큐와 `orderInLayer` 정렬 추가
+- 카메라 회전과 카메라 기준 렌더 정렬 추가
+- 에디터 인스펙터 확장
+- SceneData JSON 저장/로드 구조 추가
+- 버튼 클릭 중 즉시 씬 전환으로 생기던 iterator invalidation 문제를 지연 실행 방식으로 수정
+- SceneData에 카메라 위치/회전 저장 및 로드 지원 추가
 
-- **Box2D**: 2D 물리 시뮬레이션
-- **ImGui**: 게임 툴용 UI
-- **FBXSDK**: FBX 파일 파싱 및 렌더링 적용
-
----
-
-## 개발 환경
-
-- **Language**: C++
-- **API**: Win32API, DirectX9
-- **Library / SDK**: Box2D, ImGui, FBXSDK
-- **IDE**: Visual Studio
-- **Version Control**: Git / GitHub
-
----
-
-## 프로젝트 구조
+## 현재 폴더 구조
 
 ```text
 Solution_Kirby
-├─ EngineFramework                # 엔진 공통 기능
-│  ├─ RenderManager              # 렌더링 관리 및 정렬
-│  ├─ AnimationManager           # 애니메이션 관리
-│  ├─ TextureManager             # 텍스처 리소스 관리
-│  ├─ ObjectManager              # 게임 오브젝트 일괄 관리
-│  ├─ Camera                     # 카메라 처리
-│  ├─ Collider / BoxCollider     # 충돌 처리
-│  ├─ Component                  # 컴포넌트 패턴 기반 모듈
-│  ├─ ObjPool                    # 오브젝트 풀링
-│  └─ SharedPointer              # 직접 구현한 Shared Pointer
-│
-├─ Game                          # 실제 게임 로직
-│  ├─ Player                     # 플레이어 이동, 점프, 공격
-│  ├─ MonsterAI                  # 몬스터 동작 처리
-│  ├─ Scene                      # 씬 구성
-│  ├─ SceneChanger               # 씬 전환 처리
-│  └─ 기타 게임 플레이 로직
-│
-├─ BuildEdit                     # 게임 제작 툴 실행 빌드
-├─ BuildResultGame               # 결과 게임 실행 빌드
-│
-├─ External SDK
-│  ├─ Box2D
-│  ├─ ImGui
-│  └─ FBXSDK
-│
-└─ Resources                     # 이미지, 애니메이션, 기타 리소스
+├─ EngineFramework
+│  ├─ Component
+│  │  ├─ Collision
+│  │  └─ Physics
+│  ├─ Debugging
+│  ├─ Input
+│  ├─ Rendering
+│  │  ├─ Buffer
+│  │  ├─ Camera
+│  │  ├─ Component
+│  │  └─ UI
+│  ├─ Resource
+│  │  ├─ Animation
+│  │  └─ Texture
+│  ├─ Scene
+│  └─ Utility
+├─ KirbyGameDll
+├─ BuildEdit
+├─ BuildResultGame
+├─ SceneData
+├─ External
+├─ Box2D
+├─ Imgui
+└─ fbxsdk
 ```
 
----
+## 오브젝트 생명주기
 
-## 주요 기능 요약
+`ObjectManager`는 오브젝트 추가/삭제 요청을 즉시 메인 리스트에 반영하지 않고 pending 큐에 모읍니다.
 
-1. 컴포넌트 패턴을 활용한 기능 모듈 조합 방식
-2. 오브젝트 매니저를 통한 객체 관리 시스템
-3. 직접 구현한 Shared Pointer와 오브젝트 풀링
-4. DirectX9 기반 렌더링 최적화
-5. 직접 구현한 2D 물리 처리 시스템 최적화
-6. Box2D를 활용한 2D 물리 시뮬레이션
-7. ImGui를 활용한 게임 툴 UI
-8. FBXSDK를 활용한 FBX 파싱 및 렌더링 적용
-9. 텍스처 리소스 관리 시스템
+- `AddObject()`는 `m_pendingAddObjects`에 등록합니다.
+- `DestroyObject()`는 destroy flag를 켜고 `m_pendingRemoveObjects`에 등록합니다.
+- `FlushPendingObjects()`에서 안전한 시점에 추가/삭제를 일괄 반영합니다.
+- `Update`, `Render`, `ImguiUpdate` 중 destroy 상태인 오브젝트는 순회 대상에서 제외합니다.
 
----
+이 구조로 Update 순회 중 컨테이너가 직접 변경되면서 발생하던 iterator invalidation과 use-after-free 위험을 줄였습니다.
 
-## 주요 구현 내용
+## DirectX UI 시스템
 
-### 1. 컴포넌트 패턴 기반 구조
-게임 오브젝트에 컴포넌트 패턴을 적용해,  
-기능을 모듈화하고 조합하는 방식으로 설계했습니다.
+인게임 UI는 ImGui 의존을 줄이고 DirectX 렌더링 기반으로 옮겼습니다. 에디터용 ImGui는 유지합니다.
 
-이를 통해 기능별 확장성과 재사용성을 높였고,  
-오브젝트마다 필요한 컴포넌트를 유연하게 부착할 수 있도록 구성했습니다.
+주요 클래스:
 
-### 2. 오브젝트 매니저 기반 객체 관리
-모든 게임 오브젝트는 생성 시 오브젝트 매니저에 등록되며,  
-오브젝트 매니저가 현재 Scene 기준으로 객체들을 일괄 처리합니다.
+- `UIElement`: 위치, 크기, 표시/활성 상태, `orderInLayer`를 가진 UI 베이스
+- `UIImage`: `ImageRender`를 내부적으로 사용해 이미지 또는 단색 사각형을 렌더링
+- `UIButton`: hover, pressed, clicked 상태와 `onClick` 콜백 지원
+- `UILabel`: `ID3DXFont` 기반 텍스트 렌더링, 한글 출력은 wide string 경로 사용
+- `UIActionRegistry`: SceneData 로드 시 `actionKey`를 실제 콜백으로 다시 연결
 
-객체 삭제 시 즉시 제거하지 않고 `Destroy` 상태로 전환한 뒤,  
-다음 업데이트 이후 안전하게 삭제되도록 처리했습니다.
+`UIButton`은 콜백 실행 뒤 즉시 `return`하도록 수정했습니다. 버튼 클릭으로 씬 전환이 발생하면 버튼 자신이 삭제될 수 있으므로, 콜백 이후 멤버 접근을 막아 use-after-free를 방지합니다.
 
-### 3. Shared Pointer 직접 구현
-C++의 `std::shared_ptr` 개념을 참고하여 Shared Pointer를 직접 구현했습니다.  
-상황에 따라 오브젝트 풀과 연계하거나 독립적으로 사용할 수 있도록 설계했습니다.
+## 렌더링 파이프라인
 
-### 4. 오브젝트 풀링
-사용 중인 객체와 미사용 객체를 분리 관리하는 오브젝트 풀 시스템을 구현했습니다.  
-객체 요청 시 유휴 객체를 재사용하거나, 필요 시 새 객체를 생성하는 방식입니다.
+렌더링은 월드 렌더와 UI 렌더를 분리합니다.
 
-### 5. DirectX9 기반 렌더링 최적화
-같은 셰이더 설정을 공유하는 객체끼리 그룹화하여 드로우콜을 줄였고,  
-투명/불투명 객체는 카메라 기준 Z 깊이에 따라 정렬하여 렌더링 정확도를 높였습니다.
+1. 월드 `Render`객체 수집
+2. 카메라 회전값을 기준으로 한 z축 depth 계산 (카메라 forward 기준)
+3. 불투명/투명 월드 렌더 큐 정렬
+4. 월드 렌더링
+5. FBX 렌더링
+6. 디버그 렌더링
+7. UI 렌더 큐 렌더링
 
-또한 디버그 렌더링 속성을 추가해 개발 중 필요한 정보를 시각적으로 확인할 수 있도록 했습니다.
+UI는 항상 월드 렌더 이후에 렌더링됩니다. UI 큐는 `orderInLayer` 오름차순으로 정렬하고, 같은 `orderInLayer`에서는 등록 순서를 유지합니다.
 
-### 6. 2D 물리 처리 최적화
-충돌체 수가 많아질 때 충돌 검사 비용이 증가하는 문제를 해결하기 위해,  
-2D 공간을 재귀적으로 4분할하는 **다이나믹 쿼드 트리** 방식의 공간 분할 알고리즘을 적용했습니다.
+## 카메라와 렌더 정렬
 
-또한 충돌 이벤트를 다음 3단계로 구분해 처리했습니다.
+`Camera`는 위치뿐 아니라 회전값을 가집니다.
 
-- 충돌 시작
-- 충돌 중
-- 충돌 끝
+지원 API:
 
-### 7. Box2D 기반 물리 처리
-직접 구현한 물리 처리보다 더 자연스럽고 안정적인 시뮬레이션을 위해  
-물리 처리 로직을 Box2D 기반으로 확장했습니다.
+- `SetRotation(float x, float y, float z)`
+- `SetRotation(const D3DXVECTOR3* rotation)`
+- `GetRotation()`
+- `AddRotation(float x, float y, float z)`
+- `AddRotation(const D3DXVECTOR3* rotation)`
+- `GetForward()`
+- `GetRight()`
+- `GetUp()`
 
-이를 통해 복잡한 물리 계산과 충돌 반응의 정확성, 안정성을 높였습니다.
+카메라의 forward/right/up 방향은 `D3DXMatrixRotationYawPitchRoll`로 회전 행렬을 만든 뒤 기준 벡터를 변환해 계산합니다.
 
-### 8. ImGui 기반 툴 UI
-ImGui를 사용해 버튼, 문자열 입력, 오브젝트 상태 정보,  
-보유 컴포넌트 목록, 현재 Scene 이미지 출력 등  
-개발에 필요한 정보를 쉽게 확인할 수 있는 툴 UI를 구현했습니다.
+월드 렌더 정렬은 단순 world z값 대신 카메라 기준 깊이를 사용합니다.
 
-### 9. FBXSDK 기반 FBX 파싱
-FBXSDK를 활용하여 FBX 파일을 직접 파싱하고,  
-DirectX9 렌더링 구조에 맞는 데이터로 변환해 렌더링하도록 구현했습니다.
+```cpp
+objectToCamera = objectWorldPosition - cameraPosition;
+depth = dot(objectToCamera, cameraForward);
+```
 
-### 10. 텍스처 리소스 관리
-같은 텍스처를 여러 번 로드하지 않도록 텍스처 매니저를 구현했습니다.  
-이미 로드된 텍스처가 있으면 기존 포인터를 반환하고,  
-없으면 새로 로드해 해시맵에 저장하도록 구성했습니다.
+이 depth를 기준으로, 투명 스프라이트는 back-to-front 정렬이 자연스럽기 때문에 멀리 있는 객체가 먼저 그려지도록 정렬합니다. 
 
-또한 콜백 함수를 등록해 **비동기 텍스처 로드**도 가능하도록 구현했습니다.
+UI 렌더는 이 정렬 대상에서 제외됩니다. UI 렌더링 직전 view/projection/world 행렬을 screen-space용 직교 투영으로 바꾸고, 렌더 후 기존 행렬을 복원합니다. 따라서 UI는 카메라 위치와 회전에 영향을 받지 않습니다.
 
----
+## 입력 좌표와 에디터 Game View
 
-## 프로젝트에서 배운 점
+게임 모드에서는 마우스 좌표를 윈도우 클라이언트 기준으로 사용합니다.  
+에디터 모드에서는 게임 화면이 ImGui 창 내부 렌더 타겟으로 표시되므로, `Mouse::GetGameViewPos()`가 RenderManager에 저장된 Game View offset/size를 이용해 게임 화면 로컬 좌표로 보정합니다.
 
-이 프로젝트를 통해 단순 게임 플레이 구현을 넘어,  
-**엔진 공통 기능과 게임 로직을 어떻게 분리할지**,  
-그리고 **렌더링, 객체 관리, 물리 처리, 리소스 관리 구조를 어떻게 설계할지** 깊이 고민할 수 있었습니다.
+## SceneData 저장/로드
 
-특히 외부 SDK를 단순 사용에 그치지 않고  
-프로젝트 구조 안에 맞게 통합하는 경험을 통해  
-게임 클라이언트/엔진 프로그래밍 관점의 기초를 다질 수 있었습니다.
+씬 저장은 에디터 모드에서만 사용자가 `Save Scene` 버튼을 눌렀을 때 수행합니다. 게임 모드에서는 파일 저장을 하지 않습니다.
 
----
+게임 모드 흐름:
 
-## 실행 방법
+1. `scene->Init()`
+2. `SceneData/{SceneName}.json`이 있으면 로드
+3. 파일이 없거나 로드 실패 시 `BuildInitialSceneObjects()`
+4. `ObjectManager::FlushPendingObjects()`
+5. `scene->Start()`
 
-1. Visual Studio에서 솔루션 파일을 엽니다.
-2. 플랫폼을 **x86**으로 변경합니다.
+에디터 모드 흐름:
+
+1. `scene->Init()`
+2. 파일이 있으면 로드, 없으면 코드 기반 초기 배치 생성
+3. `ObjectManager::FlushPendingObjects()`
+4. `scene->Start()`
+5. 현재 상태를 메모리 스냅샷으로 보관
+6. `Save Scene` 클릭 시 현재 ObjectManager 상태를 다시 직렬화해서 저장
+
+SceneData는 version 3 포맷을 사용합니다.
+
+현재 저장 대상:
+
+- 씬 이름
+- 카메라 위치/회전
+- GameObject 기본 정보
+- parent/child 관계
+- ImageRender
+- UIImage
+- UILabel
+- UIButton
+- AnimationRender
+- FBXRender
+- Collider/BoxCollider
+
+저장하지 않는 대상:
+
+- raw pointer
+- DirectX texture/buffer pointer
+- Box2D body pointer
+- callback/lambda 본체
+- RenderManager 등록 상태
+- runtime cache
+- ImGui editor state
+- Rigidbody
+
+`UIButton`의 콜백은 JSON에 저장하지 않고 `actionKey`만 저장합니다. 로드 후 `UIActionRegistry`가 `ChangeGameScene`, `ChangeEditScene`, `ChangeStartScene` 같은 문자열 키를 실제 콜백으로 다시 연결합니다.
+
+## 씬 전환 안정화
+
+버튼 콜백에서 `WindowFrame::SetScene()`을 즉시 호출하면 현재 Update 순회 중인 오브젝트와 컴포넌트가 삭제될 수 있습니다. 이로 인해 invalidated vector iterator 문제가 발생했습니다.
+
+현재는 `SceneChanger`가 씬 전환 요청을 `MainFrame::AddBtnEvent()`에 등록하고, 프레임의 안전한 지점에서 실제 `SetScene()`을 실행합니다.
+
+## 빌드와 실행
+
+Visual Studio:
+
+1. `Solution_Kirby/Solution_Kirby.sln`을 엽니다.
+2. 구성은 `Debug|Win32` 또는 `Release|Win32`를 사용합니다.
 3. `BuildEdit` 또는 `BuildResultGame`을 시작 프로젝트로 설정합니다.
-4. 필요한 외부 SDK 설정 및 경로를 확인한 뒤 빌드합니다.
+4. 빌드 후 실행합니다.
 
-> 경로에 한글이 포함되면 빌드에 문제가 발생할 수 있습니다.
+VSCode:
 
----
+1. `Solution_Kirby`를 workspace root로 엽니다.
+2. `.vscode/tasks.json`의 MSBuild 작업으로 빌드합니다.
+3. `.vscode/launch.json`의 실행 구성을 사용합니다.
+4. 실행 cwd는 `${workspaceFolder}` 기준입니다.
 
-## 개선하고 싶은 점
+주의:
 
-- README에 구조도 및 실행 화면 GIF 추가
-- 엔진 시스템별 클래스 관계 문서화
-- 빌드 환경 설정 자동화
-- Player 및 일부 시스템 클래스 책임 추가 분리
-- 에디터 기능 확장
+- June 2010 DirectX SDK 또는 프로젝트에 포함된 `External/DirectXSDK` 경로가 필요합니다.
+- FBX SDK 라이브러리 경로가 맞지 않으면 `libfbxsdk.lib` 링크 오류가 발생할 수 있습니다.
+- 실행 시 리소스 상대경로는 `Solution_Kirby` 기준으로 맞춰져 있습니다.
 
+## 남은 개선점
+
+- FBX SDK 경로를 완전히 `External` 기준으로 정리
+- SceneData의 자동 마이그레이션 도구 추가
+- Rigidbody 저장/로드 정책 재검토
+- 렌더 큐에서 불투명/투명 객체를 더 세밀하게 분리
+- 에디터 인스펙터에서 컴포넌트 추가/삭제 지원
+- SceneData 저장 전 validation 기능 추가

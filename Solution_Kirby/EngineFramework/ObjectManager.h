@@ -16,6 +16,9 @@ private:
 	bool IsPendingRemove(GameObject* obj);
 	void QueueDestroyObject(GameObject* obj);
 	void ReleaseAndDeleteObject(GameObject* obj);
+	void DrawHierarchy();
+	void DrawGameObjectInspector(GameObject* obj);
+	void DrawComponentInspector(Component* component);
 	
 public:
 	static void Create();
@@ -38,6 +41,8 @@ public:
 	void Clear();
 	int Count();
 	list<GameObject*>* GetObjList();
+	std::string SerializeObjects();
+	bool DeserializeObjects(const std::string& sceneJson);
 
 	void OnLBtnDown();
 	void OnLBtnUp();

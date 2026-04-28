@@ -2,6 +2,18 @@
 #include "Component.h"
 #include "structs.h"
 #include "BoxCollider.h"
+
+struct GameObjectSerializedData
+{
+    int objectId = -1;
+    int parentId = -1;
+    string tag;
+    bool active = true;
+    D3DXVECTOR3 position = { 0.0f, 0.0f, 0.0f };
+    D3DXVECTOR3 size = { 0.0f, 0.0f, 0.0f };
+    D3DXVECTOR3 angle = { 0.0f, 0.0f, 0.0f };
+};
+
 class GameObject
 {
 protected:
@@ -48,6 +60,10 @@ public:
     string GetTag();
     void SetActive(bool isActive);
     bool GetActive();
+    std::string Serialize() const;
+    std::string Serialize(int objectId, int parentId) const;
+    static bool Deserialize(const std::string& objectJson, GameObjectSerializedData& outData);
+    static GameObject* CreateFromSerializedData(const GameObjectSerializedData& data);
     Component* AddComponent(Component* component);
     void DeleteComponent(Component* component);
     vector<Component*>* GetComponentVec();

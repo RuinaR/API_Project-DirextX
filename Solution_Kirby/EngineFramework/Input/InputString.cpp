@@ -41,8 +41,8 @@ void InputString::CreateUI()
 	backgroundObj->AddComponent(m_background);
 	backgroundObj->InitializeSet();
 	backgroundObj->SetParent(m_gameObj);
-	m_background->SetPosition(m_position);
-	m_background->SetSize(m_size);
+	m_background->SetPosition(&m_position);
+	m_background->SetSize(&m_size);
 	m_background->SetUseTexture(false);
 	m_background->SetColor(D3DCOLOR_ARGB(230, 245, 245, 245));
 	m_background->SetOrderInLayer(20);
@@ -52,8 +52,10 @@ void InputString::CreateUI()
 	labelObj->AddComponent(m_label);
 	labelObj->InitializeSet();
 	labelObj->SetParent(m_gameObj);
-	m_label->SetPosition(D3DXVECTOR2(m_position.x + 10.0f, m_position.y + 8.0f));
-	m_label->SetSize(D3DXVECTOR2(m_size.x - 20.0f, m_size.y - 12.0f));
+	D3DXVECTOR2 labelPosition(m_position.x + 10.0f, m_position.y + 8.0f);
+	D3DXVECTOR2 labelSize(m_size.x - 20.0f, m_size.y - 12.0f);
+	m_label->SetPosition(&labelPosition);
+	m_label->SetSize(&labelSize);
 	m_label->SetColor(D3DCOLOR_ARGB(255, 30, 30, 30));
 	m_label->SetFontSize(18);
 	m_label->SetOrderInLayer(30);

@@ -48,9 +48,13 @@ void Camera::SetRotation(float x, float y, float z)
 	UpdateViewMatrix();
 }
 
-void Camera::SetRotation(const D3DXVECTOR3& rotation)
+void Camera::SetRotation(const D3DXVECTOR3* rotation)
 {
-	SetRotation(rotation.x, rotation.y, rotation.z);
+	if (!rotation)
+	{
+		return;
+	}
+	SetRotation(rotation->x, rotation->y, rotation->z);
 }
 
 D3DXVECTOR3 Camera::GetRotation()
@@ -64,32 +68,44 @@ void Camera::AddRotation(float x, float y, float z)
 	UpdateViewMatrix();
 }
 
-void Camera::AddRotation(const D3DXVECTOR3& rotation)
+void Camera::AddRotation(const D3DXVECTOR3* rotation)
 {
-	AddRotation(rotation.x, rotation.y, rotation.z);
+	if (!rotation)
+	{
+		return;
+	}
+	AddRotation(rotation->x, rotation->y, rotation->z);
 }
 
 D3DXVECTOR3 Camera::GetForward()
 {
-	return RotateDirection(D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	D3DXVECTOR3 direction(0.0f, 0.0f, 1.0f);
+	return RotateDirection(&direction);
 }
 
 D3DXVECTOR3 Camera::GetRight()
 {
-	return RotateDirection(D3DXVECTOR3(1.0f, 0.0f, 0.0f));
+	D3DXVECTOR3 direction(1.0f, 0.0f, 0.0f);
+	return RotateDirection(&direction);
 }
 
 D3DXVECTOR3 Camera::GetUp()
 {
-	return RotateDirection(D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	D3DXVECTOR3 direction(0.0f, 1.0f, 0.0f);
+	return RotateDirection(&direction);
 }
 
-D3DXVECTOR3 Camera::RotateDirection(const D3DXVECTOR3& direction)
+D3DXVECTOR3 Camera::RotateDirection(const D3DXVECTOR3* direction)
 {
+	if (!direction)
+	{
+		return D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	}
+
 	D3DXMATRIX rotationMatrix;
 	D3DXVECTOR3 result;
 	D3DXMatrixRotationYawPitchRoll(&rotationMatrix, m_rotation.y, m_rotation.x, m_rotation.z);
-	D3DXVec3TransformNormal(&result, &direction, &rotationMatrix);
+	D3DXVec3TransformNormal(&result, direction, &rotationMatrix);
 	D3DXVec3Normalize(&result, &result);
 	return result;
 }
