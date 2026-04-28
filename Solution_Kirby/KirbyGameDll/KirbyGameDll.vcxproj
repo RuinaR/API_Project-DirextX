@@ -94,7 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,7 +134,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,7 +154,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

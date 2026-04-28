@@ -96,7 +96,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
-      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
@@ -120,7 +120,7 @@
       <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
-      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
@@ -142,6 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,6 +161,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,62 +175,62 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationManager.cpp" />
-    <ClCompile Include="AnimationRender.cpp" />
+    <ClCompile Include="Resource\Animation\AnimationManager.cpp" />
+    <ClCompile Include="Rendering\Component\AnimationRender.cpp" />
     <ClCompile Include="FBXRender.cpp" />
     <ClCompile Include="FbxTool.cpp" />
-    <ClCompile Include="ImageRender.cpp" />
-    <ClCompile Include="BoxCollider.cpp" />
-    <ClCompile Include="Buffer.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Rendering\Component\ImageRender.cpp" />
+    <ClCompile Include="Component\Collision\BoxCollider.cpp" />
+    <ClCompile Include="Rendering\Buffer\Buffer.cpp" />
+    <ClCompile Include="Rendering\Camera\Camera.cpp" />
+    <ClCompile Include="Component\Collision\Collider.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="DebugWindow.cpp" />
+    <ClCompile Include="Component\Component.cpp" />
+    <ClCompile Include="Debugging\DebugWindow.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="InputString.cpp" />
+    <ClCompile Include="Input\InputString.cpp" />
     <ClCompile Include="MainFrame.cpp" />
-    <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="RenderManager.cpp" />
-    <ClCompile Include="Rigidbody.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Component\Physics\Rigidbody.cpp" />
+    <ClCompile Include="Resource\Texture\TextureManager.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fbxsdk\fbxsdk.h" />
-    <ClInclude Include="AnimationManager.h" />
-    <ClInclude Include="AnimationRender.h" />
-    <ClInclude Include="DebugRender.h" />
+    <ClInclude Include="Resource\Animation\AnimationManager.h" />
+    <ClInclude Include="Rendering\Component\AnimationRender.h" />
+    <ClInclude Include="Debugging\DebugRender.h" />
     <ClInclude Include="FBXRender.h" />
     <ClInclude Include="FbxTool.h" />
-    <ClInclude Include="ImageRender.h" />
-    <ClInclude Include="BoxCollider.h" />
-    <ClInclude Include="Buffer.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collider.h" />
+    <ClInclude Include="Rendering\Component\ImageRender.h" />
+    <ClInclude Include="Component\Collision\BoxCollider.h" />
+    <ClInclude Include="Rendering\Buffer\Buffer.h" />
+    <ClInclude Include="Rendering\Camera\Camera.h" />
+    <ClInclude Include="Component\Collision\Collider.h" />
     <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="DebugWindow.h" />
+    <ClInclude Include="Component\Component.h" />
+    <ClInclude Include="Debugging\DebugWindow.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="InputString.h" />
+    <ClInclude Include="Input\InputString.h" />
     <ClInclude Include="MainFrame.h" />
-    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="ObjectManager.h" />
-    <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="Utility\ObjectPool.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="RenderManager.h" />
-    <ClInclude Include="Rigidbody.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SharedPointer.h" />
-    <ClInclude Include="structs.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Component\Physics\Rigidbody.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Utility\SharedPointer.h" />
+    <ClInclude Include="Utility\structs.h" />
+    <ClInclude Include="Resource\Texture\TextureManager.h" />
+    <ClInclude Include="Utility\Timer.h" />
     <ClInclude Include="WindowFrame.h" />
   </ItemGroup>
   <ItemGroup>

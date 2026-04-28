@@ -1,35 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AnimationRender.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Rendering\Component\AnimationRender.cpp">
+      <Filter>Rendering\Component</Filter>
     </ClCompile>
-    <ClCompile Include="ImageRender.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Rendering\Component\ImageRender.cpp">
+      <Filter>Rendering\Component</Filter>
     </ClCompile>
-    <ClCompile Include="BoxCollider.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Component\Collision\BoxCollider.cpp">
+      <Filter>Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Collider.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Component\Collision\Collider.cpp">
+      <Filter>Component\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
+    <ClCompile Include="Component\Component.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="DebugWindow.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Debugging\DebugWindow.cpp">
+      <Filter>Debugging</Filter>
     </ClCompile>
-    <ClCompile Include="InputString.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Input\InputString.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Rigidbody.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="Component\Physics\Rigidbody.cpp">
+      <Filter>Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationManager.cpp">
-      <Filter>Manager</Filter>
+    <ClCompile Include="Resource\Animation\AnimationManager.cpp">
+      <Filter>Resource\Animation</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Manager</Filter>
@@ -40,14 +40,14 @@
     <ClCompile Include="WindowFrame.cpp">
       <Filter>WindowFrame</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer.cpp">
-      <Filter>Buffer</Filter>
+    <ClCompile Include="Rendering\Buffer\Buffer.cpp">
+      <Filter>Rendering\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Rendering\Camera\Camera.cpp">
+      <Filter>Rendering\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Mouse.cpp">
-      <Filter>Mouse</Filter>
+    <ClCompile Include="Input\Mouse.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="MainFrame.cpp">
       <Filter>MainFrame</Filter>
@@ -67,40 +67,40 @@
     <ClCompile Include="FBXRender.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>Manager</Filter>
+    <ClCompile Include="Resource\Texture\TextureManager.cpp">
+      <Filter>Resource\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationRender.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Rendering\Component\AnimationRender.h">
+      <Filter>Rendering\Component</Filter>
     </ClInclude>
-    <ClInclude Include="ImageRender.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Rendering\Component\ImageRender.h">
+      <Filter>Rendering\Component</Filter>
     </ClInclude>
-    <ClInclude Include="BoxCollider.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Component\Collision\BoxCollider.h">
+      <Filter>Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Collider.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Component\Collision\Collider.h">
+      <Filter>Component\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
+    <ClInclude Include="Component\Component.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="DebugWindow.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Debugging\DebugWindow.h">
+      <Filter>Debugging</Filter>
     </ClInclude>
-    <ClInclude Include="InputString.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Input\InputString.h">
+      <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Rigidbody.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Component\Physics\Rigidbody.h">
+      <Filter>Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationManager.h">
-      <Filter>Manager</Filter>
+    <ClInclude Include="Resource\Animation\AnimationManager.h">
+      <Filter>Resource\Animation</Filter>
     </ClInclude>
     <ClInclude Include="CollisionManager.h">
       <Filter>Manager</Filter>
@@ -111,14 +111,14 @@
     <ClInclude Include="WindowFrame.h">
       <Filter>WindowFrame</Filter>
     </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>Buffer</Filter>
+    <ClInclude Include="Rendering\Buffer\Buffer.h">
+      <Filter>Rendering\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Camera</Filter>
+    <ClInclude Include="Rendering\Camera\Camera.h">
+      <Filter>Rendering\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Mouse</Filter>
+    <ClInclude Include="Input\Mouse.h">
+      <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="MainFrame.h">
       <Filter>MainFrame</Filter>
@@ -129,26 +129,26 @@
     <ClInclude Include="pch.h">
       <Filter>Global</Filter>
     </ClInclude>
-    <ClInclude Include="structs.h">
-      <Filter>Global</Filter>
+    <ClInclude Include="Utility\structs.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>MainFrame</Filter>
+    <ClInclude Include="Utility\Timer.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="RenderManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="DebugRender.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="Debugging\DebugRender.h">
+      <Filter>Debugging</Filter>
     </ClInclude>
-    <ClInclude Include="SharedPointer.h">
-      <Filter>Global</Filter>
+    <ClInclude Include="Utility\SharedPointer.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectPool.h">
-      <Filter>Global</Filter>
+    <ClInclude Include="Utility\ObjectPool.h">
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="..\fbxsdk\fbxsdk.h">
       <Filter>Fbxsdk</Filter>
@@ -159,13 +159,19 @@
     <ClInclude Include="FBXRender.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>Manager</Filter>
+    <ClInclude Include="Resource\Texture\TextureManager.h">
+      <Filter>Resource\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Component">
       <UniqueIdentifier>{35d33738-361d-4a7c-9e91-c27bd68abc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics">
+      <UniqueIdentifier>{b94131e1-6d49-4c55-b7d2-9f33a73f882e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Collision">
+      <UniqueIdentifier>{710bfaa1-4fa6-4f71-9c0d-1ecb37b9d5d5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{1c152b55-1093-4ff8-a6df-0a2fa28d5108}</UniqueIdentifier>
@@ -173,13 +179,16 @@
     <Filter Include="WindowFrame">
       <UniqueIdentifier>{52e1a455-5b50-44df-bb72-4ecc310c252c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Buffer">
+    <Filter Include="Rendering\Buffer">
       <UniqueIdentifier>{f5798204-8be9-4b7b-b50a-5a3e54cf45dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Camera">
+    <Filter Include="Rendering\Component">
+      <UniqueIdentifier>{5b45ee06-b3e7-4431-aa3a-724973e3457b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Camera">
       <UniqueIdentifier>{e2fe58d4-1f94-4801-b1a5-9cab40f188f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mouse">
+    <Filter Include="Input">
       <UniqueIdentifier>{779aa936-e18c-4963-bec7-7d6d60a46b46}</UniqueIdentifier>
     </Filter>
     <Filter Include="MainFrame">
@@ -193,6 +202,18 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{ec01aace-cb20-4a7d-9db3-dd13b775942b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{21a7d7a0-6b88-4af7-9e9c-2e5a3b5de9b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Texture">
+      <UniqueIdentifier>{7bfcefd0-1d0d-42e6-ae62-90722c5a46a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Animation">
+      <UniqueIdentifier>{103c2c99-e878-4f2a-899b-82ad528e466a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging">
+      <UniqueIdentifier>{0b62f72d-6779-4d95-a671-4ef690a2c5b8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fbxsdk">
       <UniqueIdentifier>{6c5336c8-6dde-4b4a-a432-0f40ccff6a27}</UniqueIdentifier>
