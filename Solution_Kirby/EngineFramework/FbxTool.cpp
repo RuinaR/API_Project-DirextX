@@ -1,7 +1,187 @@
 ﻿#include "pch.h"
 #include "FbxTool.h"
 #include <fbxsdk/fileio/fbximporter.h>
+#include <algorithm>
 #include <utility>
+
+namespace
+{
+bool FileExists(const std::string& path)
+{
+	return GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES;
+}
+
+std::string GetDirectoryName(const std::string& path)
+{
+	size_t pos = path.find_last_of("\\/");
+	if (pos == std::string::npos)
+	{
+		return std::string();
+	}
+	return path.substr(0, pos);
+}
+
+std::string GetFileNameOnly(const std::string& path)
+{
+	size_t pos = path.find_last_of("\\/");
+	if (pos == std::string::npos)
+	{
+		return path;
+	}
+	return path.substr(pos + 1);
+}
+
+std::string JoinPath(const std::string& lhs, const std::string& rhs)
+{
+	if (lhs.empty())
+	{
+		return rhs;
+	}
+	if (lhs.back() == '\\' || lhs.back() == '/')
+	{
+		return lhs + rhs;
+	}
+	return lhs + "\\" + rhs;
+}
+
+std::string GetExeDirectory()
+{
+	wchar_t path[MAX_PATH] = { 0 };
+	GetModuleFileNameW(NULL, path, MAX_PATH);
+	return GetDirectoryName(WideToAnsi(path));
+}
+
+std::string ResolveFbxPath(const char* fileName)
+{
+	std::string name = fileName ? fileName : "";
+	if (name.empty())
+	{
+		return name;
+	}
+
+	if (name.find(".fbx") == std::string::npos && name.find(".FBX") == std::string::npos)
+	{
+		name += ".fbx";
+	}
+
+	if (FileExists(name))
+	{
+		return name;
+	}
+
+	std::string exeDir = GetExeDirectory();
+	std::vector<std::string> candidates;
+	candidates.push_back(JoinPath(JoinPath(exeDir, "FBX"), name));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "..\\..\\FBX"), name));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "..\\..\\..\\FBX"), name));
+
+	for (const std::string& candidate : candidates)
+	{
+		if (FileExists(candidate))
+		{
+			return candidate;
+		}
+	}
+
+	return candidates.front();
+}
+
+std::string ResolveTexturePath(const std::string& texturePath, const std::string& fbxDirectory)
+{
+	if (texturePath.empty() || FileExists(texturePath))
+	{
+		return texturePath;
+	}
+
+	const std::string textureName = GetFileNameOnly(texturePath);
+	std::string exeDir = GetExeDirectory();
+	std::vector<std::string> candidates;
+	candidates.push_back(JoinPath(fbxDirectory, textureName));
+	candidates.push_back(JoinPath(JoinPath(fbxDirectory, "Texture"), textureName));
+	candidates.push_back(JoinPath(JoinPath(fbxDirectory, "Textures"), textureName));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "FBX"), textureName));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "FBX\\Texture"), textureName));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "FBX\\Textures"), textureName));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "..\\..\\FBX"), textureName));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "..\\..\\FBX\\Texture"), textureName));
+	candidates.push_back(JoinPath(JoinPath(exeDir, "..\\..\\FBX\\Textures"), textureName));
+
+	for (const std::string& candidate : candidates)
+	{
+		if (FileExists(candidate))
+		{
+			return candidate;
+		}
+	}
+
+	return texturePath;
+}
+
+int GetUVIndex(FbxMesh* mesh, FbxLayerElementUV* uvElement, int polygonIndex, int polygonVertexIndex, int controlPointIndex)
+{
+	if (!uvElement)
+	{
+		return -1;
+	}
+
+	int directIndex = -1;
+	if (uvElement->GetMappingMode() == FbxLayerElement::eByPolygonVertex)
+	{
+		if (uvElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
+		{
+			return mesh->GetTextureUVIndex(polygonIndex, polygonVertexIndex);
+		}
+		directIndex = mesh->GetPolygonVertexIndex(polygonIndex) + polygonVertexIndex;
+	}
+	else if (uvElement->GetMappingMode() == FbxLayerElement::eByControlPoint)
+	{
+		directIndex = controlPointIndex;
+	}
+
+	if (directIndex < 0)
+	{
+		return -1;
+	}
+
+	if (uvElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
+	{
+		if (directIndex >= uvElement->GetIndexArray().GetCount())
+		{
+			return -1;
+		}
+		return uvElement->GetIndexArray().GetAt(directIndex);
+	}
+
+	return directIndex;
+}
+
+int GetMaterialIndex(FbxLayerElementMaterial* materialElement, int polygonIndex)
+{
+	if (!materialElement)
+	{
+		return 0;
+	}
+
+	if (materialElement->GetMappingMode() == FbxLayerElement::eAllSame)
+	{
+		if (materialElement->GetIndexArray().GetCount() > 0)
+		{
+			return materialElement->GetIndexArray().GetAt(0);
+		}
+		return 0;
+	}
+
+	if (materialElement->GetMappingMode() == FbxLayerElement::eByPolygon)
+	{
+		if (polygonIndex < materialElement->GetIndexArray().GetCount())
+		{
+			return materialElement->GetIndexArray().GetAt(polygonIndex);
+		}
+	}
+
+	return 0;
+}
+}
 
 // FBX 행렬을 DirectX 행렬로 변환
 D3DXMATRIX FbxToD3DXMatrix(const FbxAMatrix& fbxMatrix) {
@@ -40,7 +220,6 @@ bool FbxTool::Initialize() {
     m_scene = FbxScene::Create(m_sdkManager, "MyScene");
 
     converter = new FbxGeometryConverter(m_sdkManager);
-    converter->Triangulate(m_scene, true);
     return true;
 }
 
@@ -50,27 +229,25 @@ bool FbxTool::Load(const char* fileName, std::vector<Model>& outModels) {
         return false;
     }
 
-    // FBX 파일 경로 구성
-    wchar_t path[MAX_PATH] = { 0 };
-    GetModuleFileNameW(NULL, path, MAX_PATH);
-    USES_CONVERSION;
-    std::string executepath = W2A(path);
-    executepath = executepath.substr(0, executepath.find_last_of("\\/"));
-    std::string FilePath = executepath + "\\FBX\\" + fileName + ".fbx";
+    std::string FilePath = ResolveFbxPath(fileName);
+    m_currentFbxDirectory = GetDirectoryName(FilePath);
 
     // FBX 파일 로드
     FbxImporter* importer = FbxImporter::Create(m_sdkManager, "");
     if (!importer->Initialize(FilePath.c_str(), -1, m_sdkManager->GetIOSettings())) {
         std::cerr << "Error: Unable to open FBX file! : "
             << importer->GetStatus().GetErrorString() << std::endl;
+        importer->Destroy();
         return false;
     }
 
     if (!importer->Import(m_scene)) {
         std::cerr << "Error: Failed to import FBX scene!" << std::endl;
+        importer->Destroy();
         return false;
     }
     importer->Destroy();
+    converter->Triangulate(m_scene, true);
 
     // 루트 노드에서 시작하여 모든 노드 탐색
     FbxNode* rootNode = m_scene->GetRootNode();
@@ -96,14 +273,13 @@ void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
 
         // Material 로드 및 할당
         int materialCount = node->GetMaterialCount();
-        int subMeshCount = model.subMeshes.size();
 
-        for (int i = 0; i < materialCount; ++i) {
-            if (i < subMeshCount) {  // 인덱스 범위 체크
-                LoadMaterial(node->GetMaterial(i), model.subMeshes[i]);
+        for (auto& subMesh : model.subMeshes) {
+            if (subMesh.materialIndex < static_cast<unsigned int>(materialCount)) {
+                LoadMaterial(node->GetMaterial(subMesh.materialIndex), subMesh);
             }
             else {
-                std::cerr << "Warning: Material index " << i << " exceeds subMesh count." << std::endl;
+                std::cerr << "Warning: Material index " << subMesh.materialIndex << " exceeds material count." << std::endl;
             }
         }
 
@@ -126,7 +302,7 @@ void FbxTool::ProcessNode(FbxNode* node, std::vector<Model>& outModels)
 void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
     std::vector<CUSTOMVERTEX> vertices;
     std::vector<unsigned int> indices;
-    std::unordered_map<int, SubMesh> subMeshMap;
+    std::map<int, std::vector<unsigned int>> materialIndices;
 
     FbxVector4* controlPoints = mesh->GetControlPoints();
     int polygonCount = mesh->GetPolygonCount();
@@ -142,12 +318,7 @@ void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
 
     for (int i = 0; i < polygonCount; ++i) {
         int polygonSize = mesh->GetPolygonSize(i);
-        int materialIndex = materialElement ? materialElement->GetIndexArray().GetAt(i) : 0;
-
-        // 서브메쉬 초기화
-        if (subMeshMap.find(materialIndex) == subMeshMap.end()) {
-            subMeshMap[materialIndex] = { static_cast<unsigned int>(indices.size()), 0, 0 };
-        }
+        int materialIndex = GetMaterialIndex(materialElement, i);
 
         for (int j = 0; j < polygonSize; ++j) {
             int controlPointIndex = mesh->GetPolygonVertex(i, j);
@@ -155,12 +326,7 @@ void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
             // UV 인덱스 확인 (폴리곤 정점 기준)
             int uvIndex = -1;
             if (hasUV) {
-                if (uvElement->GetMappingMode() == FbxLayerElement::eByPolygonVertex) {
-                    uvIndex = uvElement->GetIndexArray().GetAt(i * polygonSize + j);
-                }
-                else if (uvElement->GetMappingMode() == FbxLayerElement::eByControlPoint) {
-                    uvIndex = controlPointIndex; // 정점 인덱스를 사용
-                }
+                uvIndex = GetUVIndex(mesh, uvElement, i, j, controlPointIndex);
             }
 
             // UV 인덱스가 유효한지 확인
@@ -190,8 +356,7 @@ void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
                 }
 
                 // 인덱스 추가
-                indices.push_back(vertexMap[key]);
-                subMeshMap[materialIndex].indexCount++;
+                materialIndices[materialIndex].push_back(vertexMap[key]);
             }
             else {
                 // UV가 없는 경우 기본값 설정
@@ -211,16 +376,26 @@ void FbxTool::ProcessMesh(FbxMesh* mesh, Model& model) {
                 }
 
                 // 인덱스 추가
-                indices.push_back(vertexMap[key]);
-                subMeshMap[materialIndex].indexCount++;
+                materialIndices[materialIndex].push_back(vertexMap[key]);
             }
         }
     }
 
-    // 서브메쉬 정점 수 계산
-    for (auto& pair : subMeshMap) {
-        pair.second.vertexCount = static_cast<unsigned int>(vertexMap.size());
-        model.subMeshes.push_back(pair.second);
+    for (auto& pair : materialIndices) {
+        SubMesh subMesh = {};
+        subMesh.startIndex = static_cast<unsigned int>(indices.size());
+        subMesh.indexCount = static_cast<unsigned int>(pair.second.size());
+        subMesh.vertexStart = 0;
+        subMesh.vertexCount = static_cast<unsigned int>(vertices.size());
+        subMesh.materialIndex = static_cast<unsigned int>(pair.first);
+        subMesh.diffuseColor = D3DCOLOR_XRGB(255, 255, 255);
+        subMesh.uvScaleU = 1.0f;
+        subMesh.uvScaleV = 1.0f;
+        subMesh.uvOffsetU = 0.0f;
+        subMesh.uvOffsetV = 0.0f;
+
+        indices.insert(indices.end(), pair.second.begin(), pair.second.end());
+        model.subMeshes.push_back(subMesh);
     }
 
     // 모델에 최종 정점 및 인덱스 정보 저장
@@ -291,7 +466,7 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh) {
     for (int i = 0; i < textureCount; ++i) {
         FbxFileTexture* texture = diffuseProp.GetSrcObject<FbxFileTexture>(i);
         if (texture) {
-            std::string texturePath = texture->GetFileName();
+            std::string texturePath = ResolveTexturePath(texture->GetFileName(), m_currentFbxDirectory);
 
             // 이미 로드된 텍스처가 있는지 확인
             auto it = textureCache.find(texturePath);

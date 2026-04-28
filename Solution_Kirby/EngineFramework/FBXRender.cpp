@@ -98,22 +98,27 @@ void FBXRender::Render() {
                 continue;
             }
 
-            // 서브메쉬 텍스처 설정
-            for (size_t i = 0; i < subMesh.textures.size() && i < 8; ++i) {
-                if (subMesh.textures[i]) {
-                    device->SetTexture(static_cast<DWORD>(i), subMesh.textures[i]);
-                    m_logSystem.AddLog("Setting texture for slot " + std::to_string(i));
-                }
-                else {
-                    device->SetTexture(static_cast<DWORD>(i), nullptr);
-                    m_logSystem.AddLog("Setting texture for slot " + std::to_string(i) + ": nullptr");
-                }
+            for (DWORD i = 0; i < 8; ++i) {
+                device->SetTexture(i, nullptr);
+            }
+
+            device->SetRenderState(D3DRS_TEXTUREFACTOR, subMesh.diffuseColor);
+            if (!subMesh.textures.empty() && subMesh.textures[0]) {
+                device->SetTexture(0, subMesh.textures[0]);
+                device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+                device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+                device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+                m_logSystem.AddLog("Setting texture for slot 0");
+            }
+            else {
+                device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+                device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
             }
 
             // 서브메쉬 렌더링
             HRESULT hr = device->DrawIndexedPrimitive(
                 D3DPT_TRIANGLELIST,
-                subMesh.vertexStart,
+                0,
                 0,
                 model.vertexCount,
                 subMesh.startIndex,

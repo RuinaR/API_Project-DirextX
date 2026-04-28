@@ -127,6 +127,7 @@ struct SubMesh {
     unsigned int indexCount; // 인덱스 수
     unsigned int vertexCount; // 정점 수
     unsigned int vertexStart;
+    unsigned int materialIndex;
     D3DCOLOR diffuseColor; // 색상
     std::vector<IDirect3DTexture9*> textures; // 텍스처 목록
 

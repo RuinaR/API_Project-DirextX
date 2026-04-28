@@ -247,6 +247,14 @@ bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2& point)
 
 void RenderManager::Register(FBXRender* fbxr)
 {
+	for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
+	{
+		if ((*itr) == fbxr)
+		{
+			return;
+		}
+	}
+
 	m_fbxVec->push_back(fbxr);
 }
 

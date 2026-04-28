@@ -30,6 +30,7 @@ private:
     FbxManager* m_sdkManager;
     FbxScene* m_scene;
     FbxGeometryConverter* converter;
+    std::string m_currentFbxDirectory;
 
     void ProcessNode(FbxNode* node, std::vector<Model>& outModels);
     void ProcessMesh(FbxMesh* mesh, Model& model);
