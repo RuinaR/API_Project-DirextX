@@ -4,9 +4,18 @@
     <KirbySolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</KirbySolutionDir>
     <KirbySolutionDir Condition="'$(KirbySolutionDir)' == ''">$(MSBuildThisFileDirectory)</KirbySolutionDir>
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(KirbySolutionDir)</SolutionDir>
-    <DXSDK_DIR Condition="Exists('$(KirbySolutionDir)External\DirectXSDK\Include\d3dx9.h')">$(KirbySolutionDir)External\DirectXSDK\</DXSDK_DIR>
+    <D3DXPackageNativeDir>$(KirbySolutionDir)External\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\</D3DXPackageNativeDir>
+    <DXSDK_DIR Condition="'$(DXSDK_DIR)' == '' and Exists('$(D3DXPackageNativeDir)include\d3dx9.h')">$(D3DXPackageNativeDir)</DXSDK_DIR>
     <DXSDK_DIR Condition="'$(DXSDK_DIR)' == '' and Exists('$(ProgramFiles)\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h')">$(ProgramFiles)\Microsoft DirectX SDK (June 2010)\</DXSDK_DIR>
     <DXSDK_DIR Condition="'$(DXSDK_DIR)' == '' and Exists('$(ProgramFiles(x86))\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h')">$(ProgramFiles(x86))\Microsoft DirectX SDK (June 2010)\</DXSDK_DIR>
+    <D3DXIncludeDir Condition="Exists('$(D3DXPackageNativeDir)include\d3dx9.h')">$(D3DXPackageNativeDir)include</D3DXIncludeDir>
+    <D3DXLibraryDir Condition="'$(Platform)' == 'Win32' and Exists('$(D3DXPackageNativeDir)release\lib\x86\d3dx9.lib')">$(D3DXPackageNativeDir)release\lib\x86</D3DXLibraryDir>
+    <D3DXLibraryDir Condition="'$(Platform)' == 'x64' and Exists('$(D3DXPackageNativeDir)release\lib\x64\d3dx9.lib')">$(D3DXPackageNativeDir)release\lib\x64</D3DXLibraryDir>
+    <D3DXBinaryDir Condition="'$(Platform)' == 'Win32' and Exists('$(D3DXPackageNativeDir)release\bin\x86\D3DX9_43.dll')">$(D3DXPackageNativeDir)release\bin\x86</D3DXBinaryDir>
+    <D3DXBinaryDir Condition="'$(Platform)' == 'x64' and Exists('$(D3DXPackageNativeDir)release\bin\x64\D3DX9_43.dll')">$(D3DXPackageNativeDir)release\bin\x64</D3DXBinaryDir>
+    <D3DXIncludeDir Condition="'$(D3DXIncludeDir)' == '' and '$(DXSDK_DIR)' != ''">$(DXSDK_DIR)Include</D3DXIncludeDir>
+    <D3DXLibraryDir Condition="'$(D3DXLibraryDir)' == '' and '$(Platform)' == 'Win32' and '$(DXSDK_DIR)' != ''">$(DXSDK_DIR)Lib\x86</D3DXLibraryDir>
+    <D3DXLibraryDir Condition="'$(D3DXLibraryDir)' == '' and '$(Platform)' == 'x64' and '$(DXSDK_DIR)' != ''">$(DXSDK_DIR)Lib\x64</D3DXLibraryDir>
     <OutDir>$(KirbySolutionDir)Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>

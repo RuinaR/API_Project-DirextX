@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,7 +100,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,7 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -136,7 +136,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +155,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

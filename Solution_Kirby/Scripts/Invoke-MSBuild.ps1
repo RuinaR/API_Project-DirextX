@@ -26,17 +26,17 @@ if (-not $msbuild) {
     $msbuild = "MSBuild.exe"
 }
 
-$localDxSdk = Join-Path (Resolve-Path (Join-Path $PSScriptRoot "..")).Path "External\DirectXSDK\"
-if (Test-Path (Join-Path $localDxSdk "Include\d3dx9.h")) {
-    $env:DXSDK_DIR = $localDxSdk
-}
-elseif (-not $env:DXSDK_DIR) {
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$d3dxPackageNativeDir = Join-Path $repoRoot "External\packages\Microsoft.DXSDK.D3DX.9.29.952.8\build\native\"
+
+if (-not $env:DXSDK_DIR) {
     $legacyDxSdk = Join-Path ${env:ProgramFiles(x86)} "Microsoft DirectX SDK (June 2010)\"
     if (Test-Path (Join-Path $legacyDxSdk "Include\d3dx9.h")) {
         $env:DXSDK_DIR = $legacyDxSdk
     }
     else {
-        Write-Warning "DXSDK_DIR is not set and the legacy DirectX SDK include path was not found. Install the June 2010 DirectX SDK or provide DXSDK_DIR before building."
+        & (Join-Path $PSScriptRoot "Restore-D3DXPackage.ps1")
+        $env:DXSDK_DIR = $d3dxPackageNativeDir
     }
 }
 

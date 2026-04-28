@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk</IncludePath>
-    <LibraryPath>$(Configuration);$(DXSDK_DIR)Lib\x86;$(SolutionDir)Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk</IncludePath>
+    <LibraryPath>$(Configuration);$(D3DXLibraryDir);$(SolutionDir)Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk</IncludePath>
-    <LibraryPath>$(Configuration);$(DXSDK_DIR)Lib\x86;$(SolutionDir)Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk</IncludePath>
+    <LibraryPath>$(Configuration);$(D3DXLibraryDir);$(SolutionDir)Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk</IncludePath>
-    <LibraryPath>$(Configuration);$(DXSDK_DIR)Lib\x64;$(SolutionDir)Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk</IncludePath>
+    <LibraryPath>$(Configuration);$(D3DXLibraryDir);$(SolutionDir)Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)fbxsdk</IncludePath>
-    <LibraryPath>$(Configuration);$(DXSDK_DIR)Lib\x64;$(SolutionDir)Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk</IncludePath>
+    <LibraryPath>$(Configuration);$(D3DXLibraryDir);$(SolutionDir)Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

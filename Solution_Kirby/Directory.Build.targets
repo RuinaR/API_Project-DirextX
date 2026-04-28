@@ -27,6 +27,9 @@
       <KirbyRuntimeAsset Include="$(KirbySolutionDir)Lib\x64\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')">
         <RuntimeSubDir></RuntimeSubDir>
       </KirbyRuntimeAsset>
+      <KirbyRuntimeAsset Include="$(D3DXBinaryDir)\D3DX9_43.dll" Condition="'$(D3DXBinaryDir)' != '' and Exists('$(D3DXBinaryDir)\D3DX9_43.dll')">
+        <RuntimeSubDir></RuntimeSubDir>
+      </KirbyRuntimeAsset>
     </ItemGroup>
     <Copy SourceFiles="@(KirbyRuntimeAsset)"
           DestinationFiles="@(KirbyRuntimeAsset->'$(OutDir)%(RuntimeSubDir)%(Filename)%(Extension)')"

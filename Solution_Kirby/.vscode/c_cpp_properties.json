@@ -12,8 +12,7 @@
         "${workspaceFolder}\\include",
         "${workspaceFolder}\\Box2D",
         "${workspaceFolder}\\fbxsdk",
-        "${workspaceFolder}\\External\\DirectXSDK\\Include",
-        "${env:DXSDK_DIR}Include"
+        "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
       ],
       "defines": [
         "WIN32",
@@ -32,8 +31,7 @@
         "${workspaceFolder}\\include",
         "${workspaceFolder}\\Box2D",
         "${workspaceFolder}\\fbxsdk",
-        "${workspaceFolder}\\External\\DirectXSDK\\Include",
-        "${env:DXSDK_DIR}Include"
+        "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
       ],
       "defines": [
         "_DEBUG",

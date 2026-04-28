@@ -22,10 +22,13 @@ Bin/Debug_Win32/BuildResultGame.exe
 
 Runtime asset folders are copied next to the executable during application builds so existing exe-relative resource loading keeps working.
 
-This workspace includes the legacy DirectX SDK headers/libs under:
+This workspace restores the legacy D3DX headers/libs from NuGet when the
+June 2010 DirectX SDK is not installed:
 
 ```text
-External/DirectXSDK
+External/packages/Microsoft.DXSDK.D3DX.9.29.952.8
 ```
 
-`Directory.Build.props` maps that folder to `$(DXSDK_DIR)` for MSBuild. If the folder is removed, set the system `DXSDK_DIR` environment variable to an installed June 2010 DirectX SDK path.
+`Scripts/Invoke-MSBuild.ps1` runs `Scripts/Restore-D3DXPackage.ps1` as needed.
+`Directory.Build.props` then maps either the restored NuGet package or an
+installed June 2010 DirectX SDK path into the D3DX include/library properties.

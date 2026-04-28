@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -72,20 +72,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)fbxsdk;$(DXSDK_DIR)Include;$(SolutionDir)Box2D;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib;$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)fbxsdk;$(D3DXIncludeDir);$(SolutionDir)Box2D;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib;$(D3DXLibraryDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)fbxsdk;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib;$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)fbxsdk;$(D3DXIncludeDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib;$(D3DXLibraryDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)fbxsdk;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib\x64;$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)fbxsdk;$(D3DXIncludeDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib\x64;$(D3DXLibraryDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)fbxsdk;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib\x64;$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)fbxsdk;$(D3DXIncludeDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib\x64;$(D3DXLibraryDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,8 +95,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- D3DX paths are resolved by Directory.Build.props from either NuGet or the legacy DirectX SDK. -->
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(D3DXIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
@@ -107,7 +107,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference />
   </ItemDefinitionGroup>
@@ -119,8 +119,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- D3DX paths are resolved by Directory.Build.props from either NuGet or the legacy DirectX SDK. -->
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(D3DXIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
@@ -132,7 +132,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)$(Configuration);$(SolutionDir)\Lib</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference />
   </ItemDefinitionGroup>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(D3DXIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -151,7 +151,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,7 +162,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(ProjectDir)..\fbxsdk;$(D3DXIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -173,7 +173,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Box2D.lib;Imgui.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
