@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "EditerScene.h"
 #include "Button.h"
 #include "SceneChanger.h"
@@ -8,7 +8,7 @@ void EditerScene::StartEdit()
 	string mapName = m_input->GetString();
 	if (mapName.empty())
 	{
-		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("¸Ê ÀÌ¸§À» ÀÔ·Â ÇÏ¼¼¿ä"), TEXT("¾Ë¸²"), MB_OK);
+		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("ë§µ ì´ë¦„ì„ ìž…ë ¥ í•˜ì„¸ìš”"), TEXT("ì•Œë¦¼"), MB_OK);
 		return;
 	}
 	m_btn->GetGameObject()->SetDestroy(true);

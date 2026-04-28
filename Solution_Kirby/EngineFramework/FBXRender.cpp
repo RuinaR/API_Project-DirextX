@@ -1,12 +1,12 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "FBXRender.h"
 
-// ª˝º∫¿⁄: FBX ∆ƒ¿œ ¿Ã∏ß¿ª πﬁæ∆ √ ±‚»≠
+// ÏÉùÏÑ±Ïûê: FBX ÌååÏùº Ïù¥Î¶ÑÏùÑ Î∞õÏïÑ Ï¥àÍ∏∞Ìôî
 FBXRender::FBXRender(std::string name) : m_fbxFileName(std::move(name)) {}
 
-// √ ±‚»≠ «‘ºˆ
+// Ï¥àÍ∏∞Ìôî Ìï®Ïàò
 void FBXRender::Initialize() {
-    auto device = MainFrame::GetInstance()->GetDevice();  // Direct3D µπŸ¿ÃΩ∫ ∞°¡Æø¿±‚
+    auto device = MainFrame::GetInstance()->GetDevice();  // Direct3D ÎîîÎ∞îÏù¥Ïä§ Í∞ÄÏ†∏Ïò§Í∏∞
 
     if (!m_tool.Initialize()) {
         m_logSystem.AddLog("Error: Failed to initialize FbxTool!");
@@ -26,13 +26,13 @@ void FBXRender::Initialize() {
         m_tool.CreateIndexBuffer(model);
     }
 
-    RenderManager::GetInstance()->Register(this);  // Register∑Œ ºˆ¡§
+    RenderManager::GetInstance()->Register(this);  // RegisterÎ°ú ÏàòÏ†ï
 }
 
-// ¿⁄ø¯ «ÿ¡¶ «‘ºˆ
+// ÏûêÏõê Ìï¥Ï†ú Ìï®Ïàò
 void FBXRender::Release() {
     m_logSystem.AddLog("FBXRender resources released.");
-    RenderManager::GetInstance()->Unregister(this);  // Unregister∑Œ ºˆ¡§
+    RenderManager::GetInstance()->Unregister(this);  // UnregisterÎ°ú ÏàòÏ†ï
 
     for (auto& model : m_models) {
         if (model.vertexBuffer) {
@@ -48,7 +48,7 @@ void FBXRender::Release() {
 
 void FBXRender::Start() {}
 
-// ∑Œ±◊ «•Ω√
+// Î°úÍ∑∏ ÌëúÏãú
 void FBXRender::Update() {
     //m_logSystem.ShowLogWindow();
 }
@@ -69,7 +69,7 @@ void FBXRender::Render() {
             continue;
         }
 
-        // Stream sourceøÕ ¿Œµ¶Ω∫ πˆ∆€ º≥¡§
+        // Stream sourceÏôÄ Ïù∏Îç±Ïä§ Î≤ÑÌçº ÏÑ§Ï†ï
         device->SetStreamSource(0, model.vertexBuffer, 0, sizeof(CUSTOMVERTEX));
         device->SetIndices(model.indexBuffer);
 
@@ -80,7 +80,7 @@ void FBXRender::Render() {
             m_logSystem.AddLog("SubMesh startIndex: " + std::to_string(subMesh.startIndex));
             m_logSystem.AddLog("SubMesh indexCount: " + std::to_string(subMesh.indexCount));
 
-            // ¿Ø»øº∫ ∞ÀªÁ
+            // Ïú†Ìö®ÏÑ± Í≤ÄÏÇ¨
             if (subMesh.startIndex >= model.indices.size()) {
                 m_logSystem.AddLog("Error: SubMesh startIndex exceeds model indices size!");
                 continue;
@@ -98,7 +98,7 @@ void FBXRender::Render() {
                 continue;
             }
 
-            // º≠∫Í∏ﬁΩ¨ ≈ÿΩ∫√≥ º≥¡§
+            // ÏÑúÎ∏åÎ©îÏâ¨ ÌÖçÏä§Ï≤ò ÏÑ§Ï†ï
             for (size_t i = 0; i < subMesh.textures.size() && i < 8; ++i) {
                 if (subMesh.textures[i]) {
                     device->SetTexture(static_cast<DWORD>(i), subMesh.textures[i]);
@@ -110,7 +110,7 @@ void FBXRender::Render() {
                 }
             }
 
-            // º≠∫Í∏ﬁΩ¨ ∑ª¥ı∏µ
+            // ÏÑúÎ∏åÎ©îÏâ¨ Î†åÎçîÎßÅ
             HRESULT hr = device->DrawIndexedPrimitive(
                 D3DPT_TRIANGLELIST,
                 subMesh.vertexStart,
@@ -120,7 +120,7 @@ void FBXRender::Render() {
                 subMesh.indexCount / 3
             );
 
-            // DrawIndexedPrimitive ∞·∞˙ »Æ¿Œ
+            // DrawIndexedPrimitive Í≤∞Í≥º ÌôïÏù∏
             if (FAILED(hr)) {
                 m_logSystem.AddLog("Error: DrawIndexedPrimitive failed!");
             }
@@ -130,7 +130,7 @@ void FBXRender::Render() {
 
 
 
-// ø˘µÂ ∫Ø»Ø º≥¡§
+// ÏõîÎìú Î≥ÄÌôò ÏÑ§Ï†ï
 void FBXRender::SetWorldTransform(D3DXMATRIX& matWorld) {
     D3DXVECTOR3 angle = { m_gameObj->GetAngleX(), m_gameObj->GetAngleY(), m_gameObj->GetAngleZ() };
     D3DXVECTOR3 scale = m_gameObj->Size3D();

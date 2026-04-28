@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "InputString.h"
 
 void InputString::Initialize()
@@ -19,7 +19,7 @@ void InputString::Update()
 {
     ImGui::Begin("InputText");
 
-    // InputText À§Á¬ »ı¼º
+    // InputText ìœ„ì ¯ ìƒì„±
     ImGui::InputText("Input", m_inputBuffer, IM_ARRAYSIZE(m_inputBuffer));
 
     ImGui::End();

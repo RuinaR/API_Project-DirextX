@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "GameScene.h"
 #include "Component.h"
 #include "GameObject.h"
@@ -17,7 +17,7 @@ void GameScene::StartGame()
 	string mapName = m_input->GetString();
 	if (mapName.empty())
 	{
-		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("¸Ê ÀÌ¸§À» ÀÔ·Â ÇÏ¼¼¿ä"), TEXT("¾Ë¸²"), MB_OK);
+		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("ë§µ ì´ë¦„ì„ ìž…ë ¥ í•˜ì„¸ìš”"), TEXT("ì•Œë¦¼"), MB_OK);
 		return;
 	}
 	m_btn->GetGameObject()->SetDestroy(true);
@@ -25,7 +25,7 @@ void GameScene::StartGame()
 	
 	if (!StageMaker::GetInstance()->SetMap(mapName))
 	{
-		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("Á¸ÀçÇÏÁö ¾Ê´Â ¸Ê"), TEXT("¾Ë¸²"), MB_OK);
+		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ë§µ"), TEXT("ì•Œë¦¼"), MB_OK);
 	}
 	StageMaker::GetInstance()->StageStart();
 	GameObject* btnObj = new GameObject();

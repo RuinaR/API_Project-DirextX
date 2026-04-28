@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "structs.h"
 
 class Camera
@@ -7,7 +7,7 @@ private:
 	static Camera* mPthis;
 	Camera() {}
 	~Camera() {}
-	// ī�޶� ��ġ
+	// 카메라 위치
 	D3DXVECTOR3 m_eye;
 	D3DXVECTOR3 m_at;
 	D3DXVECTOR3 m_up;

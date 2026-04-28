@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "AnimationRender.h"
 
 bool AnimationManager::IsImageFile(const wstring& filename)
@@ -31,7 +31,7 @@ Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
             wstring fileName = fileData.cFileName;
             if (IsImageFile(fileName)) {
                 wstring filePath = currentDirectory + L"\\" + folderName + L"\\" + fileName;
-                cout << "ÅØ½ºÃ³ ·Îµù Áß: " << filePath.c_str() << endl; // µð¹ö±× Ãâ·Â
+                cout << "í…ìŠ¤ì²˜ ë¡œë”© ì¤‘: " << filePath.c_str() << endl; // ë””ë²„ê·¸ ì¶œë ¥
 
                 IDirect3DTexture9* texture = nullptr;
                 texture = TextureManager::GetInstance()->GetTexture(filePath);
@@ -40,14 +40,14 @@ Animation AnimationManager::LoadAnimation(const wstring& folderName, float time)
                     textures.push_back(texture);
                 }
                 else {
-                    cout << "ÅØ½ºÃ³ ·Îµù ½ÇÆÐ: " << filePath.c_str() << endl;
+                    cout << "í…ìŠ¤ì²˜ ë¡œë”© ì‹¤íŒ¨: " << filePath.c_str() << endl;
                 }
             }
         } while (FindNextFileW(hFind, &fileData) != 0);
         FindClose(hFind);
     }
     else {
-        wcout << L"Æú´õ¿¡¼­ ÆÄÀÏ Ã£±â ½ÇÆÐ: " << folderName << endl;
+        wcout << L"í´ë”ì—ì„œ íŒŒì¼ ì°¾ê¸° ì‹¤íŒ¨: " << folderName << endl;
     }
 
     Animation newAnim;

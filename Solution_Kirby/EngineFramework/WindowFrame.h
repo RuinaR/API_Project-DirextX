@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Buffer.h"
 #include "Scene.h"
 class WindowFrame
@@ -17,7 +17,7 @@ public:
 	static WindowFrame* GetInstance();
 	static void Destroy();
 
-	//Äİ¹éÇÔ¼ö´Â staticÀÌ¾î¾ß ÇÑ´Ù.
+	//ì½œë°±í•¨ìˆ˜ëŠ” staticì´ì–´ì•¼ í•œë‹¤.
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
 	void SetScene(Scene* scene);

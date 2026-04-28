@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ImageRender.h"
 
 void ImageRender::DrawImage(int x, int y, int z, int w, int h)
@@ -32,7 +32,7 @@ void ImageRender::InitGameObj(GameObject* obj)
 {
     Component::InitGameObj(obj);
 
-    //Ãß°¡ Àâ¾÷ ÇÊ¿ä?
+    //ì¶”ê°€ ì¡ì—… í•„ìš”?
 }
 
 void ImageRender::LoadTextureCallback(IDirect3DTexture9* tex)
@@ -43,28 +43,28 @@ void ImageRender::LoadTextureCallback(IDirect3DTexture9* tex)
 void ImageRender::SetupVertices()
 {
     CUSTOMVERTEX vertices[4];
-    vertices[0].x = -0.5f; // ¿ŞÂÊ »ó´Ü ¸ğ¼­¸®
+    vertices[0].x = -0.5f; // ì™¼ìª½ ìƒë‹¨ ëª¨ì„œë¦¬
     vertices[0].y = 0.5f;
     vertices[0].z = 0.0f;
     vertices[0].color = 0xffffffff;
     vertices[0].tu = 0.0f;
     vertices[0].tv = 0.0f;
 
-    vertices[1].x = -0.5f; // ¿ŞÂÊ ÇÏ´Ü ¸ğ¼­¸®
+    vertices[1].x = -0.5f; // ì™¼ìª½ í•˜ë‹¨ ëª¨ì„œë¦¬
     vertices[1].y = -0.5f;
     vertices[1].z = 0.0f;
     vertices[1].color = 0xffffffff;
     vertices[1].tu = 0.0f;
     vertices[1].tv = 1.0f;
 
-    vertices[2].x = 0.5f; // ¿À¸¥ÂÊ »ó´Ü ¸ğ¼­¸®
+    vertices[2].x = 0.5f; // ì˜¤ë¥¸ìª½ ìƒë‹¨ ëª¨ì„œë¦¬
     vertices[2].y = 0.5f;
     vertices[2].z = 0.0f;
     vertices[2].color = 0xffffffff;
     vertices[2].tu = 1.0f;
     vertices[2].tv = 0.0f;
 
-    vertices[3].x = 0.5f; // ¿À¸¥ÂÊ ÇÏ´Ü ¸ğ¼­¸®
+    vertices[3].x = 0.5f; // ì˜¤ë¥¸ìª½ í•˜ë‹¨ ëª¨ì„œë¦¬
     vertices[3].y = -0.5f;
     vertices[3].z = 0.0f;
     vertices[3].color = 0xffffffff;

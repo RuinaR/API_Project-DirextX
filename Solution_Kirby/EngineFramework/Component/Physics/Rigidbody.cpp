@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 //#include "Rigidbody.h"
 //#include "GameObject.h"
 //#include "Collider.h"
@@ -48,15 +48,15 @@
 //			if (rcInter.top == pHold->top)
 //			{
 //				m_isOnLand = true;
-//				pRect->top += nH; // y ÁÂÇ¥¸¦ À§·Î ÀÌµ¿
-//				pRect->bottom += nH; // y ÁÂÇ¥¸¦ À§·Î ÀÌµ¿
+//				pRect->top += nH; // y ì¢Œí‘œë¥¼ ìœ„ë¡œ ì´ë™
+//				pRect->bottom += nH; // y ì¢Œí‘œë¥¼ ìœ„ë¡œ ì´ë™
 //				if (m_velocity.y < 0)
 //					m_velocity.y = 0;
 //			}
 //			else if (rcInter.bottom == pHold->bottom)
 //			{
-//				pRect->top -= nH; // y ÁÂÇ¥¸¦ ¾Æ·¡·Î ÀÌµ¿
-//				pRect->bottom -= nH; // y ÁÂÇ¥¸¦ ¾Æ·¡·Î ÀÌµ¿
+//				pRect->top -= nH; // y ì¢Œí‘œë¥¼ ì•„ëž˜ë¡œ ì´ë™
+//				pRect->bottom -= nH; // y ì¢Œí‘œë¥¼ ì•„ëž˜ë¡œ ì´ë™
 //				if (m_velocity.y > 0)
 //					m_velocity.y = 0;
 //			}
@@ -65,15 +65,15 @@
 //		{
 //			if (rcInter.left == pHold->left)
 //			{
-//				pRect->left += nW; // x ÁÂÇ¥¸¦ ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿
-//				pRect->right += nW; // x ÁÂÇ¥¸¦ ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿
+//				pRect->left += nW; // x ì¢Œí‘œë¥¼ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì´ë™
+//				pRect->right += nW; // x ì¢Œí‘œë¥¼ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì´ë™
 //				if (m_velocity.x > 0)
 //					m_velocity.x = 0;
 //			}
 //			else if (rcInter.right == pHold->right)
 //			{
-//				pRect->left -= nW; // x ÁÂÇ¥¸¦ ¿ÞÂÊÀ¸·Î ÀÌµ¿
-//				pRect->right -= nW; // x ÁÂÇ¥¸¦ ¿ÞÂÊÀ¸·Î ÀÌµ¿
+//				pRect->left -= nW; // x ì¢Œí‘œë¥¼ ì™¼ìª½ìœ¼ë¡œ ì´ë™
+//				pRect->right -= nW; // x ì¢Œí‘œë¥¼ ì™¼ìª½ìœ¼ë¡œ ì´ë™
 //				if (m_velocity.x < 0)
 //					m_velocity.x = 0;
 //			}

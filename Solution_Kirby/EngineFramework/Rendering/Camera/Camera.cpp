@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Camera.h"
 Camera* Camera::mPthis = nullptr;
 void Camera::Create()
@@ -29,11 +29,11 @@ void Camera::InitializeView()
 	mPthis->m_at = { 0.0f, 0.0f, 0.0f };
 	mPthis->m_up = { 0.0f, 1.0f, 0.0f };
 
-	// ºä Çà·Ä »ý¼º
+	// ë·° í–‰ë ¬ ìƒì„±
 	D3DXMATRIX matView;
 	D3DXMatrixLookAtLH(&matView, &m_eye, &m_at, &m_up);
 
-	// µð¹ÙÀÌ½º¿¡ ºä Çà·Ä ¼³Á¤
+	// ë””ë°”ì´ìŠ¤ì— ë·° í–‰ë ¬ ì„¤ì •
 	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_VIEW, &matView);
 }
 

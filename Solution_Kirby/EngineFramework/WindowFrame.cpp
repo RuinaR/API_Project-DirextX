@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Scene.h"
 
 WindowFrame* WindowFrame::m_Pthis = nullptr;
@@ -40,7 +40,7 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, iMessage, wParam, lParam))
 	{
-		return true; // ¸Þ½ÃÁö°¡ ImGui¿¡ ÀÇÇØ Ã³¸®µÇ¾úÀ½À» ³ªÅ¸³¿
+		return true; // ë©”ì‹œì§€ê°€ ImGuiì— ì˜í•´ ì²˜ë¦¬ë˜ì—ˆìŒì„ ë‚˜íƒ€ëƒ„
 	}
 
 	switch (iMessage)
@@ -85,7 +85,7 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 		PostQuitMessage(0);
 		return 0;
 	}
-	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
+	return(DefWindowProcW(hWnd, iMessage, wParam, lParam));
 }
 
 void WindowFrame::SetScene(Scene* scene)
@@ -112,17 +112,19 @@ void WindowFrame::Initialize(RenderType type)
 
 void WindowFrame::BuildWindow()
 {
-	WNDCLASSEX WndClass = 
+	static constexpr const wchar_t* kWindowTitle = L"ìµœì›ì¤€";
+
+	WNDCLASSEXW WndClass = 
 	{
-	sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
+	sizeof(WNDCLASSEXW), CS_CLASSDC, WndProc, 0L, 0L,
 	GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
-	"MyWindow", NULL
+	L"MyWindow", NULL
 	};
 
-	RegisterClassEx(&WndClass);
+	RegisterClassExW(&WndClass);
 
 	m_Pthis->m_hWnd =
-		CreateWindow(WndClass.lpszClassName, "ÃÖ¿øÁØ",
+		CreateWindowW(WndClass.lpszClassName, kWindowTitle,
 			WS_OVERLAPPED | 
 			WS_CAPTION | 
 			WS_SYSMENU | 
@@ -133,6 +135,8 @@ void WindowFrame::BuildWindow()
 			0, 0, MAXWINDOWW, MAXWINDOWH,
 			NULL, (HMENU)NULL, m_Pthis->m_Instance, NULL);
 
+	SetWindowTextW(m_Pthis->m_hWnd, kWindowTitle);
+
 	ShowWindow(m_Pthis->m_hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(m_Pthis->m_hWnd);
 
@@ -141,5 +145,5 @@ void WindowFrame::BuildWindow()
 void WindowFrame::Run(const MSG* Message)
 {
 	TranslateMessage(Message);
-	DispatchMessage(Message);
+	DispatchMessageW(Message);
 }

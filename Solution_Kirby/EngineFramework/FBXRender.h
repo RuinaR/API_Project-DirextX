@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <vector>
 
@@ -25,7 +25,7 @@ private:
 class FBXRender : public Component {
 private:
     FbxTool m_tool;
-    std::string m_fbxFileName;  // ·ÎµåÇÒ FBX ÆÄÀÏ ÀÌ¸§
+    std::string m_fbxFileName;  // ë¡œë“œí•  FBX íŒŒì¼ ì´ë¦„
     std::vector<Model> m_models;
 
     LogSystem m_logSystem;

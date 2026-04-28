@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "StageMaker.h"
 #include "Player.h"
 #include "BoxCollider.h"
@@ -28,17 +28,17 @@ vector<string> StageMaker::ReadMapData(string mapName)
     USES_CONVERSION;
     std::string executepath = W2A(path);
     executepath = executepath.substr(0, executepath.find_last_of("\\/"));
-    // ¸Ê ÆÄÀÏ °æ·Î ¼³Á¤
+    // ë§µ íŒŒì¼ ê²½ë¡œ ì„¤ì •
     string mapFilePath = executepath + "\\Map\\" + mapName + ".txt";
 
-    // ÆÄÀÏ ¿­±â
+    // íŒŒì¼ ì—´ê¸°
     ifstream inFile(mapFilePath);
     if (!inFile) {
-        cout << "¸Ê ÆÄÀÏÀÌ ¾ø½À´Ï´Ù." << endl;
+        cout << "ë§µ íŒŒì¼ì´ ì—†ìŠµë‹ˆë‹¤." << endl;
         return mapData;
     }
 
-    // ÆÄÀÏ¿¡¼­ ¼ıÀÚµéÀ» 2Â÷¿ø ¹è¿­·Î ÀĞ¾î¿À±â
+    // íŒŒì¼ì—ì„œ ìˆ«ìë“¤ì„ 2ì°¨ì› ë°°ì—´ë¡œ ì½ì–´ì˜¤ê¸°
     
     string line;
     while (getline(inFile, line)) 
@@ -46,7 +46,7 @@ vector<string> StageMaker::ReadMapData(string mapName)
         mapData.push_back('0' + line);
     }
 
-    // ÆÄÀÏ ´İ±â
+    // íŒŒì¼ ë‹«ê¸°
     inFile.close();
     return mapData;
 }
@@ -207,7 +207,7 @@ bool StageMaker::SetMap(string mapName)
     vector<string> mapData = ReadMapData(mapName);
     if (mapData.empty())
     {
-        cout << "¸Ê µ¥ÀÌÅÍ ¾øÀ½" << endl;
+        cout << "ë§µ ë°ì´í„° ì—†ìŒ" << endl;
         m_name = "";
         return false;
     }

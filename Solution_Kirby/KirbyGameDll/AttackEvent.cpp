@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "AttackEvent.h"
 #include "Collider.h"
 #include "game.h"
@@ -7,7 +7,7 @@ void AttackEvent::CollisionEnter(Collider* other)
 {
 	if (other->GetGameObject()->GetTag() == TAG_MONSTER)
 	{
-		other->GetGameObject()->SetDestroy(true);  //µ¥¹ÌÁö Ã³¸® ÇÒ °Í
+		other->GetGameObject()->SetDestroy(true);  //ë°ë¯¸ì§€ ì²˜ë¦¬ í•  ê²ƒ
 		m_gameObj->SetDestroy(true);
 	}
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "RenderManager.h"
 class Collider : public Component, public DebugRender
 {
@@ -28,7 +28,7 @@ public:
 	bool GetTrigger();
 	b2Body* GetBody();
 
-	// DebugRenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// DebugRenderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 	virtual void DebugRenderUpdate() override;
 };
 

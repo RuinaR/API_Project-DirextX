@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define FBXSDK_SHARED
 
 #include <cmath>
@@ -114,42 +114,42 @@ struct DEBUGVERTEX
     DWORD color;        // The vertex color
 };
 #define D3DFVF_DEBUGVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE)
-// ¸ŞÅ×¸®¾ó ±¸Á¶Ã¼
+// ë©”í…Œë¦¬ì–¼ êµ¬ì¡°ì²´
 struct Material
 {
     std::vector<std::string> texturePaths;
     std::vector<IDirect3DTexture9*> textures;
-    D3DCOLOR diffuseColor;  // ÀçÁúÀÇ È®»ê »ö»ó
+    D3DCOLOR diffuseColor;  // ì¬ì§ˆì˜ í™•ì‚° ìƒ‰ìƒ
 };
 
 struct SubMesh {
-    unsigned int startIndex; // ½ÃÀÛ ÀÎµ¦½º
-    unsigned int indexCount; // ÀÎµ¦½º ¼ö
-    unsigned int vertexCount; // Á¤Á¡ ¼ö
+    unsigned int startIndex; // ì‹œì‘ ì¸ë±ìŠ¤
+    unsigned int indexCount; // ì¸ë±ìŠ¤ ìˆ˜
+    unsigned int vertexCount; // ì •ì  ìˆ˜
     unsigned int vertexStart;
-    D3DCOLOR diffuseColor; // »ö»ó
-    std::vector<IDirect3DTexture9*> textures; // ÅØ½ºÃ³ ¸ñ·Ï
+    D3DCOLOR diffuseColor; // ìƒ‰ìƒ
+    std::vector<IDirect3DTexture9*> textures; // í…ìŠ¤ì²˜ ëª©ë¡
 
-    FLOAT uvScaleU;    // UV ½ºÄÉÀÏ U
-    FLOAT uvScaleV;    // UV ½ºÄÉÀÏ V
-    FLOAT uvOffsetU;   // UV ¿ÀÇÁ¼Â U
-    FLOAT uvOffsetV;   // UV ¿ÀÇÁ¼Â V
+    FLOAT uvScaleU;    // UV ìŠ¤ì¼€ì¼ U
+    FLOAT uvScaleV;    // UV ìŠ¤ì¼€ì¼ V
+    FLOAT uvOffsetU;   // UV ì˜¤í”„ì…‹ U
+    FLOAT uvOffsetV;   // UV ì˜¤í”„ì…‹ V
 };
 
-//¸ğµ¨
+//ëª¨ë¸
 struct Model
 {
     std::vector<CUSTOMVERTEX> vertices;
     std::vector<unsigned int> indices;
-    std::vector<SubMesh> subMeshes;  // ¼­ºê ¸Ş½Ã ¸ñ·Ï
+    std::vector<SubMesh> subMeshes;  // ì„œë¸Œ ë©”ì‹œ ëª©ë¡
     IDirect3DVertexBuffer9* vertexBuffer = nullptr;
     IDirect3DIndexBuffer9* indexBuffer = nullptr;
     int indexCount = 0;
     int vertexCount = 0;
-    // »ı¼ºÀÚ: ¹öÆÛ ÃÊ±âÈ­
+    // ìƒì„±ì: ë²„í¼ ì´ˆê¸°í™”
     Model() = default;
 
-    // ¼Ò¸êÀÚ: ¹öÆÛ ÇØÁ¦
+    // ì†Œë©¸ì: ë²„í¼ í•´ì œ
     ~Model() {
         if (vertexBuffer) {
             vertexBuffer->Release();

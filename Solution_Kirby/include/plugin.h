@@ -1,4 +1,4 @@
-#ifndef IPLUGIN_H_
+ï»¿#ifndef IPLUGIN_H_
 #define IPLUGIN_H_
 
 #include <string>
@@ -36,7 +36,7 @@ public:
 };
 
 typedef IPlugin* (*CREATEPLUGIN)(PluginManager &mgr);
-// ÇÃ·¯±×ÀÎ ¸ŞÀÎÇÔ¼ö
+// í”ŒëŸ¬ê·¸ì¸ ë©”ì¸í•¨ìˆ˜
 extern "C" PLUGINDECL  IPlugin* CreatePlugin(PluginManager &mgr);
 
 

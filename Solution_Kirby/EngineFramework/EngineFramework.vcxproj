@@ -97,7 +97,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <ConformanceMode>true</ConformanceMode>
       <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
     <Link>

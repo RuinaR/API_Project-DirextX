@@ -1,4 +1,4 @@
-#include "BuildLoopCls.h"
+Ôªø#include "BuildLoopCls.h"
 #include "../include/PluginManager.h"
 #include "../include/plugin.h"
 #include "../EngineFramework/pch.h"
@@ -8,7 +8,7 @@ void BuildLoopCls::Init(HINSTANCE hInstance)
 {
 	std::string dllfilename = "KirbyGameDll.dll";
 
-	// «ˆ¿Á Ω««‡ ∆˙¥ı ∞Ê∑Œ
+	// ÌòÑÏû¨ Ïã§Ìñâ Ìè¥Îçî Í≤ΩÎ°ú
 	wchar_t path[MAX_PATH] = { 0 };
 	GetModuleFileName(NULL, path, MAX_PATH);
 	USES_CONVERSION;

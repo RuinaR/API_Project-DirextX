@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <d3dx9.h>
 #include <string>
 #include <unordered_map>
@@ -10,24 +10,24 @@ public:
     static TextureManager* GetInstance();
     static void Destroy();
 public:
-    // »ı¼ºÀÚ¿Í ¼Ò¸êÀÚ
+    // ìƒì„±ìì™€ ì†Œë©¸ì
     TextureManager();
     ~TextureManager();
 
-    // ÅØ½ºÃ³ ·Îµù ¹× ¹İÈ¯ ÇÔ¼ö
+    // í…ìŠ¤ì²˜ ë¡œë”© ë° ë°˜í™˜ í•¨ìˆ˜
     IDirect3DTexture9* GetTexture(const std::string& filepath);
     IDirect3DTexture9* GetTexture(const std::wstring& filepath);
 
-    //ºñµ¿±â ÅØ½ºÃ³ ·Îµù ÇÔ¼ö
+    //ë¹„ë™ê¸° í…ìŠ¤ì²˜ ë¡œë”© í•¨ìˆ˜
     void GetTexture(const std::string& filepath, std::function<void(IDirect3DTexture9*)> func);
     void GetTexture(const std::wstring& filepath, std::function<void(IDirect3DTexture9*)> func);
 
-    // ¸ğµç ÅØ½ºÃ³ ÇØÁ¦ ÇÔ¼ö
+    // ëª¨ë“  í…ìŠ¤ì²˜ í•´ì œ í•¨ìˆ˜
     void ReleaseAllTextures();
 
 private:
     static TextureManager* m_Pthis;
-    std::unordered_map<std::string, IDirect3DTexture9*> m_textureMap; // °æ·Î¸¦ Å°·Î, ÅØ½ºÃ³ Æ÷ÀÎÅÍ¸¦ °ªÀ¸·Î ÇÏ´Â ¸Ê
-    std::unordered_map<std::wstring, IDirect3DTexture9*> m_textureMapW; // °æ·Î¸¦ Å°·Î, ÅØ½ºÃ³ Æ÷ÀÎÅÍ¸¦ °ªÀ¸·Î ÇÏ´Â ¸Ê
+    std::unordered_map<std::string, IDirect3DTexture9*> m_textureMap; // ê²½ë¡œë¥¼ í‚¤ë¡œ, í…ìŠ¤ì²˜ í¬ì¸í„°ë¥¼ ê°’ìœ¼ë¡œ í•˜ëŠ” ë§µ
+    std::unordered_map<std::wstring, IDirect3DTexture9*> m_textureMapW; // ê²½ë¡œë¥¼ í‚¤ë¡œ, í…ìŠ¤ì²˜ í¬ì¸í„°ë¥¼ ê°’ìœ¼ë¡œ í•˜ëŠ” ë§µ
 
 };

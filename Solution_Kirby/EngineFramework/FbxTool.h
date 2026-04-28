@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <fbxsdk.h>
 #include <d3d9.h>
 #include <d3dx9.h>
@@ -36,6 +36,6 @@ private:
     void LoadMaterial(FbxSurfaceMaterial* material, SubMesh& subMesh);
     void Cleanup();
 
-    std::unordered_map<std::string, IDirect3DTexture9*> textureCache; // �ؽ�ó ĳ�� �߰�
+    std::unordered_map<std::string, IDirect3DTexture9*> textureCache; // 텍스처 캐시 추가
 };
 

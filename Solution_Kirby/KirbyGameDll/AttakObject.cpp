@@ -1,10 +1,10 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "AttakObject.h"
 #include "BoxCollider.h"
 #include "game.h"
 void AttakObject::CollisionEnter(Collider* other)
 {
-	m_gameObj->SetDestroy(true); //µ¥¹ÌÁö
+	m_gameObj->SetDestroy(true); //ë°ë¯¸ì§€
 }
 void AttakObject::CollisionExit(Collider* other)
 {
