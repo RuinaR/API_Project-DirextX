@@ -45,21 +45,40 @@ void Mouse::SetPos(D3DXVECTOR2 pos)
 
 D3DXVECTOR2 Mouse::GetDXPos()
 {
-	D3DXVECTOR2 dxPos;
-	int clientWidth = m_viewport.Width;
-	int clientHeight = m_viewport.Height;
-	dxPos.x = this->mPos.x - (clientWidth / 2) - RenderManager::GetInstance()->GetWinPos().x;
-	dxPos.y = (clientHeight / 2) - this->mPos.y + RenderManager::GetInstance()->GetWinPos().y;
-	return dxPos;
+	D3DXVECTOR2 gameViewPos = GetGameViewPos();
+	return D3DXVECTOR2(
+		gameViewPos.x - (DRAWWINDOWW * 0.5f),
+		(DRAWWINDOWH * 0.5f) - gameViewPos.y);
 }
 
 D3DXVECTOR2 Mouse::GetWinPos()
 {
-	D3DXVECTOR2 winPos;
-	winPos.x += RenderManager::GetInstance()->GetWinPos().x;
-	winPos.y += RenderManager::GetInstance()->GetWinPos().y;
-
 	return this->mPos;
+}
+
+D3DXVECTOR2 Mouse::GetGameViewPos()
+{
+	D3DXVECTOR2 gameViewPos = RenderManager::GetInstance()->GetGameViewPos();
+	D3DXVECTOR2 gameViewSize = RenderManager::GetInstance()->GetGameViewSize();
+	D3DXVECTOR2 localPos =
+	{
+		mPos.x - gameViewPos.x,
+		mPos.y - gameViewPos.y
+	};
+
+	if (gameViewSize.x > 0.0f && gameViewSize.y > 0.0f)
+	{
+		localPos.x *= static_cast<float>(DRAWWINDOWW) / gameViewSize.x;
+		localPos.y *= static_cast<float>(DRAWWINDOWH) / gameViewSize.y;
+	}
+
+	return localPos;
+}
+
+D3DXVECTOR3 Mouse::GetWorldPos(const D3DXVECTOR2& cameraPos, float z)
+{
+	D3DXVECTOR2 dxPos = GetDXPos();
+	return D3DXVECTOR3(dxPos.x + cameraPos.x, dxPos.y + cameraPos.y, z);
 }
 
 void Mouse::SetLeftBtn(bool isDown)

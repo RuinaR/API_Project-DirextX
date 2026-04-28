@@ -1,27 +1,27 @@
 ﻿#include "pch.h"
-#include "Button.h"
+#include "ImguiButton.h"
 
-void Button::Initialize()
+void ImguiButton::Initialize()
 {
-    m_gameObj->SetTag("UI_Button");
+    m_gameObj->SetTag("Imgui_Button");
     RenderManager::GetInstance()->RegisterBtn(this);
 }
 
-void Button::Release()
+void ImguiButton::Release()
 {
     RenderManager::GetInstance()->UnregisterBtn(this);
 }
 
-void Button::Start()
+void ImguiButton::Start()
 {
 }
 
-void Button::Update()
+void ImguiButton::Update()
 {
     if (m_isClicked)
     {
         m_isClicked = false;
-        ButtonEvent();
+        ImguiButtonEvent();
     }
 
     //// 버튼의 위치를 UIPos에 따라 설정합니다.
@@ -41,7 +41,7 @@ void Button::Update()
     //    m_curColor = m_defaultColor;
 }
 
-void Button::UpdateRender()
+void ImguiButton::UpdateRender()
 {
     if (ImGui::Button(m_text.c_str()))
     {
@@ -109,7 +109,7 @@ void Button::UpdateRender()
     //pFont->Release();
 }
 
-void Button::ButtonEvent()
+void ImguiButton::ImguiButtonEvent()
 {
     if (m_event)
     {
@@ -118,12 +118,12 @@ void Button::ButtonEvent()
     }
 }
 
-void Button::SetUIPos(D3DXVECTOR3 v)
+void ImguiButton::SetUIPos(D3DXVECTOR3 v)
 {
     m_UIPos = v;
 }
 
-void Button::SetUISize(D3DXVECTOR2 v)
+void ImguiButton::SetUISize(D3DXVECTOR2 v)
 {
     m_UISize = v;
     if (m_gameObj)
@@ -131,17 +131,17 @@ void Button::SetUISize(D3DXVECTOR2 v)
 }
 
 
-void Button::SetTextColor(D3DCOLOR col)
+void ImguiButton::SetTextColor(D3DCOLOR col)
 {
     m_textColor = col;
 }
 
-void Button::SetText(string str)
+void ImguiButton::SetText(string str)
 {
     m_text = str;
 }
 
-void Button::SetEvent(std::function<void()> func)
+void ImguiButton::SetEvent(std::function<void()> func)
 {
     m_event = func;
 }

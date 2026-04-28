@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "RenderManager.h"
 #include "ImageRender.h"
-#include "Button.h"
+#include "ImguiButton.h"
+#include "UIElement.h"
 
 RenderManager* RenderManager::m_Pthis = nullptr;
 
@@ -31,6 +32,8 @@ void RenderManager::Destroy()
 
 void RenderManager::Register(ImageRender* ir)
 {
+	UnregisterUI(ir);
+
 	if (ir->IsTrans())
 	{
 		auto it = std::lower_bound(m_transVec->begin(), m_transVec->end(), ir,
@@ -51,6 +54,8 @@ void RenderManager::Register(ImageRender* ir)
 
 void RenderManager::Unregister(ImageRender* ir)
 {
+	UnregisterUI(ir);
+
 	if (ir->IsTrans())
 	{
 		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
@@ -75,6 +80,147 @@ void RenderManager::Unregister(ImageRender* ir)
 	}
 }
 
+void RenderManager::RegisterUI(ImageRender* ir)
+{
+	Unregister(ir);
+
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->render == ir)
+		{
+			itr->orderInLayer = ir->GetOrderInLayer();
+			SortUIQueue();
+			return;
+		}
+	}
+
+	UIRenderEntry entry;
+	entry.render = ir;
+	entry.orderInLayer = ir->GetOrderInLayer();
+	entry.registrationOrder = m_nextUIRenderRegistrationOrder++;
+	m_uiRenderVec->push_back(entry);
+	SortUIQueue();
+}
+
+void RenderManager::UnregisterUI(ImageRender* ir)
+{
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->render == ir)
+		{
+			m_uiRenderVec->erase(itr);
+			return;
+		}
+	}
+}
+
+void RenderManager::RegisterUI(UIElement* element)
+{
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->element == element)
+		{
+			itr->orderInLayer = element->GetOrderInLayer();
+			SortUIQueue();
+			return;
+		}
+	}
+
+	UIRenderEntry entry;
+	entry.element = element;
+	entry.orderInLayer = element->GetOrderInLayer();
+	entry.registrationOrder = m_nextUIRenderRegistrationOrder++;
+	m_uiRenderVec->push_back(entry);
+	SortUIQueue();
+}
+
+void RenderManager::UnregisterUI(UIElement* element)
+{
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->element == element)
+		{
+			m_uiRenderVec->erase(itr);
+			return;
+		}
+	}
+}
+
+void RenderManager::RefreshUIOrder(ImageRender* ir)
+{
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->render == ir)
+		{
+			itr->orderInLayer = ir->GetOrderInLayer();
+			break;
+		}
+	}
+
+	SortUIQueue();
+}
+
+void RenderManager::RefreshUIOrder(UIElement* element)
+{
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->element == element)
+		{
+			itr->orderInLayer = element->GetOrderInLayer();
+			break;
+		}
+	}
+
+	SortUIQueue();
+}
+
+void RenderManager::SortUIQueue()
+{
+	std::stable_sort(m_uiRenderVec->begin(), m_uiRenderVec->end(),
+		[](const UIRenderEntry& lhs, const UIRenderEntry& rhs) {
+			if (lhs.orderInLayer == rhs.orderInLayer)
+			{
+				return lhs.registrationOrder < rhs.registrationOrder;
+			}
+			return lhs.orderInLayer < rhs.orderInLayer;
+		});
+}
+
+bool RenderManager::IsTopUIRenderAt(ImageRender* ir, const D3DXVECTOR2& point)
+{
+	for (vector<UIRenderEntry>::reverse_iterator itr = m_uiRenderVec->rbegin(); itr != m_uiRenderVec->rend(); itr++)
+	{
+		ImageRender* render = itr->render;
+		if (!render || !render->IsRenderEnabled() || !render->GetGameObject())
+		{
+			continue;
+		}
+
+		GameObject* obj = render->GetGameObject();
+		D3DXVECTOR3 position = obj->Position();
+		D3DXVECTOR2 size = obj->Size2D();
+		RECT rect =
+		{
+			static_cast<LONG>(position.x - (size.x * 0.5f)),
+			static_cast<LONG>(position.y - (size.y * 0.5f)),
+			static_cast<LONG>(position.x + (size.x * 0.5f)),
+			static_cast<LONG>(position.y + (size.y * 0.5f))
+		};
+		POINT winPoint =
+		{
+			static_cast<LONG>(point.x),
+			static_cast<LONG>(point.y)
+		};
+
+		if (PtInRect(&rect, winPoint))
+		{
+			return render == ir;
+		}
+	}
+
+	return false;
+}
+
 void RenderManager::Register(FBXRender* fbxr)
 {
 	m_fbxVec->push_back(fbxr);
@@ -92,14 +238,14 @@ void RenderManager::Unregister(FBXRender* fbxr)
 	}
 }
 
-void RenderManager::RegisterBtn(Button* btn)
+void RenderManager::RegisterBtn(ImguiButton* btn)
 {
 	m_btnVec->push_back(btn);
 }
 
-void RenderManager::UnregisterBtn(Button* btn)
+void RenderManager::UnregisterBtn(ImguiButton* btn)
 {
-	for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+	for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
 	{
 		if ((*itr) == btn)
 		{
@@ -130,9 +276,11 @@ void RenderManager::Initialize()
 {
 	m_transVec = new vector<ImageRender*>();
 	m_noTransVec = new vector<ImageRender*>();
-	m_btnVec = new vector<Button*>();
+	m_btnVec = new vector<ImguiButton*>();
 	m_debugVec = new vector<DebugRender*>();
 	m_fbxVec = new vector<FBXRender*>();
+	m_uiRenderVec = new vector<UIRenderEntry>();
+	m_nextUIRenderRegistrationOrder = 0;
 
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
 	device->CreateTexture(
@@ -201,6 +349,7 @@ void RenderManager::EditUpdate()
 		{
 			(*itr)->DebugRenderUpdate();
 		}
+		RenderUIQueue();
 		device->SetTexture(0, nullptr);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
@@ -218,7 +367,7 @@ void RenderManager::EditUpdate()
 		ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize);
 
 		//button/imgui
-		for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+		for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
 		{
 			ImGui::SameLine();
 			(*itr)->UpdateRender();
@@ -229,8 +378,19 @@ void RenderManager::EditUpdate()
 		windowSize.y = DRAWWINDOWH;
 
 		//Game
+		ImVec2 imageScreenPos = ImGui::GetCursorScreenPos();
+		m_gameViewScreenPos = D3DXVECTOR2(imageScreenPos.x, imageScreenPos.y);
+		POINT imageClientPos =
+		{
+			static_cast<LONG>(imageScreenPos.x),
+			static_cast<LONG>(imageScreenPos.y)
+		};
+		ScreenToClient(WindowFrame::GetInstance()->GetHWND(), &imageClientPos);
+		m_gameViewPos = D3DXVECTOR2(static_cast<float>(imageClientPos.x), static_cast<float>(imageClientPos.y));
+		m_gameViewSize = D3DXVECTOR2(windowSize.x, windowSize.y);
+		m_useScreenSpaceUIMouse = true;
+		m_winPos = ImVec2(m_gameViewPos.x, m_gameViewPos.y);
 		ImGui::Image((void*)renderTargetTexture, windowSize);
-		m_winPos = ImGui::GetWindowPos();
 		ImGui::End();
 
 		//ObjMgr
@@ -266,6 +426,11 @@ void RenderManager::EditUpdate()
 void RenderManager::GameUpdate()
 {
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
+	m_gameViewPos = D3DXVECTOR2(0.0f, 0.0f);
+	m_gameViewScreenPos = D3DXVECTOR2(0.0f, 0.0f);
+	m_gameViewSize = D3DXVECTOR2(DRAWWINDOWW, DRAWWINDOWH);
+	m_useScreenSpaceUIMouse = false;
+	m_winPos = ImVec2(0.0f, 0.0f);
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
 	{
@@ -295,6 +460,7 @@ void RenderManager::GameUpdate()
 		{
 			(*itr)->Render();
 		}
+		RenderUIQueue();
 		device->SetTexture(0, nullptr);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
@@ -308,7 +474,7 @@ void RenderManager::GameUpdate()
 
 		//button/imgui
 		ImGui::Begin("Button");
-		for (vector<Button*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+		for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
 		{
 			ImGui::SameLine();
 			(*itr)->UpdateRender();
@@ -349,12 +515,14 @@ void RenderManager::Release()
 	m_noTransVec->clear();
 	m_btnVec->clear();
 	m_debugVec->clear();
+	m_uiRenderVec->clear();
 
 	delete m_transVec;
 	delete m_noTransVec;
 	delete m_btnVec;
 	delete m_debugVec;
 	delete m_fbxVec;
+	delete m_uiRenderVec;
 
 	if (renderTargetTexture != nullptr)
 	{
@@ -366,4 +534,114 @@ void RenderManager::Release()
 ImVec2 RenderManager::GetWinPos()
 {
 	return m_winPos;
+}
+
+D3DXVECTOR2 RenderManager::ScreenToUICoordinate(const D3DXVECTOR2& screenPosition)
+{
+	D3DXVECTOR2 uiPosition =
+	{
+		screenPosition.x - m_gameViewPos.x,
+		screenPosition.y - m_gameViewPos.y
+	};
+
+	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
+	{
+		uiPosition.x *= static_cast<float>(DRAWWINDOWW) / m_gameViewSize.x;
+		uiPosition.y *= static_cast<float>(DRAWWINDOWH) / m_gameViewSize.y;
+	}
+
+	return uiPosition;
+}
+
+D3DXVECTOR2 RenderManager::GetMouseUICoordinate()
+{
+	D3DXVECTOR2 mousePosition;
+
+	if (m_useScreenSpaceUIMouse)
+	{
+		ImVec2 imguiMousePosition = ImGui::GetMousePos();
+		mousePosition = D3DXVECTOR2(imguiMousePosition.x - m_gameViewScreenPos.x, imguiMousePosition.y - m_gameViewScreenPos.y);
+	}
+	else
+	{
+		D3DXVECTOR2 clientMousePosition = Mouse::GetInstance()->GetWinPos();
+		mousePosition = D3DXVECTOR2(clientMousePosition.x - m_gameViewPos.x, clientMousePosition.y - m_gameViewPos.y);
+	}
+
+	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
+	{
+		mousePosition.x *= static_cast<float>(DRAWWINDOWW) / m_gameViewSize.x;
+		mousePosition.y *= static_cast<float>(DRAWWINDOWH) / m_gameViewSize.y;
+	}
+
+	return mousePosition;
+}
+
+bool RenderManager::IsUIMouseLeftDown()
+{
+	if (m_useScreenSpaceUIMouse)
+	{
+		return ImGui::IsMouseDown(ImGuiMouseButton_Left);
+	}
+
+	return Mouse::GetInstance()->IsLeftDown();
+}
+
+D3DXVECTOR2 RenderManager::GetGameViewPos()
+{
+	return m_gameViewPos;
+}
+
+D3DXVECTOR2 RenderManager::GetGameViewSize()
+{
+	return m_gameViewSize;
+}
+
+void RenderManager::RenderUIQueue()
+{
+	if (m_uiRenderVec->empty())
+	{
+		return;
+	}
+
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
+	D3DXMATRIX oldWorld;
+	D3DXMATRIX oldView;
+	D3DXMATRIX oldProjection;
+	D3DXMATRIX identity;
+	D3DXMATRIX uiProjection;
+
+	device->GetTransform(D3DTS_WORLD, &oldWorld);
+	device->GetTransform(D3DTS_VIEW, &oldView);
+	device->GetTransform(D3DTS_PROJECTION, &oldProjection);
+	D3DXMatrixIdentity(&identity);
+	D3DXMatrixOrthoOffCenterLH(&uiProjection, 0.0f, static_cast<float>(DRAWWINDOWW), static_cast<float>(DRAWWINDOWH), 0.0f, -1.0f, 1.0f);
+
+	device->SetTransform(D3DTS_WORLD, &identity);
+	device->SetTransform(D3DTS_VIEW, &identity);
+	device->SetTransform(D3DTS_PROJECTION, &uiProjection);
+	device->SetFVF(D3DFVF_CUSTOMVERTEX);
+	device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	{
+		if (itr->render)
+		{
+			itr->render->Render();
+		}
+		else if (itr->element)
+		{
+			itr->element->RenderUI();
+		}
+	}
+
+	device->SetTransform(D3DTS_WORLD, &oldWorld);
+	device->SetTransform(D3DTS_VIEW, &oldView);
+	device->SetTransform(D3DTS_PROJECTION, &oldProjection);
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 }

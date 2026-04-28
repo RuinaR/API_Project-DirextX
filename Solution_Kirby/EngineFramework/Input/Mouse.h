@@ -22,6 +22,8 @@ public:
 	void SetPos(D3DXVECTOR2 pos);
 	D3DXVECTOR2 GetDXPos();
 	D3DXVECTOR2 GetWinPos();
+	D3DXVECTOR2 GetGameViewPos();
+	D3DXVECTOR3 GetWorldPos(const D3DXVECTOR2& cameraPos, float z);
 
 	void SetLeftBtn(bool isDown);
 	bool IsLeftDown();

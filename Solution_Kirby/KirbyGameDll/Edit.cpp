@@ -1,5 +1,43 @@
 ﻿#include "pch.h"
 #include "Edit.h"
+#include "UIButton.h"
+#include "UILabel.h"
+
+namespace
+{
+	const float kPaletteX = 40.0f;
+	const float kPaletteY = 40.0f;
+	const float kPaletteButtonW = 118.0f;
+	const float kPaletteButtonH = 34.0f;
+	const float kPaletteGap = 8.0f;
+	const float kGridX = 40.0f;
+	const float kGridY = 150.0f;
+	const float kTileSize = 22.0f;
+	const float kTileGap = 2.0f;
+
+	const wchar_t* ToWideTileName(MapType type)
+	{
+		switch (type)
+		{
+		case MapType::None:
+			return L"Empty";
+		case MapType::Player:
+			return L"Player";
+		case MapType::Block:
+			return L"Block";
+		case MapType::DefaultMon:
+			return L"DefaultMon";
+		case MapType::SwordMon:
+			return L"SwordMon";
+		case MapType::StoneMon:
+			return L"StoneMon";
+		case MapType::Door:
+			return L"Door";
+		default:
+			return L"Unknown";
+		}
+	}
+}
 
 vector<string> Edit::ReadMapData(string mapName)
 {
@@ -134,73 +172,12 @@ void Edit::Start()
 	RECT rect;
 	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &rect);
 	Camera::GetInstance()->SetPos(UNITSIZE * 10, -UNITSIZE * 5);
+	CreatePaletteUI();
+	CreateTileMapUI();
 }
 
 void Edit::Update()
 {
-	ImGui::Begin("Tile Map Editor");
-	// 타일셋 선택 상자
-	ImGui::Text("Tileset:");
-	ImGui::SameLine();
-	ImGui::Combo("##TilesetCombo", &m_SelectedTileIndex, Tileset, (int)MapType::max);
-	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 0.6f, 0.6f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.7f, 0.7f, 0.7f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.8f, 0.8f, 0.8f));
-	// 타일 맵 그리드
-	for (int i = 0; i < m_mapTypeData.size(); ++i)
-	{
-		for (int j = 0; j < m_mapTypeData[i].size(); ++j)
-		{
-			ImGui::PushID(j * m_mapTypeData.size() + i);
-			// 각 타일을 버튼으로 그리기
-			if (m_mapTypeData[i][j] != MapType::None)
-			{
-				if (ImGui::ImageButton(
-					(ImTextureID)TextureHandle[(int)m_mapTypeData[i][j]],
-					ImVec2(42, 42),
-					ImVec2(0, 0),
-					ImVec2(1, 1),
-					-1,
-					ImVec4(0, 0, 0, 0),
-					ImVec4(1, 1, 1, 1)
-				))
-				{
-					if ((MapType)m_SelectedTileIndex == MapType::Player)
-					{
-						m_mapTypeData[playerI][playerJ] = MapType::None;
-						playerI = i;
-						playerJ = j;
-						m_mapTypeData[i][j] = MapType::Player;
-					}
-					else if (m_mapTypeData[i][j] != MapType::Player)
-						m_mapTypeData[i][j] = (MapType)m_SelectedTileIndex;
-				}
-			}
-			else
-			{
-				if (ImGui::Button(Tileset[(int)m_mapTypeData[i][j]], ImVec2(50, 50)))
-				{
-					if ((MapType)m_SelectedTileIndex == MapType::Player)
-					{
-						m_mapTypeData[playerI][playerJ] = MapType::None;
-						playerI = i;
-						playerJ = j;
-						m_mapTypeData[i][j] = MapType::Player;
-					}
-					else if (m_mapTypeData[i][j] != MapType::Player)
-						m_mapTypeData[i][j] = (MapType)m_SelectedTileIndex;
-				}
-			}
-
-
-			ImGui::PopID();
-			if (j + 1 != m_count)
-				ImGui::SameLine();
-		}
-	}
-	ImGui::PopStyleColor(3);
-	ImGui::End();
-
 }
 
 void Edit::SetMap(string mapName)
@@ -213,5 +190,206 @@ void Edit::SetMap(string mapName)
 		{
 			m_mapTypeData[i][j] = (MapType)(strMapData[i][j] - '0');
 		}
+	}
+	RefreshTileUI();
+}
+
+void Edit::CreatePaletteUI()
+{
+	if (!m_paletteButtons.empty())
+	{
+		return;
+	}
+
+	for (int i = 0; i < (int)MapType::max; i++)
+	{
+		const float x = kPaletteX + (i * (kPaletteButtonW + kPaletteGap));
+		UIButton* button = CreateUIButton(D3DXVECTOR2(x, kPaletteY), D3DXVECTOR2(kPaletteButtonW, kPaletteButtonH), 100);
+		button->SetOnClick(bind(&Edit::SelectTileType, this, i));
+		m_paletteButtons.push_back(button);
+
+		UILabel* label = CreateUILabel(D3DXVECTOR2(x + 10.0f, kPaletteY + 8.0f), D3DXVECTOR2(kPaletteButtonW - 20.0f, 20.0f), ToWideTileName((MapType)i), 110);
+		m_paletteLabels.push_back(label);
+	}
+
+	RefreshPaletteUI();
+}
+
+void Edit::CreateTileMapUI()
+{
+	if (!m_tileButtons.empty())
+	{
+		RefreshTileUI();
+		return;
+	}
+
+	m_tileButtons.resize(m_count * m_count, nullptr);
+	for (int i = 0; i < m_count; i++)
+	{
+		for (int j = 0; j < m_count; j++)
+		{
+			const int index = i * m_count + j;
+			const float x = kGridX + (j * (kTileSize + kTileGap));
+			const float y = kGridY + (i * (kTileSize + kTileGap));
+			UIButton* button = CreateUIButton(D3DXVECTOR2(x, y), D3DXVECTOR2(kTileSize, kTileSize), 90);
+			button->SetOnClick(bind(&Edit::SetTile, this, i, j));
+			m_tileButtons[index] = button;
+			RefreshTileButton(i, j);
+		}
+	}
+}
+
+void Edit::RefreshPaletteUI()
+{
+	for (int i = 0; i < m_paletteButtons.size(); i++)
+	{
+		UIButton* button = m_paletteButtons[i];
+		if (!button)
+		{
+			continue;
+		}
+
+		const bool selected = i == m_SelectedTileIndex;
+		IDirect3DTexture9* texture = TextureHandle[i];
+		if (texture)
+		{
+			button->SetTexture(texture);
+			button->SetUseTexture(true);
+			button->SetStateColors(
+				selected ? D3DCOLOR_ARGB(255, 255, 245, 185) : D3DCOLOR_ARGB(255, 255, 255, 255),
+				selected ? D3DCOLOR_ARGB(255, 255, 250, 210) : D3DCOLOR_ARGB(255, 230, 230, 230),
+				selected ? D3DCOLOR_ARGB(255, 230, 210, 120) : D3DCOLOR_ARGB(255, 190, 190, 190));
+		}
+		else
+		{
+			D3DCOLOR baseColor = selected ? D3DCOLOR_ARGB(255, 255, 235, 130) : D3DCOLOR_ARGB(255, 245, 245, 245);
+			D3DCOLOR hoverColor = selected ? D3DCOLOR_ARGB(255, 255, 245, 170) : D3DCOLOR_ARGB(255, 220, 235, 255);
+			D3DCOLOR pressedColor = selected ? D3DCOLOR_ARGB(255, 230, 200, 80) : D3DCOLOR_ARGB(255, 190, 210, 230);
+			button->SetUseTexture(false);
+			button->SetStateColors(baseColor, hoverColor, pressedColor);
+		}
+	}
+}
+
+void Edit::RefreshTileUI()
+{
+	for (int i = 0; i < m_count; i++)
+	{
+		for (int j = 0; j < m_count; j++)
+		{
+			RefreshTileButton(i, j);
+		}
+	}
+}
+
+void Edit::RefreshTileButton(int i, int j)
+{
+	if (i < 0 || j < 0 || i >= m_count || j >= m_count)
+	{
+		return;
+	}
+
+	const int index = i * m_count + j;
+	if (index < 0 || index >= m_tileButtons.size() || !m_tileButtons[index])
+	{
+		return;
+	}
+
+	UIButton* button = m_tileButtons[index];
+	MapType type = m_mapTypeData[i][j];
+	IDirect3DTexture9* texture = TextureHandle[(int)type];
+	if (texture)
+	{
+		button->SetTexture(texture);
+		button->SetUseTexture(true);
+		button->SetStateColors(D3DCOLOR_ARGB(255, 255, 255, 255), D3DCOLOR_ARGB(255, 230, 255, 230), D3DCOLOR_ARGB(255, 190, 220, 190));
+	}
+	else
+	{
+		button->SetUseTexture(false);
+		D3DCOLOR color = GetTileColor(type);
+		button->SetStateColors(color, D3DCOLOR_ARGB(255, 210, 225, 240), D3DCOLOR_ARGB(255, 170, 190, 210));
+	}
+}
+
+void Edit::SetTile(int i, int j)
+{
+	if (i < 0 || j < 0 || i >= m_count || j >= m_count)
+	{
+		return;
+	}
+
+	if ((MapType)m_SelectedTileIndex == MapType::Player)
+	{
+		m_mapTypeData[playerI][playerJ] = MapType::None;
+		RefreshTileButton(playerI, playerJ);
+		playerI = i;
+		playerJ = j;
+		m_mapTypeData[i][j] = MapType::Player;
+		RefreshTileButton(i, j);
+	}
+	else if (m_mapTypeData[i][j] != MapType::Player)
+	{
+		m_mapTypeData[i][j] = (MapType)m_SelectedTileIndex;
+		RefreshTileButton(i, j);
+	}
+}
+
+void Edit::SelectTileType(int tileType)
+{
+	m_SelectedTileIndex = tileType;
+	RefreshPaletteUI();
+}
+
+UIButton* Edit::CreateUIButton(const D3DXVECTOR2& position, const D3DXVECTOR2& size, int orderInLayer)
+{
+	GameObject* obj = new GameObject();
+	UIButton* button = new UIButton();
+	obj->AddComponent(button);
+	obj->InitializeSet();
+	obj->SetParent(m_gameObj);
+	button->SetPosition(position);
+	button->SetSize(size);
+	button->SetUseTexture(false);
+	button->SetOrderInLayer(orderInLayer);
+	return button;
+}
+
+UILabel* Edit::CreateUILabel(const D3DXVECTOR2& position, const D3DXVECTOR2& size, const wchar_t* text, int orderInLayer)
+{
+	GameObject* obj = new GameObject();
+	UILabel* label = new UILabel();
+	obj->AddComponent(label);
+	obj->InitializeSet();
+	obj->SetParent(m_gameObj);
+	label->SetPosition(position);
+	label->SetSize(size);
+	label->SetText(text);
+	label->SetColor(D3DCOLOR_ARGB(255, 35, 35, 35));
+	label->SetFontSize(14);
+	label->SetOrderInLayer(orderInLayer);
+	return label;
+}
+
+D3DCOLOR Edit::GetTileColor(MapType type)
+{
+	switch (type)
+	{
+	case MapType::None:
+		return D3DCOLOR_ARGB(180, 60, 70, 80);
+	case MapType::Player:
+		return D3DCOLOR_ARGB(255, 120, 210, 255);
+	case MapType::Block:
+		return D3DCOLOR_ARGB(255, 120, 120, 120);
+	case MapType::DefaultMon:
+		return D3DCOLOR_ARGB(255, 230, 120, 120);
+	case MapType::SwordMon:
+		return D3DCOLOR_ARGB(255, 180, 120, 230);
+	case MapType::StoneMon:
+		return D3DCOLOR_ARGB(255, 160, 150, 130);
+	case MapType::Door:
+		return D3DCOLOR_ARGB(255, 210, 165, 80);
+	default:
+		return D3DCOLOR_ARGB(255, 255, 255, 255);
 	}
 }

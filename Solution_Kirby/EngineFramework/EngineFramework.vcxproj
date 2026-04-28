@@ -96,7 +96,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
@@ -120,7 +120,7 @@
       <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <!-- TODO: If the DirectX SDK is vendored later, replace $(DXSDK_DIR) with $(SolutionDir)External\DirectXSDK\. -->
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,7 +161,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Input;$(ProjectDir)Utility;$(ProjectDir)Scene;$(ProjectDir)Component;$(ProjectDir)Component\Physics;$(ProjectDir)Component\Collision;$(ProjectDir)Rendering\Camera;$(ProjectDir)Rendering\Component;$(ProjectDir)Rendering\Buffer;$(ProjectDir)Rendering\UI;$(ProjectDir)Resource\Texture;$(ProjectDir)Resource\Animation;$(ProjectDir)Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -177,6 +177,10 @@
   <ItemGroup>
     <ClCompile Include="Resource\Animation\AnimationManager.cpp" />
     <ClCompile Include="Rendering\Component\AnimationRender.cpp" />
+    <ClCompile Include="Rendering\UI\UIButton.cpp" />
+    <ClCompile Include="Rendering\UI\UIImage.cpp" />
+    <ClCompile Include="Rendering\UI\UILabel.cpp" />
+    <ClCompile Include="Rendering\UI\UIElement.cpp" />
     <ClCompile Include="FBXRender.cpp" />
     <ClCompile Include="FbxTool.cpp" />
     <ClCompile Include="Rendering\Component\ImageRender.cpp" />
@@ -195,7 +199,7 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ImguiButton.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Component\Physics\Rigidbody.cpp" />
     <ClCompile Include="Resource\Texture\TextureManager.cpp" />
@@ -205,6 +209,10 @@
     <ClInclude Include="..\fbxsdk\fbxsdk.h" />
     <ClInclude Include="Resource\Animation\AnimationManager.h" />
     <ClInclude Include="Rendering\Component\AnimationRender.h" />
+    <ClInclude Include="Rendering\UI\UIButton.h" />
+    <ClInclude Include="Rendering\UI\UIImage.h" />
+    <ClInclude Include="Rendering\UI\UILabel.h" />
+    <ClInclude Include="Rendering\UI\UIElement.h" />
     <ClInclude Include="Debugging\DebugRender.h" />
     <ClInclude Include="FBXRender.h" />
     <ClInclude Include="FbxTool.h" />
@@ -223,7 +231,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Utility\ObjectPool.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Button.h" />
+    <ClInclude Include="ImguiButton.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Component\Physics\Rigidbody.h" />
     <ClInclude Include="Scene\Scene.h" />

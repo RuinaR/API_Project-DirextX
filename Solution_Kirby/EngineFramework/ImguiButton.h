@@ -1,6 +1,6 @@
 #pragma once
 #include "RenderManager.h"
-class Button : public Component
+class ImguiButton : public Component
 {
 protected:
     D3DCOLOR m_textColor = D3DCOLOR_XRGB(0, 0, 0);
@@ -12,7 +12,7 @@ protected:
     int m_textSize = 20;
 
     bool m_isClicked = false;
-    void ButtonEvent();
+    void ImguiButtonEvent();
 
     std::function<void()> m_event = nullptr;
 

@@ -7,13 +7,25 @@
     <ClCompile Include="Rendering\Component\ImageRender.cpp">
       <Filter>Rendering\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\UI\UIButton.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UIImage.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UILabel.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UIElement.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Component\Collision\BoxCollider.cpp">
       <Filter>Component\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Component\Collision\Collider.cpp">
       <Filter>Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
+    <ClCompile Include="ImguiButton.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="Component\Component.cpp">
@@ -78,13 +90,25 @@
     <ClInclude Include="Rendering\Component\ImageRender.h">
       <Filter>Rendering\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\UI\UIButton.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UIImage.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UILabel.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UIElement.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Component\Collision\BoxCollider.h">
       <Filter>Component\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Component\Collision\Collider.h">
       <Filter>Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
+    <ClInclude Include="ImguiButton.h">
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="Component\Component.h">
@@ -184,6 +208,9 @@
     </Filter>
     <Filter Include="Rendering\Component">
       <UniqueIdentifier>{5b45ee06-b3e7-4431-aa3a-724973e3457b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\UI">
+      <UniqueIdentifier>{83ee85bb-7d05-41a9-9fa5-60f2e3199cbb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Rendering\Camera">
       <UniqueIdentifier>{e2fe58d4-1f94-4801-b1a5-9cab40f188f1}</UniqueIdentifier>

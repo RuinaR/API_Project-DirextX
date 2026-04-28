@@ -11,6 +11,11 @@ private:
 	IDirect3DVertexBuffer9* m_vertexBuffer = nullptr;
 	IDirect3DIndexBuffer9* m_indexBuffer = nullptr;
 	bool m_isTrans = true;
+	bool m_isUIRender = false;
+	bool m_renderEnabled = true;
+	bool m_useTexture = true;
+	int m_orderInLayer = 0;
+	D3DCOLOR m_color = 0xffffffff;
 	
 
 	void SetupVertices();
@@ -24,6 +29,16 @@ public:
 	ImageRender(IDirect3DTexture9* texture);
 	void SetTrans(bool trans);
 	bool IsTrans();
+	void SetUIRender(bool isUIRender);
+	bool IsUIRender();
+	void SetOrderInLayer(int orderInLayer);
+	int GetOrderInLayer();
+	void SetRenderEnabled(bool renderEnabled);
+	bool IsRenderEnabled();
+	void SetUseTexture(bool useTexture);
+	bool IsUseTexture();
+	void SetColor(D3DCOLOR color);
+	D3DCOLOR GetColor();
 	void Initialize() override;
 	void Release() override;
 	void ChangeTexture(IDirect3DTexture9* texture);

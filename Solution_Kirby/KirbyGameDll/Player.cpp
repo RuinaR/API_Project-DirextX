@@ -11,7 +11,6 @@
 #include "DebugWindow.h"
 #include "SceneChanger.h"
 #include "StageMaker.h"
-#include "Button.h"
 
 float Lerp(float start, float end, float t)
 {
@@ -91,13 +90,10 @@ void Player::Update()
 	};
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
 
-	D3DXVECTOR3 mousePos = {
-		Mouse::GetInstance()->GetDXPos().x,
-		Mouse::GetInstance()->GetDXPos().y,
-		playerPos.z};
+	D3DXVECTOR3 mouseWorldPos = Mouse::GetInstance()->GetWorldPos(newCamPos, playerPos.z);
 	D3DXVECTOR3 newPlayerPos = {
-		Lerp(playerPos.x, mousePos.x + camPos.x, smoothFactor),
-		Lerp(playerPos.y, mousePos.y + camPos.y, smoothFactor),
+		Lerp(playerPos.x, mouseWorldPos.x, smoothFactor),
+		Lerp(playerPos.y, mouseWorldPos.y, smoothFactor),
 		playerPos.z
 	};
 	D3DXVECTOR3 force = newPlayerPos - playerPos;

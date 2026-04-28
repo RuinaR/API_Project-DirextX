@@ -5,9 +5,38 @@
 #include "Player.h"
 #include "ChangeObject.h"
 #include "StageMaker.h"
-#include "Button.h"
+#include "UIButton.h"
+#include "UILabel.h"
 #include "DebugWindow.h"
 #include "SceneChanger.h"
+
+static UIButton* CreateSceneButton(const D3DXVECTOR2& position, const wchar_t* text, std::function<void()> onClick, int orderInLayer = 10)
+{
+	GameObject* buttonObj = new GameObject();
+	UIButton* button = new UIButton();
+	buttonObj->AddComponent(button);
+	buttonObj->InitializeSet();
+	button->SetPosition(position);
+	button->SetSize(D3DXVECTOR2(220.0f, 70.0f));
+	button->SetUseTexture(false);
+	button->SetStateColors(D3DCOLOR_ARGB(255, 245, 245, 245), D3DCOLOR_ARGB(255, 215, 235, 255), D3DCOLOR_ARGB(255, 180, 205, 230));
+	button->SetOrderInLayer(orderInLayer);
+	button->SetOnClick(onClick);
+
+	GameObject* labelObj = new GameObject();
+	UILabel* label = new UILabel();
+	labelObj->AddComponent(label);
+	labelObj->InitializeSet();
+	labelObj->SetParent(buttonObj);
+	label->SetPosition(D3DXVECTOR2(position.x + 26.0f, position.y + 23.0f));
+	label->SetSize(D3DXVECTOR2(190.0f, 28.0f));
+	label->SetText(text);
+	label->SetColor(D3DCOLOR_ARGB(255, 40, 40, 40));
+	label->SetFontSize(20);
+	label->SetOrderInLayer(orderInLayer + 10);
+
+	return button;
+}
 
 void GameScene::StartGame()
 {
@@ -28,25 +57,8 @@ void GameScene::StartGame()
 		MessageBox(WindowFrame::GetInstance()->GetHWND(), TEXT("존재하지 않는 맵"), TEXT("알림"), MB_OK);
 	}
 	StageMaker::GetInstance()->StageStart();
-	GameObject* btnObj = new GameObject();
-	Button* btn = new Button();
-	btnObj->AddComponent(btn);
-	btnObj->InitializeSet();
-	btn->SetUIPos({ -700,300, -1.0f });
-	btn->SetUISize({ 200,100 });
-	btn->SetText("GameScene Load");
-	btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn->SetEvent(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
-
-	GameObject* btnObj2 = new GameObject();
-	Button* btn2 = new Button();
-	btnObj2->AddComponent(btn2);
-	btnObj2->InitializeSet();
-	btn2->SetUIPos({ -700,200, -1.0f });
-	btn2->SetUISize({ 200,100 });
-	btn2->SetText("StartScene Load");
-	btn2->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	btn2->SetEvent(bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
+	CreateSceneButton(D3DXVECTOR2(40.0f, 40.0f), L"GameScene Load", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
+	CreateSceneButton(D3DXVECTOR2(40.0f, 125.0f), L"StartScene Load", bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
 }
 
 void GameScene::Init()
@@ -69,14 +81,6 @@ void GameScene::Start()
 	obj->AddComponent(m_input);
 	obj->InitializeSet();
 
-	GameObject* btnObj = new GameObject();
-	m_btn = new Button();
-	btnObj->AddComponent(m_btn);
-	btnObj->InitializeSet();
-	m_btn->SetUIPos({ -700,200,-1.0f });
-	m_btn->SetUISize({ 200,100 });
-	m_btn->SetText("Start Game");
-	m_btn->SetTextColor(D3DCOLOR_XRGB(255, 0, 255));
-	m_btn->SetEvent(bind(&GameScene::StartGame, this));
+	m_btn = CreateSceneButton(D3DXVECTOR2(40.0f, 40.0f), L"Start Game", bind(&GameScene::StartGame, this));
 }
 

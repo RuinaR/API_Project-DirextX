@@ -2,13 +2,13 @@
 #include "Scene.h"
 #include "StageMaker.h"
 #include "InputString.h"
-#include "Button.h"
+class UIButton;
 class GameScene : public Scene
 {
 private:
 	IDirect3DTexture9* m_bg = NULL;
 	InputString* m_input = nullptr;
-	Button* m_btn = nullptr;
+	UIButton* m_btn = nullptr;
 
 	void StartGame();
 public:
