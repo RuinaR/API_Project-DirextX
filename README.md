@@ -1,4 +1,4 @@
-﻿# API_Project-DirextX
+﻿# KirbyEngine
 
 Win32API, DirectX9 기반의 2D/3D 게임 프레임워크와 ImGui 기반 에디터 프로젝트입니다. 현재 구조는 단순 샘플 게임을 넘어, `GameObject + Component + SceneData + Editor` 흐름을 갖춘 미니 게임 엔진/에디터 형태로 점진 확장 중입니다.
 
@@ -13,7 +13,7 @@ Win32API, DirectX9 기반의 2D/3D 게임 프레임워크와 ImGui 기반 에디
 
 사용 기술은 C++17, Win32API, DirectX9, ImGui, Box2D, FBX SDK입니다.
 
-## 빌드 및 실행 환경
+## 빌드 https://github.com/RuinaR/KirbyEngine/tree/main및 실행 환경
 
 현재 `Debug|Win32`, `Debug|x64` 빌드를 모두 지원하도록 정리되어 있습니다.
 
