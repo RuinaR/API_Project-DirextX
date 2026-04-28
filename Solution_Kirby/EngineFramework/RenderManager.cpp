@@ -3,6 +3,7 @@
 #include "ImageRender.h"
 #include "ImguiButton.h"
 #include "UIElement.h"
+#include "Camera.h"
 
 RenderManager* RenderManager::m_Pthis = nullptr;
 
@@ -36,19 +37,11 @@ void RenderManager::Register(ImageRender* ir)
 
 	if (ir->IsTrans())
 	{
-		auto it = std::lower_bound(m_transVec->begin(), m_transVec->end(), ir,
-			[](ImageRender* lhs, ImageRender* rhs) {
-				return lhs->GetZ() > rhs->GetZ();
-			});
-		m_transVec->insert(it, ir);
+		m_transVec->push_back(ir);
 	}
 	else
 	{
-		auto it = std::lower_bound(m_noTransVec->begin(), m_noTransVec->end(), ir,
-			[](ImageRender* lhs, ImageRender* rhs) {
-				return lhs->GetZ() > rhs->GetZ();
-			});
-		m_noTransVec->insert(it, ir);
+		m_noTransVec->push_back(ir);
 	}
 }
 
@@ -172,6 +165,37 @@ void RenderManager::RefreshUIOrder(UIElement* element)
 	}
 
 	SortUIQueue();
+}
+
+float RenderManager::CalculateCameraDepth(ImageRender* ir)
+{
+	if (!ir || !ir->GetGameObject())
+	{
+		return 0.0f;
+	}
+
+	D3DXVECTOR3 objectPosition = ir->GetGameObject()->Position();
+	D3DXVECTOR3 cameraPosition = Camera::GetInstance()->GetPos();
+	D3DXVECTOR3 cameraForward = Camera::GetInstance()->GetForward();
+	D3DXVECTOR3 objectToCamera = objectPosition - cameraPosition;
+	return D3DXVec3Dot(&objectToCamera, &cameraForward);
+}
+
+void RenderManager::SortWorldRenderQueues()
+{
+	auto depthDesc = [this](ImageRender* lhs, ImageRender* rhs) {
+		const float lhsDepth = CalculateCameraDepth(lhs);
+		const float rhsDepth = CalculateCameraDepth(rhs);
+		const float epsilon = 0.0001f;
+		if (fabs(lhsDepth - rhsDepth) > epsilon)
+		{
+			return lhsDepth > rhsDepth;
+		}
+		return lhs->GetZ() > rhs->GetZ();
+	};
+
+	std::stable_sort(m_noTransVec->begin(), m_noTransVec->end(), depthDesc);
+	std::stable_sort(m_transVec->begin(), m_transVec->end(), depthDesc);
 }
 
 void RenderManager::SortUIQueue()
@@ -312,6 +336,7 @@ void RenderManager::EditUpdate()
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
 	{	
+		SortWorldRenderQueues();
 		device->SetRenderState(D3DRS_ZENABLE, TRUE);
 		device->SetRenderState(D3DRS_LIGHTING, FALSE);
 		device->SetFVF(D3DFVF_CUSTOMVERTEX);
@@ -434,6 +459,7 @@ void RenderManager::GameUpdate()
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
 	{
+		SortWorldRenderQueues();
 		device->SetRenderState(D3DRS_ZENABLE, TRUE);
 		device->SetRenderState(D3DRS_LIGHTING, FALSE);
 		device->SetFVF(D3DFVF_CUSTOMVERTEX);
@@ -592,9 +618,19 @@ D3DXVECTOR2 RenderManager::GetGameViewPos()
 	return m_gameViewPos;
 }
 
+D3DXVECTOR2 RenderManager::GetGameViewScreenPos()
+{
+	return m_gameViewScreenPos;
+}
+
 D3DXVECTOR2 RenderManager::GetGameViewSize()
 {
 	return m_gameViewSize;
+}
+
+bool RenderManager::IsUsingScreenSpaceUIMouse()
+{
+	return m_useScreenSpaceUIMouse;
 }
 
 void RenderManager::RenderUIQueue()

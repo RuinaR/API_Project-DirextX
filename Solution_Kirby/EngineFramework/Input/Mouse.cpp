@@ -58,12 +58,21 @@ D3DXVECTOR2 Mouse::GetWinPos()
 
 D3DXVECTOR2 Mouse::GetGameViewPos()
 {
-	D3DXVECTOR2 gameViewPos = RenderManager::GetInstance()->GetGameViewPos();
+	D3DXVECTOR2 gameViewPos = RenderManager::GetInstance()->IsUsingScreenSpaceUIMouse()
+		? RenderManager::GetInstance()->GetGameViewScreenPos()
+		: RenderManager::GetInstance()->GetGameViewPos();
 	D3DXVECTOR2 gameViewSize = RenderManager::GetInstance()->GetGameViewSize();
+	D3DXVECTOR2 mousePos = mPos;
+	if (RenderManager::GetInstance()->IsUsingScreenSpaceUIMouse())
+	{
+		ImVec2 imguiMousePos = ImGui::GetMousePos();
+		mousePos = D3DXVECTOR2(imguiMousePos.x, imguiMousePos.y);
+	}
+
 	D3DXVECTOR2 localPos =
 	{
-		mPos.x - gameViewPos.x,
-		mPos.y - gameViewPos.y
+		mousePos.x - gameViewPos.x,
+		mousePos.y - gameViewPos.y
 	};
 
 	if (gameViewSize.x > 0.0f && gameViewSize.y > 0.0f)
@@ -88,6 +97,11 @@ void Mouse::SetLeftBtn(bool isDown)
 
 bool Mouse::IsLeftDown()
 {
+	if (RenderManager::GetInstance()->IsUsingScreenSpaceUIMouse())
+	{
+		return ImGui::IsMouseDown(ImGuiMouseButton_Left);
+	}
+
 	return this->mIsLeftDown;
 }
 
@@ -98,5 +112,10 @@ void Mouse::SetRightBtn(bool isDown)
 
 bool Mouse::IsRightDown()
 {
+	if (RenderManager::GetInstance()->IsUsingScreenSpaceUIMouse())
+	{
+		return ImGui::IsMouseDown(ImGuiMouseButton_Right);
+	}
+
 	return this->mIsRightDown;
 }

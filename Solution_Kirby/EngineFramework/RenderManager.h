@@ -36,6 +36,8 @@ private:
 	bool m_useScreenSpaceUIMouse = false;
 	LPDIRECT3DTEXTURE9 renderTargetTexture = nullptr;
 
+	float CalculateCameraDepth(ImageRender* ir);
+	void SortWorldRenderQueues();
 	void SortUIQueue();
 	void RenderUIQueue();
 public:
@@ -70,7 +72,9 @@ public:
 	D3DXVECTOR2 GetMouseUICoordinate();
 	bool IsUIMouseLeftDown();
 	D3DXVECTOR2 GetGameViewPos();
+	D3DXVECTOR2 GetGameViewScreenPos();
 	D3DXVECTOR2 GetGameViewSize();
+	bool IsUsingScreenSpaceUIMouse();
 
 	static int FrameCount;
 };

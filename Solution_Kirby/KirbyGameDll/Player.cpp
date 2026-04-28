@@ -17,6 +17,19 @@ float Lerp(float start, float end, float t)
 	return start + ((end - start) * t);
 }
 
+float Clamp(float value, float minValue, float maxValue)
+{
+	if (value < minValue)
+	{
+		return minValue;
+	}
+	if (value > maxValue)
+	{
+		return maxValue;
+	}
+	return value;
+}
+
 void Player::CollisionEnter(Collider* other)
 {
 }
@@ -89,6 +102,21 @@ void Player::Update()
 		Lerp(camPos.y, playerPos.y, smoothFactor)
 	};
 	Camera::GetInstance()->SetPos(newCamPos.x, newCamPos.y);
+
+	D3DXVECTOR2 mouseViewPos = Mouse::GetInstance()->GetGameViewPos();
+	float normalizedMouseX = Clamp((mouseViewPos.x - (DRAWWINDOWW * 0.5f)) / (DRAWWINDOWW * 0.5f), -1.0f, 1.0f);
+	float normalizedMouseY = Clamp((mouseViewPos.y - (DRAWWINDOWH * 0.5f)) / (DRAWWINDOWH * 0.5f), -1.0f, 1.0f);
+	D3DXVECTOR3 cameraRotation = Camera::GetInstance()->GetRotation();
+	D3DXVECTOR3 targetRotation = {
+		D3DXToRadian(-20.0f) * normalizedMouseY,
+		D3DXToRadian(30.0f) * normalizedMouseX,
+		D3DXToRadian(-5.0f) * normalizedMouseX
+	};
+	float rotationSmoothFactor = 0.08f;
+	Camera::GetInstance()->SetRotation(
+		Lerp(cameraRotation.x, targetRotation.x, rotationSmoothFactor),
+		Lerp(cameraRotation.y, targetRotation.y, rotationSmoothFactor),
+		Lerp(cameraRotation.z, targetRotation.z, rotationSmoothFactor));
 
 	D3DXVECTOR3 mouseWorldPos = Mouse::GetInstance()->GetWorldPos(newCamPos, playerPos.z);
 	D3DXVECTOR3 newPlayerPos = {
