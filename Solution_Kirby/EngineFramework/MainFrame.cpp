@@ -55,6 +55,14 @@ double MainFrame::DeltaTime()
 	return m_timer.getTotalDeltaTime();
 }
 
+namespace
+{
+	UINT ClampClientSize(LONG value)
+	{
+		return value > 0 ? static_cast<UINT>(value) : 1u;
+	}
+}
+
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 {
     m_released = false;
@@ -68,46 +76,41 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
         AssetDatabase::GetInstance()->Scan();
     }
     m_hWnd = WindowFrame::GetInstance()->GetHWND();
-    m_width = DRAWWINDOWW;
-    m_height = DRAWWINDOWH;
+    RECT clientRect = {};
+    GetClientRect(m_hWnd, &clientRect);
+    m_width = static_cast<int>(ClampClientSize(clientRect.right - clientRect.left));
+    m_height = static_cast<int>(ClampClientSize(clientRect.bottom - clientRect.top));
 
     if (NULL == (m_pD3D = Direct3DCreate9(D3D_SDK_VERSION)))
         return ;
 
-    D3DPRESENT_PARAMETERS d3dpp;
-    ZeroMemory(&d3dpp, sizeof(d3dpp));
+    ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
 
-    d3dpp.Windowed = TRUE;
-    d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    d3dpp.hDeviceWindow = m_hWnd;
-    d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
-    d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
-    d3dpp.EnableAutoDepthStencil = TRUE;
-    d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+    m_d3dpp.Windowed = TRUE;
+    m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    m_d3dpp.hDeviceWindow = m_hWnd;
+    m_d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+    m_d3dpp.BackBufferWidth = static_cast<UINT>(m_width);
+    m_d3dpp.BackBufferHeight = static_cast<UINT>(m_height);
+    m_d3dpp.EnableAutoDepthStencil = TRUE;
+    m_d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
+    m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
 
     if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_hWnd,
         D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-        &d3dpp, &m_pd3dDevice)))
+        &m_d3dpp, &m_pd3dDevice)))
     {
         return ;
     }
 
-    m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    ApplyDeviceState();
 
-    // 정점 색상을 직접 사용하므로 Direct3D 조명은 끈다.
-    m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-    m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
-    m_pd3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
-    RECT rect;
     D3DVIEWPORT9 vp;
-    GetClientRect(m_hWnd, &rect);
-    //int offset = 50;
     vp.X = 0;
     vp.Y = 0;
-    vp.Width = m_width;//rect.right - rect.left;// +offset;
-    vp.Height = m_height;//rect.bottom - rect.top;// +offset;
+    vp.Width = static_cast<DWORD>(m_width);
+    vp.Height = static_cast<DWORD>(m_height);
     vp.MinZ = 0.0f;
     vp.MaxZ = 1.0f;
 
@@ -150,7 +153,6 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // 키보드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // 게임패드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigWindowsResizeFromEdges = false;
 
     ImGui::StyleColorsDark();
@@ -268,6 +270,13 @@ bool MainFrame::Update()
             return false;
         }
     }
+
+        if (!EnsureDeviceReady())
+        {
+            Sleep(1);
+            return true;
+        }
+
         m_timer.tick();
         if (m_timer.getTotalDeltaTime() >= m_targetFrameTime)
         {
@@ -315,6 +324,135 @@ LPDIRECT3DDEVICE9 MainFrame::GetDevice()
 b2World* MainFrame::GetBox2dWorld()
 {
     return m_pWorld;
+}
+
+void MainFrame::RequestResize(UINT width, UINT height)
+{
+    m_pendingResize = true;
+    m_pendingResizeWidth = width > 0 ? width : 1u;
+    m_pendingResizeHeight = height > 0 ? height : 1u;
+}
+
+bool MainFrame::HandleResize(UINT width, UINT height)
+{
+    if (m_pd3dDevice == nullptr || width == 0 || height == 0)
+    {
+        return false;
+    }
+
+    InvalidateDeviceResources();
+
+    m_width = static_cast<int>(width);
+    m_height = static_cast<int>(height);
+    m_d3dpp.BackBufferWidth = width;
+    m_d3dpp.BackBufferHeight = height;
+
+    HRESULT hr = m_pd3dDevice->Reset(&m_d3dpp);
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+    D3DVIEWPORT9 vp = {};
+    vp.X = 0;
+    vp.Y = 0;
+    vp.Width = width;
+    vp.Height = height;
+    vp.MinZ = 0.0f;
+    vp.MaxZ = 1.0f;
+    m_pd3dDevice->SetViewport(&vp);
+    m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+    ApplyDeviceState();
+    RestoreDeviceResources();
+    m_pendingResize = false;
+    return true;
+}
+
+void MainFrame::InvalidateDeviceResources()
+{
+    if (m_deviceResourcesInvalidated)
+    {
+        return;
+    }
+
+    if (m_pFont != nullptr)
+    {
+        m_pFont->OnLostDevice();
+    }
+
+    if (ImGui::GetCurrentContext() != nullptr)
+    {
+        ImGui_ImplDX9_InvalidateDeviceObjects();
+    }
+    if (RenderManager::GetInstance() != nullptr)
+    {
+        RenderManager::GetInstance()->ReleaseRenderTargetTexture();
+    }
+
+    m_deviceResourcesInvalidated = true;
+}
+
+void MainFrame::RestoreDeviceResources()
+{
+    if (m_pFont != nullptr)
+    {
+        m_pFont->OnResetDevice();
+    }
+
+    if (RenderManager::GetInstance() != nullptr)
+    {
+        RenderManager::GetInstance()->CreateRenderTargetTexture();
+    }
+
+    if (ImGui::GetCurrentContext() != nullptr)
+    {
+        ImGui_ImplDX9_CreateDeviceObjects();
+    }
+
+    m_deviceResourcesInvalidated = false;
+}
+
+void MainFrame::ApplyDeviceState()
+{
+    if (m_pd3dDevice == nullptr)
+    {
+        return;
+    }
+
+    m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+    m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
+    m_pd3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+}
+
+bool MainFrame::EnsureDeviceReady()
+{
+    if (m_pd3dDevice == nullptr)
+    {
+        return false;
+    }
+
+    if (m_pendingResize)
+    {
+        return HandleResize(m_pendingResizeWidth, m_pendingResizeHeight);
+    }
+
+    HRESULT hr = m_pd3dDevice->TestCooperativeLevel();
+    if (hr == D3DERR_DEVICELOST)
+    {
+        return false;
+    }
+
+    if (hr == D3DERR_DEVICENOTRESET)
+    {
+        RECT clientRect = {};
+        GetClientRect(m_hWnd, &clientRect);
+        return HandleResize(
+            ClampClientSize(clientRect.right - clientRect.left),
+            ClampClientSize(clientRect.bottom - clientRect.top));
+    }
+
+    return SUCCEEDED(hr);
 }
 
 void MainFrame::Release()

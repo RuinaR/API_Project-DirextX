@@ -7,6 +7,7 @@ struct GameObjectSerializedData
 {
     int objectId = -1;
     int parentId = -1;
+    string name;
     string tag;
     bool active = true;
     D3DXVECTOR3 position = { 0.0f, 0.0f, 0.0f };
@@ -70,9 +71,12 @@ public:
     bool GetActive();
     std::string Serialize() const;
     std::string Serialize(int objectId, int parentId) const;
+    std::string Serialize(int objectId, int parentId, int sceneVersion) const;
     static bool Deserialize(const std::string& objectJson, GameObjectSerializedData& outData);
+    static bool Deserialize(const std::string& objectJson, GameObjectSerializedData& outData, int sceneVersion);
     static GameObject* CreateFromSerializedData(const GameObjectSerializedData& data);
     Component* AddComponent(Component* component);
+    Component* AddComponent(Component* component, bool initializeComponent, bool startComponent);
     void DeleteComponent(Component* component);
     vector<Component*>* GetComponentVec();
     void InitializeSet();

@@ -44,7 +44,9 @@ public:
 	void SetSelectedObject(GameObject* obj);
 	void ClearSelectedObject();
 	std::string SerializeObjects();
+	std::string SerializeObjects(int sceneVersion);
 	bool DeserializeObjects(const std::string& sceneJson);
+	bool DeserializeObjects(const std::string& sceneJson, int sceneVersion);
 
 	void OnLBtnDown();
 	void OnLBtnUp();

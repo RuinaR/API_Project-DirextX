@@ -19,19 +19,20 @@ namespace
 
 	std::string BuildSceneDataJson(const std::string& sceneName)
 	{
+		constexpr int kSceneDataVersion = 4;
 		const D3DXVECTOR3 cameraPosition = Camera::GetInstance()->GetPos();
 		const D3DXVECTOR3 cameraRotation = Camera::GetInstance()->GetRotation();
 
 		std::ostringstream oss;
 		oss << "{\n";
-		oss << "  \"version\": 3,\n";
+		oss << "  \"version\": " << kSceneDataVersion << ",\n";
 		oss << "  \"sceneName\": \"" << sceneName << "\",\n";
 		oss << "  \"camera\": {\n";
 		oss << "    \"position\": { \"x\": " << cameraPosition.x << ", \"y\": " << cameraPosition.y << ", \"z\": " << cameraPosition.z << " },\n";
 		oss << "    \"rotation\": { \"x\": " << cameraRotation.x << ", \"y\": " << cameraRotation.y << ", \"z\": " << cameraRotation.z << " }\n";
 		oss << "  },\n";
 		oss << "  \"objects\": ";
-		oss << ObjectManager::GetInstance()->SerializeObjects();
+		oss << ObjectManager::GetInstance()->SerializeObjects(kSceneDataVersion);
 		oss << "\n}\n";
 		return oss.str();
 	}
@@ -256,8 +257,10 @@ bool SceneDataManager::LoadSceneData(const std::string& sceneName)
 	std::ostringstream oss;
 	oss << file.rdbuf();
 	const std::string sceneJson = oss.str();
+	int sceneVersion = 3;
+	SceneJson::ReadInt(sceneJson, "version", sceneVersion);
 	DeserializeCamera(sceneJson);
-	if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson))
+	if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson, sceneVersion))
 	{
 		std::cout << "SceneData load failed: " << path << std::endl;
 		return false;

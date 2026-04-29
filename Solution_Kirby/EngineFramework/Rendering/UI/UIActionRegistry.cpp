@@ -28,12 +28,19 @@ void UIActionRegistry::Clear()
 
 bool UIActionRegistry::Bind(UIButton* button, const std::string& actionKey)
 {
-	if (button == nullptr || actionKey.empty())
+	if (button == nullptr)
 		return false;
+
+	if (actionKey.empty())
+	{
+		button->SetOnClick(nullptr);
+		return false;
+	}
 
 	std::map<std::string, std::function<void()>>::iterator itr = GetActions().find(actionKey);
 	if (itr == GetActions().end())
 	{
+		button->SetOnClick(nullptr);
 		std::cout << "UIActionRegistry missing action: " << actionKey << std::endl;
 		return false;
 	}

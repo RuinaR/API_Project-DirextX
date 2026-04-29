@@ -3,8 +3,33 @@
 #include "../include/PluginManager.h"
 
 #include "StartScene.h"
+#include "GameScene.h"
+#include "EditerScene.h"
+#include "SceneDataManager.h"
 #include "ComponentFactory.h"
 #include "GameComponentRegistry.h"
+
+namespace
+{
+	const char* GetStartupSceneName()
+	{
+		// 나중에 빌드 설정값으로 교체하기 쉽게 시작 씬 이름을 분리한다.
+		return "StartScene";
+	}
+
+	Scene* CreateSceneByName(const std::string& sceneName)
+	{
+		if (sceneName == "GameScene")
+		{
+			return new GameScene();
+		}
+		if (sceneName == "EditerScene")
+		{
+			return new EditerScene();
+		}
+		return new StartScene();
+	}
+}
 
 
 KirbyGame::KirbyGame(PluginManager& p_mgr) :
@@ -19,7 +44,9 @@ bool KirbyGame::Initialize(HINSTANCE hInst, RenderType type)
 	RegisterEngineComponents();
 	RegisterGameComponents(ComponentFactory::GetInstance());
 	MainFrame::Create(hInst);
-	MainFrame::GetInstance()->Initialize(TARGETFPS, new StartScene(), type);
+	const std::string startupSceneName = GetStartupSceneName();
+	Scene* startupScene = CreateSceneByName(startupSceneName);
+	MainFrame::GetInstance()->Initialize(TARGETFPS, startupScene, type);
 	//MainFrame::GetInstance()->Set();
 	return true;
 }

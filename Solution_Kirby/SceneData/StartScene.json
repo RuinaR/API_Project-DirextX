@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "sceneName": "StartScene",
   "camera": {
     "position": { "x": 0, "y": 0, "z": 0 },
@@ -7,168 +7,152 @@
   },
   "objects": [
     {
-      "objectId": 1,
+      "id": 1,
       "parentId": -1,
+      "name": "",
       "tag": "",
       "active": true,
-      "position": { "x": 150, "y": 85, "z": 0 },
-      "size": { "x": 220, "y": 90, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 150, "y": 85, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 220, "y": 90, "z": 1 }
+      },
       "components": [
         { "type": "UIButton", "data": { "position": { "x": 40, "y": 40 }, "size": { "x": 220, "y": 90 }, "visible": true, "enabled": true, "orderInLayer": 10, "imagePath": "", "useTexture": false, "normalColor": 4294309365, "hoverColor": 4292340735, "pressedColor": 4290039270, "actionKey": "ChangeGameScene" } }
       ]
     },
     {
-      "objectId": 2,
+      "id": 2,
       "parentId": -1,
+      "name": "",
       "tag": "",
       "active": true,
-      "position": { "x": 158, "y": 89, "z": 0 },
-      "size": { "x": 180, "y": 34, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 158, "y": 89, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 180, "y": 34, "z": 1 }
+      },
       "components": [
         { "type": "UILabel", "data": { "position": { "x": 68, "y": 72 }, "size": { "x": 180, "y": 34 }, "visible": true, "enabled": true, "orderInLayer": 20, "text": "GameScene Load", "color": 4280821800, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
-      "objectId": 3,
+      "id": 3,
       "parentId": -1,
+      "name": "",
       "tag": "",
       "active": true,
-      "position": { "x": 410, "y": 85, "z": 0 },
-      "size": { "x": 220, "y": 90, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 410, "y": 85, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 220, "y": 90, "z": 1 }
+      },
       "components": [
         { "type": "UIButton", "data": { "position": { "x": 300, "y": 40 }, "size": { "x": 220, "y": 90 }, "visible": true, "enabled": true, "orderInLayer": 10, "imagePath": "", "useTexture": false, "normalColor": 4294309365, "hoverColor": 4292997340, "pressedColor": 4290697145, "actionKey": "ChangeEditScene" } }
       ]
     },
     {
-      "objectId": 4,
+      "id": 4,
       "parentId": -1,
+      "name": "",
       "tag": "",
       "active": true,
-      "position": { "x": 423, "y": 89, "z": 0 },
-      "size": { "x": 170, "y": 34, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 423, "y": 89, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 170, "y": 34, "z": 1 }
+      },
       "components": [
         { "type": "UILabel", "data": { "position": { "x": 338, "y": 72 }, "size": { "x": 170, "y": 34 }, "visible": true, "enabled": true, "orderInLayer": 20, "text": "EditScene Load", "color": 4280821800, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
-      "objectId": 5,
-      "parentId": -1,
+      "id": 5,
+      "parentId": 6,
+      "name": "3D_OBJ",
       "tag": "3D_OBJ",
       "active": true,
-      "position": { "x": 300, "y": 0, "z": 500 },
-      "size": { "x": 0.5, "y": 0.5, "z": 0.5 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 300, "y": 0, "z": 500 },
+        "rotation": { "x": 0, "y": 108340, "z": 0 },
+        "size": { "x": 0.5, "y": 0.5, "z": 0.5 }
+      },
       "components": [
-        { "type": "FBXRender", "data": { "fbxPath": "fbxSample1" } }
+        { "type": "FBXRender", "data": { "fbxPath": "fbxSample1" } },
+        { "type": "FBXRotateObj", "data": { } }
       ]
     },
     {
-      "objectId": 6,
+      "id": 6,
+      "parentId": -1,
+      "name": "3D_OBJ",
+      "tag": "3D_OBJ",
+      "active": true,
+      "transform": {
+        "position": { "x": -300, "y": 0, "z": 500 },
+        "rotation": { "x": 0, "y": 137542, "z": 0 },
+        "size": { "x": 0.5, "y": 0.5, "z": 0.5 }
+      },
+      "components": [
+        { "type": "FBXRender", "data": { "fbxPath": "fbxSample" } },
+        { "type": "FBXRotateObj", "data": { } }
+      ]
+    },
+    {
+      "id": 7,
       "parentId": 5,
-      "tag": "3D_OBJ",
-      "active": true,
-      "position": { "x": -29, "y": 0, "z": 500 },
-      "size": { "x": 0.5, "y": 0.5, "z": 0.5 },
-      "angle": { "x": 172.9, "y": 1501.5, "z": 23.1 },
-      "components": [
-        { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample.fbx" } }
-      ]
-    },
-    {
-      "objectId": 7,
-      "parentId": -1,
+      "name": "TEST_1",
       "tag": "TEST_1",
       "active": true,
-      "position": { "x": 0, "y": 0, "z": 0 },
-      "size": { "x": 0, "y": 0, "z": 0 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 49574, "z": 0 },
+        "size": { "x": 0, "y": 0, "z": 0 }
+      },
       "components": []
     },
     {
-      "objectId": 8,
-      "parentId": 7,
+      "id": 8,
+      "parentId": 6,
+      "name": "TEST_2",
       "tag": "TEST_2",
       "active": true,
-      "position": { "x": 0, "y": 0, "z": 0 },
-      "size": { "x": 0, "y": 0, "z": 0 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 26087, "z": 0 },
+        "size": { "x": 0, "y": 0, "z": 0 }
+      },
       "components": []
     },
     {
-      "objectId": 9,
+      "id": 9,
       "parentId": -1,
-      "tag": "UI Text",
-      "active": true,
-      "position": { "x": 747, "y": 199, "z": 0 },
-      "size": { "x": 240, "y": 48, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
-      "components": [
-        { "type": "UILabel", "data": { "position": { "x": 627, "y": 175 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "MyText", "color": 4294967295, "fontSize": 53, "scale": 1 } }
-      ]
-    },
-    {
-      "objectId": 10,
-      "parentId": -1,
-      "tag": "UI Text (1)",
-      "active": true,
-      "position": { "x": 308, "y": 185, "z": 0 },
-      "size": { "x": 240, "y": 48, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
-      "components": [
-        { "type": "UILabel", "data": { "position": { "x": 188, "y": 161 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "test", "color": 4279357248, "fontSize": 52, "scale": 1 } }
-      ]
-    },
-    {
-      "objectId": 11,
-      "parentId": -1,
+      "name": "Sprite",
       "tag": "Sprite",
       "active": true,
-      "position": { "x": 457, "y": 0, "z": 0 },
-      "size": { "x": 128, "y": 128, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 21, "y": 139, "z": 633 },
+        "rotation": { "x": 0, "y": 3483.3, "z": -13.2 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/download.jpg" } }
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/eat.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
       ]
     },
     {
-      "objectId": 12,
-      "parentId": -1,
-      "tag": "AnimationTest",
+      "id": 10,
+      "parentId": 9,
+      "name": "animTest",
+      "tag": "animTest",
       "active": true,
-      "position": { "x": 175, "y": 321, "z": 0 },
-      "size": { "x": 128, "y": 128, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
-      "components": []
-    },
-    {
-      "objectId": 13,
-      "parentId": -1,
-      "tag": "Sprite (1)",
-      "active": true,
-      "position": { "x": 0, "y": 189, "z": 0 },
-      "size": { "x": 128, "y": 133, "z": 0 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "transform": {
+        "position": { "x": 0, "y": -23, "z": 9 },
+        "rotation": { "x": 0, "y": 0, "z": -13.2 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
       "components": [
-        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/attack.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
-      ]
-    },
-    {
-      "objectId": 14,
-      "parentId": -1,
-      "tag": "Sprite (2)",
-      "active": true,
-      "position": { "x": 270, "y": 206, "z": 0 },
-      "size": { "x": 128, "y": 128, "z": 1 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
-      "components": [
-        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/change.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/eat_move.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
         { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
       ]
     }

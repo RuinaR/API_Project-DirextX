@@ -420,6 +420,11 @@ void ObjectManager::ClearSelectedObject()
 
 std::string ObjectManager::SerializeObjects()
 {
+	return SerializeObjects(3);
+}
+
+std::string ObjectManager::SerializeObjects(int sceneVersion)
+{
 	std::ostringstream oss;
 	oss << "[\n";
 
@@ -457,7 +462,7 @@ std::string ObjectManager::SerializeObjects()
 			parentId = parentItr->second;
 		}
 
-		oss << "    " << obj->Serialize(objectIds[obj], parentId);
+		oss << "    " << obj->Serialize(objectIds[obj], parentId, sceneVersion);
 		isFirst = false;
 	}
 
@@ -480,6 +485,14 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 		return false;
 	}
 
+	struct PendingComponentData
+	{
+		Component* component = nullptr;
+		std::string type;
+		std::string dataJson;
+	};
+
+	vector<PendingComponentData> pendingComponents;
 	for (vector<std::string>::iterator itr = componentJsonList.begin(); itr != componentJsonList.end(); itr++)
 	{
 		std::string type;
@@ -497,10 +510,33 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 			continue;
 		}
 
-		obj->AddComponent(component);
-		if (!component->Deserialize(dataJson))
+		obj->AddComponent(component, false, false);
+
+		PendingComponentData pendingComponent;
+		pendingComponent.component = component;
+		pendingComponent.type = type;
+		pendingComponent.dataJson = dataJson;
+		pendingComponents.push_back(pendingComponent);
+	}
+
+	for (vector<PendingComponentData>::iterator itr = pendingComponents.begin(); itr != pendingComponents.end(); itr++)
+	{
+		if (itr->component != nullptr)
 		{
-			std::cout << "SceneData load failed: component deserialize failed: " << type << std::endl;
+			itr->component->Initialize();
+		}
+	}
+
+	for (vector<PendingComponentData>::iterator itr = pendingComponents.begin(); itr != pendingComponents.end(); itr++)
+	{
+		if (itr->component == nullptr)
+		{
+			continue;
+		}
+
+		if (!itr->component->Deserialize(itr->dataJson))
+		{
+			std::cout << "SceneData load failed: component deserialize failed: " << itr->type << std::endl;
 			return false;
 		}
 	}
@@ -508,6 +544,11 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 }
 
 bool ObjectManager::DeserializeObjects(const std::string& sceneJson)
+{
+	return DeserializeObjects(sceneJson, 3);
+}
+
+bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVersion)
 {
 	RegisterEngineComponents();
 
@@ -529,7 +570,7 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson)
 	for (vector<std::string>::iterator itr = objectJsonList.begin(); itr != objectJsonList.end(); itr++)
 	{
 		GameObjectSerializedData data;
-		if (!GameObject::Deserialize(*itr, data))
+		if (!GameObject::Deserialize(*itr, data, sceneVersion))
 		{
 			std::cout << "SceneData load failed: invalid GameObject data." << std::endl;
 			return false;

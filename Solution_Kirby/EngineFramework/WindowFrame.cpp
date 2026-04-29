@@ -5,6 +5,16 @@
 
 WindowFrame* WindowFrame::m_Pthis = nullptr;
 
+namespace
+{
+	RECT BuildStartupWindowRect()
+	{
+		RECT rect = { 0, 0, DRAWWINDOWW, DRAWWINDOWH };
+		AdjustWindowRect(&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, FALSE);
+		return rect;
+	}
+}
+
 void WindowFrame::Create(HINSTANCE hInstance)
 {
 	if (!m_Pthis)
@@ -78,6 +88,10 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 	case WM_SETFOCUS:
 		return 0;
 	case WM_SIZE:
+		if (MainFrame::GetInstance() != nullptr)
+		{
+			MainFrame::GetInstance()->RequestResize(static_cast<UINT>(LOWORD(lParam)), static_cast<UINT>(HIWORD(lParam)));
+		}
 		return 0;
 	case WM_PAINT:
 		ValidateRect(hWnd, NULL);
@@ -152,6 +166,7 @@ void WindowFrame::BuildWindow()
 	};
 
 	RegisterClassExW(&WndClass);
+	const RECT startupRect = BuildStartupWindowRect();
 
 	m_Pthis->m_hWnd =
 		CreateWindowW(WndClass.lpszClassName, kWindowTitle,
@@ -160,9 +175,10 @@ void WindowFrame::BuildWindow()
 			WS_SYSMENU | 
 			WS_MINIMIZEBOX | 
 			WS_CLIPSIBLINGS | 
-			WS_CLIPCHILDREN |
-			WS_SIZEBOX,
-			0, 0, MAXWINDOWW, MAXWINDOWH,
+			WS_CLIPCHILDREN,
+			100, 100,
+			startupRect.right - startupRect.left,
+			startupRect.bottom - startupRect.top,
 			NULL, (HMENU)NULL, m_Pthis->m_Instance, NULL);
 
 	SetWindowTextW(m_Pthis->m_hWnd, kWindowTitle);

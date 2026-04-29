@@ -7,5 +7,8 @@ public:
 	void Release() override;
 	void Start() override;
 	void Update() override;
+	const char* GetSerializableType() const override;
+	std::string Serialize() const override;
+	bool Deserialize(const std::string& componentJson) override;
 };
 

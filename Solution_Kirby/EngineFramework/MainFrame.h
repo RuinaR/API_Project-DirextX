@@ -36,14 +36,19 @@ private:
 	HWND m_hWnd = nullptr;
 	LPDIRECT3D9 m_pD3D = nullptr;
 	LPDIRECT3DDEVICE9 m_pd3dDevice = nullptr;
+	D3DPRESENT_PARAMETERS m_d3dpp = {};
 
 	D3DXMATRIX m_matWorld;
 	D3DXMATRIX m_matProj;
 	ID3DXFont* m_pFont = nullptr;
 	bool m_released = false;
+	bool m_deviceResourcesInvalidated = false;
 
 	int m_width;
 	int m_height;
+	bool m_pendingResize = false;
+	UINT m_pendingResizeWidth = 0;
+	UINT m_pendingResizeHeight = 0;
 
 	RenderType m_type;
 
@@ -68,9 +73,15 @@ public:
 	LPDIRECT3DDEVICE9 GetDevice();
 	b2World* GetBox2dWorld();
 	RenderType GetRenderType() const { return m_type; }
+	void RequestResize(UINT width, UINT height);
+	bool HandleResize(UINT width, UINT height);
 	void ProcessMouseInput();
 
 	void AddBtnEvent(std::function<void()> p_event);
 private:
+	void InvalidateDeviceResources();
+	void RestoreDeviceResources();
+	void ApplyDeviceState();
+	bool EnsureDeviceReady();
 	void Release();
 };

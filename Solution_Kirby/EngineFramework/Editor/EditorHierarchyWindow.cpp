@@ -7,6 +7,8 @@
 
 namespace
 {
+	const char* kHierarchyDragDropPayload = "HierarchyGameObject";
+
 	void MarkCurrentSceneDirty()
 	{
 		if (WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
@@ -66,6 +68,83 @@ namespace
 		objectManager->DestroyObject(obj);
 		MarkCurrentSceneDirty();
 	}
+
+	bool ChangeParentInHierarchy(GameObject* child, GameObject* newParent)
+	{
+		if (child == nullptr)
+		{
+			return false;
+		}
+
+		if (newParent == child)
+		{
+			return false;
+		}
+
+		if (newParent != nullptr && IsSameOrChild(child, newParent))
+		{
+			return false;
+		}
+
+		if (child->GetParent() == newParent)
+		{
+			return false;
+		}
+
+		child->SetParent(newParent);
+		MarkCurrentSceneDirty();
+		return true;
+	}
+
+	void DrawHierarchyContextMenu(GameObject* obj)
+	{
+		if (obj == nullptr)
+		{
+			return;
+		}
+
+		if (ImGui::BeginPopupContextItem("GameObjectContext"))
+		{
+			if (ImGui::MenuItem("Make Root", nullptr, false, obj->GetParent() != nullptr))
+			{
+				ChangeParentInHierarchy(obj, nullptr);
+			}
+			if (ImGui::MenuItem("Delete"))
+			{
+				DeleteGameObjectFromHierarchy(obj);
+			}
+			ImGui::EndPopup();
+		}
+	}
+
+	void DrawHierarchyDragDrop(GameObject* obj)
+	{
+		if (obj == nullptr)
+		{
+			return;
+		}
+
+		if (ImGui::BeginDragDropSource())
+		{
+			GameObject* payloadObject = obj;
+			ImGui::SetDragDropPayload(kHierarchyDragDropPayload, &payloadObject, sizeof(payloadObject));
+			ImGui::Text("%s", obj->GetTag().c_str());
+			ImGui::EndDragDropSource();
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kHierarchyDragDropPayload))
+			{
+				if (payload->DataSize == sizeof(GameObject*))
+				{
+					GameObject* draggedObject = *static_cast<GameObject* const*>(payload->Data);
+					ChangeParentInHierarchy(draggedObject, obj);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+	}
 }
 
 void EditorHierarchyWindow::Draw()
@@ -75,8 +154,6 @@ void EditorHierarchyWindow::Draw()
 	{
 		return;
 	}
-
-	char str[64];
 
 	ImGui::Begin("Hierarchy");
 	if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
@@ -138,10 +215,28 @@ void EditorHierarchyWindow::Draw()
 		ImGui::Separator();
 	}
 
+	if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
+	{
+		ImGui::Selectable("Drop Here To Make Root", false);
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kHierarchyDragDropPayload))
+			{
+				if (payload->DataSize == sizeof(GameObject*))
+				{
+					GameObject* draggedObject = *static_cast<GameObject* const*>(payload->Data);
+					ChangeParentInHierarchy(draggedObject, nullptr);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+		ImGui::Separator();
+	}
+
 	list<GameObject*>* objList = objectManager->GetObjList();
 	if (objList != nullptr)
 	{
-		int i = 0;
+		int visibleIndex = 0;
 		for (list<GameObject*>::iterator itr = objList->begin(); itr != objList->end(); itr++)
 		{
 			if ((*itr) == nullptr || (*itr)->GetDestroy())
@@ -149,34 +244,18 @@ void EditorHierarchyWindow::Draw()
 				continue;
 			}
 
-			i++;
 			if ((*itr)->GetParent() != nullptr)
 			{
 				continue;
 			}
 
-			sprintf_s(str, 64, "-%d. %s", i, (*itr)->GetTag().c_str());
-			ImGui::PushID(*itr);
-			if (ImGui::Selectable(str, objectManager->GetSelectedObject() == (*itr)))
-			{
-				objectManager->SetSelectedObject(*itr);
-			}
-			if (ImGui::BeginPopupContextItem("GameObjectContext"))
-			{
-				if (ImGui::MenuItem("Delete"))
-				{
-					DeleteGameObjectFromHierarchy(*itr);
-				}
-				ImGui::EndPopup();
-			}
-			ImGui::PopID();
-			ProcessChildNode((*itr), 1);
+			DrawGameObjectNode(*itr, 0, visibleIndex);
 		}
 	}
 	ImGui::End();
 }
 
-void EditorHierarchyWindow::ProcessChildNode(GameObject* obj, int depth)
+void EditorHierarchyWindow::DrawGameObjectNode(GameObject* obj, int depth, int& visibleIndex)
 {
 	ObjectManager* objectManager = ObjectManager::GetInstance();
 	if (objectManager == nullptr || obj == nullptr || obj->GetDestroy())
@@ -184,13 +263,38 @@ void EditorHierarchyWindow::ProcessChildNode(GameObject* obj, int depth)
 		return;
 	}
 
-	char str[64];
-	std::string d = "  ";
-	for (int i = 0; i < depth; i++)
+	char str[128];
+	std::string prefix;
+	if (depth > 0)
 	{
-		d.append(" ");
+		prefix = "  ";
+		for (int i = 0; i < depth; i++)
+		{
+			prefix.append(" ");
+		}
+		prefix.append("L ");
 	}
-	d.append("L");
+
+	visibleIndex++;
+	sprintf_s(str, 128, "%s%d. %s", prefix.c_str(), visibleIndex, obj->GetTag().c_str());
+	ImGui::PushID(obj);
+	if (ImGui::Selectable(str, objectManager->GetSelectedObject() == obj))
+	{
+		objectManager->SetSelectedObject(obj);
+	}
+	DrawHierarchyDragDrop(obj);
+	DrawHierarchyContextMenu(obj);
+	ImGui::PopID();
+
+	ProcessChildNode(obj, depth + 1);
+}
+
+void EditorHierarchyWindow::ProcessChildNode(GameObject* obj, int depth)
+{
+	if (obj == nullptr || obj->GetDestroy())
+	{
+		return;
+	}
 
 	vector<GameObject*>* childList = obj->GetChild();
 	if (childList == nullptr)
@@ -198,29 +302,14 @@ void EditorHierarchyWindow::ProcessChildNode(GameObject* obj, int depth)
 		return;
 	}
 
+	int visibleIndex = 0;
 	for (vector<GameObject*>::iterator node = childList->begin(); node != childList->end(); node++)
 	{
 		if ((*node) == nullptr || (*node)->GetDestroy())
 		{
 			continue;
 		}
-
-		sprintf_s(str, 64, "%s %s", d.c_str(), (*node)->GetTag().c_str());
-		ProcessChildNode(*node, depth + 1);
-		ImGui::PushID(*node);
-		if (ImGui::Selectable(str, objectManager->GetSelectedObject() == (*node)))
-		{
-			objectManager->SetSelectedObject(*node);
-		}
-		if (ImGui::BeginPopupContextItem("GameObjectContext"))
-		{
-			if (ImGui::MenuItem("Delete"))
-			{
-				DeleteGameObjectFromHierarchy(*node);
-			}
-			ImGui::EndPopup();
-		}
-		ImGui::PopID();
+		DrawGameObjectNode(*node, depth, visibleIndex);
 	}
 }
 

@@ -41,6 +41,14 @@ namespace
 		GameObject* obj = component->GetGameObject();
 		return obj->GetActive() && !obj->GetDestroy();
 	}
+
+	void EndImGuiFrameSafely()
+	{
+		if (ImGui::GetCurrentContext() != nullptr)
+		{
+			ImGui::EndFrame();
+		}
+	}
 }
 
 void RenderManager::Create()
@@ -350,8 +358,27 @@ void RenderManager::Initialize()
 	m_uiRenderVec = new vector<UIRenderEntry>();
 	m_nextUIRenderRegistrationOrder = 0;
 
-	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
-	device->CreateTexture(
+	CreateRenderTargetTexture();
+}
+
+void RenderManager::ReleaseRenderTargetTexture()
+{
+	if (renderTargetTexture != nullptr)
+	{
+		renderTargetTexture->Release();
+		renderTargetTexture = nullptr;
+	}
+}
+
+bool RenderManager::CreateRenderTargetTexture()
+{
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetDevice() : nullptr;
+	if (device == nullptr)
+	{
+		return false;
+	}
+
+	HRESULT hr = device->CreateTexture(
 		DRAWWINDOWW,
 		DRAWWINDOWH,
 		1,
@@ -360,6 +387,8 @@ void RenderManager::Initialize()
 		D3DPOOL_DEFAULT,
 		&renderTargetTexture,
 		nullptr);
+
+	return SUCCEEDED(hr) && renderTargetTexture != nullptr;
 }
 
 void RenderManager::EditUpdate()
@@ -369,9 +398,23 @@ void RenderManager::EditUpdate()
 	LPDIRECT3DSURFACE9 originalDepthStencil = nullptr;
 
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
+	if (renderTargetTexture == nullptr)
+	{
+		CreateRenderTargetTexture();
+	}
+	if (device == nullptr || renderTargetTexture == nullptr)
+	{
+		EndImGuiFrameSafely();
+		return;
+	}
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	
 	renderTargetTexture->GetSurfaceLevel(0, &renderTargetSurface);
+	if (renderTargetSurface == nullptr)
+	{
+		EndImGuiFrameSafely();
+		return;
+	}
 
 	device->GetRenderTarget(0, &originalRenderTarget);
 	device->GetDepthStencilSurface(&originalDepthStencil);
@@ -497,6 +540,22 @@ void RenderManager::EditUpdate()
 		}
 		device->EndScene();
 	}
+	else
+	{
+		if (originalRenderTarget != nullptr)
+		{
+			originalRenderTarget->Release();
+		}
+		if (originalDepthStencil != nullptr)
+		{
+			originalDepthStencil->Release();
+		}
+		if (renderTargetSurface != nullptr)
+		{
+			renderTargetSurface->Release();
+		}
+		EndImGuiFrameSafely();
+	}
 	device->Present(NULL, NULL, NULL, NULL);
 }
 
@@ -505,7 +564,16 @@ void RenderManager::GameUpdate()
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
 	m_gameViewPos = D3DXVECTOR2(0.0f, 0.0f);
 	m_gameViewScreenPos = D3DXVECTOR2(0.0f, 0.0f);
-	m_gameViewSize = D3DXVECTOR2(DRAWWINDOWW, DRAWWINDOWH);
+	RECT clientRect = {};
+	if (WindowFrame::GetInstance() != nullptr)
+	{
+		GetClientRect(WindowFrame::GetInstance()->GetHWND(), &clientRect);
+	}
+	const float clientWidth = static_cast<float>(clientRect.right - clientRect.left);
+	const float clientHeight = static_cast<float>(clientRect.bottom - clientRect.top);
+	m_gameViewSize = D3DXVECTOR2(
+		clientWidth > 0.0f ? clientWidth : static_cast<float>(DRAWWINDOWW),
+		clientHeight > 0.0f ? clientHeight : static_cast<float>(DRAWWINDOWH));
 	m_useScreenSpaceUIMouse = false;
 	m_winPos = ImVec2(0.0f, 0.0f);
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
@@ -593,6 +661,10 @@ void RenderManager::GameUpdate()
 		}
 
 		device->EndScene();
+	}
+	else
+	{
+		EndImGuiFrameSafely();
 	}
 
 	device->Present(NULL, NULL, NULL, NULL);

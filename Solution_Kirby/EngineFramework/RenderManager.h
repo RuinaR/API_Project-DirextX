@@ -65,6 +65,8 @@ public:
 	void Initialize();
 	void EditUpdate();
 	void GameUpdate();
+	void ReleaseRenderTargetTexture();
+	bool CreateRenderTargetTexture();
 	void Release();
 
 	ImVec2 GetWinPos();

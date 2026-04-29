@@ -86,18 +86,42 @@ std::string GameObject::Serialize() const
 
 std::string GameObject::Serialize(int objectId, int parentId) const
 {
+    return Serialize(objectId, parentId, 3);
+}
+
+std::string GameObject::Serialize(int objectId, int parentId, int sceneVersion) const
+{
     std::ostringstream oss;
     oss << "{\n";
-    if (objectId >= 0)
+    if (sceneVersion >= 4)
     {
-        oss << "      \"objectId\": " << objectId << ",\n";
-        oss << "      \"parentId\": " << parentId << ",\n";
+        if (objectId >= 0)
+        {
+            oss << "      \"id\": " << objectId << ",\n";
+            oss << "      \"parentId\": " << parentId << ",\n";
+        }
+        oss << "      \"name\": \"" << SceneJson::EscapeString(m_tag) << "\",\n";
+        oss << "      \"tag\": \"" << SceneJson::EscapeString(m_tag) << "\",\n";
+        oss << "      \"active\": " << (m_setActive ? "true" : "false") << ",\n";
+        oss << "      \"transform\": {\n";
+        oss << "        \"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << ", \"z\": " << m_position.z << " },\n";
+        oss << "        \"rotation\": { \"x\": " << m_angleX << ", \"y\": " << m_angleY << ", \"z\": " << m_angleZ << " },\n";
+        oss << "        \"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << ", \"z\": " << m_size.z << " }\n";
+        oss << "      },\n";
     }
-    oss << "      \"tag\": \"" << SceneJson::EscapeString(m_tag) << "\",\n";
-    oss << "      \"active\": " << (m_setActive ? "true" : "false") << ",\n";
-    oss << "      \"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << ", \"z\": " << m_position.z << " },\n";
-    oss << "      \"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << ", \"z\": " << m_size.z << " },\n";
-    oss << "      \"angle\": { \"x\": " << m_angleX << ", \"y\": " << m_angleY << ", \"z\": " << m_angleZ << " },\n";
+    else
+    {
+        if (objectId >= 0)
+        {
+            oss << "      \"objectId\": " << objectId << ",\n";
+            oss << "      \"parentId\": " << parentId << ",\n";
+        }
+        oss << "      \"tag\": \"" << SceneJson::EscapeString(m_tag) << "\",\n";
+        oss << "      \"active\": " << (m_setActive ? "true" : "false") << ",\n";
+        oss << "      \"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << ", \"z\": " << m_position.z << " },\n";
+        oss << "      \"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << ", \"z\": " << m_size.z << " },\n";
+        oss << "      \"angle\": { \"x\": " << m_angleX << ", \"y\": " << m_angleY << ", \"z\": " << m_angleZ << " },\n";
+    }
     oss << "      \"components\": [";
 
     bool isFirstComponent = true;
@@ -130,19 +154,58 @@ std::string GameObject::Serialize(int objectId, int parentId) const
 
 bool GameObject::Deserialize(const std::string& objectJson, GameObjectSerializedData& outData)
 {
+    return Deserialize(objectJson, outData, 3);
+}
+
+bool GameObject::Deserialize(const std::string& objectJson, GameObjectSerializedData& outData, int sceneVersion)
+{
     GameObjectSerializedData data;
-    SceneJson::ReadInt(objectJson, "objectId", data.objectId);
-    SceneJson::ReadInt(objectJson, "parentId", data.parentId);
-    if (!SceneJson::ReadString(objectJson, "tag", data.tag))
-        return false;
-    if (!SceneJson::ReadBool(objectJson, "active", data.active))
-        return false;
-    if (!SceneJson::ReadVector3(objectJson, "position", &data.position))
-		return false;
-    if (!SceneJson::ReadVector3(objectJson, "size", &data.size))
-		return false;
-    if (!SceneJson::ReadVector3(objectJson, "angle", &data.angle))
-		return false;
+    if (sceneVersion >= 4)
+    {
+        std::string transformJson;
+        const bool hasName = SceneJson::ReadString(objectJson, "name", data.name);
+        const bool hasTag = SceneJson::ReadString(objectJson, "tag", data.tag);
+        SceneJson::ReadInt(objectJson, "id", data.objectId);
+        SceneJson::ReadInt(objectJson, "parentId", data.parentId);
+        if (!hasTag)
+        {
+            data.tag = data.name;
+        }
+        if (!hasName && !hasTag)
+        {
+            return false;
+        }
+        if (data.name.empty())
+        {
+            data.name = data.tag;
+        }
+        if (!SceneJson::ReadBool(objectJson, "active", data.active))
+            return false;
+        if (!SceneJson::ExtractObject(objectJson, "transform", transformJson))
+            return false;
+        if (!SceneJson::ReadVector3(transformJson, "position", &data.position))
+            return false;
+        if (!SceneJson::ReadVector3(transformJson, "size", &data.size))
+            return false;
+        if (!SceneJson::ReadVector3(transformJson, "rotation", &data.angle))
+            return false;
+    }
+    else
+    {
+        SceneJson::ReadInt(objectJson, "objectId", data.objectId);
+        SceneJson::ReadInt(objectJson, "parentId", data.parentId);
+        if (!SceneJson::ReadString(objectJson, "tag", data.tag))
+            return false;
+        data.name = data.tag;
+        if (!SceneJson::ReadBool(objectJson, "active", data.active))
+            return false;
+        if (!SceneJson::ReadVector3(objectJson, "position", &data.position))
+		    return false;
+        if (!SceneJson::ReadVector3(objectJson, "size", &data.size))
+		    return false;
+        if (!SceneJson::ReadVector3(objectJson, "angle", &data.angle))
+		    return false;
+    }
 
     outData = data;
     return true;
@@ -162,11 +225,16 @@ GameObject* GameObject::CreateFromSerializedData(const GameObjectSerializedData&
 }
 
 Component* GameObject::AddComponent(Component* component) {
+    return AddComponent(component, true, true);
+}
+
+Component* GameObject::AddComponent(Component* component, bool initializeComponent, bool startComponent) {
     if (component) {
         component->InitGameObj(this);
         m_vecComponent->push_back(component);
-        component->Initialize();
-        if (ObjectManager::GetInstance()->FindObject(this)) {
+        if (initializeComponent)
+            component->Initialize();
+        if (startComponent && ObjectManager::GetInstance()->FindObject(this)) {
             component->Start();
         }
         return component;
@@ -385,28 +453,31 @@ const float& GameObject::GetAngleY()
 
 void GameObject::SetAngleZ(float v)
 {
+    const float delta = v - m_angleZ;
     m_angleZ = v;
     if (m_box != nullptr && m_box->GetBody() != nullptr)
         m_box->GetBody()->SetTransform(m_box->GetBody()->GetPosition(), v);
 
     for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngleZ(v);
+        (*itr)->SetAngleZ((*itr)->GetAngleZ() + delta);
 }
 
 void GameObject::SetAngleX(float v)
 {
+    const float delta = v - m_angleX;
     m_angleX = v;
 
     for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngleX(v);
+        (*itr)->SetAngleX((*itr)->GetAngleX() + delta);
 }
 
 void GameObject::SetAngleY(float v)
 {
+    const float delta = v - m_angleY;
     m_angleY = v;
 
     for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngleY(v);
+        (*itr)->SetAngleY((*itr)->GetAngleY() + delta);
 }
 
 void GameObject::OnCollisionEnter(Collider* col)
