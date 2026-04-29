@@ -9,19 +9,10 @@ FBXRender::FBXRender(std::string name) : m_fbxFileName(std::move(name)) {}
 
 // 초기화 함수
 void FBXRender::Initialize() {
-    auto device = MainFrame::GetInstance()->GetDevice();  // Direct3D 디바이스 가져오기
     m_loaded = false;
     m_resource = nullptr;
 
-    m_resource = ResourceManager::GetInstance()->GetModel(m_fbxFileName);
-    if (m_resource == nullptr || !m_resource->loaded) {
-        m_logSystem.AddLog("Error: Failed to load FBX file");
-        return;
-    }
-
-    m_logSystem.AddLog("FBX file loaded successfully");
-    m_loaded = true;
-
+    ReloadModel(m_fbxFileName);
     RenderManager::GetInstance()->Register(this);  // 렌더 매니저에 등록
 }
 
@@ -128,6 +119,35 @@ void FBXRender::Render() {
     }
 }
 
+bool FBXRender::ReloadModel(const std::string& fbxPath)
+{
+    if (fbxPath.empty())
+    {
+        m_logSystem.AddLog("Error: FBX path is empty.");
+        return false;
+    }
+
+    ResourceManager* resourceManager = ResourceManager::GetInstance();
+    if (resourceManager == nullptr)
+    {
+        m_logSystem.AddLog("Error: ResourceManager is null.");
+        return false;
+    }
+
+    FbxResource* newResource = resourceManager->GetModel(fbxPath);
+    if (newResource == nullptr || !newResource->loaded)
+    {
+        m_logSystem.AddLog("Error: Failed to load FBX file.");
+        return false;
+    }
+
+    m_resource = newResource;
+    m_fbxFileName = fbxPath;
+    m_loaded = true;
+    m_logSystem.AddLog("FBX file loaded successfully.");
+    return true;
+}
+
 
 
 // 월드 변환 설정
@@ -180,14 +200,14 @@ void FBXRender::DrawInspector()
     std::string selectedModelKey = m_fbxFileName;
     if (EditorAssetField::Draw("Model Asset", AssetType::Model, selectedModelKey))
     {
-        m_fbxFileName = selectedModelKey;
+        ReloadModel(selectedModelKey);
     }
 
     char fbxPath[260] = {};
     strcpy_s(fbxPath, m_fbxFileName.c_str());
-    if (ImGui::InputText("FBX Path", fbxPath, IM_ARRAYSIZE(fbxPath)))
+    if (ImGui::InputText("FBX Path", fbxPath, IM_ARRAYSIZE(fbxPath), ImGuiInputTextFlags_EnterReturnsTrue))
     {
-        m_fbxFileName = fbxPath;
+        ReloadModel(fbxPath);
     }
 
     ImGui::Text("Loaded: %s", m_loaded ? "true" : "false");
@@ -196,7 +216,7 @@ void FBXRender::DrawInspector()
     ImGui::Text("Material Slot Count: %d", materialCount);
     ImGui::Text("Vertex Count: %d", vertexCount);
     ImGui::Text("Index Count: %d", indexCount);
-    ImGui::TextDisabled("Reload is deferred until the component is recreated.");
+    ImGui::TextDisabled("Press Enter after manual path changes to reload.");
 }
 
 const char* FBXRender::GetSerializableType() const

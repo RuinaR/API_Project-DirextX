@@ -15,6 +15,7 @@ public:
 	static void Destroy();
 
 	IDirect3DTexture9* GetTexture(const std::string& assetKey);
+	IDirect3DTexture9* GetTexture(const std::string& assetKey, bool useMagentaColorKey);
 	void GetTexture(const std::string& assetKey, std::function<void(IDirect3DTexture9*)> callback);
 	void GetTexture(const std::string& assetKey, ImageRender* imageRender);
 	Animation GetAnimation(const std::wstring& folderName, float time);

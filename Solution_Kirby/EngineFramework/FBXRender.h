@@ -39,6 +39,7 @@ public:
     void Start() override;
     void Update() override;
     void Render();
+    bool ReloadModel(const std::string& fbxPath);
     const char* GetInspectorName() const override;
     void DrawInspector() override;
     const char* GetSerializableType() const override;

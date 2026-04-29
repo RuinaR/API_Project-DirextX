@@ -164,11 +164,29 @@ void ObjectManager::Destroy()
 			m_Pthis->ReleaseAndDeleteObject(*itr);
 		}
 		m_Pthis->m_pendingAddObjects.clear();
+
+		for (vector<GameObject*>::iterator itr = m_Pthis->m_pendingRemoveObjects.begin(); itr != m_Pthis->m_pendingRemoveObjects.end(); itr++)
+		{
+			GameObject* obj = *itr;
+			for (list<GameObject*>::iterator listItr = m_Pthis->m_objList->begin(); listItr != m_Pthis->m_objList->end();)
+			{
+				if ((*listItr) == obj)
+				{
+					listItr = m_Pthis->m_objList->erase(listItr);
+					break;
+				}
+				else
+				{
+					listItr++;
+				}
+			}
+			m_Pthis->ReleaseAndDeleteObject(obj);
+		}
 		m_Pthis->m_pendingRemoveObjects.clear();
 
 		for (list<GameObject*>::iterator itr = m_Pthis->m_objList->begin(); itr != m_Pthis->m_objList->end(); itr++)
 		{
-			delete(*itr);
+			m_Pthis->ReleaseAndDeleteObject(*itr);
 			(*itr) = nullptr;
 		}
 		delete m_Pthis->m_objList;

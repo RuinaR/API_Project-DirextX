@@ -161,6 +161,17 @@ int AssetDatabase::GetAssetCount() const
 
 void AssetDatabase::ScanDirectoryRecursive(const std::string& directoryPath, const std::string& rootPath)
 {
+	const std::string directoryName = GetFileName(directoryPath);
+	if (IsFbmDirectoryName(directoryName))
+	{
+		return;
+	}
+	if (IsAnimDirectoryName(directoryName))
+	{
+		AddAnimationFolderAsset(directoryPath, rootPath);
+		return;
+	}
+
 	const std::string searchPath = JoinPath(directoryPath, "*");
 	WIN32_FIND_DATAA findData;
 	HANDLE findHandle = FindFirstFileA(searchPath.c_str(), &findData);
@@ -180,16 +191,21 @@ void AssetDatabase::ScanDirectoryRecursive(const std::string& directoryPath, con
 		const std::string fullPath = NormalizePath(GetFullPath(JoinPath(directoryPath, fileName)));
 		if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
+			if (IsFbmDirectoryName(fileName))
+			{
+				continue;
+			}
+			if (IsAnimDirectoryName(fileName))
+			{
+				AddAnimationFolderAsset(fullPath, rootPath);
+				continue;
+			}
 			ScanDirectoryRecursive(fullPath, rootPath);
 			continue;
 		}
 
 		const std::string extension = ToLower(GetExtension(fileName));
 		AssetType type = GetAssetType(extension);
-		if (type == AssetType::Unknown && IsAnimationFolderName(GetFileName(directoryPath)))
-		{
-			type = AssetType::Animation;
-		}
 
 		AssetInfo info;
 		info.key = NormalizePath(MakeRelativePath(fullPath, rootPath));
@@ -201,6 +217,36 @@ void AssetDatabase::ScanDirectoryRecursive(const std::string& directoryPath, con
 	} while (FindNextFileA(findHandle, &findData));
 
 	FindClose(findHandle);
+}
+
+void AssetDatabase::AddAnimationFolderAsset(const std::string& directoryPath, const std::string& rootPath)
+{
+	const std::string key = NormalizePath(MakeRelativePath(directoryPath, rootPath));
+	if (key.empty() || HasAssetKey(key))
+	{
+		return;
+	}
+
+	AssetInfo info;
+	info.key = key;
+	info.path = NormalizePath(directoryPath);
+	info.fileName = GetFileName(directoryPath);
+	info.type = AssetType::Animation;
+	info.extension = "folder";
+	m_assets.push_back(info);
+}
+
+bool AssetDatabase::HasAssetKey(const std::string& key) const
+{
+	const std::string normalizedKey = NormalizePath(key);
+	for (std::vector<AssetInfo>::const_iterator itr = m_assets.begin(); itr != m_assets.end(); itr++)
+	{
+		if (itr->key == normalizedKey)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 const char* AssetDatabase::AssetTypeToString(AssetType type)
@@ -242,22 +288,20 @@ AssetType AssetDatabase::GetAssetType(const std::string& extension)
 	return AssetType::Unknown;
 }
 
-bool AssetDatabase::IsAnimationFolderName(const std::string& folderName)
+bool AssetDatabase::IsImageFileExtension(const std::string& extension)
 {
-	const std::string name = ToLower(folderName);
-	return name == "idle"
-		|| name == "walk"
-		|| name == "run"
-		|| name == "jump"
-		|| name == "attack"
-		|| name == "hit"
-		|| name == "fly"
-		|| name == "eat"
-		|| name == "eating"
-		|| name == "eat_idle"
-		|| name == "eat_move"
-		|| name == "eat_jump"
-		|| name == "change";
+	const std::string ext = ToLower(extension);
+	return ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".dds";
+}
+
+bool AssetDatabase::IsFbmDirectoryName(const std::string& directoryName)
+{
+	return ToLower(GetExtension(directoryName)) == ".fbm";
+}
+
+bool AssetDatabase::IsAnimDirectoryName(const std::string& directoryName)
+{
+	return ToLower(GetExtension(directoryName)) == ".anim";
 }
 
 std::string AssetDatabase::FindDefaultRootPath()

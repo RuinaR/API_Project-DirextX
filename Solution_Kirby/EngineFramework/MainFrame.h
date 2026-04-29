@@ -29,17 +29,18 @@ private:
 	int m_targetFPS = 60;
 
 	b2Vec2 m_gravity = { 0.0f, -10.0f };
-	b2World* m_pWorld;
+	b2World* m_pWorld = nullptr;
 	CollisionListener m_cListener;
 private:
 
-	HWND m_hWnd;
-	LPDIRECT3D9 m_pD3D;
-	LPDIRECT3DDEVICE9 m_pd3dDevice;
+	HWND m_hWnd = nullptr;
+	LPDIRECT3D9 m_pD3D = nullptr;
+	LPDIRECT3DDEVICE9 m_pd3dDevice = nullptr;
 
 	D3DXMATRIX m_matWorld;
 	D3DXMATRIX m_matProj;
-	ID3DXFont* m_pFont;
+	ID3DXFont* m_pFont = nullptr;
+	bool m_released = false;
 
 	int m_width;
 	int m_height;

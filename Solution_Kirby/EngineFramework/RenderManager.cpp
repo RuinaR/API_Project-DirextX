@@ -11,6 +11,26 @@ int RenderManager::FrameCount = 0;
 
 namespace
 {
+	void RemoveImageRenderFromQueue(vector<ImageRender*>* queue, ImageRender* ir)
+	{
+		if (queue == nullptr || ir == nullptr)
+		{
+			return;
+		}
+
+		for (vector<ImageRender*>::iterator itr = queue->begin(); itr != queue->end();)
+		{
+			if ((*itr) == ir)
+			{
+				itr = queue->erase(itr);
+			}
+			else
+			{
+				itr++;
+			}
+		}
+	}
+
 	bool CanRenderComponent(Component* component)
 	{
 		if (component == nullptr || component->GetGameObject() == nullptr)
@@ -47,7 +67,12 @@ void RenderManager::Destroy()
 
 void RenderManager::Register(ImageRender* ir)
 {
-	UnregisterUI(ir);
+	if (ir == nullptr)
+	{
+		return;
+	}
+
+	Unregister(ir);
 
 	if (ir->IsTrans())
 	{
@@ -62,33 +87,17 @@ void RenderManager::Register(ImageRender* ir)
 void RenderManager::Unregister(ImageRender* ir)
 {
 	UnregisterUI(ir);
-
-	if (ir->IsTrans())
-	{
-		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
-		{
-			if ((*itr) == ir)
-			{
-				m_transVec->erase(itr);
-				return;
-			}
-		}
-	}
-	else
-	{
-		for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
-		{
-			if ((*itr) == ir)
-			{
-				m_noTransVec->erase(itr);
-				return;
-			}
-		}
-	}
+	RemoveImageRenderFromQueue(m_transVec, ir);
+	RemoveImageRenderFromQueue(m_noTransVec, ir);
 }
 
 void RenderManager::RegisterUI(ImageRender* ir)
 {
+	if (ir == nullptr)
+	{
+		return;
+	}
+
 	Unregister(ir);
 
 	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
@@ -111,12 +120,20 @@ void RenderManager::RegisterUI(ImageRender* ir)
 
 void RenderManager::UnregisterUI(ImageRender* ir)
 {
-	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
+	if (m_uiRenderVec == nullptr || ir == nullptr)
+	{
+		return;
+	}
+
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end();)
 	{
 		if (itr->render == ir)
 		{
-			m_uiRenderVec->erase(itr);
-			return;
+			itr = m_uiRenderVec->erase(itr);
+		}
+		else
+		{
+			itr++;
 		}
 	}
 }
@@ -376,20 +393,10 @@ void RenderManager::EditUpdate()
 				continue;
 			(*itr)->Render();
 		}	
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
 		//FBX Render
 		device->SetFVF(D3DFVF_CUSTOMVERTEX);
 		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 		device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 		device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
@@ -402,6 +409,19 @@ void RenderManager::EditUpdate()
 				continue;
 			(*itr)->Render();
 		}
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
+		{
+			if (!CanRenderComponent(*itr))
+				continue;
+			(*itr)->Render();
+		}
+		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 		//DebugRender
 		for (vector<DebugRender*>::iterator itr = m_debugVec->begin(); itr != m_debugVec->end(); itr++)
 		{
@@ -504,9 +524,20 @@ void RenderManager::GameUpdate()
 				continue;
 			(*itr)->Render();
 		}
+		//FBX Render
+		device->SetFVF(D3DFVF_CUSTOMVERTEX);
+		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
+		{
+			if (!CanRenderComponent(*itr))
+				continue;
+			(*itr)->Render();
+		}
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
@@ -515,15 +546,7 @@ void RenderManager::GameUpdate()
 				continue;
 			(*itr)->Render();
 		}
-		//FBX Render
-		device->SetFVF(D3DFVF_CUSTOMVERTEX);
-		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
+		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 		RenderUIQueue();
 		device->SetTexture(0, nullptr);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);

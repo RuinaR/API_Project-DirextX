@@ -4,6 +4,7 @@
 #include "SceneJsonUtility.h"
 GameObject::GameObject() {
     m_vecComponent = new vector<Component*>();
+    m_pendingDeleteComponents = new vector<Component*>();
     m_children = new vector<GameObject*>();
     m_angleX = 0.0f;
     m_angleY = 0.0f;
@@ -174,12 +175,22 @@ Component* GameObject::AddComponent(Component* component) {
 }
 
 void GameObject::DeleteComponent(Component* component) {
+    if (component == nullptr || m_vecComponent == nullptr)
+        return;
+
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++) {
         if ((*itr) == component) {
-            (*itr)->Release();
-            delete (*itr);
-            (*itr) = nullptr;
+            Component* target = *itr;
             m_vecComponent->erase(itr);
+            if (m_pendingDeleteComponents != nullptr)
+            {
+                m_pendingDeleteComponents->push_back(target);
+            }
+            else
+            {
+                target->Release();
+                delete target;
+            }
             return;
         }
     }
@@ -189,6 +200,25 @@ vector<Component*>* GameObject::GetComponentVec() {
     return m_vecComponent;
 }
 
+void GameObject::FlushPendingComponents()
+{
+    if (m_pendingDeleteComponents == nullptr || m_pendingDeleteComponents->empty())
+        return;
+
+    vector<Component*> pendingDeleteComponents;
+    pendingDeleteComponents.swap(*m_pendingDeleteComponents);
+
+    for (vector<Component*>::iterator itr = pendingDeleteComponents.begin(); itr != pendingDeleteComponents.end(); itr++)
+    {
+        Component* component = *itr;
+        if (component == nullptr)
+            continue;
+
+        component->Release();
+        delete component;
+    }
+}
+
 void GameObject::InitializeSet() {
     m_isDestroy = false;
     m_box = GetComponent<BoxCollider>();
@@ -196,6 +226,8 @@ void GameObject::InitializeSet() {
 }
 
 void GameObject::Release() {
+
+    FlushPendingComponents();
 
 	if (m_vecComponent != nullptr)
 	{
@@ -211,6 +243,12 @@ void GameObject::Release() {
 		delete m_vecComponent;
 		m_vecComponent = nullptr;
 	}
+
+    if (m_pendingDeleteComponents != nullptr)
+    {
+        delete m_pendingDeleteComponents;
+        m_pendingDeleteComponents = nullptr;
+    }
 
 	if (m_children != nullptr)
 	{
@@ -242,6 +280,8 @@ void GameObject::Start() {
 }
 
 void GameObject::Update() {
+    FlushPendingComponents();
+
     if (!m_setActive)
         return;
     if (m_isDestroy)

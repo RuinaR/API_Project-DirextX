@@ -27,9 +27,11 @@ protected:
     float m_angleY;
 
     vector<Component*>* m_vecComponent = nullptr;
+    vector<Component*>* m_pendingDeleteComponents = nullptr;
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
     BoxCollider* m_box;
+    void FlushPendingComponents();
 public:
     GameObject();
     virtual ~GameObject();
@@ -44,8 +46,14 @@ public:
     template <typename T>
     T* GetComponent() 
     {
+        if (m_vecComponent == nullptr)
+            return nullptr;
+
         for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++) 
         {
+            if (*itr == nullptr)
+                continue;
+
             if (typeid(**itr) == typeid(T)) 
             {
                 return (T*)*itr;

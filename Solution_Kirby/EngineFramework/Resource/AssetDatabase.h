@@ -44,8 +44,13 @@ private:
 
 	void ScanDirectoryRecursive(const std::string& directoryPath, const std::string& rootPath);
 
+	void AddAnimationFolderAsset(const std::string& directoryPath, const std::string& rootPath);
+	bool HasAssetKey(const std::string& key) const;
+
 	static AssetType GetAssetType(const std::string& extension);
-	static bool IsAnimationFolderName(const std::string& folderName);
+	static bool IsImageFileExtension(const std::string& extension);
+	static bool IsFbmDirectoryName(const std::string& directoryName);
+	static bool IsAnimDirectoryName(const std::string& directoryName);
 	static std::string FindDefaultRootPath();
 	static std::string NormalizePath(const std::string& path);
 	static std::string ToLower(std::string value);

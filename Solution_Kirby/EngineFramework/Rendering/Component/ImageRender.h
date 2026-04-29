@@ -14,9 +14,12 @@ private:
 	bool m_isUIRender = false;
 	bool m_renderEnabled = true;
 	bool m_useTexture = true;
+	bool m_useMagentaColorKey = false;
+	bool m_released = false;
 	int m_orderInLayer = 0;
 	D3DCOLOR m_color = 0xffffffff;
 	std::string m_texturePath;
+	std::string m_runtimeTexturePath;
 	D3DXVECTOR3 m_positionOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	
 
@@ -39,6 +42,8 @@ public:
 	bool IsRenderEnabled();
 	void SetUseTexture(bool useTexture);
 	bool IsUseTexture();
+	void SetUseMagentaColorKey(bool useMagentaColorKey);
+	bool IsUseMagentaColorKey() const;
 	void SetColor(D3DCOLOR color);
 	D3DCOLOR GetColor();
 	void SetPositionOffset(const D3DXVECTOR3& offset);
@@ -47,8 +52,10 @@ public:
 	void Initialize() override;
 	void Release() override;
 	void ChangeTexture(IDirect3DTexture9* texture);
+	void ChangeTexture(IDirect3DTexture9* texture, const std::string& runtimeTexturePath);
 	void SetTexturePath(const std::string& path);
 	const std::string& GetTexturePath() const;
+	const std::string& GetRuntimeTexturePath() const;
 	void Start() override;
 	void Update() override;
 	const char* GetInspectorName() const override;

@@ -31,6 +31,7 @@ void MainFrame::Destroy()
 {
 	if (m_Pthis)
 	{
+        m_Pthis->Release();
         ResourceManager::Destroy();
         AssetDatabase::Destroy();
 		Camera::Destroy();
@@ -56,12 +57,13 @@ double MainFrame::DeltaTime()
 
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 {
+    m_released = false;
     m_pWorld = new b2World(m_gravity);
     m_pWorld->SetContactListener(&m_cListener);
     m_pWorld->SetContinuousPhysics(true);
     m_type = type;
     WindowFrame::GetInstance()->Initialize(m_type);
-    if (m_type == RenderType::Edit && AssetDatabase::GetInstance() != nullptr)
+    if (AssetDatabase::GetInstance() != nullptr)
     {
         AssetDatabase::GetInstance()->Scan();
     }
@@ -317,22 +319,43 @@ b2World* MainFrame::GetBox2dWorld()
 
 void MainFrame::Release()
 {
-	ObjectManager::GetInstance()->Release();
-	ObjectManager::Destroy();
-    RenderManager::GetInstance()->Release();
-    RenderManager::Destroy();
+    if (m_released)
+        return;
+
+    m_released = true;
+
+    if (ObjectManager::GetInstance() != nullptr)
+    {
+        ObjectManager::GetInstance()->Release();
+        ObjectManager::Destroy();
+    }
+    if (RenderManager::GetInstance() != nullptr)
+    {
+        RenderManager::GetInstance()->Release();
+        RenderManager::Destroy();
+    }
 	//CollisionManager::Destroy();
 
+    if (m_pFont != NULL)
+    {
+        m_pFont->Release();
+        m_pFont = NULL;
+    }
+
     if (m_pd3dDevice != NULL)
+    {
         m_pd3dDevice->Release();
+        m_pd3dDevice = NULL;
+    }
 
     if (m_pD3D != NULL)
+    {
         m_pD3D->Release();
-
-    if (m_pFont != NULL)
-        m_pFont->Release();
+        m_pD3D = NULL;
+    }
 
     delete m_pWorld;
+    m_pWorld = nullptr;
 }
 
 void CollisionListener::BeginContact(b2Contact* contact)

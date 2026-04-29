@@ -6,7 +6,7 @@
 
 void ImageRender::DrawImage(int x, int y, int z, int w, int h)
 {
-    if (m_gameObj->GetDestroy())
+    if (m_released || m_gameObj == nullptr || m_gameObj->GetDestroy() || m_device == nullptr || m_vertexBuffer == nullptr || m_indexBuffer == nullptr)
         return;
 
     SetupVertices();
@@ -58,6 +58,11 @@ void ImageRender::LoadTextureCallback(IDirect3DTexture9* tex)
 
 void ImageRender::SetupVertices()
 {
+    if (m_device == nullptr || m_vertexBuffer == nullptr || m_indexBuffer == nullptr)
+    {
+        return;
+    }
+
     const float upperV = m_isUIRender ? 1.0f : 0.0f;
     const float lowerV = m_isUIRender ? 0.0f : 1.0f;
 
@@ -92,7 +97,10 @@ void ImageRender::SetupVertices()
 
     // 정점 버퍼에 사각형 정점 정보를 갱신한다.
     VOID* pVertices;
-    m_vertexBuffer->Lock(0, sizeof(CUSTOMVERTEX) * 4, (void**)&pVertices, 0);
+    if (FAILED(m_vertexBuffer->Lock(0, sizeof(CUSTOMVERTEX) * 4, (void**)&pVertices, 0)))
+    {
+        return;
+    }
     memcpy(pVertices, vertices, sizeof(CUSTOMVERTEX) * 4);
     m_vertexBuffer->Unlock();
 
@@ -105,7 +113,10 @@ void ImageRender::SetupVertices()
 
     // 인덱스 버퍼에 인덱스 정보를 갱신한다.
     WORD* pIndices;
-    m_indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0);
+    if (FAILED(m_indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0)))
+    {
+        return;
+    }
     memcpy(pIndices, indices, sizeof(indices));
     m_indexBuffer->Unlock();
 
@@ -124,6 +135,9 @@ float ImageRender::GetZ()
 
 void ImageRender::Render()
 {
+    if (m_released || m_gameObj == nullptr || m_device == nullptr || m_vertexBuffer == nullptr || m_indexBuffer == nullptr)
+        return;
+
     if (!m_renderEnabled)
         return;
 
@@ -224,6 +238,25 @@ bool ImageRender::IsUseTexture()
     return m_useTexture;
 }
 
+void ImageRender::SetUseMagentaColorKey(bool useMagentaColorKey)
+{
+    if (m_useMagentaColorKey == useMagentaColorKey)
+    {
+        return;
+    }
+
+    m_useMagentaColorKey = useMagentaColorKey;
+    if (!m_texturePath.empty())
+    {
+        SetTexturePath(m_texturePath);
+    }
+}
+
+bool ImageRender::IsUseMagentaColorKey() const
+{
+    return m_useMagentaColorKey;
+}
+
 void ImageRender::SetColor(D3DCOLOR color)
 {
     m_color = color;
@@ -260,58 +293,117 @@ D3DXVECTOR3 ImageRender::GetRenderPosition() const
 
 void ImageRender::Initialize()
 {
-	m_device = MainFrame::GetInstance()->GetDevice();
+    m_released = false;
+    MainFrame* mainFrame = MainFrame::GetInstance();
+    if (mainFrame == nullptr)
+    {
+        return;
+    }
 
-	m_device->
-	CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &m_vertexBuffer, NULL);
-    m_device->
-        CreateIndexBuffer(6 * sizeof(WORD), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_indexBuffer, nullptr);
+	m_device = mainFrame->GetDevice();
+    if (m_device == nullptr)
+    {
+        return;
+    }
+
+	if (FAILED(m_device->CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &m_vertexBuffer, NULL))
+        || FAILED(m_device->CreateIndexBuffer(6 * sizeof(WORD), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_indexBuffer, nullptr)))
+    {
+        Release();
+        return;
+    }
+
+    RenderManager* renderManager = RenderManager::GetInstance();
+    if (renderManager == nullptr)
+    {
+        return;
+    }
+
     if (m_isUIRender)
     {
-        RenderManager::GetInstance()->RegisterUI(this);
+        renderManager->RegisterUI(this);
     }
     else
     {
-        RenderManager::GetInstance()->Register(this);
+        renderManager->Register(this);
     }
 }
 
 void ImageRender::Release()
 {
-    if (m_isUIRender)
+    if (m_released)
     {
-        RenderManager::GetInstance()->UnregisterUI(this);
+        return;
     }
-    else
+
+    m_released = true;
+    if (RenderManager::GetInstance() != nullptr)
     {
         RenderManager::GetInstance()->Unregister(this);
     }
 
-    m_vertexBuffer->Release();
-    m_indexBuffer->Release();
+    m_texture = nullptr;
+    m_runtimeTexturePath.clear();
+    if (m_vertexBuffer != nullptr)
+    {
+        m_vertexBuffer->Release();
+        m_vertexBuffer = nullptr;
+    }
+    if (m_indexBuffer != nullptr)
+    {
+        m_indexBuffer->Release();
+        m_indexBuffer = nullptr;
+    }
+    m_device = nullptr;
 }
 
 void ImageRender::ChangeTexture(IDirect3DTexture9* texture)
 {
+    if (m_released)
+    {
+        return;
+    }
+
     m_texture = texture;
+    m_runtimeTexturePath.clear();
+}
+
+void ImageRender::ChangeTexture(IDirect3DTexture9* texture, const std::string& runtimeTexturePath)
+{
+    if (m_released)
+    {
+        return;
+    }
+
+    m_texture = texture;
+    m_runtimeTexturePath = runtimeTexturePath;
 }
 
 void ImageRender::SetTexturePath(const std::string& path)
 {
     m_texturePath = path;
+    m_runtimeTexturePath.clear();
     if (m_texturePath.empty())
     {
         m_texture = nullptr;
     }
     else
     {
-        m_texture = ResourceManager::GetInstance()->GetTexture(m_texturePath);
+        ResourceManager* resourceManager = ResourceManager::GetInstance();
+        m_texture = resourceManager != nullptr
+            ? resourceManager->GetTexture(m_texturePath, m_useMagentaColorKey)
+            : nullptr;
     }
 }
 
 const std::string& ImageRender::GetTexturePath() const
 {
     return m_texturePath;
+}
+
+const std::string& ImageRender::GetRuntimeTexturePath() const
+{
+    return m_runtimeTexturePath;
 }
 
 void ImageRender::Start()
@@ -362,6 +454,12 @@ void ImageRender::DrawInspector()
         SetUseTexture(useTexture);
     }
 
+    bool useMagentaColorKey = m_useMagentaColorKey;
+    if (ImGui::Checkbox("Magenta Color Key", &useMagentaColorKey))
+    {
+        SetUseMagentaColorKey(useMagentaColorKey);
+    }
+
     bool trans = m_isTrans;
     if (ImGui::Checkbox("Transparent Queue", &trans))
     {
@@ -400,6 +498,10 @@ void ImageRender::DrawInspector()
     }
 
     ImGui::Text("Texture: %s", m_texture ? "Loaded" : "None");
+    if (!m_runtimeTexturePath.empty())
+    {
+        ImGui::Text("Animation Texture: %s", m_runtimeTexturePath.c_str());
+    }
 }
 
 const char* ImageRender::GetSerializableType() const
@@ -413,6 +515,7 @@ std::string ImageRender::Serialize() const
     oss << "{ ";
     oss << "\"renderEnabled\": " << (m_renderEnabled ? "true" : "false") << ", ";
     oss << "\"useTexture\": " << (m_useTexture ? "true" : "false") << ", ";
+    oss << "\"magentaColorKey\": " << (m_useMagentaColorKey ? "true" : "false") << ", ";
     oss << "\"color\": " << static_cast<DWORD>(m_color) << ", ";
     oss << "\"isUIRender\": " << (m_isUIRender ? "true" : "false") << ", ";
     oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
@@ -426,6 +529,7 @@ bool ImageRender::Deserialize(const std::string& componentJson)
 {
     bool renderEnabled = m_renderEnabled;
     bool useTexture = m_useTexture;
+    bool magentaColorKey = m_useMagentaColorKey;
     bool isUIRender = m_isUIRender;
     bool trans = m_isTrans;
     int orderInLayer = m_orderInLayer;
@@ -434,6 +538,7 @@ bool ImageRender::Deserialize(const std::string& componentJson)
 
     SceneJson::ReadBool(componentJson, "renderEnabled", renderEnabled);
     SceneJson::ReadBool(componentJson, "useTexture", useTexture);
+    SceneJson::ReadBool(componentJson, "magentaColorKey", magentaColorKey);
     SceneJson::ReadBool(componentJson, "isUIRender", isUIRender);
     SceneJson::ReadBool(componentJson, "trans", trans);
     SceneJson::ReadInt(componentJson, "orderInLayer", orderInLayer);
@@ -442,6 +547,7 @@ bool ImageRender::Deserialize(const std::string& componentJson)
 
     SetRenderEnabled(renderEnabled);
     SetUseTexture(useTexture);
+    m_useMagentaColorKey = magentaColorKey;
     SetColor(static_cast<D3DCOLOR>(color));
     SetTrans(trans);
     SetOrderInLayer(orderInLayer);

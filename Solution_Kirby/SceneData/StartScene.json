@@ -73,9 +73,9 @@
       "active": true,
       "position": { "x": -29, "y": 0, "z": 500 },
       "size": { "x": 0.5, "y": 0.5, "z": 0.5 },
-      "angle": { "x": 0, "y": 579, "z": 0 },
+      "angle": { "x": 172.9, "y": 1501.5, "z": 23.1 },
       "components": [
-        { "type": "FBXRender", "data": { "fbxPath": "fbxSample" } }
+        { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample.fbx" } }
       ]
     },
     {
@@ -127,11 +127,48 @@
       "parentId": -1,
       "tag": "Sprite",
       "active": true,
-      "position": { "x": 0, "y": 0, "z": 0 },
+      "position": { "x": 457, "y": 0, "z": 0 },
       "size": { "x": 128, "y": 128, "z": 1 },
       "angle": { "x": 0, "y": 0, "z": 0 },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/download.jpg" } }
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/download.jpg" } }
+      ]
+    },
+    {
+      "objectId": 12,
+      "parentId": -1,
+      "tag": "AnimationTest",
+      "active": true,
+      "position": { "x": 175, "y": 321, "z": 0 },
+      "size": { "x": 128, "y": 128, "z": 1 },
+      "angle": { "x": 0, "y": 0, "z": 0 },
+      "components": []
+    },
+    {
+      "objectId": 13,
+      "parentId": -1,
+      "tag": "Sprite (1)",
+      "active": true,
+      "position": { "x": 0, "y": 353, "z": 0 },
+      "size": { "x": 128, "y": 128, "z": 1 },
+      "angle": { "x": 0, "y": 0, "z": 0 },
+      "components": [
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/right/eat_move.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "sourcePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
+      ]
+    },
+    {
+      "objectId": 14,
+      "parentId": -1,
+      "tag": "Sprite (2)",
+      "active": true,
+      "position": { "x": 270, "y": 206, "z": 0 },
+      "size": { "x": 128, "y": 128, "z": 1 },
+      "angle": { "x": 0, "y": 0, "z": 0 },
+      "components": [
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/stoneObj.bmp" } },
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/eat_jump.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "sourcePath": "" } }
       ]
     }
   ]

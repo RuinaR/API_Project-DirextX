@@ -11,6 +11,30 @@ struct Vector2D
 	double y = 0.0f;
 };
 
+struct AnimationFrameData
+{
+	std::string textureKey;
+	float duration = 0.1f;
+};
+
+struct AnimationClipData
+{
+	std::string animationFolderKey;
+	std::vector<AnimationFrameData> frames;
+	float defaultFrameDuration = 0.1f;
+	bool loop = true;
+	bool playOnStart = true;
+};
+
+struct AnimationRuntimeFrame
+{
+	IDirect3DTexture9* texture = nullptr;
+	std::string textureKey;
+	float duration = 0.1f;
+};
+
+// Deprecated legacy runtime structure.
+// Use AnimationClipData for saved data and AnimationRuntimeFrame for runtime texture frames.
 struct Animation
 {
 	vector<IDirect3DTexture9*> textures;

@@ -32,6 +32,11 @@ IDirect3DTexture9* ResourceManager::GetTexture(const std::string& assetKey)
 	return m_textureManager.GetTexture(assetKey);
 }
 
+IDirect3DTexture9* ResourceManager::GetTexture(const std::string& assetKey, bool useMagentaColorKey)
+{
+	return m_textureManager.GetTexture(assetKey, useMagentaColorKey);
+}
+
 void ResourceManager::GetTexture(const std::string& assetKey, std::function<void(IDirect3DTexture9*)> callback)
 {
 	m_textureManager.GetTexture(assetKey, callback);
