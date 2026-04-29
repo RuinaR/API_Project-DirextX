@@ -375,7 +375,7 @@ void AnimationRender::RebuildRuntimeFrames()
 			continue;
 		}
 
-		IDirect3DTexture9* texture = resourceManager->GetTexture(frameData.textureKey);
+		IDirect3DTexture9* texture = resourceManager->GetTexture(frameData.textureKey, m_useColorKey);
 		if (texture == nullptr)
 		{
 			continue;
@@ -452,6 +452,36 @@ void AnimationRender::SetPlayOnStart(bool playOnStart)
 	m_clip.playOnStart = playOnStart;
 }
 
+bool AnimationRender::GetUseColorKey() const
+{
+	return m_useColorKey;
+}
+
+void AnimationRender::SetUseColorKey(bool useColorKey)
+{
+	if (m_useColorKey == useColorKey)
+	{
+		return;
+	}
+
+	m_useColorKey = useColorKey;
+
+	if (ResourceManager::GetInstance() != nullptr && !m_anim.sourcePath.empty())
+	{
+		m_anim = ResourceManager::GetInstance()->GetAnimation(
+			ConvertToWideString(m_anim.sourcePath),
+			m_anim.time,
+			m_useColorKey);
+		m_curItr = m_anim.textures.begin();
+		if (ResolveImageRender() != nullptr && !m_anim.textures.empty())
+		{
+			m_bitren->ChangeTexture(*m_curItr);
+		}
+	}
+
+	RebuildRuntimeFrames();
+}
+
 const char* AnimationRender::GetInspectorName() const
 {
 	return "AnimationRender";
@@ -467,6 +497,17 @@ void AnimationRender::DrawInspector()
 
 	ImGui::Text("Texture Count: %d", static_cast<int>(m_anim.textures.size()));
 	ImGui::Text("Runtime Frame Count: %d", static_cast<int>(m_runtimeFrames.size()));
+	if (m_runtimeFrames.empty())
+	{
+		ImGui::Text("Current Frame: No runtime frames");
+	}
+	else
+	{
+		const int currentFrameIndex = static_cast<int>(m_runtimeFrameIndex < m_runtimeFrames.size() ? m_runtimeFrameIndex : 0);
+		const int lastFrameIndex = static_cast<int>(m_runtimeFrames.size() - 1);
+		ImGui::Text("Current Frame: %d / %d", currentFrameIndex, lastFrameIndex);
+	}
+	ImGui::Text("Current Timer: %.3f", m_updateTimer);
 	if (ImGui::Button("Reload Animation"))
 	{
 		RequestReloadFromFolder();
@@ -482,8 +523,39 @@ void AnimationRender::DrawInspector()
 	{
 		SetPlayOnStart(playOnStart);
 	}
+	bool useColorKey = m_useColorKey;
+	if (ImGui::Checkbox("Use Color Key", &useColorKey))
+	{
+		SetUseColorKey(useColorKey);
+	}
+	if (ImGui::CollapsingHeader("Frame List"))
+	{
+		if (m_clip.frames.empty())
+		{
+			ImGui::Text("No runtime frames");
+		}
+		else
+		{
+			const AnimationRuntimeFrame* currentRuntimeFrame =
+				(!m_runtimeFrames.empty() && m_runtimeFrameIndex < m_runtimeFrames.size())
+				? &m_runtimeFrames[m_runtimeFrameIndex]
+				: nullptr;
+
+			for (size_t i = 0; i < m_clip.frames.size(); ++i)
+			{
+				const AnimationFrameData& frame = m_clip.frames[i];
+				const bool isCurrent = currentRuntimeFrame != nullptr
+					&& currentRuntimeFrame->textureKey == frame.textureKey;
+				ImGui::Text(
+					"[%d] %s | duration: %.3f%s",
+					static_cast<int>(i),
+					frame.textureKey.c_str(),
+					frame.duration,
+					isCurrent ? " (current)" : "");
+			}
+		}
+	}
 	ImGui::Text("Source Path: %s", m_anim.sourcePath.empty() ? "(none)" : m_anim.sourcePath.c_str());
-	ImGui::Text("Update Timer: %.3f", m_updateTimer);
 	ImGui::Checkbox("Play", &m_isPlay);
 	bool oneTime = m_isOneTime;
 	if (ImGui::Checkbox("One Shot", &oneTime))
@@ -515,6 +587,7 @@ std::string AnimationRender::Serialize() const
 	oss << "\"frameDuration\": " << m_frameDuration << ", ";
 	oss << "\"loop\": " << (m_loop ? "true" : "false") << ", ";
 	oss << "\"playOnStart\": " << (m_playOnStart ? "true" : "false") << ", ";
+	oss << "\"useColorKey\": " << (m_useColorKey ? "true" : "false") << ", ";
 	oss << "\"sourcePath\": \"" << SceneJson::EscapeString(m_anim.sourcePath) << "\"";
 	oss << " }";
 	return oss.str();
@@ -522,12 +595,15 @@ std::string AnimationRender::Serialize() const
 
 bool AnimationRender::Deserialize(const std::string& componentJson)
 {
+	m_useColorKey = true;
+	m_reloadRequested = false;
 	SceneJson::ReadBool(componentJson, "play", m_isPlay);
 	SceneJson::ReadBool(componentJson, "oneTime", m_isOneTime);
 	m_loop = !m_isOneTime;
 	SceneJson::ReadBool(componentJson, "loop", m_loop);
 	m_isOneTime = !m_loop;
 	SceneJson::ReadBool(componentJson, "playOnStart", m_playOnStart);
+	SceneJson::ReadBool(componentJson, "useColorKey", m_useColorKey);
 
 	float frameTime = m_frameDuration;
 	if (SceneJson::ReadFloat(componentJson, "frameTime", frameTime))
@@ -538,20 +614,34 @@ bool AnimationRender::Deserialize(const std::string& componentJson)
 	SetFrameDuration(frameTime);
 
 	std::string animationFolderKey;
-	if (SceneJson::ReadString(componentJson, "animationFolderKey", animationFolderKey))
+	const bool hasAnimationFolderKey = SceneJson::ReadString(componentJson, "animationFolderKey", animationFolderKey)
+		&& !animationFolderKey.empty();
+	if (hasAnimationFolderKey)
 	{
 		SetAnimationFolderKey(animationFolderKey);
+	}
+	else
+	{
+		m_animationFolderKey.clear();
 	}
 
 	std::string sourcePath;
 	if (SceneJson::ReadString(componentJson, "sourcePath", sourcePath) && !sourcePath.empty())
 	{
-		m_anim = ResourceManager::GetInstance()->GetAnimation(ConvertToWideString(sourcePath), m_anim.time);
+		m_anim = ResourceManager::GetInstance()->GetAnimation(
+			ConvertToWideString(sourcePath),
+			m_anim.time,
+			m_useColorKey);
 		m_anim.sourcePath = sourcePath;
 	}
-	else
+	else if (!hasAnimationFolderKey)
 	{
 		std::cout << "AnimationRender deserialize: sourcePath missing. Animation frames are not restored." << std::endl;
+	}
+
+	if (hasAnimationFolderKey)
+	{
+		ReloadFromFolder();
 	}
 
 	m_curItr = m_anim.textures.begin();

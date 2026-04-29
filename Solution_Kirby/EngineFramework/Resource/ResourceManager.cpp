@@ -52,6 +52,11 @@ Animation ResourceManager::GetAnimation(const std::wstring& folderName, float ti
 	return m_animationManager.GetAnimation(folderName, time, &m_textureManager);
 }
 
+Animation ResourceManager::GetAnimation(const std::wstring& folderName, float time, bool useMagentaColorKey)
+{
+	return m_animationManager.GetAnimation(folderName, time, &m_textureManager, useMagentaColorKey);
+}
+
 FbxResource* ResourceManager::GetModel(const std::string& assetKey)
 {
 	return m_fbxManager.GetModel(assetKey);

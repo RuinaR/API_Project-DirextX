@@ -19,6 +19,7 @@ public:
 	void GetTexture(const std::string& assetKey, std::function<void(IDirect3DTexture9*)> callback);
 	void GetTexture(const std::string& assetKey, ImageRender* imageRender);
 	Animation GetAnimation(const std::wstring& folderName, float time);
+	Animation GetAnimation(const std::wstring& folderName, float time, bool useMagentaColorKey);
 	FbxResource* GetModel(const std::string& assetKey);
 	SoundResource* GetSound(const std::string& assetKey);
 

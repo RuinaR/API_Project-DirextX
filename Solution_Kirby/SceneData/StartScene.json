@@ -149,11 +149,12 @@
       "parentId": -1,
       "tag": "Sprite (1)",
       "active": true,
-      "position": { "x": 0, "y": 353, "z": 0 },
-      "size": { "x": 128, "y": 128, "z": 1 },
+      "position": { "x": 0, "y": 189, "z": 0 },
+      "size": { "x": 128, "y": 133, "z": 0 },
       "angle": { "x": 0, "y": 0, "z": 0 },
       "components": [
-        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/right/eat_move.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "sourcePath": "" } },
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/attack.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
         { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
         { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
       ]
@@ -167,8 +168,8 @@
       "size": { "x": 128, "y": 128, "z": 1 },
       "angle": { "x": 0, "y": 0, "z": 0 },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/stoneObj.bmp" } },
-        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/eat_jump.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "sourcePath": "" } }
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/change.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
       ]
     }
   ]

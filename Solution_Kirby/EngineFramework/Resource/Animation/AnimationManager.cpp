@@ -36,7 +36,13 @@ namespace
 
 Animation AnimationManager::GetAnimation(const std::wstring& folderName, float time, TextureManager* textureManager)
 {
-	const std::string animationKey = BuildAnimationKey(folderName, time);
+	return GetAnimation(folderName, time, textureManager, false);
+}
+
+Animation AnimationManager::GetAnimation(const std::wstring& folderName, float time, TextureManager* textureManager, bool useMagentaColorKey)
+{
+	const std::string animationKey = BuildAnimationKey(folderName, time)
+		+ (useMagentaColorKey ? "#magenta" : "#opaque");
 	std::unordered_map<std::string, Animation>::iterator cached = m_animationMap.find(animationKey);
 	if (cached != m_animationMap.end())
 	{
@@ -58,7 +64,7 @@ Animation AnimationManager::GetAnimation(const std::wstring& folderName, float t
 			{
 				std::wstring filePath = currentDirectory + L"\\" + fileName;
 				IDirect3DTexture9* texture = textureManager != nullptr
-					? textureManager->GetTexture(ConvertToString(filePath))
+					? textureManager->GetTexture(ConvertToString(filePath), useMagentaColorKey)
 					: nullptr;
 
 				if (texture)

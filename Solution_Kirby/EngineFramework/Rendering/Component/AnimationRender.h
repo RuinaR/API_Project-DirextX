@@ -17,6 +17,7 @@ private:
 	float m_frameDuration = 0.1f;
 	bool m_loop = true;
 	bool m_playOnStart = true;
+	bool m_useColorKey = true;
 	float m_updateTimer;
 	vector<IDirect3DTexture9*>::iterator m_curItr;
 	bool m_released = false;
@@ -50,6 +51,8 @@ public:
 	void SetLoop(bool loop);
 	bool GetPlayOnStart() const;
 	void SetPlayOnStart(bool playOnStart);
+	bool GetUseColorKey() const;
+	void SetUseColorKey(bool useColorKey);
 	const char* GetInspectorName() const override;
 	void DrawInspector() override;
 	const char* GetSerializableType() const override;
