@@ -4,7 +4,7 @@
     {
       "name": "Win32",
       "intelliSenseMode": "windows-msvc-x86",
-      "compilerPath": "cl.exe",
+      "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.39.33519/bin/Hostx64/x86/cl.exe",
       "cppStandard": "c++17",
       "includePath": [
         "${workspaceFolder}",
@@ -29,7 +29,7 @@
         "${workspaceFolder}\\fbxsdk",
         "${workspaceFolder}\\Imgui\\imgui",
         "${workspaceFolder}\\Imgui\\source",
-        "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
+        "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include"
       ],
       "browse": {
         "path": [
@@ -42,19 +42,20 @@
           "${workspaceFolder}\\fbxsdk",
           "${workspaceFolder}\\Imgui\\imgui",
           "${workspaceFolder}\\Imgui\\source",
-          "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
+          "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include"
         ]
       },
       "defines": [
         "WIN32",
         "_DEBUG",
-        "_WINDOWS"
+        "_WINDOWS",
+        "FBXSDK_SHARED"
       ]
     },
     {
       "name": "x64",
       "intelliSenseMode": "windows-msvc-x64",
-      "compilerPath": "cl.exe",
+      "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.39.33519/bin/Hostx64/x64/cl.exe",
       "cppStandard": "c++17",
       "includePath": [
         "${workspaceFolder}",
@@ -79,7 +80,7 @@
         "${workspaceFolder}\\fbxsdk",
         "${workspaceFolder}\\Imgui\\imgui",
         "${workspaceFolder}\\Imgui\\source",
-        "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
+        "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include"
       ],
       "browse": {
         "path": [
@@ -92,12 +93,13 @@
           "${workspaceFolder}\\fbxsdk",
           "${workspaceFolder}\\Imgui\\imgui",
           "${workspaceFolder}\\Imgui\\source",
-          "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
+          "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Include"
         ]
       },
       "defines": [
         "_DEBUG",
-        "_WINDOWS"
+        "_WINDOWS",
+        "FBXSDK_SHARED"
       ]
     }
   ]
