@@ -127,10 +127,52 @@ const char* UIButton::GetInspectorName() const
 void UIButton::DrawInspector()
 {
 	UIImage::DrawInspector();
+
+	char actionKey[128] = {};
+	strcpy_s(actionKey, m_actionKey.c_str());
+	if (ImGui::InputText("Action Key", actionKey, IM_ARRAYSIZE(actionKey)))
+	{
+		SetActionKey(actionKey);
+		BindActionFromRegistry();
+	}
+
+	float normalColor[4] =
+	{
+		static_cast<float>((m_normalColor >> 16) & 0xff) / 255.0f,
+		static_cast<float>((m_normalColor >> 8) & 0xff) / 255.0f,
+		static_cast<float>(m_normalColor & 0xff) / 255.0f,
+		static_cast<float>((m_normalColor >> 24) & 0xff) / 255.0f
+	};
+	float hoverColor[4] =
+	{
+		static_cast<float>((m_hoverColor >> 16) & 0xff) / 255.0f,
+		static_cast<float>((m_hoverColor >> 8) & 0xff) / 255.0f,
+		static_cast<float>(m_hoverColor & 0xff) / 255.0f,
+		static_cast<float>((m_hoverColor >> 24) & 0xff) / 255.0f
+	};
+	float pressedColor[4] =
+	{
+		static_cast<float>((m_pressedColor >> 16) & 0xff) / 255.0f,
+		static_cast<float>((m_pressedColor >> 8) & 0xff) / 255.0f,
+		static_cast<float>(m_pressedColor & 0xff) / 255.0f,
+		static_cast<float>((m_pressedColor >> 24) & 0xff) / 255.0f
+	};
+
+	bool changedColor = false;
+	changedColor |= ImGui::ColorEdit4("Normal Color", normalColor);
+	changedColor |= ImGui::ColorEdit4("Hover Color", hoverColor);
+	changedColor |= ImGui::ColorEdit4("Pressed Color", pressedColor);
+	if (changedColor)
+	{
+		SetStateColors(
+			D3DCOLOR_COLORVALUE(normalColor[0], normalColor[1], normalColor[2], normalColor[3]),
+			D3DCOLOR_COLORVALUE(hoverColor[0], hoverColor[1], hoverColor[2], hoverColor[3]),
+			D3DCOLOR_COLORVALUE(pressedColor[0], pressedColor[1], pressedColor[2], pressedColor[3]));
+	}
+
 	ImGui::Text("Hovered: %s", m_isHovered ? "true" : "false");
 	ImGui::Text("Pressed: %s", m_isPressed ? "true" : "false");
 	ImGui::Text("OnClick: %s", m_onClick ? "Bound" : "None");
-	ImGui::Text("Action Key: %s", m_actionKey.empty() ? "(none)" : m_actionKey.c_str());
 }
 
 const char* UIButton::GetSerializableType() const

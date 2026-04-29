@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Scene.h"
 #include "SceneDataManager.h"
+#include "Resource/ResourceManager.h"
 
 WindowFrame* WindowFrame::m_Pthis = nullptr;
 
@@ -95,7 +96,7 @@ void WindowFrame::SetScene(Scene* scene)
 	{
 		m_scene->Release();
 		ObjectManager::GetInstance()->Clear();
-		TextureManager::GetInstance()->ReleaseAllTextures();
+		ResourceManager::GetInstance()->ReleaseAllResources();
 		delete m_scene;
 	}
 	m_scene = scene;

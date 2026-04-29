@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "FBXRender.h"
+#include "Editor/EditorAssetField.h"
+#include "Resource/ResourceManager.h"
 #include "SceneJsonUtility.h"
 
 // 생성자: FBX 파일 이름을 받아 초기화
@@ -9,25 +11,16 @@ FBXRender::FBXRender(std::string name) : m_fbxFileName(std::move(name)) {}
 void FBXRender::Initialize() {
     auto device = MainFrame::GetInstance()->GetDevice();  // Direct3D 디바이스 가져오기
     m_loaded = false;
+    m_resource = nullptr;
 
-    if (!m_tool.Initialize()) {
-        m_logSystem.AddLog("Error: Failed to initialize FbxTool!");
-        return;
-    }
-
-    if (!m_tool.Load(m_fbxFileName.c_str(), &m_models)) {
+    m_resource = ResourceManager::GetInstance()->GetModel(m_fbxFileName);
+    if (m_resource == nullptr || !m_resource->loaded) {
         m_logSystem.AddLog("Error: Failed to load FBX file");
         return;
     }
 
     m_logSystem.AddLog("FBX file loaded successfully");
     m_loaded = true;
-
-    for (auto& model : m_models)
-    {
-        m_tool.CreateVertexBuffer(&model);
-        m_tool.CreateIndexBuffer(&model);
-    }
 
     RenderManager::GetInstance()->Register(this);  // 렌더 매니저에 등록
 }
@@ -36,17 +29,8 @@ void FBXRender::Initialize() {
 void FBXRender::Release() {
     m_logSystem.AddLog("FBXRender resources released.");
     RenderManager::GetInstance()->Unregister(this);  // 렌더 매니저에서 해제
-
-    for (auto& model : m_models) {
-        if (model.vertexBuffer) {
-            model.vertexBuffer->Release();
-            model.vertexBuffer = nullptr;
-        }
-        if (model.indexBuffer) {
-            model.indexBuffer->Release();
-            model.indexBuffer = nullptr;
-        }
-    }
+    m_resource = nullptr;
+    m_loaded = false;
 }
 
 void FBXRender::Start() {}
@@ -70,7 +54,11 @@ void FBXRender::Render() {
     D3DXMATRIX matWorld;
     SetWorldTransform(&matWorld);
 
-    for (auto& model : m_models) {
+    if (m_resource == nullptr) {
+        return;
+    }
+
+    for (auto& model : m_resource->models) {
         if (!model.vertexBuffer || !model.indexBuffer) {
             m_logSystem.AddLog("Error: Vertex or index buffer is null for model!");
             continue;
@@ -174,25 +162,41 @@ void FBXRender::DrawInspector()
     int vertexCount = 0;
     int indexCount = 0;
 
-    for (const auto& model : m_models)
+    const std::vector<Model>* models = m_resource != nullptr ? &m_resource->models : nullptr;
+    if (models != nullptr)
     {
-        subMeshCount += static_cast<int>(model.subMeshes.size());
-        vertexCount += model.vertexCount;
-        indexCount += model.indexCount;
-        for (const auto& subMesh : model.subMeshes)
+        for (const auto& model : *models)
         {
-            materialCount++;
+            subMeshCount += static_cast<int>(model.subMeshes.size());
+            vertexCount += model.vertexCount;
+            indexCount += model.indexCount;
+            for (const auto& subMesh : model.subMeshes)
+            {
+                materialCount++;
+            }
         }
     }
 
-    ImGui::Text("FBX File: %s", m_fbxFileName.c_str());
+    std::string selectedModelKey = m_fbxFileName;
+    if (EditorAssetField::Draw("Model Asset", AssetType::Model, selectedModelKey))
+    {
+        m_fbxFileName = selectedModelKey;
+    }
+
+    char fbxPath[260] = {};
+    strcpy_s(fbxPath, m_fbxFileName.c_str());
+    if (ImGui::InputText("FBX Path", fbxPath, IM_ARRAYSIZE(fbxPath)))
+    {
+        m_fbxFileName = fbxPath;
+    }
+
     ImGui::Text("Loaded: %s", m_loaded ? "true" : "false");
-    ImGui::Text("Model Count: %d", static_cast<int>(m_models.size()));
+    ImGui::Text("Model Count: %d", models != nullptr ? static_cast<int>(models->size()) : 0);
     ImGui::Text("Mesh/SubMesh Count: %d", subMeshCount);
     ImGui::Text("Material Slot Count: %d", materialCount);
     ImGui::Text("Vertex Count: %d", vertexCount);
     ImGui::Text("Index Count: %d", indexCount);
-    ImGui::TextDisabled("File replacement is deferred.");
+    ImGui::TextDisabled("Reload is deferred until the component is recreated.");
 }
 
 const char* FBXRender::GetSerializableType() const

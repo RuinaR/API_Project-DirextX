@@ -70,6 +70,12 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	m_colSize = size;
 	m_colOffset = offset;
 
+	if (m_body != nullptr)
+	{
+		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+		m_body = nullptr;
+	}
+
 	b2BodyDef bodyDef;
 	bodyDef.type = m_type;
 	bodyDef.fixedRotation = fixedRotation;
@@ -87,10 +93,71 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.3f;
 	fixtureDef.restitution = 0.5f;
+	fixtureDef.isSensor = m_isTrigger;
 	m_body->CreateFixture(&fixtureDef);
 	//m_body->SetGravityScale(30.0);
 	m_body->GetUserData().pointer = (uintptr_t)this;
 }
+
+void Collider::SetBodyType(b2BodyType type)
+{
+	if (m_type == type)
+	{
+		return;
+	}
+
+	const bool fixedRotation = GetFixedRotation();
+	m_type = type;
+	if (m_body != nullptr)
+	{
+		CreateBody(m_colOffset, m_colSize, fixedRotation);
+	}
+}
+
+void Collider::SetColliderSize(Vector2D size)
+{
+	if (size.x < 0.0f)
+	{
+		size.x = 0.0f;
+	}
+	if (size.y < 0.0f)
+	{
+		size.y = 0.0f;
+	}
+
+	const bool fixedRotation = GetFixedRotation();
+	if (m_body != nullptr && size.x > 0.0f && size.y > 0.0f)
+	{
+		CreateBody(m_colOffset, size, fixedRotation);
+		return;
+	}
+	m_colSize = size;
+}
+
+void Collider::SetColliderOffset(Vector2D offset)
+{
+	const bool fixedRotation = GetFixedRotation();
+	if (m_body != nullptr && m_colSize.x > 0.0f && m_colSize.y > 0.0f)
+	{
+		CreateBody(offset, m_colSize, fixedRotation);
+		return;
+	}
+	m_colOffset = offset;
+}
+
+void Collider::SetFixedRotation(bool fixedRotation)
+{
+	if (m_body != nullptr)
+	{
+		m_body->SetFixedRotation(fixedRotation);
+	}
+}
+
+bool Collider::GetFixedRotation() const
+{
+	return m_body != nullptr && m_body->IsFixedRotation();
+}
+
 void Collider::Initialize()
 {
 	//CollisionManager::GetInstance()->AddCollider(this);
@@ -114,6 +181,13 @@ void Collider::Release()
 void Collider::SetTrigger(bool b)
 {
 	m_isTrigger = b;
+	if (m_body != nullptr)
+	{
+		for (b2Fixture* fixture = m_body->GetFixtureList(); fixture != nullptr; fixture = fixture->GetNext())
+		{
+			fixture->SetSensor(m_isTrigger);
+		}
+	}
 }
 
 bool Collider::GetTrigger()
@@ -138,10 +212,37 @@ const char* Collider::GetInspectorName() const
 
 void Collider::DrawInspector()
 {
-	ImGui::Text("Type: %d", static_cast<int>(m_type));
-	ImGui::Text("Trigger: %s", m_isTrigger ? "true" : "false");
-	ImGui::Text("Size: %.2f, %.2f", m_colSize.x, m_colSize.y);
-	ImGui::Text("Offset: %.2f, %.2f", m_colOffset.x, m_colOffset.y);
+	int bodyType = static_cast<int>(m_type);
+	const char* bodyTypeNames[] = { "Static", "Kinematic", "Dynamic" };
+	if (ImGui::Combo("Body Type", &bodyType, bodyTypeNames, IM_ARRAYSIZE(bodyTypeNames)))
+	{
+		SetBodyType(static_cast<b2BodyType>(bodyType));
+	}
+
+	bool trigger = m_isTrigger;
+	if (ImGui::Checkbox("Trigger", &trigger))
+	{
+		SetTrigger(trigger);
+	}
+
+	bool fixedRotation = GetFixedRotation();
+	if (ImGui::Checkbox("Fixed Rotation", &fixedRotation))
+	{
+		SetFixedRotation(fixedRotation);
+	}
+
+	float size[2] = { m_colSize.x, m_colSize.y };
+	if (ImGui::DragFloat2("Size", size, 1.0f, 0.0f, 10000.0f))
+	{
+		SetColliderSize({ size[0], size[1] });
+	}
+
+	float offset[2] = { m_colOffset.x, m_colOffset.y };
+	if (ImGui::DragFloat2("Offset", offset, 1.0f))
+	{
+		SetColliderOffset({ offset[0], offset[1] });
+	}
+
 	ImGui::Text("Body: %s", m_body ? "Created" : "None");
 
 	if (m_body)

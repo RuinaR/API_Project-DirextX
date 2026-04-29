@@ -2,6 +2,7 @@
 #include "AnimationRender.h"
 #include "ImageRender.h"
 #include "GameObject.h"
+#include "Resource/ResourceManager.h"
 #include "SceneJsonUtility.h"
 
 AnimationRender::AnimationRender(Animation anim)
@@ -134,7 +135,7 @@ bool AnimationRender::Deserialize(const std::string& componentJson)
 	std::string sourcePath;
 	if (SceneJson::ReadString(componentJson, "sourcePath", sourcePath) && !sourcePath.empty())
 	{
-		m_anim = AnimationManager::LoadAnimation(ConvertToWideString(sourcePath), m_anim.time);
+		m_anim = ResourceManager::GetInstance()->GetAnimation(ConvertToWideString(sourcePath), m_anim.time);
 		m_anim.sourcePath = sourcePath;
 	}
 	else

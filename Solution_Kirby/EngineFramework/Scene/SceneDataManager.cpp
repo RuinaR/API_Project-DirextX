@@ -11,6 +11,12 @@ namespace
 		return snapshots;
 	}
 
+	std::map<std::string, bool>& GetSceneDirtyFlags()
+	{
+		static std::map<std::string, bool> dirtyFlags;
+		return dirtyFlags;
+	}
+
 	std::string BuildSceneDataJson(const std::string& sceneName)
 	{
 		const D3DXVECTOR3 cameraPosition = Camera::GetInstance()->GetPos();
@@ -165,12 +171,14 @@ bool SceneDataManager::SaveCurrentSceneData(const std::string& sceneName)
 	}
 
 	GetCapturedSceneSnapshots()[sceneName] = json;
+	ClearSceneDirty(sceneName);
 	return true;
 }
 
 bool SceneDataManager::CaptureSceneSnapshot(const std::string& sceneName)
 {
 	GetCapturedSceneSnapshots()[sceneName] = BuildSceneDataJson(sceneName);
+	ClearSceneDirty(sceneName);
 	std::cout << "SceneData snapshot captured: " << sceneName << std::endl;
 	return true;
 }
@@ -185,8 +193,32 @@ std::string SceneDataManager::GetCapturedSnapshot(const std::string& sceneName)
 	return itr->second;
 }
 
+void SceneDataManager::MarkSceneDirty(const std::string& sceneName)
+{
+	if (sceneName.empty())
+	{
+		return;
+	}
+	GetSceneDirtyFlags()[sceneName] = true;
+}
+
+void SceneDataManager::ClearSceneDirty(const std::string& sceneName)
+{
+	if (sceneName.empty())
+	{
+		return;
+	}
+	GetSceneDirtyFlags()[sceneName] = false;
+}
+
 bool SceneDataManager::IsSceneDirty(const std::string& sceneName)
 {
+	std::map<std::string, bool>::iterator dirtyItr = GetSceneDirtyFlags().find(sceneName);
+	if (dirtyItr != GetSceneDirtyFlags().end() && dirtyItr->second)
+	{
+		return true;
+	}
+
 	const std::string snapshot = GetCapturedSnapshot(sceneName);
 	if (snapshot.empty())
 	{
@@ -203,7 +235,12 @@ bool SceneDataManager::SaveCapturedSnapshot(const std::string& sceneName)
 		std::cout << "SceneData snapshot not found: " << sceneName << std::endl;
 		return false;
 	}
-	return WriteSceneDataFile(sceneName, snapshot);
+	const bool saved = WriteSceneDataFile(sceneName, snapshot);
+	if (saved)
+	{
+		ClearSceneDirty(sceneName);
+	}
+	return saved;
 }
 
 bool SceneDataManager::LoadSceneData(const std::string& sceneName)
@@ -225,5 +262,6 @@ bool SceneDataManager::LoadSceneData(const std::string& sceneName)
 		std::cout << "SceneData load failed: " << path << std::endl;
 		return false;
 	}
+	CaptureSceneSnapshot(sceneName);
 	return true;
 }

@@ -18,24 +18,12 @@ private:
 	void QueueDestroyObjectTree(GameObject* obj);
 	bool IsSameOrChild(GameObject* root, GameObject* target);
 	void ReleaseAndDeleteObject(GameObject* obj);
-	bool IsGameObjectNameUsed(const string& name);
-	string CreateUniqueGameObjectName(const string& baseName);
-	GameObject* CreateEmptyGameObject();
-	GameObject* CreateSpriteGameObject();
-	GameObject* CreateUIImageGameObject();
-	GameObject* CreateUIButtonGameObject();
-	GameObject* CreateUITextGameObject();
-	void DrawHierarchy();
-	void DrawGameObjectDeleteControls(GameObject* obj);
-	void DrawGameObjectInspector(GameObject* obj);
-	bool DrawComponentInspector(Component* component);
 	
 public:
 	static void Create();
 	static ObjectManager* GetInstance();
 	static void Destroy();
 
-	void ProcessChildNode(GameObject* obj, int depth);
 	void ImguiUpdate();
 	void AddObject(GameObject* obj);
 	bool UnregisterObject(GameObject* obj);
@@ -51,6 +39,10 @@ public:
 	void Clear();
 	int Count();
 	list<GameObject*>* GetObjList();
+	bool HasGameObjectName(const string& name);
+	GameObject* GetSelectedObject();
+	void SetSelectedObject(GameObject* obj);
+	void ClearSelectedObject();
 	std::string SerializeObjects();
 	bool DeserializeObjects(const std::string& sceneJson);
 

@@ -39,6 +39,7 @@
 #include "FbxTool.h"
 #include "DebugRender.h"
 #include "AnimationManager.h"
+#include "Resource/ResourceManager.h"
 #include "ObjectManager.h"
 #include "TextureManager.h"
 //#include "CollisionManager.h"

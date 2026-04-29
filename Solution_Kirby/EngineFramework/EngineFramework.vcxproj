@@ -177,6 +177,15 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Editor\EditorAssetField.cpp" />
+    <ClCompile Include="Editor\EditorHierarchyWindow.cpp" />
+    <ClCompile Include="Editor\EditorInspectorWindow.cpp" />
+    <ClCompile Include="Editor\EditorObjectFactory.cpp" />
+    <ClCompile Include="Resource\AssetDatabase.cpp" />
+    <ClCompile Include="Resource\FBXManager.cpp" />
+    <ClCompile Include="Resource\ResourceManager.cpp" />
+    <ClCompile Include="Resource\ResourceBrowser.cpp" />
+    <ClCompile Include="Resource\SoundManager.cpp" />
     <ClCompile Include="Resource\Animation\AnimationManager.cpp" />
     <ClCompile Include="Rendering\Component\AnimationRender.cpp" />
     <ClCompile Include="Rendering\UI\UIButton.cpp" />
@@ -212,6 +221,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fbxsdk\fbxsdk.h" />
+    <ClInclude Include="Editor\EditorAssetField.h" />
+    <ClInclude Include="Editor\EditorHierarchyWindow.h" />
+    <ClInclude Include="Editor\EditorInspectorWindow.h" />
+    <ClInclude Include="Editor\EditorObjectFactory.h" />
+    <ClInclude Include="Resource\AssetDatabase.h" />
+    <ClInclude Include="Resource\FBXManager.h" />
+    <ClInclude Include="Resource\IResourceTypeManager.h" />
+    <ClInclude Include="Resource\ResourceManager.h" />
+    <ClInclude Include="Resource\ResourceBrowser.h" />
+    <ClInclude Include="Resource\SoundManager.h" />
     <ClInclude Include="Resource\Animation\AnimationManager.h" />
     <ClInclude Include="Rendering\Component\AnimationRender.h" />
     <ClInclude Include="Rendering\UI\UIButton.h" />

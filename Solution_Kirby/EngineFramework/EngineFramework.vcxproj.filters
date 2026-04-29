@@ -1,6 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="Editor\EditorAssetField.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorHierarchyWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorInspectorWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorObjectFactory.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\AssetDatabase.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\FBXManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ResourceManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ResourceBrowser.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\SoundManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
     <ClCompile Include="Rendering\Component\AnimationRender.cpp">
       <Filter>Rendering\Component</Filter>
     </ClCompile>
@@ -93,6 +120,36 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Editor\EditorAssetField.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorHierarchyWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorInspectorWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorObjectFactory.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\AssetDatabase.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\FBXManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\IResourceTypeManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceBrowser.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\SoundManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
     <ClInclude Include="Rendering\Component\AnimationRender.h">
       <Filter>Rendering\Component</Filter>
     </ClInclude>
@@ -259,6 +316,12 @@
     </Filter>
     <Filter Include="Resource\Animation">
       <UniqueIdentifier>{103c2c99-e878-4f2a-899b-82ad528e466a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{969d0714-f2f4-45a5-8eba-2fbbe03d580b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{b14ff8a2-9f8d-4546-ae1a-b3f765736444}</UniqueIdentifier>
     </Filter>
     <Filter Include="Debugging">
       <UniqueIdentifier>{0b62f72d-6779-4d95-a671-4ef690a2c5b8}</UniqueIdentifier>

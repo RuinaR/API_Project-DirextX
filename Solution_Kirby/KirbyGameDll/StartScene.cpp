@@ -13,7 +13,7 @@ void StartScene::Init()
 	SceneChanger::Create();
 	UIActionRegistry::RegisterAction("ChangeGameScene", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 	UIActionRegistry::RegisterAction("ChangeEditScene", bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
-	m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
+	m_bg = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\BG.bmp");
 }
 
 void StartScene::Release()

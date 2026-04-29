@@ -73,7 +73,7 @@
       "active": true,
       "position": { "x": -29, "y": 0, "z": 500 },
       "size": { "x": 0.5, "y": 0.5, "z": 0.5 },
-      "angle": { "x": 0, "y": 0, "z": 0 },
+      "angle": { "x": 0, "y": 579, "z": 0 },
       "components": [
         { "type": "FBXRender", "data": { "fbxPath": "fbxSample" } }
       ]
@@ -97,6 +97,42 @@
       "size": { "x": 0, "y": 0, "z": 0 },
       "angle": { "x": 0, "y": 0, "z": 0 },
       "components": []
+    },
+    {
+      "objectId": 9,
+      "parentId": -1,
+      "tag": "UI Text",
+      "active": true,
+      "position": { "x": 747, "y": 199, "z": 0 },
+      "size": { "x": 240, "y": 48, "z": 1 },
+      "angle": { "x": 0, "y": 0, "z": 0 },
+      "components": [
+        { "type": "UILabel", "data": { "position": { "x": 627, "y": 175 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "MyText", "color": 4294967295, "fontSize": 53, "scale": 1 } }
+      ]
+    },
+    {
+      "objectId": 10,
+      "parentId": -1,
+      "tag": "UI Text (1)",
+      "active": true,
+      "position": { "x": 308, "y": 185, "z": 0 },
+      "size": { "x": 240, "y": 48, "z": 1 },
+      "angle": { "x": 0, "y": 0, "z": 0 },
+      "components": [
+        { "type": "UILabel", "data": { "position": { "x": 188, "y": 161 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "test", "color": 4279357248, "fontSize": 52, "scale": 1 } }
+      ]
+    },
+    {
+      "objectId": 11,
+      "parentId": -1,
+      "tag": "Sprite",
+      "active": true,
+      "position": { "x": 0, "y": 0, "z": 0 },
+      "size": { "x": 128, "y": 128, "z": 1 },
+      "angle": { "x": 0, "y": 0, "z": 0 },
+      "components": [
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/download.jpg" } }
+      ]
     }
   ]
 }

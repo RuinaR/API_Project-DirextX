@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
+#include "Resource/FBXManager.h"
 
 class LogSystem {
 public:
@@ -24,9 +25,8 @@ private:
 
 class FBXRender : public Component {
 private:
-    FbxTool m_tool;
     std::string m_fbxFileName;  // 로드할 FBX 파일 이름
-    std::vector<Model> m_models;
+    FbxResource* m_resource = nullptr;
     bool m_loaded = false;
 
     LogSystem m_logSystem;

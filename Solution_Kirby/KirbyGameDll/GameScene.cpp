@@ -75,7 +75,7 @@ void GameScene::StartGame()
 
 void GameScene::Init()
 {
-	m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
+	m_bg = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\BG.bmp");
 	SceneChanger::Create();
 	UIActionRegistry::RegisterAction("ChangeGameScene", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
 	UIActionRegistry::RegisterAction("ChangeStartScene", bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));

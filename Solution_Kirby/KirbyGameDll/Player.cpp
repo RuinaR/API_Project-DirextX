@@ -67,7 +67,7 @@ void Player::Initialize()
 	{
 		wstring path = L"Bitmaps\\Player\\default\\" + arrowStr[i] + L"\\idle";
 		float atime = 0.25f;
-		m_arrAnim[i] = AnimationManager::LoadAnimation(path, atime);
+		m_arrAnim[i] = ResourceManager::GetInstance()->GetAnimation(path, atime);
 	}
 	m_ar = new AnimationRender(m_arrAnim[(int)Arrow::right]);
 	//m_rig = new Rigidbody();

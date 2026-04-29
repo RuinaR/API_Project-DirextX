@@ -5,6 +5,8 @@
 #include "DebugWindow.h"
 #include "..\Imgui\source\imgui_impl_win32.h"
 #include "..\Imgui\source\imgui_impl_dx9.h"
+#include "Resource/AssetDatabase.h"
+#include "Resource/ResourceManager.h"
 MainFrame* MainFrame::m_Pthis = nullptr;
 
 void MainFrame::Create(HINSTANCE hInstance)
@@ -15,7 +17,8 @@ void MainFrame::Create(HINSTANCE hInstance)
 		WindowFrame::Create(hInstance);
 		Mouse::Create();
 		Camera::Create();
-        TextureManager::Create();
+        AssetDatabase::Create();
+        ResourceManager::Create();
 	}
 }
 
@@ -28,7 +31,8 @@ void MainFrame::Destroy()
 {
 	if (m_Pthis)
 	{
-        TextureManager::Destroy();
+        ResourceManager::Destroy();
+        AssetDatabase::Destroy();
 		Camera::Destroy();
 		Mouse::Destroy();
 		WindowFrame::Destroy();
@@ -57,6 +61,10 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     m_pWorld->SetContinuousPhysics(true);
     m_type = type;
     WindowFrame::GetInstance()->Initialize(m_type);
+    if (m_type == RenderType::Edit && AssetDatabase::GetInstance() != nullptr)
+    {
+        AssetDatabase::GetInstance()->Scan();
+    }
     m_hWnd = WindowFrame::GetInstance()->GetHWND();
     m_width = DRAWWINDOWW;
     m_height = DRAWWINDOWH;

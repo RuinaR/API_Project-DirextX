@@ -76,7 +76,7 @@ void StageMaker::MakeMap(MapType t, int i, int j, vector<GameObject*>* rowGroup)
         block->AddComponent(box);
         box->CreateBody({ 0,0 }, { block->Size3D().x, block->Size3D().y }, true);
         ImageRender* ir = new ImageRender(nullptr);
-        AnimationManager::LoadTexture("Bitmaps\\obj\\land.bmp", ir);
+        ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\land.bmp", ir);
         block->AddComponent(ir);
         ir->SetTrans(false);
         
@@ -180,24 +180,24 @@ void StageMaker::StageStart()
 
 bool StageMaker::SetMap(string mapName)
 {
-    m_defaultObj = AnimationManager::LoadTexture("Bitmaps\\obj\\defaultObj.bmp");
-    m_swordObj = AnimationManager::LoadTexture("Bitmaps\\obj\\swordObj.bmp");
-    m_stoneObj = AnimationManager::LoadTexture("Bitmaps\\obj\\stoneObj.bmp");
-    m_door = AnimationManager::LoadTexture("Bitmaps\\obj\\door.bmp");
+    m_defaultObj = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\defaultObj.bmp");
+    m_swordObj = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\swordObj.bmp");
+    m_stoneObj = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\stoneObj.bmp");
+    m_door = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\door.bmp");
 
     wstring path[(int)Arrow::max];
     path[(int)Arrow::left] = L"Bitmaps\\monster\\default\\left";
     path[(int)Arrow::right] = L"Bitmaps\\monster\\default\\right";
-    m_defaultMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-    m_defaultMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    m_defaultMobAnim[(int)Arrow::left] = ResourceManager::GetInstance()->GetAnimation(path[(int)Arrow::left], 0.15f);
+    m_defaultMobAnim[(int)Arrow::right] = ResourceManager::GetInstance()->GetAnimation(path[(int)Arrow::right], 0.15f);
     path[(int)Arrow::left] = L"Bitmaps\\monster\\sword\\left";
     path[(int)Arrow::right] = L"Bitmaps\\monster\\sword\\right";
-    m_swordMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-    m_swordMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    m_swordMobAnim[(int)Arrow::left] = ResourceManager::GetInstance()->GetAnimation(path[(int)Arrow::left], 0.15f);
+    m_swordMobAnim[(int)Arrow::right] = ResourceManager::GetInstance()->GetAnimation(path[(int)Arrow::right], 0.15f);
     path[(int)Arrow::left] = L"Bitmaps\\monster\\stone\\left";
     path[(int)Arrow::right] = L"Bitmaps\\monster\\stone\\right";
-    m_stoneMobAnim[(int)Arrow::left] = AnimationManager::LoadAnimation(path[(int)Arrow::left], 0.15f);
-    m_stoneMobAnim[(int)Arrow::right] = AnimationManager::LoadAnimation(path[(int)Arrow::right], 0.15f);
+    m_stoneMobAnim[(int)Arrow::left] = ResourceManager::GetInstance()->GetAnimation(path[(int)Arrow::left], 0.15f);
+    m_stoneMobAnim[(int)Arrow::right] = ResourceManager::GetInstance()->GetAnimation(path[(int)Arrow::right], 0.15f);
 
 
 	for (vector<vector<GameObject*>>::iterator itr = m_mapObj.begin(); itr != m_mapObj.end(); itr++)

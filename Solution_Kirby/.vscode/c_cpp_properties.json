@@ -9,11 +9,42 @@
       "includePath": [
         "${workspaceFolder}",
         "${workspaceFolder}\\EngineFramework",
+        "${workspaceFolder}\\EngineFramework\\Input",
+        "${workspaceFolder}\\EngineFramework\\Utility",
+        "${workspaceFolder}\\EngineFramework\\Scene",
+        "${workspaceFolder}\\EngineFramework\\Component",
+        "${workspaceFolder}\\EngineFramework\\Component\\Physics",
+        "${workspaceFolder}\\EngineFramework\\Component\\Collision",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\Camera",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\Component",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\Buffer",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\UI",
+        "${workspaceFolder}\\EngineFramework\\Resource",
+        "${workspaceFolder}\\EngineFramework\\Resource\\Texture",
+        "${workspaceFolder}\\EngineFramework\\Resource\\Animation",
+        "${workspaceFolder}\\EngineFramework\\Debugging",
         "${workspaceFolder}\\include",
         "${workspaceFolder}\\Box2D",
+        "${workspaceFolder}\\Box2D\\box2d\\include",
         "${workspaceFolder}\\fbxsdk",
+        "${workspaceFolder}\\Imgui\\imgui",
+        "${workspaceFolder}\\Imgui\\source",
         "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
       ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}",
+          "${workspaceFolder}\\EngineFramework",
+          "${workspaceFolder}\\EngineFramework\\**",
+          "${workspaceFolder}\\EngineFramework\\Resource",
+          "${workspaceFolder}\\include",
+          "${workspaceFolder}\\Box2D\\box2d\\include",
+          "${workspaceFolder}\\fbxsdk",
+          "${workspaceFolder}\\Imgui\\imgui",
+          "${workspaceFolder}\\Imgui\\source",
+          "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
+        ]
+      },
       "defines": [
         "WIN32",
         "_DEBUG",
@@ -28,11 +59,42 @@
       "includePath": [
         "${workspaceFolder}",
         "${workspaceFolder}\\EngineFramework",
+        "${workspaceFolder}\\EngineFramework\\Input",
+        "${workspaceFolder}\\EngineFramework\\Utility",
+        "${workspaceFolder}\\EngineFramework\\Scene",
+        "${workspaceFolder}\\EngineFramework\\Component",
+        "${workspaceFolder}\\EngineFramework\\Component\\Physics",
+        "${workspaceFolder}\\EngineFramework\\Component\\Collision",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\Camera",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\Component",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\Buffer",
+        "${workspaceFolder}\\EngineFramework\\Rendering\\UI",
+        "${workspaceFolder}\\EngineFramework\\Resource",
+        "${workspaceFolder}\\EngineFramework\\Resource\\Texture",
+        "${workspaceFolder}\\EngineFramework\\Resource\\Animation",
+        "${workspaceFolder}\\EngineFramework\\Debugging",
         "${workspaceFolder}\\include",
         "${workspaceFolder}\\Box2D",
+        "${workspaceFolder}\\Box2D\\box2d\\include",
         "${workspaceFolder}\\fbxsdk",
+        "${workspaceFolder}\\Imgui\\imgui",
+        "${workspaceFolder}\\Imgui\\source",
         "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
       ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}",
+          "${workspaceFolder}\\EngineFramework",
+          "${workspaceFolder}\\EngineFramework\\**",
+          "${workspaceFolder}\\EngineFramework\\Resource",
+          "${workspaceFolder}\\include",
+          "${workspaceFolder}\\Box2D\\box2d\\include",
+          "${workspaceFolder}\\fbxsdk",
+          "${workspaceFolder}\\Imgui\\imgui",
+          "${workspaceFolder}\\Imgui\\source",
+          "${workspaceFolder}\\External\\packages\\Microsoft.DXSDK.D3DX.9.29.952.8\\build\\native\\include"
+        ]
+      },
       "defines": [
         "_DEBUG",
         "_WINDOWS"

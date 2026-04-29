@@ -22,6 +22,11 @@ public:
 	const Vector2D& GetColSize();
 	const Vector2D& GetColOffset();
 	void CreateBody(Vector2D offset, Vector2D size, bool fixedRotation);
+	void SetBodyType(b2BodyType type);
+	void SetColliderSize(Vector2D size);
+	void SetColliderOffset(Vector2D offset);
+	void SetFixedRotation(bool fixedRotation);
+	bool GetFixedRotation() const;
 	void Initialize() final;
 	void Release() final;
 	void SetTrigger(bool b);

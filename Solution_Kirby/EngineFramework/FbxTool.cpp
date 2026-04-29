@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "FbxTool.h"
+#include "Resource/ResourceManager.h"
 #include <fbxsdk/fileio/fbximporter.h>
 #include <algorithm>
 #include <utility>
@@ -506,7 +507,7 @@ void FbxTool::LoadMaterial(FbxSurfaceMaterial* material, SubMesh* subMesh) {
 
             // 텍스처 로드 시도
             IDirect3DTexture9* d3dTexture = nullptr;
-            d3dTexture = TextureManager::GetInstance()->GetTexture(texturePath.c_str());
+            d3dTexture = ResourceManager::GetInstance()->GetTexture(texturePath);
 
             if (d3dTexture) {
                 subMesh->textures.push_back(d3dTexture);

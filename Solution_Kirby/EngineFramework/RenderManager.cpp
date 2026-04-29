@@ -421,22 +421,12 @@ void RenderManager::EditUpdate()
 		originalRenderTarget->Release();
 		originalDepthStencil->Release();
 
-		ImGui::SetNextWindowSize(ImVec2(DRAWWINDOWW, DRAWWINDOWH), ImGuiCond_Once);
-		ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize);
+		ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+		ImVec2 imageScreenPos = mainViewport != nullptr ? mainViewport->Pos : ImVec2(0.0f, 0.0f);
+		ImVec2 windowSize(DRAWWINDOWW, DRAWWINDOWH);
+		ImVec2 imageMax(imageScreenPos.x + windowSize.x, imageScreenPos.y + windowSize.y);
+		ImGui::GetBackgroundDrawList(mainViewport)->AddImage((void*)renderTargetTexture, imageScreenPos, imageMax);
 
-		//button/imgui
-		for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
-		{
-			ImGui::SameLine();
-			(*itr)->UpdateRender();
-		}
-		
-		ImVec2 windowSize;// = ImGui::GetContentRegionAvail();
-		windowSize.x = DRAWWINDOWW;
-		windowSize.y = DRAWWINDOWH;
-
-		//Game
-		ImVec2 imageScreenPos = ImGui::GetCursorScreenPos();
 		m_gameViewScreenPos = D3DXVECTOR2(imageScreenPos.x, imageScreenPos.y);
 		POINT imageClientPos =
 		{
@@ -448,8 +438,17 @@ void RenderManager::EditUpdate()
 		m_gameViewSize = D3DXVECTOR2(windowSize.x, windowSize.y);
 		m_useScreenSpaceUIMouse = true;
 		m_winPos = ImVec2(m_gameViewPos.x, m_gameViewPos.y);
-		ImGui::Image((void*)renderTargetTexture, windowSize);
-		ImGui::End();
+
+		if (!m_btnVec->empty())
+		{
+			ImGui::Begin("Button");
+			for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+			{
+				ImGui::SameLine();
+				(*itr)->UpdateRender();
+			}
+			ImGui::End();
+		}
 
 		//ObjMgr
 		ObjectManager::GetInstance()->ImguiUpdate();
@@ -537,19 +536,21 @@ void RenderManager::GameUpdate()
 		//ImGui::SetNextWindowSize(ImVec2(DRAWWINDOWW, DRAWWINDOWH), ImGuiCond_Once);
 		//ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize);
 
-		//button/imgui
-		ImGui::Begin("Button");
-		for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+		if (!m_btnVec->empty())
 		{
-			ImGui::SameLine();
-			(*itr)->UpdateRender();
+			ImGui::Begin("Button");
+			for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
+			{
+				ImGui::SameLine();
+				(*itr)->UpdateRender();
+			}
+			ImGui::End();
 		}
 
 		//ImVec2 windowSize = ImGui::GetContentRegionAvail();
 		//Game
 		//ImGui::Image((void*)renderTargetTexture, windowSize);
 		//m_winPos = ImGui::GetWindowPos();
-		ImGui::End();
 
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		//ImGui::EndFrame();

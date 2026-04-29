@@ -141,10 +141,24 @@ void UILabel::DrawInspector()
 {
 	UIElement::DrawInspector();
 	std::string text = ConvertToString(m_text);
-	ImGui::Text("Text: %s", text.c_str());
-	ImGui::Text("Font Size: %d", m_fontSize);
-	ImGui::Text("Scale: %.2f", m_scale);
-	ImGui::Text("Font: %s", m_font ? "Created" : "None");
+	char textBuffer[512] = {};
+	strcpy_s(textBuffer, text.c_str());
+	if (ImGui::InputText("Text", textBuffer, IM_ARRAYSIZE(textBuffer)))
+	{
+		SetText(ConvertToWideString(textBuffer));
+	}
+
+	int fontSize = m_fontSize;
+	if (ImGui::DragInt("Font Size", &fontSize, 1.0f, 1, 256))
+	{
+		SetFontSize(fontSize);
+	}
+
+	float scale = m_scale;
+	if (ImGui::DragFloat("Scale", &scale, 0.05f, 0.1f, 10.0f))
+	{
+		SetScale(scale);
+	}
 
 	float color[4] =
 	{
@@ -153,7 +167,11 @@ void UILabel::DrawInspector()
 		static_cast<float>(m_color & 0xff) / 255.0f,
 		static_cast<float>((m_color >> 24) & 0xff) / 255.0f
 	};
-	ImGui::ColorButton("Color", ImVec4(color[0], color[1], color[2], color[3]));
+	if (ImGui::ColorEdit4("Color", color))
+	{
+		SetColor(D3DCOLOR_COLORVALUE(color[0], color[1], color[2], color[3]));
+	}
+	ImGui::Text("Font: %s", m_font ? "Created" : "None");
 }
 
 const char* UILabel::GetSerializableType() const

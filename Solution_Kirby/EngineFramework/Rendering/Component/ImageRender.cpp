@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "ImageRender.h"
+#include "Editor/EditorAssetField.h"
+#include "Resource/ResourceManager.h"
 #include "SceneJsonUtility.h"
 
 void ImageRender::DrawImage(int x, int y, int z, int w, int h)
@@ -237,6 +239,11 @@ void ImageRender::SetPositionOffset(const D3DXVECTOR3& offset)
     m_positionOffset = offset;
 }
 
+const D3DXVECTOR3& ImageRender::GetPositionOffset() const
+{
+    return m_positionOffset;
+}
+
 D3DXVECTOR3 ImageRender::GetRenderPosition() const
 {
     if (m_gameObj == nullptr)
@@ -292,9 +299,13 @@ void ImageRender::ChangeTexture(IDirect3DTexture9* texture)
 void ImageRender::SetTexturePath(const std::string& path)
 {
     m_texturePath = path;
-    if (!m_texturePath.empty())
+    if (m_texturePath.empty())
     {
-        m_texture = TextureManager::GetInstance()->GetTexture(m_texturePath);
+        m_texture = nullptr;
+    }
+    else
+    {
+        m_texture = ResourceManager::GetInstance()->GetTexture(m_texturePath);
     }
 }
 
@@ -318,6 +329,21 @@ const char* ImageRender::GetInspectorName() const
 
 void ImageRender::DrawInspector()
 {
+    if (m_gameObj != nullptr)
+    {
+        D3DXVECTOR3 size = m_gameObj->Size3D();
+        if (ImGui::DragFloat3("Size", &size.x, 1.0f, 0.0f, 10000.0f))
+        {
+            m_gameObj->Size3D() = size;
+        }
+    }
+
+    D3DXVECTOR3 positionOffset = m_positionOffset;
+    if (ImGui::DragFloat3("Position Offset", &positionOffset.x, 1.0f))
+    {
+        SetPositionOffset(positionOffset);
+    }
+
     bool uiRender = m_isUIRender;
     if (ImGui::Checkbox("UI Render", &uiRender))
     {
@@ -360,8 +386,20 @@ void ImageRender::DrawInspector()
         SetColor(D3DCOLOR_COLORVALUE(color[0], color[1], color[2], color[3]));
     }
 
+    std::string selectedTextureKey = m_texturePath;
+    if (EditorAssetField::Draw("Texture Asset", AssetType::Texture, selectedTextureKey))
+    {
+        SetTexturePath(selectedTextureKey);
+    }
+
+    char texturePath[260] = {};
+    strcpy_s(texturePath, m_texturePath.c_str());
+    if (ImGui::InputText("Texture Path", texturePath, IM_ARRAYSIZE(texturePath)))
+    {
+        SetTexturePath(texturePath);
+    }
+
     ImGui::Text("Texture: %s", m_texture ? "Loaded" : "None");
-    ImGui::Text("Texture Path: %s", m_texturePath.empty() ? "(none)" : m_texturePath.c_str());
 }
 
 const char* ImageRender::GetSerializableType() const

@@ -2,13 +2,10 @@
 #include <d3dx9.h>
 #include <string>
 #include <unordered_map>
+#include "Resource/IResourceTypeManager.h"
 
-class TextureManager {
+class TextureManager : public IResourceTypeManager {
 
-public:
-    static void Create();
-    static TextureManager* GetInstance();
-    static void Destroy();
 public:
     // 생성자와 소멸자
     TextureManager();
@@ -24,9 +21,9 @@ public:
 
     // 모든 텍스처 해제 함수
     void ReleaseAllTextures();
+    void ReleaseAllResources() override;
 
 private:
-    static TextureManager* m_Pthis;
     std::unordered_map<std::string, IDirect3DTexture9*> m_textureMap; // 경로를 키로, 텍스처 포인터를 값으로 하는 맵
     std::unordered_map<std::wstring, IDirect3DTexture9*> m_textureMapW; // 경로를 키로, 텍스처 포인터를 값으로 하는 맵
 

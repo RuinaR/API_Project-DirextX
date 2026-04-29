@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "UIImage.h"
 #include "ImageRender.h"
+#include "Editor/EditorAssetField.h"
+#include "Resource/ResourceManager.h"
 #include "TextureManager.h"
 #include "SceneJsonUtility.h"
 
@@ -39,7 +41,7 @@ void UIImage::SetTexture(IDirect3DTexture9* texture)
 void UIImage::SetTexture(const std::string& path)
 {
 	m_texturePath = path;
-	SetTexture(TextureManager::GetInstance()->GetTexture(path));
+	SetTexture(ResourceManager::GetInstance()->GetTexture(path));
 	if (m_imageRender)
 	{
 		m_imageRender->SetTexturePath(path);
@@ -150,15 +152,44 @@ const char* UIImage::GetInspectorName() const
 void UIImage::DrawInspector()
 {
 	UIElement::DrawInspector();
+
+	bool useTexture = IsUseTexture();
+	if (ImGui::Checkbox("Use Texture", &useTexture))
+	{
+		SetUseTexture(useTexture);
+	}
+
+	float color[4] =
+	{
+		static_cast<float>((GetColor() >> 16) & 0xff) / 255.0f,
+		static_cast<float>((GetColor() >> 8) & 0xff) / 255.0f,
+		static_cast<float>(GetColor() & 0xff) / 255.0f,
+		static_cast<float>((GetColor() >> 24) & 0xff) / 255.0f
+	};
+	if (ImGui::ColorEdit4("Color", color))
+	{
+		SetColor(D3DCOLOR_COLORVALUE(color[0], color[1], color[2], color[3]));
+	}
+
+	std::string selectedTextureKey = m_texturePath;
+	if (EditorAssetField::Draw("Image Asset", AssetType::Texture, selectedTextureKey))
+	{
+		SetTexture(selectedTextureKey);
+	}
+
+	char texturePath[260] = {};
+	strcpy_s(texturePath, m_texturePath.c_str());
+	if (ImGui::InputText("Image Path", texturePath, IM_ARRAYSIZE(texturePath)))
+	{
+		SetTexture(texturePath);
+	}
+
 	ImGui::Text("Texture: %s", m_texture ? "Assigned" : "None");
 	ImGui::Text("ImageRender: %s", m_imageRender ? "Created" : "None");
 	if (m_imageRender)
 	{
-		ImGui::Text("Use Texture: %s", m_imageRender->IsUseTexture() ? "true" : "false");
 		ImGui::Text("Render Enabled: %s", m_imageRender->IsRenderEnabled() ? "true" : "false");
-		ImGui::Text("Order In Layer: %d", m_imageRender->GetOrderInLayer());
 	}
-	ImGui::Text("Texture Path: %s", m_texturePath.empty() ? "(none)" : m_texturePath.c_str());
 }
 
 const char* UIImage::GetSerializableType() const

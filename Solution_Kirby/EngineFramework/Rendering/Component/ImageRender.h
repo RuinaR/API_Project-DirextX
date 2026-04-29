@@ -42,6 +42,7 @@ public:
 	void SetColor(D3DCOLOR color);
 	D3DCOLOR GetColor();
 	void SetPositionOffset(const D3DXVECTOR3& offset);
+	const D3DXVECTOR3& GetPositionOffset() const;
 	D3DXVECTOR3 GetRenderPosition() const;
 	void Initialize() override;
 	void Release() override;

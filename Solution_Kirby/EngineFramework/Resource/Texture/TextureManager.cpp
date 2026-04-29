@@ -1,37 +1,33 @@
 ﻿#include "pch.h"
 #include "TextureManager.h"
+#include "Resource/AssetDatabase.h"
 
 #include <thread>
 #include <future>
 
-TextureManager* TextureManager::m_Pthis = nullptr;
+namespace
+{
+    std::string ResolveTexturePath(const std::string& filepath)
+    {
+        AssetDatabase* assetDatabase = AssetDatabase::GetInstance();
+        if (assetDatabase == nullptr)
+        {
+            return filepath;
+        }
+
+        const AssetInfo* asset = assetDatabase->FindByKey(filepath);
+        if (asset == nullptr || asset->path.empty())
+        {
+            return filepath;
+        }
+
+        return asset->path;
+    }
+}
 
 TextureManager::TextureManager()  {}
 
 TextureManager::~TextureManager() {}
-
-void TextureManager::Create()
-{
-    if (!m_Pthis)
-    {
-        m_Pthis = new TextureManager();
-    }
-}
-
-TextureManager* TextureManager::GetInstance()
-{
-    return m_Pthis;
-}
-
-void TextureManager::Destroy()
-{
-    if (m_Pthis)
-    {
-        m_Pthis->ReleaseAllTextures();
-        delete m_Pthis;
-        m_Pthis = nullptr;
-    }
-}
 
 IDirect3DTexture9* TextureManager::GetTexture(const std::string& filepath) {
     // 맵에서 텍스처를 검색
@@ -43,7 +39,8 @@ IDirect3DTexture9* TextureManager::GetTexture(const std::string& filepath) {
 
     // 새로운 텍스처 로드
     IDirect3DTexture9* texture = nullptr;
-    if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), filepath.c_str(), &texture))) {
+    const std::string resolvedPath = ResolveTexturePath(filepath);
+    if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), resolvedPath.c_str(), &texture))) {
         m_textureMap[filepath] = texture; // 맵에 추가
         return texture;
     }
@@ -85,7 +82,8 @@ void TextureManager::GetTexture(const std::string& filepath, std::function<void(
     // 새로운 텍스처 비동기 로드
     std::async(std::launch::async, [this, filepath, func]() {
         IDirect3DTexture9* texture = nullptr;
-        if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), filepath.c_str(), &texture))) {
+        const std::string resolvedPath = ResolveTexturePath(filepath);
+        if (SUCCEEDED(D3DXCreateTextureFromFileA(MainFrame::GetInstance()->GetDevice(), resolvedPath.c_str(), &texture))) {
             this->m_textureMap[filepath] = texture; // 맵에 추가
 
             // 로드가 완료되면 콜백 호출
@@ -139,4 +137,9 @@ void TextureManager::ReleaseAllTextures()
         }
     }
     m_textureMapW.clear();
+}
+
+void TextureManager::ReleaseAllResources()
+{
+    ReleaseAllTextures();
 }

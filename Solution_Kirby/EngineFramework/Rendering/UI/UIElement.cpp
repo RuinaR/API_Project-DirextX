@@ -187,13 +187,32 @@ const char* UIElement::GetInspectorName() const
 
 void UIElement::DrawInspector()
 {
-	D3DXVECTOR2 position = GetPosition();
 	D3DXVECTOR2 size = GetSize();
-	ImGui::Text("Position: %.2f, %.2f", position.x, position.y);
-	ImGui::Text("Size: %.2f, %.2f", size.x, size.y);
-	ImGui::Text("Visible: %s", m_visible ? "true" : "false");
-	ImGui::Text("Enabled: %s", m_enabled ? "true" : "false");
-	ImGui::Text("Order In Layer: %d", m_orderInLayer);
+	D3DXVECTOR2 localOffset = GetLocalOffset();
+	bool visible = m_visible;
+	bool enabled = m_enabled;
+	int orderInLayer = m_orderInLayer;
+
+	if (ImGui::DragFloat2("Local Offset", &localOffset.x, 1.0f))
+	{
+		SetLocalOffset(&localOffset);
+	}
+	if (ImGui::DragFloat2("Size", &size.x, 1.0f, 0.0f, 10000.0f))
+	{
+		SetSize(&size);
+	}
+	if (ImGui::Checkbox("Visible", &visible))
+	{
+		SetVisible(visible);
+	}
+	if (ImGui::Checkbox("Enabled", &enabled))
+	{
+		SetEnabled(enabled);
+	}
+	if (ImGui::DragInt("Order In Layer", &orderInLayer))
+	{
+		SetOrderInLayer(orderInLayer);
+	}
 }
 
 std::string UIElement::Serialize() const

@@ -23,6 +23,8 @@ public:
 	static bool SaveCurrentSceneData(const std::string& sceneName);
 	static bool CaptureSceneSnapshot(const std::string& sceneName);
 	static std::string GetCapturedSnapshot(const std::string& sceneName);
+	static void MarkSceneDirty(const std::string& sceneName);
+	static void ClearSceneDirty(const std::string& sceneName);
 	static bool IsSceneDirty(const std::string& sceneName);
 	static bool SaveCapturedSnapshot(const std::string& sceneName);
 	static bool LoadSceneData(const std::string& sceneName);

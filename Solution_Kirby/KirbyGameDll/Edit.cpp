@@ -136,13 +136,13 @@ void Edit::InitMap()
 
 void Edit::Initialize()
 {
-	m_land = AnimationManager::LoadTexture("Bitmaps\\obj\\land.bmp");
-	m_bg = AnimationManager::LoadTexture("Bitmaps\\obj\\BG.bmp");
-	m_defaultObj = AnimationManager::LoadTexture("Bitmaps\\obj\\defaultObj.bmp");
-	m_swordObj = AnimationManager::LoadTexture("Bitmaps\\obj\\swordObj.bmp");
-	m_stoneObj = AnimationManager::LoadTexture("Bitmaps\\obj\\stoneObj.bmp");
-	m_player = AnimationManager::LoadTexture("Bitmaps\\obj\\player.bmp");
-	m_door = AnimationManager::LoadTexture("Bitmaps\\obj\\door.bmp");
+	m_land = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\land.bmp");
+	m_bg = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\BG.bmp");
+	m_defaultObj = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\defaultObj.bmp");
+	m_swordObj = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\swordObj.bmp");
+	m_stoneObj = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\stoneObj.bmp");
+	m_player = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\player.bmp");
+	m_door = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\door.bmp");
 
 	//타일셋 데이터
 	Tileset[(int)MapType::None] = "Empty";
