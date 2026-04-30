@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Collider.h"
+#include "Rigidbody2D.h"
 #include "SceneJsonUtility.h"
 
 void Collider::RenderCollider()
@@ -10,8 +11,18 @@ void Collider::RenderCollider()
 		D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
 
 		b2Vec2 position = m_body->GetPosition();
+		float renderX = position.x;
+		float renderY = position.y;
+		if (!m_ownsBody)
+		{
+			const float angle = m_body->GetAngle();
+			const float cosAngle = cosf(angle);
+			const float sinAngle = sinf(angle);
+			renderX += (m_colOffset.x * cosAngle) - (m_colOffset.y * sinAngle);
+			renderY += (m_colOffset.x * sinAngle) + (m_colOffset.y * cosAngle);
+		}
 
-		D3DXMatrixTranslation(&matTranslate, position.x, position.y, -9.0f);
+		D3DXMatrixTranslation(&matTranslate, renderX, renderY, 0.0f);
 		D3DXMatrixScaling(&matScale, m_colSize.x + 1, m_colSize.y + 1, 1.0f);
 		D3DXMatrixRotationZ(&matRotate, m_body->GetAngle());
 		matWorld = matScale * matRotate * matTranslate;
@@ -41,6 +52,28 @@ Collider::Collider(b2BodyType type)
 }
 void Collider::Start()
 {
+	if (m_gameObj == nullptr)
+	{
+		return;
+	}
+
+	if (m_colSize.x <= 0.0f || m_colSize.y <= 0.0f)
+	{
+		const D3DXVECTOR2 objectSize = m_gameObj->Size2D();
+		if (m_colSize.x <= 0.0f)
+		{
+			m_colSize.x = objectSize.x;
+		}
+		if (m_colSize.y <= 0.0f)
+		{
+			m_colSize.y = objectSize.y;
+		}
+	}
+
+	if (m_body == nullptr && m_colSize.x > 0.0f && m_colSize.y > 0.0f)
+	{
+		CreateBody(m_colOffset, m_colSize, GetFixedRotation());
+	}
 }
 void Collider::Update()
 {
@@ -70,23 +103,60 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	m_colSize = size;
 	m_colOffset = offset;
 
-	if (m_body != nullptr)
+	if (m_fixture != nullptr && m_body != nullptr)
+	{
+		m_body->DestroyFixture(m_fixture);
+		m_fixture = nullptr;
+	}
+
+	if (m_ownsBody && m_body != nullptr)
 	{
 		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
 		m_body = nullptr;
+		m_ownsBody = false;
 	}
 
-	b2BodyDef bodyDef;
-	bodyDef.type = m_type;
-	bodyDef.fixedRotation = fixedRotation;
-	bodyDef.position.Set(
-		m_gameObj->Position().x + (float)m_colOffset.x,
-		m_gameObj->Position().y + (float)m_colOffset.y);
-	bodyDef.angle = 0.0f;
-	m_body = MainFrame::GetInstance()->GetBox2dWorld()->CreateBody(&bodyDef);
+	Rigidbody2D* rigidbody2D = m_gameObj != nullptr ? m_gameObj->GetComponent<Rigidbody2D>() : nullptr;
+	if (rigidbody2D != nullptr)
+	{
+		if (rigidbody2D->GetBody() == nullptr)
+		{
+			rigidbody2D->CreateBody(false);
+		}
+		m_body = rigidbody2D->GetBody();
+		m_ownsBody = false;
+	}
+	else
+	{
+		b2BodyDef bodyDef;
+		bodyDef.type = m_type;
+		bodyDef.fixedRotation = fixedRotation;
+		bodyDef.position.Set(
+			m_gameObj->Position().x + (float)m_colOffset.x,
+			m_gameObj->Position().y + (float)m_colOffset.y);
+		bodyDef.angle = 0.0f;
+		m_body = MainFrame::GetInstance()->GetBox2dWorld()->CreateBody(&bodyDef);
+		m_ownsBody = true;
+	}
+
+	if (m_body == nullptr)
+	{
+		return;
+	}
 	
 	b2PolygonShape box;
-	box.SetAsBox(m_colSize.x / 2.0f, m_colSize.y / 2.0f);
+	if (m_ownsBody)
+	{
+		box.SetAsBox(m_colSize.x / 2.0f, m_colSize.y / 2.0f);
+	}
+	else
+	{
+		box.SetAsBox(
+			m_colSize.x / 2.0f,
+			m_colSize.y / 2.0f,
+			b2Vec2(m_colOffset.x, m_colOffset.y),
+			0.0f);
+	}
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &box;
@@ -94,7 +164,18 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	fixtureDef.friction = 0.3f;
 	fixtureDef.restitution = 0.5f;
 	fixtureDef.isSensor = m_isTrigger;
-	m_body->CreateFixture(&fixtureDef);
+	m_fixture = m_body->CreateFixture(&fixtureDef);
+	if (m_fixture != nullptr)
+	{
+		m_fixture->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
+	}
+
+	if (!m_ownsBody)
+	{
+		m_body->ResetMassData();
+		m_body->SetAwake(true);
+	}
+
 	//m_body->SetGravityScale(30.0);
 	m_body->GetUserData().pointer = (uintptr_t)this;
 }
@@ -168,11 +249,22 @@ void Collider::Initialize()
 void Collider::Release()
 {
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
-	if (m_body != nullptr)
+	if (m_body != nullptr && m_body->GetUserData().pointer == reinterpret_cast<uintptr_t>(this))
+	{
+		m_body->GetUserData().pointer = 0;
+	}
+	if (m_fixture != nullptr && m_body != nullptr)
+	{
+		m_fixture->GetUserData().pointer = 0;
+		m_body->DestroyFixture(m_fixture);
+		m_fixture = nullptr;
+	}
+	if (m_ownsBody && m_body != nullptr)
 	{
 		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
-		m_body = nullptr;
 	}
+	m_body = nullptr;
+	m_ownsBody = false;
 	RenderManager::GetInstance()->UnregisterDebug(this);
 
 	ColRelease();
@@ -200,6 +292,23 @@ b2Body* Collider::GetBody()
 	return m_body;
 }
 
+void Collider::ClearBodyReferenceIfMatches(b2Body* body)
+{
+	if (m_body != body)
+	{
+		return;
+	}
+
+	m_body = nullptr;
+	m_fixture = nullptr;
+	m_ownsBody = false;
+}
+
+bool Collider::OwnsBody() const
+{
+	return m_ownsBody;
+}
+
 void Collider::DebugRenderUpdate()
 {
 	RenderCollider();
@@ -212,11 +321,18 @@ const char* Collider::GetInspectorName() const
 
 void Collider::DrawInspector()
 {
-	int bodyType = static_cast<int>(m_type);
-	const char* bodyTypeNames[] = { "Static", "Kinematic", "Dynamic" };
-	if (ImGui::Combo("Body Type", &bodyType, bodyTypeNames, IM_ARRAYSIZE(bodyTypeNames)))
+	Rigidbody2D* rigidbody2D = m_gameObj != nullptr ? m_gameObj->GetComponent<Rigidbody2D>() : nullptr;
+	if (rigidbody2D == nullptr)
 	{
-		SetBodyType(static_cast<b2BodyType>(bodyType));
+		if (m_type != b2_staticBody)
+		{
+			SetBodyType(b2_staticBody);
+		}
+		ImGui::TextDisabled("Body Type: Static");
+	}
+	else
+	{
+		ImGui::TextDisabled("Body Type is controlled by Rigidbody 2D");
 	}
 
 	bool trigger = m_isTrigger;
@@ -225,10 +341,17 @@ void Collider::DrawInspector()
 		SetTrigger(trigger);
 	}
 
-	bool fixedRotation = GetFixedRotation();
-	if (ImGui::Checkbox("Fixed Rotation", &fixedRotation))
+	if (rigidbody2D == nullptr)
 	{
-		SetFixedRotation(fixedRotation);
+		bool fixedRotation = GetFixedRotation();
+		if (ImGui::Checkbox("Fixed Rotation", &fixedRotation))
+		{
+			SetFixedRotation(fixedRotation);
+		}
+	}
+	else
+	{
+		ImGui::TextDisabled("Fixed Rotation is controlled by Rigidbody 2D");
 	}
 
 	float size[2] = { m_colSize.x, m_colSize.y };

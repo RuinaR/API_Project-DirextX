@@ -53,6 +53,11 @@ D3DXVECTOR3 Camera::GetPos()
 	return m_at;
 }
 
+const D3DXMATRIX& Camera::GetViewMatrix() const
+{
+	return m_viewMatrix;
+}
+
 void Camera::SetRotation(float x, float y, float z)
 {
 	m_rotation = D3DXVECTOR3(x, y, z);
@@ -191,9 +196,8 @@ void Camera::UpdateViewMatrix()
 	m_up = GetUp();
 	m_eye = m_at - (forward * m_distance);
 
-	D3DXMATRIX matView;
-	D3DXMatrixLookAtLH(&matView, &m_eye, &m_at, &m_up);
-	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_VIEW, &matView);
+	D3DXMatrixLookAtLH(&m_viewMatrix, &m_eye, &m_at, &m_up);
+	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_VIEW, &m_viewMatrix);
 }
 
 void Camera::UpdateProjectionMatrix()

@@ -80,6 +80,9 @@ public:
 	bool Update();
 	ID3DXFont* GetFont();
 	LPDIRECT3DDEVICE9 GetDevice();
+	const D3DXMATRIX& GetProjectionMatrix() const;
+	int GetViewportWidth() const;
+	int GetViewportHeight() const;
 	b2World* GetBox2dWorld();
 	RenderType GetRenderType() const { return m_type; }
 	void RequestResize(UINT width, UINT height);

@@ -1,7 +1,47 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "DebugWindow.h"
+#include "Rigidbody2D.h"
 #include "SceneJsonUtility.h"
+
+namespace
+{
+	b2Body* GetPrimaryPhysicsBody(GameObject* gameObject, BoxCollider* boxCollider)
+	{
+		if (gameObject == nullptr)
+		{
+			return nullptr;
+		}
+
+		Rigidbody2D* rigidbody2D = gameObject->GetComponent<Rigidbody2D>();
+		if (rigidbody2D != nullptr && rigidbody2D->GetBody() != nullptr)
+		{
+			return rigidbody2D->GetBody();
+		}
+
+		if (boxCollider != nullptr)
+		{
+			return boxCollider->GetBody();
+		}
+
+		return nullptr;
+	}
+
+	void SyncBodyTransform(b2Body* body, const D3DXVECTOR3& position, float angle)
+	{
+		if (body == nullptr)
+		{
+			return;
+		}
+
+		body->SetTransform({ position.x, position.y }, angle);
+		if (body->GetType() != b2_staticBody)
+		{
+			body->SetAwake(true);
+		}
+	}
+}
+
 GameObject::GameObject() {
     m_vecComponent = new vector<Component*>();
     m_pendingDeleteComponents = new vector<Component*>();
@@ -22,11 +62,11 @@ const D3DXVECTOR3& GameObject::Position() {
 void GameObject::SetPosition(D3DXVECTOR3 v)
 {
     D3DXVECTOR3 d = {v.x - m_position.x,  v.y - m_position.y,  v.z - m_position.z };
-	m_position.x = v.x;
+    m_position.x = v.x;
 	m_position.y = v.y;
     m_position.z = v.z;
-    if (m_box != nullptr && m_box->GetBody() != nullptr)
-        m_box->GetBody()->SetTransform({ m_position.x, m_position.y }, m_box->GetBody()->GetAngle());
+    b2Body* body = GetPrimaryPhysicsBody(this, m_box);
+    SyncBodyTransform(body, m_position, body != nullptr ? body->GetAngle() : 0.0f);
     
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
 		(*itr)->AddPosition(d);
@@ -37,8 +77,8 @@ void GameObject::AddPosition(D3DXVECTOR3 v)
 	m_position.x += v.x;
 	m_position.y += v.y;
     m_position.z += v.z;
-    if (m_box != nullptr && m_box->GetBody() != nullptr)
-        m_box->GetBody()->SetTransform({ m_position.x, m_position.y }, m_box->GetBody()->GetAngle());
+    b2Body* body = GetPrimaryPhysicsBody(this, m_box);
+    SyncBodyTransform(body, m_position, body != nullptr ? body->GetAngle() : 0.0f);
 
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
 		(*itr)->AddPosition(v);
@@ -61,6 +101,16 @@ void GameObject::SetDestroy(bool destroy) {
 
 bool GameObject::GetDestroy() {
     return m_isDestroy;
+}
+
+int GameObject::GetId() const
+{
+    return m_objectId;
+}
+
+void GameObject::SetId(int objectId)
+{
+    m_objectId = objectId;
 }
 
 void GameObject::SetTag(string tag) {
@@ -214,6 +264,7 @@ bool GameObject::Deserialize(const std::string& objectJson, GameObjectSerialized
 GameObject* GameObject::CreateFromSerializedData(const GameObjectSerializedData& data)
 {
     GameObject* obj = new GameObject();
+    obj->SetId(data.objectId);
     obj->SetTag(data.tag);
     obj->SetActive(data.active);
     obj->SetPosition(data.position);
@@ -232,6 +283,10 @@ Component* GameObject::AddComponent(Component* component, bool initializeCompone
     if (component) {
         component->InitGameObj(this);
         m_vecComponent->push_back(component);
+        if (BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(component))
+        {
+            m_box = boxCollider;
+        }
         if (initializeComponent)
             component->Initialize();
         if (startComponent && ObjectManager::GetInstance()->FindObject(this)) {
@@ -249,6 +304,10 @@ void GameObject::DeleteComponent(Component* component) {
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++) {
         if ((*itr) == component) {
             Component* target = *itr;
+            if (target == m_box)
+            {
+                m_box = nullptr;
+            }
             m_vecComponent->erase(itr);
             if (m_pendingDeleteComponents != nullptr)
             {
@@ -455,8 +514,15 @@ void GameObject::SetAngleZ(float v)
 {
     const float delta = v - m_angleZ;
     m_angleZ = v;
-    if (m_box != nullptr && m_box->GetBody() != nullptr)
-        m_box->GetBody()->SetTransform(m_box->GetBody()->GetPosition(), v);
+    b2Body* body = GetPrimaryPhysicsBody(this, m_box);
+    if (body != nullptr)
+    {
+        body->SetTransform(body->GetPosition(), v);
+        if (body->GetType() != b2_staticBody)
+        {
+            body->SetAwake(true);
+        }
+    }
 
     for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
         (*itr)->SetAngleZ((*itr)->GetAngleZ() + delta);

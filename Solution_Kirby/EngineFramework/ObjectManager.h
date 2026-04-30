@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include <unordered_map>
 
 class ObjectManager
 {
@@ -10,10 +11,13 @@ private:
 	vector<GameObject*> m_pendingRemoveObjects;
 	GameObject* m_selected;
 	bool m_isFlushing = false;
+	int m_nextRuntimeObjectId = 1;
 
 	bool IsInObjectList(GameObject* obj);
 	bool IsPendingAdd(GameObject* obj);
 	bool IsPendingRemove(GameObject* obj);
+	void AssignRuntimeObjectId(GameObject* obj);
+	void ResolveComponentReferences(const std::unordered_map<int, GameObject*>& objectMap);
 	void QueueDestroyObject(GameObject* obj);
 	void QueueDestroyObjectTree(GameObject* obj);
 	bool IsSameOrChild(GameObject* root, GameObject* target);

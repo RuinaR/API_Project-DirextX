@@ -55,6 +55,9 @@
     <ClCompile Include="Component\Collision\BoxCollider.cpp">
       <Filter>Component\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Physics\Rigidbody2D.cpp">
+      <Filter>Component\Physics</Filter>
+    </ClCompile>
     <ClCompile Include="Component\Collision\Collider.cpp">
       <Filter>Component\Collision</Filter>
     </ClCompile>
@@ -99,6 +102,9 @@
     </ClCompile>
     <ClCompile Include="Input\Mouse.cpp">
       <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics2D\Physics2D.cpp">
+      <Filter>Physics2D</Filter>
     </ClCompile>
     <ClCompile Include="MainFrame.cpp">
       <Filter>MainFrame</Filter>
@@ -183,6 +189,9 @@
     <ClInclude Include="Component\Collision\BoxCollider.h">
       <Filter>Component\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Physics\Rigidbody2D.h">
+      <Filter>Component\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="Component\Collision\Collider.h">
       <Filter>Component\Collision</Filter>
     </ClInclude>
@@ -197,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Input\InputString.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Ray.h">
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Component\Physics\Rigidbody.h">
       <Filter>Component\Physics</Filter>
@@ -227,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="Input\Mouse.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics2D\Physics2D.h">
+      <Filter>Physics2D</Filter>
     </ClInclude>
     <ClInclude Include="MainFrame.h">
       <Filter>MainFrame</Filter>
@@ -307,6 +322,12 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{779aa936-e18c-4963-bec7-7d6d60a46b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{77f30fbb-bd2a-4e34-9600-8b6725029667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics2D">
+      <UniqueIdentifier>{2b6b0c21-397d-4240-9d38-5d4332cff9f5}</UniqueIdentifier>
     </Filter>
     <Filter Include="MainFrame">
       <UniqueIdentifier>{89d5651b-119d-4cd1-b5c4-8f4e0d28b506}</UniqueIdentifier>

@@ -17,6 +17,7 @@ private:
 	D3DXVECTOR3 m_eye;
 	D3DXVECTOR3 m_at;
 	D3DXVECTOR3 m_up;
+	D3DXMATRIX m_viewMatrix;
 	D3DXVECTOR3 m_rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	float m_distance = 20.0f;
 	CameraProjectionMode m_projectionMode = CameraProjectionMode::Orthographic;
@@ -37,6 +38,7 @@ public:
 	void SetPos(float x, float y);
 	void SetPos(float x, float y, float z);
 	D3DXVECTOR3 GetPos();
+	const D3DXMATRIX& GetViewMatrix() const;
 	void SetRotation(float x, float y, float z);
 	void SetRotation(const D3DXVECTOR3* rotation);
 	D3DXVECTOR3 GetRotation();

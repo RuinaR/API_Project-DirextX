@@ -5,6 +5,7 @@
 #include "AnimationRender.h"
 #include "FBXRender.h"
 #include "BoxCollider.h"
+#include "Rigidbody2D.h"
 #include "UIImage.h"
 #include "UIButton.h"
 #include "UILabel.h"
@@ -89,9 +90,17 @@ void RegisterEngineComponents()
 			SceneJson::ReadString(componentJson, "fbxPath", fbxPath);
 			return new FBXRender(fbxPath);
 		});
-	factory.Register("BoxCollider", "Box Collider", "Physics", true, [](const std::string&) -> Component*
+	factory.Register("BoxCollider2D", "Box Collider 2D", "Physics2D", true, [](const std::string&) -> Component*
 		{
 			return new BoxCollider(b2_staticBody);
+		});
+	factory.Register("BoxCollider", "Box Collider", "Physics2D", false, [](const std::string&) -> Component*
+		{
+			return new BoxCollider(b2_staticBody);
+		});
+	factory.Register("Rigidbody2D", "Rigidbody 2D", "Physics2D", true, [](const std::string&) -> Component*
+		{
+			return new Rigidbody2D();
 		});
 	factory.Register("UIImage", "UI Image", "UI", true, [](const std::string&) -> Component*
 		{

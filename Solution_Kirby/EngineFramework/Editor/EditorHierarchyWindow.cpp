@@ -6,7 +6,11 @@
 #include "MainFrame.h"
 #include "ObjectManager.h"
 #include "Camera.h"
+#include "Mouse.h"
+#include "Physics2D/Physics2D.h"
+#include "RenderManager.h"
 #include "SceneDataManager.h"
+#include <cfloat>
 
 namespace
 {
@@ -24,6 +28,40 @@ namespace
 	std::string g_pendingOpenSceneName;
 	bool g_shouldExecutePendingSceneAction = false;
 	bool g_shouldOpenSceneChangeConfirmPopup = false;
+	bool g_enableDebugRaycast = false;
+	float g_debugRaycastMaxDistance = 1000.0f;
+	bool g_debugRaycastIncludeTriggers = false;
+	bool g_debugRaycastShowNormal = true;
+	const float kDebugRaycastHitCrossHalfSize = 5.0f;
+	const float kDebugRaycastNormalLength = 20.0f;
+	const D3DCOLOR kDebugRaycastColor = D3DCOLOR_XRGB(255, 0, 0);
+
+	bool TryIntersectRayWithPhysicsPlane(const Ray& ray, D3DXVECTOR3& outPoint, float& outDistance)
+	{
+		const float epsilon = 0.000001f;
+
+		if (fabs(ray.direction.z) <= epsilon)
+		{
+			if (fabs(ray.origin.z) > epsilon)
+			{
+				return false;
+			}
+
+			outPoint = ray.origin;
+			outDistance = 0.0f;
+			return true;
+		}
+
+		const float t = -ray.origin.z / ray.direction.z;
+		if (t < 0.0f)
+		{
+			return false;
+		}
+
+		outPoint = ray.origin + (ray.direction * t);
+		outDistance = t;
+		return true;
+	}
 
 	std::string GetCurrentSceneName()
 	{
@@ -191,6 +229,109 @@ namespace
 		{
 			camera->InitializeView();
 			MarkCurrentSceneDirty();
+		}
+
+		RenderManager* renderManager = RenderManager::GetInstance();
+		if (renderManager != nullptr)
+		{
+			bool colliderDebug = renderManager->IsColliderDebugVisible();
+			if (ImGui::Checkbox("Show Collider Debug", &colliderDebug))
+			{
+				renderManager->SetColliderDebugVisible(colliderDebug);
+			}
+		}
+	}
+
+	void DrawRaycastDebugSection()
+	{
+		if (!ImGui::CollapsingHeader("Raycast Debug", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			return;
+		}
+
+		ImGui::Checkbox("Enable Debug Raycast", &g_enableDebugRaycast);
+		if (!g_enableDebugRaycast)
+		{
+			if (RenderManager::GetInstance() != nullptr)
+			{
+				RenderManager::GetInstance()->ClearImmediateDebugLines();
+			}
+			ImGui::TextDisabled("Enable to inspect the current mouse raycast.");
+			return;
+		}
+
+		if (g_debugRaycastMaxDistance <= 0.0f)
+		{
+			g_debugRaycastMaxDistance = 1.0f;
+		}
+		if (ImGui::DragFloat("Max Distance", &g_debugRaycastMaxDistance, 10.0f, 1.0f, 100000.0f, "%.1f"))
+		{
+			if (g_debugRaycastMaxDistance <= 0.0f)
+			{
+				g_debugRaycastMaxDistance = 1.0f;
+			}
+		}
+		ImGui::Checkbox("Include Triggers", &g_debugRaycastIncludeTriggers);
+		ImGui::Checkbox("Show Hit Normal", &g_debugRaycastShowNormal);
+
+		Mouse* mouse = Mouse::GetInstance();
+		RenderManager* renderManager = RenderManager::GetInstance();
+		if (mouse == nullptr || renderManager == nullptr)
+		{
+			ImGui::TextDisabled("Mouse or RenderManager unavailable");
+			return;
+		}
+
+		const Ray ray = mouse->ScreenPointToRay();
+		RaycastHit2D hit;
+		const bool hasHit = Physics2D::Raycast(ray, hit, g_debugRaycastMaxDistance, g_debugRaycastIncludeTriggers);
+		const D3DXVECTOR3 rayStart = ray.origin;
+		D3DXVECTOR3 rayEnd = ray.origin + (ray.direction * g_debugRaycastMaxDistance);
+		D3DXVECTOR3 planePoint;
+		float planeDistance = 0.0f;
+		if (TryIntersectRayWithPhysicsPlane(ray, planePoint, planeDistance))
+		{
+			if (planeDistance <= g_debugRaycastMaxDistance)
+			{
+				rayEnd = planePoint;
+			}
+		}
+		if (hasHit)
+		{
+			rayEnd = hit.point;
+		}
+
+		renderManager->ClearImmediateDebugLines();
+		renderManager->AddImmediateDebugLine(rayStart, rayEnd, kDebugRaycastColor);
+		if (hasHit)
+		{
+			renderManager->AddImmediateDebugCross(hit.point, kDebugRaycastHitCrossHalfSize, kDebugRaycastColor);
+			if (g_debugRaycastShowNormal)
+			{
+				renderManager->AddImmediateDebugLine(
+					hit.point,
+					hit.point + (hit.normal * kDebugRaycastNormalLength),
+					kDebugRaycastColor);
+			}
+		}
+
+		ImGui::Text("Ray Origin: %.2f, %.2f, %.2f", ray.origin.x, ray.origin.y, ray.origin.z);
+		ImGui::Text("Ray Direction: %.3f, %.3f, %.3f", ray.direction.x, ray.direction.y, ray.direction.z);
+		ImGui::Text("Hit: %s", hasHit ? "true" : "false");
+
+		if (hasHit && hit.gameObject != nullptr)
+		{
+			ImGui::Text("Hit GameObject: %s", hit.gameObject->GetTag().c_str());
+			ImGui::Text("Hit Distance: %.3f", hit.distance);
+			ImGui::Text("Hit Point: %.2f, %.2f, %.2f", hit.point.x, hit.point.y, hit.point.z);
+			ImGui::Text("Hit Normal: %.2f, %.2f, %.2f", hit.normal.x, hit.normal.y, hit.normal.z);
+		}
+		else
+		{
+			ImGui::Text("Hit GameObject: None");
+			ImGui::Text("Hit Distance: N/A");
+			ImGui::Text("Hit Point: N/A");
+			ImGui::Text("Hit Normal: N/A (AABB approximation)");
 		}
 	}
 
@@ -472,6 +613,8 @@ void EditorHierarchyWindow::Draw()
 		DrawSaveSceneAsPopup();
 		ImGui::Separator();
 		DrawCameraSection();
+		ImGui::Separator();
+		DrawRaycastDebugSection();
 		ImGui::Separator();
 		EditorBuildSettingsPanel::Draw();
 		ImGui::Separator();

@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Ray.h"
 
 class Mouse
 {
@@ -23,6 +24,8 @@ public:
 	D3DXVECTOR2 GetDXPos();
 	D3DXVECTOR2 GetWinPos();
 	D3DXVECTOR2 GetGameViewPos();
+	Ray ScreenPointToRay();
+	Ray ScreenPointToRay(const D3DXVECTOR2& screenPos);
 	D3DXVECTOR3 GetWorldPos(const D3DXVECTOR2* cameraPos, float z);
 
 	void SetLeftBtn(bool isDown);

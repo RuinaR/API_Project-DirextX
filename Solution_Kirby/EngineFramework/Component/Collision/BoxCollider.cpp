@@ -24,10 +24,10 @@ BoxCollider::~BoxCollider()
 
 const char* BoxCollider::GetInspectorName() const
 {
-	return "BoxCollider";
+	return "Box Collider 2D";
 }
 
 const char* BoxCollider::GetSerializableType() const
 {
-	return "BoxCollider";
+	return "BoxCollider2D";
 }

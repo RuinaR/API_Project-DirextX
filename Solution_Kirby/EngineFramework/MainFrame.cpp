@@ -119,6 +119,16 @@ namespace
 
 		return false;
 	}
+
+	Collider* GetColliderFromFixture(b2Fixture* fixture)
+	{
+		if (fixture == nullptr)
+		{
+			return nullptr;
+		}
+
+		return reinterpret_cast<Collider*>(fixture->GetUserData().pointer);
+	}
 }
 
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
@@ -450,6 +460,21 @@ LPDIRECT3DDEVICE9 MainFrame::GetDevice()
     return m_pd3dDevice;
 }
 
+const D3DXMATRIX& MainFrame::GetProjectionMatrix() const
+{
+    return m_matProj;
+}
+
+int MainFrame::GetViewportWidth() const
+{
+    return m_width;
+}
+
+int MainFrame::GetViewportHeight() const
+{
+    return m_height;
+}
+
 b2World* MainFrame::GetBox2dWorld()
 {
     return m_pWorld;
@@ -658,8 +683,12 @@ void CollisionListener::BeginContact(b2Contact* contact)
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
-    BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
-    BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+    Collider* dataA = GetColliderFromFixture(fixtureA);
+    Collider* dataB = GetColliderFromFixture(fixtureB);
+	if (dataA == nullptr || dataB == nullptr)
+	{
+		return;
+	}
 
     dataA->GetGameObject()->OnCollisionEnter(dataB);
     dataB->GetGameObject()->OnCollisionEnter(dataA);
@@ -670,8 +699,8 @@ void CollisionListener::EndContact(b2Contact* contact)
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
-	BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
-	BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+	Collider* dataA = GetColliderFromFixture(fixtureA);
+	Collider* dataB = GetColliderFromFixture(fixtureB);
 	if (dataA)
 		dataA->GetGameObject()->OnCollisionExit(dataB);
 	if (dataB)
@@ -683,8 +712,14 @@ void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifo
 	b2Fixture* fixtureA = contact->GetFixtureA();
 	b2Fixture* fixtureB = contact->GetFixtureB();
 
-	BoxCollider* dataA = (BoxCollider*)fixtureA->GetBody()->GetUserData().pointer;
-	BoxCollider* dataB = (BoxCollider*)fixtureB->GetBody()->GetUserData().pointer;
+	UNREFERENCED_PARAMETER(oldManifold);
+
+	Collider* dataA = GetColliderFromFixture(fixtureA);
+	Collider* dataB = GetColliderFromFixture(fixtureB);
+	if (dataA == nullptr || dataB == nullptr)
+	{
+		return;
+	}
 
 	dataA->GetGameObject()->OnCollisionStay(dataB);
 	dataB->GetGameObject()->OnCollisionStay(dataA);

@@ -41,6 +41,47 @@ bool ObjectManager::IsPendingRemove(GameObject* obj)
 	return false;
 }
 
+void ObjectManager::AssignRuntimeObjectId(GameObject* obj)
+{
+	if (obj == nullptr)
+		return;
+
+	if (obj->GetId() >= 0)
+	{
+		if (obj->GetId() >= m_nextRuntimeObjectId)
+		{
+			m_nextRuntimeObjectId = obj->GetId() + 1;
+		}
+		return;
+	}
+
+	obj->SetId(m_nextRuntimeObjectId);
+	m_nextRuntimeObjectId++;
+}
+
+void ObjectManager::ResolveComponentReferences(const std::unordered_map<int, GameObject*>& objectMap)
+{
+	for (list<GameObject*>::iterator objItr = m_objList->begin(); objItr != m_objList->end(); objItr++)
+	{
+		GameObject* obj = *objItr;
+		if (obj == nullptr || obj->GetDestroy())
+			continue;
+
+		vector<Component*>* components = obj->GetComponentVec();
+		if (components == nullptr)
+			continue;
+
+		for (vector<Component*>::iterator componentItr = components->begin(); componentItr != components->end(); componentItr++)
+		{
+			Component* component = *componentItr;
+			if (component == nullptr)
+				continue;
+
+			component->ResolveReferences(objectMap);
+		}
+	}
+}
+
 void ObjectManager::QueueDestroyObject(GameObject* obj)
 {
 	if (obj == nullptr || IsPendingRemove(obj))
@@ -200,6 +241,7 @@ void ObjectManager::AddObject(GameObject* obj)
 	if (obj == nullptr || IsInObjectList(obj) || IsPendingAdd(obj) || IsPendingRemove(obj))
 		return;
 
+	AssignRuntimeObjectId(obj);
 	m_pendingAddObjects.push_back(obj);
 }
 
@@ -292,6 +334,7 @@ void ObjectManager::Initialize()
 {
 	m_objList = new list<GameObject*>();
 	m_selected = nullptr;
+	m_nextRuntimeObjectId = 1;
 }
 
 void ObjectManager::Release()
@@ -438,8 +481,6 @@ std::string ObjectManager::SerializeObjects(int sceneVersion)
 	std::ostringstream oss;
 	oss << "[\n";
 
-	std::map<GameObject*, int> objectIds;
-	int nextObjectId = 1;
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 	{
 		GameObject* obj = *itr;
@@ -447,9 +488,7 @@ std::string ObjectManager::SerializeObjects(int sceneVersion)
 			continue;
 		if (obj->GetTag() == "SceneChanger")
 			continue;
-
-		objectIds[obj] = nextObjectId;
-		nextObjectId++;
+		AssignRuntimeObjectId(obj);
 	}
 
 	bool isFirst = true;
@@ -466,13 +505,12 @@ std::string ObjectManager::SerializeObjects(int sceneVersion)
 			oss << ",\n";
 		}
 		int parentId = -1;
-		std::map<GameObject*, int>::iterator parentItr = objectIds.find(obj->GetParent());
-		if (parentItr != objectIds.end())
+		if (obj->GetParent() != nullptr)
 		{
-			parentId = parentItr->second;
+			parentId = obj->GetParent()->GetId();
 		}
 
-		oss << "    " << obj->Serialize(objectIds[obj], parentId, sceneVersion);
+		oss << "    " << obj->Serialize(obj->GetId(), parentId, sceneVersion);
 		isFirst = false;
 	}
 
@@ -589,7 +627,7 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 	}
 
 	vector<GameObject*> createdObjects;
-	std::map<int, GameObject*> objectMap;
+	std::unordered_map<int, GameObject*> objectMap;
 	for (size_t i = 0; i < objectDataList.size(); i++)
 	{
 		GameObject* obj = GameObject::CreateFromSerializedData(objectDataList[i]);
@@ -617,7 +655,7 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 		if (objectDataList[i].parentId < 0)
 			continue;
 
-		std::map<int, GameObject*>::iterator parentItr = objectMap.find(objectDataList[i].parentId);
+		std::unordered_map<int, GameObject*>::iterator parentItr = objectMap.find(objectDataList[i].parentId);
 		if (parentItr == objectMap.end())
 		{
 			std::cout << "SceneData parent not found. Object is loaded as root: " << objectDataList[i].tag << std::endl;
@@ -631,6 +669,9 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 	{
 		(*itr)->InitializeSet();
 	}
+
+	FlushPendingObjects();
+	ResolveComponentReferences(objectMap);
 	return true;
 }
 

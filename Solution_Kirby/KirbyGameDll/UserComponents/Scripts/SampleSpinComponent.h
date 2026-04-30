@@ -20,10 +20,13 @@ public:
 	const char* GetSerializableType() const override;
 	std::string Serialize() const override;
 	bool Deserialize(const std::string& componentJson) override;
+	void ResolveReferences(const std::unordered_map<int, GameObject*>& objectMap) override;
 
 private:
 	bool m_enabled = true;
 	float m_spinSpeed = 1.0f;
 	bool m_useYAxis = true;
 	bool m_useZAxis = false;
+	GameObject* m_targetObject = nullptr;
+	int m_targetObjectId = -1;
 };

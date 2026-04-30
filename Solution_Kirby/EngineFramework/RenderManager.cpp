@@ -348,6 +348,50 @@ void RenderManager::UnregisterDebug(DebugRender* db)
 	}
 }
 
+void RenderManager::SetColliderDebugVisible(bool visible)
+{
+	m_showColliderDebug = visible;
+}
+
+bool RenderManager::IsColliderDebugVisible() const
+{
+	return m_showColliderDebug;
+}
+
+void RenderManager::ClearImmediateDebugLines()
+{
+	if (m_immediateDebugLines != nullptr)
+	{
+		m_immediateDebugLines->clear();
+	}
+}
+
+void RenderManager::AddImmediateDebugLine(const D3DXVECTOR3& start, const D3DXVECTOR3& end, D3DCOLOR color)
+{
+	if (m_immediateDebugLines == nullptr)
+	{
+		return;
+	}
+
+	DebugLine line;
+	line.start = start;
+	line.end = end;
+	line.color = color;
+	m_immediateDebugLines->push_back(line);
+}
+
+void RenderManager::AddImmediateDebugCross(const D3DXVECTOR3& center, float halfSize, D3DCOLOR color)
+{
+	AddImmediateDebugLine(
+		D3DXVECTOR3(center.x - halfSize, center.y, center.z),
+		D3DXVECTOR3(center.x + halfSize, center.y, center.z),
+		color);
+	AddImmediateDebugLine(
+		D3DXVECTOR3(center.x, center.y - halfSize, center.z),
+		D3DXVECTOR3(center.x, center.y + halfSize, center.z),
+		color);
+}
+
 void RenderManager::Initialize()
 {
 	m_transVec = new vector<ImageRender*>();
@@ -356,6 +400,7 @@ void RenderManager::Initialize()
 	m_debugVec = new vector<DebugRender*>();
 	m_fbxVec = new vector<FBXRender*>();
 	m_uiRenderVec = new vector<UIRenderEntry>();
+	m_immediateDebugLines = new vector<DebugLine>();
 	m_nextUIRenderRegistrationOrder = 0;
 
 	CreateRenderTargetTexture();
@@ -389,6 +434,37 @@ bool RenderManager::CreateRenderTargetTexture()
 		nullptr);
 
 	return SUCCEEDED(hr) && renderTargetTexture != nullptr;
+}
+
+void RenderManager::RenderImmediateDebugLines()
+{
+	if (m_immediateDebugLines == nullptr || m_immediateDebugLines->empty())
+	{
+		return;
+	}
+
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetDevice() : nullptr;
+	if (device == nullptr)
+	{
+		return;
+	}
+
+	device->SetTexture(0, nullptr);
+	device->SetFVF(D3DFVF_DEBUGVERTEX);
+	device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
+	for (vector<DebugLine>::iterator itr = m_immediateDebugLines->begin(); itr != m_immediateDebugLines->end(); ++itr)
+	{
+		DEBUGVERTEX vertices[] =
+		{
+			{ itr->start.x, itr->start.y, itr->start.z, itr->color },
+			{ itr->end.x, itr->end.y, itr->end.z, itr->color },
+		};
+		device->DrawPrimitiveUP(D3DPT_LINELIST, 1, vertices, sizeof(DEBUGVERTEX));
+	}
+
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
 void RenderManager::EditUpdate()
@@ -466,10 +542,16 @@ void RenderManager::EditUpdate()
 		}
 		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 		//DebugRender
-		for (vector<DebugRender*>::iterator itr = m_debugVec->begin(); itr != m_debugVec->end(); itr++)
+		if (m_showColliderDebug)
 		{
-			(*itr)->DebugRenderUpdate();
+			device->SetRenderState(D3DRS_ZENABLE, FALSE);
+			for (vector<DebugRender*>::iterator itr = m_debugVec->begin(); itr != m_debugVec->end(); itr++)
+			{
+				(*itr)->DebugRenderUpdate();
+			}
+			device->SetRenderState(D3DRS_ZENABLE, TRUE);
 		}
+		RenderImmediateDebugLines();
 		RenderUIQueue();
 		device->SetTexture(0, nullptr);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
@@ -677,6 +759,10 @@ void RenderManager::Release()
 	m_btnVec->clear();
 	m_debugVec->clear();
 	m_uiRenderVec->clear();
+	if (m_immediateDebugLines != nullptr)
+	{
+		m_immediateDebugLines->clear();
+	}
 
 	delete m_transVec;
 	delete m_noTransVec;
@@ -684,6 +770,7 @@ void RenderManager::Release()
 	delete m_debugVec;
 	delete m_fbxVec;
 	delete m_uiRenderVec;
+	delete m_immediateDebugLines;
 
 	if (renderTargetTexture != nullptr)
 	{

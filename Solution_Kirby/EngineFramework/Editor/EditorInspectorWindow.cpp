@@ -9,6 +9,8 @@
 
 namespace
 {
+	const char* kHierarchyGameObjectPayload = "HierarchyGameObject";
+
 	void MarkCurrentSceneDirty()
 	{
 		if (WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
@@ -184,6 +186,72 @@ namespace
 
 		ImGui::EndPopup();
 	}
+}
+
+bool EditorInspectorWindow::DrawGameObjectReferenceField(const char* label, GameObject*& ref, int& refObjectId)
+{
+	bool changed = false;
+	const char* safeLabel = label != nullptr ? label : "GameObject";
+
+	if (ref != nullptr && ref->GetDestroy())
+	{
+		ref = nullptr;
+	}
+
+	std::string displayText = "(None)";
+	if (ref != nullptr)
+	{
+		displayText = ref->GetTag();
+		displayText += " [id=" + std::to_string(ref->GetId()) + "]";
+	}
+	else if (refObjectId >= 0)
+	{
+		displayText = "(Missing) [id=" + std::to_string(refObjectId) + "]";
+	}
+
+	ImGui::PushID(safeLabel);
+	ImGui::Text("%s", safeLabel);
+	ImGui::SameLine();
+	ImGui::Button(displayText.c_str(), ImVec2(220.0f, 0.0f));
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kHierarchyGameObjectPayload))
+		{
+			if (payload->DataSize == sizeof(GameObject*))
+			{
+				GameObject* droppedObject = *static_cast<GameObject* const*>(payload->Data);
+				const int droppedObjectId = droppedObject != nullptr ? droppedObject->GetId() : -1;
+				if (ref != droppedObject || refObjectId != droppedObjectId)
+				{
+					ref = droppedObject;
+					refObjectId = droppedObjectId;
+					changed = true;
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	ImGui::SameLine();
+	const bool hasReference = ref != nullptr || refObjectId >= 0;
+	if (!hasReference)
+	{
+		ImGui::BeginDisabled();
+	}
+	if (ImGui::Button("Clear"))
+	{
+		ref = nullptr;
+		refObjectId = -1;
+		changed = true;
+	}
+	if (!hasReference)
+	{
+		ImGui::EndDisabled();
+	}
+
+	ImGui::PopID();
+	return changed;
 }
 
 void EditorInspectorWindow::Draw()

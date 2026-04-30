@@ -200,6 +200,7 @@
     <ClCompile Include="FbxTool.cpp" />
     <ClCompile Include="Rendering\Component\ImageRender.cpp" />
     <ClCompile Include="Component\Collision\BoxCollider.cpp" />
+    <ClCompile Include="Component\Physics\Rigidbody2D.cpp" />
     <ClCompile Include="Rendering\Buffer\Buffer.cpp" />
     <ClCompile Include="Rendering\Camera\Camera.cpp" />
     <ClCompile Include="Component\Collision\Collider.cpp" />
@@ -212,6 +213,7 @@
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="Physics2D\Physics2D.cpp" />
     <ClCompile Include="Scene\SceneDataManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -248,6 +250,7 @@
     <ClInclude Include="FbxTool.h" />
     <ClInclude Include="Rendering\Component\ImageRender.h" />
     <ClInclude Include="Component\Collision\BoxCollider.h" />
+    <ClInclude Include="Component\Physics\Rigidbody2D.h" />
     <ClInclude Include="Rendering\Buffer\Buffer.h" />
     <ClInclude Include="Rendering\Camera\Camera.h" />
     <ClInclude Include="Component\Collision\Collider.h" />
@@ -257,9 +260,11 @@
     <ClInclude Include="Debugging\DebugWindow.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input\InputString.h" />
+    <ClInclude Include="Math\Ray.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="Physics2D\Physics2D.h" />
     <ClInclude Include="Utility\ObjectPool.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ImguiButton.h" />

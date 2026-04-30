@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <unordered_map>
 class GameObject;
 class Collider;
 
@@ -35,4 +36,5 @@ public:
 	virtual const char* GetSerializableType() const;
 	virtual std::string Serialize() const;
 	virtual bool Deserialize(const std::string& componentJson);
+	virtual void ResolveReferences(const std::unordered_map<int, GameObject*>& objectMap);
 };

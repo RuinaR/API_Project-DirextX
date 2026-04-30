@@ -1,4 +1,33 @@
 #include "pch.h"
+#include "Mouse.h"
+#include "Camera.h"
+
+namespace
+{
+	D3DVIEWPORT9 CreateRayViewport()
+	{
+		D3DVIEWPORT9 viewport = {};
+		viewport.X = 0;
+		viewport.Y = 0;
+		viewport.Width = static_cast<DWORD>(max(1, MainFrame::GetInstance()->GetViewportWidth()));
+		viewport.Height = static_cast<DWORD>(max(1, MainFrame::GetInstance()->GetViewportHeight()));
+		viewport.MinZ = 0.0f;
+		viewport.MaxZ = 1.0f;
+		return viewport;
+	}
+
+	Ray CreateFallbackRay()
+	{
+		Camera* camera = Camera::GetInstance();
+		if (camera == nullptr)
+		{
+			return Ray();
+		}
+
+		return Ray(camera->GetPos(), camera->GetForward());
+	}
+}
+
 Mouse* Mouse::mPthis = nullptr;
 
 void Mouse::Create()
@@ -82,6 +111,46 @@ D3DXVECTOR2 Mouse::GetGameViewPos()
 	}
 
 	return localPos;
+}
+
+Ray Mouse::ScreenPointToRay()
+{
+	return ScreenPointToRay(GetGameViewPos());
+}
+
+Ray Mouse::ScreenPointToRay(const D3DXVECTOR2& screenPos)
+{
+	Camera* camera = Camera::GetInstance();
+	MainFrame* mainFrame = MainFrame::GetInstance();
+	if (camera == nullptr || mainFrame == nullptr)
+	{
+		return Ray();
+	}
+
+	const D3DVIEWPORT9 viewport = CreateRayViewport();
+	const D3DXMATRIX& viewMatrix = camera->GetViewMatrix();
+	const D3DXMATRIX& projectionMatrix = mainFrame->GetProjectionMatrix();
+	D3DXMATRIX identityWorld;
+	D3DXMatrixIdentity(&identityWorld);
+
+	D3DXVECTOR3 nearScreenPoint(screenPos.x, screenPos.y, 0.0f);
+	D3DXVECTOR3 farScreenPoint(screenPos.x, screenPos.y, 1.0f);
+	D3DXVECTOR3 nearWorldPoint;
+	D3DXVECTOR3 farWorldPoint;
+
+	if (D3DXVec3Unproject(&nearWorldPoint, &nearScreenPoint, &viewport, &projectionMatrix, &viewMatrix, &identityWorld) == nullptr
+		|| D3DXVec3Unproject(&farWorldPoint, &farScreenPoint, &viewport, &projectionMatrix, &viewMatrix, &identityWorld) == nullptr)
+	{
+		return CreateFallbackRay();
+	}
+
+	if (camera->GetProjectionMode() == CameraProjectionMode::Orthographic)
+	{
+		return Ray(nearWorldPoint, camera->GetForward());
+	}
+
+	D3DXVECTOR3 direction = farWorldPoint - nearWorldPoint;
+	return Ray(nearWorldPoint, direction);
 }
 
 D3DXVECTOR3 Mouse::GetWorldPos(const D3DXVECTOR2* cameraPos, float z)

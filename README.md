@@ -363,3 +363,81 @@ SceneData 저장 구조:
 - 사운드 컴포넌트/데이터 구조 추가 후 리소스 최소 복사와 실제 연결
 - 사용자 Component/Action 예제 확장
 - SceneData 기반 워크플로우 계속 강화
+
+## 최신 구조 갱신 (2026-04-30)
+
+### Engine / Editor / GameDll 방향 정리
+
+현재 구조 목표는 다음과 같습니다.
+
+- `EngineFramework`는 엔진 런타임과 에디터 기반 코드를 함께 포함하고 있으나, 장기적으로는 `EngineRuntime`과 `EngineEditor` 역할을 더 분명히 나누는 방향으로 정리 중입니다.
+- `KirbyGameDll`은 게임별 `Component`, `Action`, bootstrap 코드를 두는 확장 계층으로 유지합니다.
+- 에디터 실행 경로는 `EngineRuntime + EngineEditor + KirbyGameDll`, 게임 실행 경로는 `EngineRuntime + KirbyGameDll`에 가깝게 수렴시키는 것이 현재 목표입니다.
+
+### Physics2D / Collider / Rigidbody2D 진행 상태
+
+물리 방향은 이제 3D 물리가 아니라 **2D 전용 Physics2D** 기준으로 정리하고 있습니다.
+
+현재 반영된 내용:
+
+- `BoxCollider`의 canonical SceneData type은 `BoxCollider2D`입니다.
+- 기존 SceneData 호환을 위해 legacy alias `BoxCollider`도 계속 로드됩니다.
+- Add Component UI에는 `BoxCollider2D`만 노출됩니다.
+- `Rigidbody2D` 컴포넌트가 추가되어 Inspector, Serialize/Deserialize, 기본 Force/Velocity API 뼈대가 들어가 있습니다.
+- `Rigidbody2D`가 있으면 collider는 그 body를 사용하고, 없으면 collider가 static fallback body를 유지합니다.
+- `Rigidbody2D`만 삭제하면 collider는 fallback static body로 복귀합니다.
+- `Collider`만 삭제하면 fixture만 제거되고 `Rigidbody2D` body는 유지됩니다.
+- collision callback은 body userData가 아니라 fixture userData의 `Collider*`를 우선 사용하도록 정리했습니다.
+
+현재 제약:
+
+- 클래스명/파일명은 아직 `Collider`, `BoxCollider` 그대로이며, `Collider2D`, `BoxCollider2D` rename은 후속 단계입니다.
+- `GameObject::m_box` 직접 접근 제거와 다중 collider 일반화는 아직 완전히 끝나지 않았습니다.
+
+### Runtime 입력 / Camera / Raycast 진행 상태
+
+입력과 피킹 쪽도 다음처럼 정리되었습니다.
+
+- UI 입력은 계속 `Mouse::GetGameViewPos()` 기반 screen/client 좌표를 사용합니다.
+- `Mouse::ScreenPointToRay()`가 추가되어 3D ray를 만들 수 있습니다.
+- `Math/Ray.h`가 추가되었고 `Ray`는 `origin`, `direction`을 가집니다.
+- `Physics2D::Raycast(const Ray&, ...)` 최소 구현이 들어가 있으며, 현재는 `ObjectManager` 순회 + `BoxCollider` AABB 판정 기반입니다.
+- 에디터 모드에서는 Raycast Debug 텍스트와 debug line/cross 시각화가 동작합니다.
+- collider debug render와 ray debug render는 모두 에디터 전용이며 `GameUpdate()`에는 들어가지 않습니다.
+
+### GameObject Reference Field / Scene Resolve 진행 상태
+
+Inspector 드래그 앤 드롭 참조 등록도 1차 기반이 들어갔습니다.
+
+- `HierarchyGameObject` payload를 Inspector 참조 필드에서 받을 수 있습니다.
+- `EditorInspectorWindow::DrawGameObjectReferenceField(...)` helper가 추가되었습니다.
+- `GameObject`는 runtime object id를 유지합니다.
+- SceneData 로드 후 `objectId -> GameObject*` map을 만들어 모든 component의 `ResolveReferences(...)`를 호출합니다.
+- 샘플로 `SampleSpinComponent`에 `GameObject* + targetObjectId` 패턴이 적용되어 저장/복원이 됩니다.
+
+### 현재 저장/복원 정책 보강
+
+최근 작업 기준으로 SceneData에 저장하지 않는 대표 항목은 다음과 같습니다.
+
+- raw pointer
+- `b2Body*`
+- fixture pointer
+- DirectX runtime pointer
+- callback/lambda 본체
+- raycast debug 상태
+
+반대로 저장하는 대표 항목은 다음과 같습니다.
+
+- `BoxCollider2D`, `Rigidbody2D` 같은 canonical component type
+- Rigidbody2D 설정값 (`bodyType`, `drag`, `gravityScale`, `collisionDetection`, `interpolate` 등)
+- GameObject reference id (`targetObjectId` 같은 정수 id)
+
+### 다음 Physics2D 단계 메모
+
+다음으로 이어갈 만한 Physics2D 작업은 아래와 같습니다.
+
+- `GameObject::m_box` 직접 body 접근 제거
+- `Collider -> Collider2D`, `BoxCollider -> BoxCollider2D` 클래스/파일 rename
+- `CircleCollider2D` 추가
+- `Physics2D::Raycast`를 Box2D world raycast 기반으로 정밀화할지 검토
+- Rigidbody2D를 transform sync의 단일 주체로 더 명확히 정리

@@ -66,3 +66,8 @@ bool Component::Deserialize(const std::string& componentJson)
 {
 	return true;
 }
+
+void Component::ResolveReferences(const std::unordered_map<int, GameObject*>& objectMap)
+{
+	(void)objectMap;
+}

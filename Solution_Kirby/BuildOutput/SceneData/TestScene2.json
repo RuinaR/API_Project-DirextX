@@ -37,7 +37,7 @@
       "active": true,
       "transform": {
         "position": { "x": 89, "y": 194, "z": 225 },
-        "rotation": { "x": 0, "y": 9163, "z": 9032 },
+        "rotation": { "x": 0, "y": 9297, "z": 9166 },
         "size": { "x": 1, "y": 1, "z": 1 }
       },
       "components": [
@@ -113,7 +113,7 @@
       "active": true,
       "transform": {
         "position": { "x": 0, "y": 0, "z": 208 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 134, "z": 134 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [

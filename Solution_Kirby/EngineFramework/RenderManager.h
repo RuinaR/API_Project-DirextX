@@ -26,7 +26,15 @@ private:
 		unsigned int registrationOrder = 0;
 	};
 
+	struct DebugLine
+	{
+		D3DXVECTOR3 start = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 end = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DCOLOR color = D3DCOLOR_XRGB(255, 0, 0);
+	};
+
 	vector<UIRenderEntry>* m_uiRenderVec;
+	vector<DebugLine>* m_immediateDebugLines;
 	unsigned int m_nextUIRenderRegistrationOrder = 0;
 
 	ImVec2 m_winPos;
@@ -34,11 +42,13 @@ private:
 	D3DXVECTOR2 m_gameViewScreenPos = D3DXVECTOR2(0.0f, 0.0f);
 	D3DXVECTOR2 m_gameViewSize = D3DXVECTOR2(0.0f, 0.0f);
 	bool m_useScreenSpaceUIMouse = false;
+	bool m_showColliderDebug = false;
 	LPDIRECT3DTEXTURE9 renderTargetTexture = nullptr;
 
 	float CalculateCameraDepth(ImageRender* ir);
 	void SortWorldRenderQueues();
 	void SortUIQueue();
+	void RenderImmediateDebugLines();
 	void RenderUIQueue();
 public:
 	static void Create();
@@ -61,6 +71,11 @@ public:
 	void UnregisterBtn(ImguiButton* btn);
 	void RegisterDebug(DebugRender* db);
 	void UnregisterDebug(DebugRender* db);
+	void SetColliderDebugVisible(bool visible);
+	bool IsColliderDebugVisible() const;
+	void ClearImmediateDebugLines();
+	void AddImmediateDebugLine(const D3DXVECTOR3& start, const D3DXVECTOR3& end, D3DCOLOR color = D3DCOLOR_XRGB(255, 0, 0));
+	void AddImmediateDebugCross(const D3DXVECTOR3& center, float halfSize = 5.0f, D3DCOLOR color = D3DCOLOR_XRGB(255, 0, 0));
 
 	void Initialize();
 	void EditUpdate();

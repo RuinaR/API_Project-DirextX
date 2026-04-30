@@ -13,6 +13,8 @@ protected:
 	bool m_isTrigger = false;
 
 	b2Body* m_body = nullptr;
+	b2Fixture* m_fixture = nullptr;
+	bool m_ownsBody = false;
 	b2BodyType m_type;
 public:
 	
@@ -32,6 +34,8 @@ public:
 	void SetTrigger(bool b);
 	bool GetTrigger();
 	b2Body* GetBody();
+	void ClearBodyReferenceIfMatches(b2Body* body);
+	bool OwnsBody() const;
 
 	// DebugRender을(를) 통해 상속됨
 	virtual void DebugRenderUpdate() override;

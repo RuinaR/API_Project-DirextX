@@ -20,6 +20,7 @@ class GameObject
 protected:
     bool m_isDestroy = false;
     bool m_setActive = true;
+    int m_objectId = -1;
     string m_tag = "";
     D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
     D3DXVECTOR3 m_size = { 0.0f, 0.0f, 0.0f };
@@ -65,6 +66,8 @@ public:
 
     void SetDestroy(bool destroy);
     bool GetDestroy();
+    int GetId() const;
+    void SetId(int objectId);
     void SetTag(string tag);
     string GetTag();
     void SetActive(bool isActive);
