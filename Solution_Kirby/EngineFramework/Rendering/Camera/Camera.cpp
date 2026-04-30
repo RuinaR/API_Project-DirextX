@@ -33,7 +33,12 @@ void Camera::InitializeView()
 
 void Camera::SetPos(float x, float y)
 {
-	mPthis->m_at = { x, y, 0.0f };
+	SetPos(x, y, 0.0f);
+}
+
+void Camera::SetPos(float x, float y, float z)
+{
+	mPthis->m_at = { x, y, z };
 	mPthis->UpdateViewMatrix();
 }
 

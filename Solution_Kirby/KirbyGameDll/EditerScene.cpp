@@ -73,20 +73,19 @@ void EditerScene::StartEdit()
 
 	D3DXVECTOR2 startButtonPosition(40.0f, 90.0f);
 	D3DXVECTOR2 startButtonSize(150.0f, 42.0f);
-	CreateEditorSceneButton(&startButtonPosition, L"StartScene Load", bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()), "ChangeStartScene", 10, &startButtonSize, 14);
+	UIButton* startButton = CreateEditorSceneButton(&startButtonPosition, L"StartScene Load", nullptr, "ChangeStartScene", 10, &startButtonSize, 14);
+	UIActionRegistry::Bind(startButton, "ChangeStartScene");
 }
 
 void EditerScene::Init()
 {
 	m_bg = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\BG.bmp");
 	SceneChanger::Create();
-	UIActionRegistry::RegisterAction("ChangeStartScene", bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
 }
 
 void EditerScene::Release()
 {
 	SceneChanger::Destroy();
-	UIActionRegistry::UnregisterAction("ChangeStartScene");
 }
 
 void EditerScene::Start()

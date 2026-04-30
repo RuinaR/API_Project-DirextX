@@ -8,6 +8,8 @@
 #include "SceneDataManager.h"
 #include "ComponentFactory.h"
 #include "GameComponentRegistry.h"
+#include "SceneChanger.h"
+#include "UIActionRegistry.h"
 
 namespace
 {
@@ -29,6 +31,34 @@ namespace
 		}
 		return new StartScene();
 	}
+
+	void RegisterSceneChangerAction(const std::string& actionKey, void (SceneChanger::*action)())
+	{
+		UIActionRegistry::RegisterAction(actionKey, [action]()
+		{
+			SceneChanger* sceneChanger = SceneChanger::GetInstance();
+			if (sceneChanger == nullptr)
+			{
+				return;
+			}
+
+			(sceneChanger->*action)();
+		});
+	}
+
+	void RegisterGameUIActions(RenderType type)
+	{
+		RegisterSceneChangerAction("ChangeGameScene", &SceneChanger::ChangeGameScene);
+		RegisterSceneChangerAction("ChangeStartScene", &SceneChanger::ChangeStartScene);
+
+		if (type == RenderType::Edit)
+		{
+			RegisterSceneChangerAction("ChangeEditScene", &SceneChanger::ChangeEditScene);
+			return;
+		}
+
+		UIActionRegistry::RegisterAction("ChangeEditScene", []() {});
+	}
 }
 
 
@@ -43,6 +73,7 @@ bool KirbyGame::Initialize(HINSTANCE hInst, RenderType type)
 {
 	RegisterEngineComponents();
 	RegisterGameComponents(ComponentFactory::GetInstance());
+	RegisterGameUIActions(type);
 	MainFrame::Create(hInst);
 	const std::string startupSceneName = GetStartupSceneName();
 	Scene* startupScene = CreateSceneByName(startupSceneName);
@@ -92,6 +123,7 @@ void KirbyGame::AllStart()
 
 void KirbyGame::AllRelease()
 {
+	UIActionRegistry::Clear();
 	MainFrame::Destroy();
 }
 

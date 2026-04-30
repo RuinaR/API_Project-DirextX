@@ -23,6 +23,7 @@ public:
 
 	void InitializeView();
 	void SetPos(float x, float y);
+	void SetPos(float x, float y, float z);
 	D3DXVECTOR3 GetPos();
 	void SetRotation(float x, float y, float z);
 	void SetRotation(const D3DXVECTOR3* rotation);

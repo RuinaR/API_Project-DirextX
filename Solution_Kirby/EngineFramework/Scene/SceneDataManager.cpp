@@ -50,7 +50,7 @@ namespace
 		SceneJson::ReadVector3(cameraJson, "position", &position);
 		SceneJson::ReadVector3(cameraJson, "rotation", &rotation);
 
-		Camera::GetInstance()->SetPos(position.x, position.y);
+		Camera::GetInstance()->SetPos(position.x, position.y, position.z);
 		Camera::GetInstance()->SetRotation(&rotation);
 	}
 

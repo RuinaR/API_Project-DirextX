@@ -69,24 +69,22 @@ void GameScene::StartGame()
 	StageMaker::GetInstance()->StageStart();
 	D3DXVECTOR2 gameSceneButtonPosition(40.0f, 40.0f);
 	D3DXVECTOR2 startSceneButtonPosition(40.0f, 125.0f);
-	CreateSceneButton(&gameSceneButtonPosition, L"GameScene Load", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()), "ChangeGameScene");
-	CreateSceneButton(&startSceneButtonPosition, L"StartScene Load", bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()), "ChangeStartScene");
+	UIButton* gameSceneButton = CreateSceneButton(&gameSceneButtonPosition, L"GameScene Load", nullptr, "ChangeGameScene");
+	UIButton* startSceneButton = CreateSceneButton(&startSceneButtonPosition, L"StartScene Load", nullptr, "ChangeStartScene");
+	UIActionRegistry::Bind(gameSceneButton, "ChangeGameScene");
+	UIActionRegistry::Bind(startSceneButton, "ChangeStartScene");
 }
 
 void GameScene::Init()
 {
 	m_bg = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\BG.bmp");
 	SceneChanger::Create();
-	UIActionRegistry::RegisterAction("ChangeGameScene", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
-	UIActionRegistry::RegisterAction("ChangeStartScene", bind(&SceneChanger::ChangeStartScene, SceneChanger::GetInstance()));
 	StageMaker::Create();
 }
 
 void GameScene::Release()
 {
 	SceneChanger::Destroy();
-	UIActionRegistry::UnregisterAction("ChangeGameScene");
-	UIActionRegistry::UnregisterAction("ChangeStartScene");
 	StageMaker::Destroy();
 }
 

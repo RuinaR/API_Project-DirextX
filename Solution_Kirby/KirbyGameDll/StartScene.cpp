@@ -11,15 +11,11 @@ void StartScene::Init()
 {
 	Camera::GetInstance()->SetPos(0.0f, 0.0f);
 	SceneChanger::Create();
-	UIActionRegistry::RegisterAction("ChangeGameScene", bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
-	UIActionRegistry::RegisterAction("ChangeEditScene", bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
 	m_bg = ResourceManager::GetInstance()->GetTexture("Bitmaps\\obj\\BG.bmp");
 }
 
 void StartScene::Release()
 {
-	UIActionRegistry::UnregisterAction("ChangeGameScene");
-	UIActionRegistry::UnregisterAction("ChangeEditScene");
 	SceneChanger::Destroy();
 }
 
@@ -48,7 +44,7 @@ void StartScene::BuildInitialSceneObjects()
 	gameButton->SetStateColors(D3DCOLOR_ARGB(255, 245, 245, 245), D3DCOLOR_ARGB(255, 215, 235, 255), D3DCOLOR_ARGB(255, 180, 205, 230));
 	gameButton->SetOrderInLayer(10);
 	gameButton->SetActionKey("ChangeGameScene");
-	gameButton->SetOnClick(bind(&SceneChanger::ChangeGameScene, SceneChanger::GetInstance()));
+	UIActionRegistry::Bind(gameButton, "ChangeGameScene");
 
 	GameObject* gameLabelObj = new GameObject();
 	UILabel* gameLabel = new UILabel();
@@ -75,7 +71,7 @@ void StartScene::BuildInitialSceneObjects()
 	editButton->SetStateColors(D3DCOLOR_ARGB(255, 245, 245, 245), D3DCOLOR_ARGB(255, 225, 240, 220), D3DCOLOR_ARGB(255, 190, 215, 185));
 	editButton->SetOrderInLayer(10);
 	editButton->SetActionKey("ChangeEditScene");
-	editButton->SetOnClick(bind(&SceneChanger::ChangeEditScene, SceneChanger::GetInstance()));
+	UIActionRegistry::Bind(editButton, "ChangeEditScene");
 
 	GameObject* editLabelObj = new GameObject();
 	UILabel* editLabel = new UILabel();

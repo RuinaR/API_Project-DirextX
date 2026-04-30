@@ -7,10 +7,19 @@ WindowFrame* WindowFrame::m_Pthis = nullptr;
 
 namespace
 {
+	constexpr DWORD kFixedResolutionWindowStyle =
+		WS_OVERLAPPED |
+		WS_CAPTION |
+		WS_SYSMENU |
+		WS_MINIMIZEBOX |
+		WS_CLIPSIBLINGS |
+		WS_CLIPCHILDREN;
+
 	RECT BuildStartupWindowRect()
 	{
 		RECT rect = { 0, 0, DRAWWINDOWW, DRAWWINDOWH };
-		AdjustWindowRect(&rect, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, FALSE);
+		// 현재 엔진은 고정 해상도 기반이므로 실행 중 창 리사이즈와 최대화를 막는다.
+		AdjustWindowRect(&rect, kFixedResolutionWindowStyle, FALSE);
 		return rect;
 	}
 }
@@ -170,12 +179,7 @@ void WindowFrame::BuildWindow()
 
 	m_Pthis->m_hWnd =
 		CreateWindowW(WndClass.lpszClassName, kWindowTitle,
-			WS_OVERLAPPED | 
-			WS_CAPTION | 
-			WS_SYSMENU | 
-			WS_MINIMIZEBOX | 
-			WS_CLIPSIBLINGS | 
-			WS_CLIPCHILDREN,
+			kFixedResolutionWindowStyle,
 			100, 100,
 			startupRect.right - startupRect.left,
 			startupRect.bottom - startupRect.top,

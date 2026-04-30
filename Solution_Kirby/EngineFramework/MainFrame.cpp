@@ -153,9 +153,20 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // 키보드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // 게임패드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    if (m_type == RenderType::Edit)
+    {
+        // 에디터 모드에서는 ImGui 툴 창을 메인 창 밖으로 분리할 수 있게 멀티 뷰포트를 켠다.
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    }
     io.ConfigWindowsResizeFromEdges = false;
 
     ImGui::StyleColorsDark();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
     ImGui_ImplWin32_Init(m_hWnd);
     ImGui_ImplDX9_Init(m_pd3dDevice);
 }
@@ -328,9 +339,10 @@ b2World* MainFrame::GetBox2dWorld()
 
 void MainFrame::RequestResize(UINT width, UINT height)
 {
-    m_pendingResize = true;
-    m_pendingResizeWidth = width > 0 ? width : 1u;
-    m_pendingResizeHeight = height > 0 ? height : 1u;
+    UNREFERENCED_PARAMETER(width);
+    UNREFERENCED_PARAMETER(height);
+    // 현재 엔진은 고정 해상도 기반이며 실행 중 창 리사이즈를 지원하지 않는다.
+    m_pendingResize = false;
 }
 
 bool MainFrame::HandleResize(UINT width, UINT height)
