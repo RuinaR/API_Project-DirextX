@@ -589,6 +589,12 @@ namespace
 
 		if (exitCode != 0)
 		{
+			if (exitCode == 9009)
+			{
+				SetBuildGameResult("MSBuild를 찾지 못했습니다. Visual Studio 또는 Visual Studio Build Tools를 설치한 뒤 에디터를 다시 실행하세요.");
+				return false;
+			}
+
 			SetBuildGameResult(
 				"Release|x64 게임 빌드에 실패했습니다. exitCode=" + std::to_string(static_cast<unsigned long long>(exitCode)) +
 				", script=" + projectMsbuildScriptPath);

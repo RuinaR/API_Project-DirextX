@@ -2,3 +2,15 @@
 !Tools/
 !Tools/MSBuild/
 !Tools/MSBuild/msbuild.cmd
+
+# Build output package: keep folder structure only.
+/BuildOutput/*
+!/BuildOutput/.gitkeep
+!/BuildOutput/SceneData/
+!/BuildOutput/Resources/
+
+/BuildOutput/SceneData/*
+!/BuildOutput/SceneData/.gitkeep
+
+/BuildOutput/Resources/*
+!/BuildOutput/Resources/.gitkeep

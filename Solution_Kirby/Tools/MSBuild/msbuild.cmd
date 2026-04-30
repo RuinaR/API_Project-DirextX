@@ -57,5 +57,9 @@ if exist "%MSBUILD_EXE%" (
     exit /b %ERRORLEVEL%
 )
 
-echo MSBuild.exe not found.
-exit /b 1
+echo [KirbyEngine] MSBuild.exe not found.
+echo [KirbyEngine] Install one of the following:
+echo [KirbyEngine] - Visual Studio 2022/2025 Community, Professional, or Enterprise
+echo [KirbyEngine] - Visual Studio Build Tools with MSBuild
+echo [KirbyEngine] After installation, restart the editor and try Build Game again.
+exit /b 9009
