@@ -22,110 +22,41 @@
     <Filter Include="Include">
       <UniqueIdentifier>{b6eb1d8e-2b96-412a-b344-31c138402a79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UserActions">
+      <UniqueIdentifier>{e1e50566-95c7-44bf-9631-416a5fd06065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserComponents">
+      <UniqueIdentifier>{7af9f049-a689-44e9-a0f2-90dbd27ef53c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AttackEvent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="AttakObject.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ChangeObject.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Door.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Edit.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="LandChecker.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="MonsterAI.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneChanger.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="StageMaker.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="EditerScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="StartScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\plugin.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\PluginManager.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="KirbyGame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="FBXRotateObj.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="UserActions\GameActionRegistry.h">
+      <Filter>UserActions</Filter>
     </ClInclude>
-    <ClInclude Include="GameComponentRegistry.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="UserComponents\GameComponentRegistry.h">
+      <Filter>UserComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\UserComponentPlaceholder.h">
+      <Filter>UserComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\UserComponentRegistration.h">
+      <Filter>UserComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\SampleSpinComponent.h">
+      <Filter>UserComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="AttackEvent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="AttakObject.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="ChangeObject.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Door.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Edit.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="LandChecker.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="MonsterAI.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneChanger.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="StageMaker.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="EditerScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="StartScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="KirbyGame.cpp">
@@ -134,11 +65,14 @@
     <ClCompile Include="..\include\PluginManager.cpp">
       <Filter>Include</Filter>
     </ClCompile>
-    <ClCompile Include="FBXRotateObj.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="UserActions\GameActionRegistry.cpp">
+      <Filter>UserActions</Filter>
     </ClCompile>
-    <ClCompile Include="GameComponentRegistry.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="UserComponents\GameComponentRegistry.cpp">
+      <Filter>UserComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\SampleSpinComponent.cpp">
+      <Filter>UserComponents</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

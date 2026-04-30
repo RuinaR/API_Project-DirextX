@@ -110,8 +110,9 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -173,44 +174,20 @@
   <ItemGroup>
     <ClInclude Include="..\include\plugin.h" />
     <ClInclude Include="..\include\PluginManager.h" />
-    <ClInclude Include="AttackEvent.h" />
-    <ClInclude Include="AttakObject.h" />
-    <ClInclude Include="ChangeObject.h" />
-    <ClInclude Include="Door.h" />
-    <ClInclude Include="Edit.h" />
-    <ClInclude Include="EditerScene.h" />
-    <ClInclude Include="FBXRotateObj.h" />
-    <ClInclude Include="GameComponentRegistry.h" />
-    <ClInclude Include="game.h" />
-    <ClInclude Include="GameScene.h" />
     <ClInclude Include="KirbyGame.h" />
-    <ClInclude Include="LandChecker.h" />
-    <ClInclude Include="MonsterAI.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SceneChanger.h" />
-    <ClInclude Include="StageMaker.h" />
-    <ClInclude Include="StartScene.h" />
+    <ClInclude Include="UserComponents\GameComponentRegistry.h" />
+    <ClInclude Include="UserActions\GameActionRegistry.h" />
+    <ClInclude Include="UserComponents\UserComponentPlaceholder.h" />
+    <ClInclude Include="UserComponents\UserComponentRegistration.h" />
+    <ClInclude Include="UserComponents\SampleSpinComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\PluginManager.cpp" />
-    <ClCompile Include="AttackEvent.cpp" />
-    <ClCompile Include="AttakObject.cpp" />
-    <ClCompile Include="ChangeObject.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="Door.cpp" />
-    <ClCompile Include="Edit.cpp" />
-    <ClCompile Include="EditerScene.cpp" />
-    <ClCompile Include="FBXRotateObj.cpp" />
-    <ClCompile Include="GameComponentRegistry.cpp" />
-    <ClCompile Include="game.cpp" />
-    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="KirbyGame.cpp" />
-    <ClCompile Include="LandChecker.cpp" />
-    <ClCompile Include="MonsterAI.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SceneChanger.cpp" />
-    <ClCompile Include="StageMaker.cpp" />
-    <ClCompile Include="StartScene.cpp" />
+    <ClCompile Include="UserActions\GameActionRegistry.cpp" />
+    <ClCompile Include="UserComponents\GameComponentRegistry.cpp" />
+    <ClCompile Include="UserComponents\SampleSpinComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EngineFramework\EngineFramework.vcxproj">

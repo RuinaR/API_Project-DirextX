@@ -61,6 +61,37 @@ namespace
 	{
 		return value > 0 ? static_cast<UINT>(value) : 1u;
 	}
+
+	bool LoadEditorKoreanFont(ImGuiIO& io)
+	{
+		char windowsDirectory[MAX_PATH] = {};
+		if (GetWindowsDirectoryA(windowsDirectory, MAX_PATH) == 0)
+		{
+			return false;
+		}
+
+		const std::string fontDirectory = std::string(windowsDirectory) + "\\Fonts\\";
+		const std::string fontCandidates[] =
+		{
+			fontDirectory + "malgun.ttf",
+			fontDirectory + "gulim.ttc",
+		};
+
+		for (const std::string& fontPath : fontCandidates)
+		{
+			if (GetFileAttributesA(fontPath.c_str()) == INVALID_FILE_ATTRIBUTES)
+			{
+				continue;
+			}
+
+			if (io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f, nullptr, io.Fonts->GetGlyphRangesKorean()) != nullptr)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
@@ -150,6 +181,11 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); 
+    if (m_type == RenderType::Edit)
+    {
+        // 기본 ImGui 폰트에는 한글 글리프가 없어서 에디터 문자열이 깨질 수 있다.
+        LoadEditorKoreanFont(io);
+    }
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // 키보드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // 게임패드 조작 활성화
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;

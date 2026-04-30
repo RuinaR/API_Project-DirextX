@@ -28,4 +28,9 @@ public:
 	static bool IsSceneDirty(const std::string& sceneName);
 	static bool SaveCapturedSnapshot(const std::string& sceneName);
 	static bool LoadSceneData(const std::string& sceneName);
+	static bool CreateNewScene(const std::string& sceneName = "NewScene");
+	static std::vector<std::string> GetSceneFileList();
+	static bool OpenSceneData(const std::string& sceneName);
+	static bool IsValidSceneName(const std::string& sceneName);
+	static bool SaveSceneDataAs(const std::string& sceneName);
 };

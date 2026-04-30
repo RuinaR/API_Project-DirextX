@@ -116,6 +116,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -178,6 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor\EditorAssetField.cpp" />
+    <ClCompile Include="Editor\EditorBuildSettingsPanel.cpp" />
     <ClCompile Include="Editor\EditorHierarchyWindow.cpp" />
     <ClCompile Include="Editor\EditorInspectorWindow.cpp" />
     <ClCompile Include="Editor\EditorObjectFactory.cpp" />
@@ -216,12 +218,14 @@
     <ClCompile Include="ImguiButton.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Component\Physics\Rigidbody.cpp" />
+    <ClCompile Include="Scene\BuildSettingsManager.cpp" />
     <ClCompile Include="Resource\Texture\TextureManager.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fbxsdk\fbxsdk.h" />
     <ClInclude Include="Editor\EditorAssetField.h" />
+    <ClInclude Include="Editor\EditorBuildSettingsPanel.h" />
     <ClInclude Include="Editor\EditorHierarchyWindow.h" />
     <ClInclude Include="Editor\EditorInspectorWindow.h" />
     <ClInclude Include="Editor\EditorObjectFactory.h" />
@@ -260,6 +264,7 @@
     <ClInclude Include="ImguiButton.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Component\Physics\Rigidbody.h" />
+    <ClInclude Include="Scene\BuildSettingsManager.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneDataManager.h" />
     <ClInclude Include="Scene\SceneJsonUtility.h" />

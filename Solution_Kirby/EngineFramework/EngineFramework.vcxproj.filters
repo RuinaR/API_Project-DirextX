@@ -4,6 +4,9 @@
     <ClCompile Include="Editor\EditorAssetField.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorBuildSettingsPanel.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\EditorHierarchyWindow.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -70,6 +73,9 @@
     <ClCompile Include="Component\Physics\Rigidbody.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\BuildSettingsManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
     <ClCompile Include="Resource\Animation\AnimationManager.cpp">
       <Filter>Resource\Animation</Filter>
     </ClCompile>
@@ -121,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorAssetField.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorBuildSettingsPanel.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Editor\EditorHierarchyWindow.h">
@@ -191,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="Component\Physics\Rigidbody.h">
       <Filter>Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BuildSettingsManager.h">
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Resource\Animation\AnimationManager.h">
       <Filter>Resource\Animation</Filter>

@@ -68,6 +68,65 @@ namespace
 		std::cout << "SceneData saved: " << path << std::endl;
 		return true;
 	}
+
+	bool ReadSceneDataFile(const std::string& sceneName, std::string* outSceneJson)
+	{
+		if (outSceneJson == nullptr)
+		{
+			return false;
+		}
+
+		const std::string path = SceneDataManager::GetSceneDataPath(sceneName);
+		std::ifstream file(path.c_str(), std::ios::in);
+		if (!file.is_open())
+		{
+			std::cout << "SceneData load failed: " << path << std::endl;
+			return false;
+		}
+
+		std::ostringstream oss;
+		oss << file.rdbuf();
+		*outSceneJson = oss.str();
+		return true;
+	}
+
+	bool DeserializeSceneDataJson(const std::string& sceneName, const std::string& sceneJson)
+	{
+		int sceneVersion = 3;
+		SceneJson::ReadInt(sceneJson, "version", sceneVersion);
+		DeserializeCamera(sceneJson);
+		if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson, sceneVersion))
+		{
+			std::cout << "SceneData load failed: " << SceneDataManager::GetSceneDataPath(sceneName) << std::endl;
+			return false;
+		}
+
+		ObjectManager::GetInstance()->FlushPendingObjects();
+		SceneDataManager::CaptureSceneSnapshot(sceneName);
+		return true;
+	}
+
+	std::string TrimSceneFileExtension(const std::string& fileName)
+	{
+		const size_t extensionPos = fileName.rfind(".json");
+		if (extensionPos == std::string::npos)
+		{
+			return fileName;
+		}
+		return fileName.substr(0, extensionPos);
+	}
+
+	bool ContainsOnlyWhitespace(const std::string& text)
+	{
+		for (std::string::const_iterator itr = text.begin(); itr != text.end(); ++itr)
+		{
+			if (!isspace(static_cast<unsigned char>(*itr)))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 std::string SceneDataManager::GetExeDirectory()
@@ -125,16 +184,21 @@ std::string SceneDataManager::JoinPath(const std::string& lhs, const std::string
 std::string SceneDataManager::GetSceneDataDirectory()
 {
 	std::string exeDir = GetExeDirectory();
+	std::string sceneDataFolder = "SceneData";
+	std::string exeCandidate = JoinPath(exeDir, sceneDataFolder);
+	if (DirectoryExists(exeCandidate))
+	{
+		return exeCandidate;
+	}
+
 	std::string relativeSceneData = "..\\..\\SceneData";
 	std::string solutionPath = JoinPath(exeDir, relativeSceneData);
 	std::string solutionCandidate = GetFullPath(solutionPath);
-	if (EnsureDirectory(solutionCandidate))
+	if (DirectoryExists(solutionCandidate))
 	{
 		return solutionCandidate;
 	}
 
-	std::string sceneDataFolder = "SceneData";
-	std::string exeCandidate = JoinPath(exeDir, sceneDataFolder);
 	EnsureDirectory(exeCandidate);
 	return exeCandidate;
 }
@@ -151,6 +215,17 @@ bool SceneDataManager::Exists(const std::string& sceneName)
 	const std::string path = GetSceneDataPath(sceneName);
 	DWORD attributes = GetFileAttributesA(path.c_str());
 	return attributes != INVALID_FILE_ATTRIBUTES && !(attributes & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+bool SceneDataManager::IsValidSceneName(const std::string& sceneName)
+{
+	if (sceneName.empty() || ContainsOnlyWhitespace(sceneName))
+	{
+		return false;
+	}
+
+	static const char* kInvalidSceneNameChars = "\\/:*?\"<>|";
+	return sceneName.find_first_of(kInvalidSceneNameChars) == std::string::npos;
 }
 
 bool SceneDataManager::SaveInitialSceneData(const std::string& sceneName)
@@ -246,25 +321,135 @@ bool SceneDataManager::SaveCapturedSnapshot(const std::string& sceneName)
 
 bool SceneDataManager::LoadSceneData(const std::string& sceneName)
 {
-	const std::string path = GetSceneDataPath(sceneName);
-	std::ifstream file(path.c_str(), std::ios::in);
-	if (!file.is_open())
+	std::string sceneJson;
+	if (!ReadSceneDataFile(sceneName, &sceneJson))
 	{
-		std::cout << "SceneData load failed: " << path << std::endl;
 		return false;
 	}
 
-	std::ostringstream oss;
-	oss << file.rdbuf();
-	const std::string sceneJson = oss.str();
-	int sceneVersion = 3;
-	SceneJson::ReadInt(sceneJson, "version", sceneVersion);
-	DeserializeCamera(sceneJson);
-	if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson, sceneVersion))
+	return DeserializeSceneDataJson(sceneName, sceneJson);
+}
+
+bool SceneDataManager::CreateNewScene(const std::string& sceneName)
+{
+	if (sceneName.empty() || WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
 	{
-		std::cout << "SceneData load failed: " << path << std::endl;
 		return false;
 	}
-	CaptureSceneSnapshot(sceneName);
+
+	ObjectManager* objectManager = ObjectManager::GetInstance();
+	if (objectManager == nullptr)
+	{
+		return false;
+	}
+
+	objectManager->Clear();
+	objectManager->FlushPendingObjects();
+	Camera::GetInstance()->InitializeView();
+	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
+	MarkSceneDirty(sceneName);
+	return true;
+}
+
+std::vector<std::string> SceneDataManager::GetSceneFileList()
+{
+	std::vector<std::string> sceneNames;
+	const std::string searchPattern = JoinPath(GetSceneDataDirectory(), "*.json");
+
+	WIN32_FIND_DATAA findData = {};
+	HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);
+	if (findHandle == INVALID_HANDLE_VALUE)
+	{
+		return sceneNames;
+	}
+
+	do
+	{
+		if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+		{
+			continue;
+		}
+
+		sceneNames.push_back(TrimSceneFileExtension(findData.cFileName));
+	} while (FindNextFileA(findHandle, &findData) == TRUE);
+
+	FindClose(findHandle);
+	std::sort(sceneNames.begin(), sceneNames.end());
+	return sceneNames;
+}
+
+bool SceneDataManager::OpenSceneData(const std::string& sceneName)
+{
+	if (sceneName.empty() || WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
+	{
+		return false;
+	}
+
+	ObjectManager* objectManager = ObjectManager::GetInstance();
+	if (objectManager == nullptr)
+	{
+		return false;
+	}
+
+	std::string targetSceneJson;
+	if (!ReadSceneDataFile(sceneName, &targetSceneJson))
+	{
+		return false;
+	}
+
+	const char* currentSceneName = WindowFrame::GetInstance()->GetCurrentSceneName();
+	const std::string previousSceneName = currentSceneName != nullptr ? currentSceneName : "";
+	const bool previousSceneDirty = !previousSceneName.empty() && IsSceneDirty(previousSceneName);
+	const std::string previousSceneJson = previousSceneName.empty() ? std::string() : BuildSceneDataJson(previousSceneName);
+
+	// TODO: dirty 상태 저장 확인 팝업은 Open Scene / Save As 흐름과 함께 다음 단계에서 정리한다.
+	objectManager->Clear();
+	objectManager->FlushPendingObjects();
+
+	if (!DeserializeSceneDataJson(sceneName, targetSceneJson))
+	{
+		objectManager->Clear();
+		objectManager->FlushPendingObjects();
+
+		if (!previousSceneJson.empty() && DeserializeSceneDataJson(previousSceneName, previousSceneJson))
+		{
+			WindowFrame::GetInstance()->SetCurrentSceneName(previousSceneName);
+			if (previousSceneDirty)
+			{
+				MarkSceneDirty(previousSceneName);
+			}
+			else
+			{
+				ClearSceneDirty(previousSceneName);
+			}
+		}
+		return false;
+	}
+
+	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
+	ClearSceneDirty(sceneName);
+	return true;
+}
+
+bool SceneDataManager::SaveSceneDataAs(const std::string& sceneName)
+{
+	if (WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
+	{
+		return false;
+	}
+
+	if (!IsValidSceneName(sceneName))
+	{
+		std::cout << "Save Scene As failed: invalid scene name: " << sceneName << std::endl;
+		return false;
+	}
+
+	if (!SaveCurrentSceneData(sceneName))
+	{
+		return false;
+	}
+
+	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
+	ClearSceneDirty(sceneName);
 	return true;
 }

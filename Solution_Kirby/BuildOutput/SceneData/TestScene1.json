@@ -1,0 +1,55 @@
+{
+  "version": 4,
+  "sceneName": "TestScene1",
+  "camera": {
+    "position": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 }
+  },
+  "objects": [
+    {
+      "id": 1,
+      "parentId": -1,
+      "name": "Sprite",
+      "tag": "Sprite",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 137 },
+        "rotation": { "x": 0, "y": 4492, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample.fbx" } }
+      ]
+    },
+    {
+      "id": 2,
+      "parentId": -1,
+      "name": "UI Image",
+      "tag": "UI Image",
+      "active": true,
+      "transform": {
+        "position": { "x": 289, "y": 400, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
+      "components": [
+        { "type": "UIImage", "data": { "position": { "x": 225, "y": 336 }, "size": { "x": 128, "y": 128 }, "visible": true, "enabled": true, "orderInLayer": 0, "useTexture": true, "color": 4294967295, "imagePath": "IMG/obj/attack.bmp" } }
+      ]
+    },
+    {
+      "id": 3,
+      "parentId": 2,
+      "name": "UI Text",
+      "tag": "UI Text",
+      "active": true,
+      "transform": {
+        "position": { "x": 183, "y": 62, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 240, "y": 48, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "data": { "position": { "x": 63, "y": 38 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "TestScene 1 ", "color": 4294967295, "fontSize": 148, "scale": 1 } }
+      ]
+    }
+  ]
+}

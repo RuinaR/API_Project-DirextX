@@ -128,9 +128,49 @@ void UIButton::DrawInspector()
 {
 	UIImage::DrawInspector();
 
+	const std::vector<std::string> registeredActionKeys = UIActionRegistry::GetRegisteredActionKeys();
+	if (!registeredActionKeys.empty())
+	{
+		const char* comboPreview = m_actionKey.empty() ? "(None)" : m_actionKey.c_str();
+		if (ImGui::BeginCombo("Action Key List", comboPreview))
+		{
+			const bool isNoneSelected = m_actionKey.empty();
+			if (ImGui::Selectable("(None)", isNoneSelected))
+			{
+				SetActionKey("");
+				BindActionFromRegistry();
+			}
+
+			if (isNoneSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+
+			for (std::vector<std::string>::const_iterator itr = registeredActionKeys.begin(); itr != registeredActionKeys.end(); ++itr)
+			{
+				const bool isSelected = (*itr == m_actionKey);
+				if (ImGui::Selectable(itr->c_str(), isSelected))
+				{
+					SetActionKey(*itr);
+					BindActionFromRegistry();
+				}
+
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+	else
+	{
+		ImGui::TextDisabled("Registered Action Key: none");
+	}
+
 	char actionKey[128] = {};
 	strcpy_s(actionKey, m_actionKey.c_str());
-	if (ImGui::InputText("Action Key", actionKey, IM_ARRAYSIZE(actionKey)))
+	if (ImGui::InputText("Custom Action Key", actionKey, IM_ARRAYSIZE(actionKey)))
 	{
 		SetActionKey(actionKey);
 		BindActionFromRegistry();

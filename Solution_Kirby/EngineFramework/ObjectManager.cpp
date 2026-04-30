@@ -386,9 +386,19 @@ void ObjectManager::Clear()
 {
 	if (m_Pthis)
 	{
+		m_Pthis->ClearSelectedObject();
+
+		for (vector<GameObject*>::iterator itr = m_Pthis->m_pendingAddObjects.begin(); itr != m_Pthis->m_pendingAddObjects.end(); itr++)
+		{
+			if (*itr != nullptr)
+			{
+				m_Pthis->QueueDestroyObjectTree(*itr);
+			}
+		}
+
 		for (list<GameObject*>::iterator itr = m_Pthis->m_objList->begin(); itr != m_Pthis->m_objList->end(); itr++)
 		{
-			m_Pthis->QueueDestroyObject(*itr);
+			m_Pthis->QueueDestroyObjectTree(*itr);
 		}
 	}
 }

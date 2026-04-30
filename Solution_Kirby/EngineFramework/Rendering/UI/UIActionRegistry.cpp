@@ -48,3 +48,16 @@ bool UIActionRegistry::Bind(UIButton* button, const std::string& actionKey)
 	button->SetOnClick(itr->second);
 	return true;
 }
+
+std::vector<std::string> UIActionRegistry::GetRegisteredActionKeys()
+{
+	std::vector<std::string> actionKeys;
+	actionKeys.reserve(GetActions().size());
+
+	for (std::map<std::string, std::function<void()>>::const_iterator itr = GetActions().begin(); itr != GetActions().end(); ++itr)
+	{
+		actionKeys.push_back(itr->first);
+	}
+
+	return actionKeys;
+}

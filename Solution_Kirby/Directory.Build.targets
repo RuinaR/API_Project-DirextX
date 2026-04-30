@@ -11,28 +11,25 @@
 
   <Target Name="CopyKirbyRuntimeAssets" AfterTargets="Build" Condition="'$(ConfigurationType)' == 'Application'">
     <ItemGroup>
-      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Debug\Bitmaps\**\*.*">
-        <RuntimeSubDir>Bitmaps\%(RecursiveDir)</RuntimeSubDir>
-      </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Debug\Map\**\*.*">
-        <RuntimeSubDir>Map\%(RecursiveDir)</RuntimeSubDir>
-      </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Debug\FBX\**\*.*">
-        <RuntimeSubDir>FBX\%(RecursiveDir)</RuntimeSubDir>
-      </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="Exists('$(KirbySolutionDir)Lib\libfbxsdk.dll')">
-        <RuntimeSubDir></RuntimeSubDir>
-      </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Remove="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')" />
-      <KirbyRuntimeAsset Include="$(KirbySolutionDir)Lib\x64\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')">
-        <RuntimeSubDir></RuntimeSubDir>
-      </KirbyRuntimeAsset>
-      <KirbyRuntimeAsset Include="$(D3DXBinaryDir)\D3DX9_43.dll" Condition="'$(D3DXBinaryDir)' != '' and Exists('$(D3DXBinaryDir)\D3DX9_43.dll')">
-        <RuntimeSubDir></RuntimeSubDir>
-      </KirbyRuntimeAsset>
+      <KirbyRuntimeBitmap Include="$(KirbySolutionDir)Debug\Bitmaps\**\*.*" />
+      <KirbyRuntimeMap Include="$(KirbySolutionDir)Debug\Map\**\*.*" />
+      <KirbyRuntimeFbx Include="$(KirbySolutionDir)Debug\FBX\**\*.*" />
+      <KirbyRuntimeRootAsset Include="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="Exists('$(KirbySolutionDir)Lib\libfbxsdk.dll')" />
+      <KirbyRuntimeRootAsset Remove="$(KirbySolutionDir)Lib\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')" />
+      <KirbyRuntimeRootAsset Include="$(KirbySolutionDir)Lib\x64\libfbxsdk.dll" Condition="'$(Platform)' == 'x64' and Exists('$(KirbySolutionDir)Lib\x64\libfbxsdk.dll')" />
+      <KirbyRuntimeRootAsset Include="$(D3DXBinaryDir)\D3DX9_43.dll" Condition="'$(D3DXBinaryDir)' != '' and Exists('$(D3DXBinaryDir)\D3DX9_43.dll')" />
     </ItemGroup>
-    <Copy SourceFiles="@(KirbyRuntimeAsset)"
-          DestinationFiles="@(KirbyRuntimeAsset->'$(OutDir)%(RuntimeSubDir)%(Filename)%(Extension)')"
+    <Copy SourceFiles="@(KirbyRuntimeBitmap)"
+          DestinationFiles="@(KirbyRuntimeBitmap->'$(OutDir)Bitmaps\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(KirbyRuntimeMap)"
+          DestinationFiles="@(KirbyRuntimeMap->'$(OutDir)Map\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(KirbyRuntimeFbx)"
+          DestinationFiles="@(KirbyRuntimeFbx->'$(OutDir)FBX\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(KirbyRuntimeRootAsset)"
+          DestinationFiles="@(KirbyRuntimeRootAsset->'$(OutDir)%(Filename)%(Extension)')"
           SkipUnchangedFiles="true" />
   </Target>
 </Project>

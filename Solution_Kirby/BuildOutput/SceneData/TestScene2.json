@@ -1,0 +1,57 @@
+{
+  "version": 4,
+  "sceneName": "TestScene2",
+  "camera": {
+    "position": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 }
+  },
+  "objects": [
+    {
+      "id": 1,
+      "parentId": -1,
+      "name": "Sprite",
+      "tag": "Sprite",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
+      "components": [
+        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/eat.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
+      ]
+    },
+    {
+      "id": 2,
+      "parentId": -1,
+      "name": "fbxSample",
+      "tag": "fbxSample",
+      "active": true,
+      "transform": {
+        "position": { "x": 89, "y": 194, "z": 225 },
+        "rotation": { "x": 0, "y": 4059, "z": 3928 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "SampleSpinComponent", "data": { "enabled": true, "spinSpeed": 1, "useYAxis": true, "useZAxis": true } }
+      ]
+    },
+    {
+      "id": 3,
+      "parentId": -1,
+      "name": "UI Button",
+      "tag": "UI Button",
+      "active": true,
+      "transform": {
+        "position": { "x": 417, "y": 121, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 180, "y": 48, "z": 1 }
+      },
+      "components": [
+        { "type": "UIButton", "data": { "position": { "x": 327, "y": 97 }, "size": { "x": 180, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "imagePath": "", "useTexture": false, "normalColor": 4283463900, "hoverColor": 4284781040, "pressedColor": 4281817780, "actionKey": "SampleButtonAction" } }
+      ]
+    }
+  ]
+}

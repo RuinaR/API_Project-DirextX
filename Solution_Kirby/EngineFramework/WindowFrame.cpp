@@ -22,6 +22,24 @@ namespace
 		AdjustWindowRect(&rect, kFixedResolutionWindowStyle, FALSE);
 		return rect;
 	}
+
+	std::wstring ToWideString(const std::string& text)
+	{
+		if (text.empty())
+		{
+			return std::wstring();
+		}
+
+		const int requiredLength = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
+		if (requiredLength <= 0)
+		{
+			return std::wstring(text.begin(), text.end());
+		}
+
+		std::wstring wideText(static_cast<size_t>(requiredLength) - 1, L'\0');
+		MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, &wideText[0], requiredLength);
+		return wideText;
+	}
 }
 
 void WindowFrame::Create(HINSTANCE hInstance)
@@ -124,7 +142,11 @@ void WindowFrame::SetScene(Scene* scene)
 	}
 	m_scene = scene;
 	m_scene->Init();
-	const std::string sceneName = m_scene->GetSceneName();
+	const std::string requestedSceneDataName = m_requestedSceneDataName;
+	const bool hasRequestedSceneDataName = !requestedSceneDataName.empty();
+	const std::string sceneName = hasRequestedSceneDataName ? requestedSceneDataName : m_scene->GetSceneName();
+	m_requestedSceneDataName.clear();
+	m_currentSceneName = sceneName;
 	const bool useSceneData = m_scene->ShouldUseSceneData();
 	const bool sceneDataExists = useSceneData && SceneDataManager::Exists(sceneName);
 	bool sceneDataLoaded = false;
@@ -138,6 +160,25 @@ void WindowFrame::SetScene(Scene* scene)
 		else
 		{
 			std::cout << "SceneData load fallback: " << sceneName << std::endl;
+		}
+	}
+
+	if (useSceneData && hasRequestedSceneDataName && m_type == RenderType::Game)
+	{
+		if (!sceneDataExists)
+		{
+			const std::wstring message = std::wstring(L"SceneData 파일을 찾지 못했습니다: ") + ToWideString(sceneName);
+			MessageBoxW(m_hWnd, message.c_str(), L"SceneData Load Error", MB_OK | MB_ICONERROR);
+			PostMessageA(m_hWnd, WM_CLOSE, 0, 0);
+			return;
+		}
+
+		if (!sceneDataLoaded)
+		{
+			const std::wstring message = std::wstring(L"SceneData 로드에 실패했습니다: ") + ToWideString(sceneName);
+			MessageBoxW(m_hWnd, message.c_str(), L"SceneData Load Error", MB_OK | MB_ICONERROR);
+			PostMessageA(m_hWnd, WM_CLOSE, 0, 0);
+			return;
 		}
 	}
 
