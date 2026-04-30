@@ -4,6 +4,7 @@
 #include "EditorObjectFactory.h"
 #include "GameObject.h"
 #include "ObjectManager.h"
+#include "Camera.h"
 #include "SceneDataManager.h"
 
 namespace
@@ -120,6 +121,76 @@ namespace
 		}
 
 		SceneDataManager::MarkSceneDirty(sceneName);
+	}
+
+	void DrawCameraSection()
+	{
+		Camera* camera = Camera::GetInstance();
+		if (camera == nullptr)
+		{
+			return;
+		}
+
+		if (!ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			return;
+		}
+
+		D3DXVECTOR3 position = camera->GetPos();
+		if (ImGui::DragFloat3("Camera Position", &position.x, 1.0f))
+		{
+			camera->SetPos(position.x, position.y, position.z);
+			MarkCurrentSceneDirty();
+		}
+
+		D3DXVECTOR3 rotation = camera->GetRotation();
+		if (ImGui::DragFloat3("Camera Rotation", &rotation.x, 0.1f))
+		{
+			camera->SetRotation(&rotation);
+			MarkCurrentSceneDirty();
+		}
+
+		int projectionMode = static_cast<int>(camera->GetProjectionMode());
+		const char* projectionModeLabels[] = { "Orthographic", "Perspective" };
+		if (ImGui::Combo("Projection Mode", &projectionMode, projectionModeLabels, IM_ARRAYSIZE(projectionModeLabels)))
+		{
+			camera->SetProjectionMode(static_cast<CameraProjectionMode>(projectionMode));
+			MarkCurrentSceneDirty();
+		}
+
+		float fov = camera->GetFov();
+		if (ImGui::DragFloat("FOV", &fov, 0.01f, 0.01f, D3DX_PI - 0.01f))
+		{
+			camera->SetFov(fov);
+			MarkCurrentSceneDirty();
+		}
+
+		float orthographicSize = camera->GetOrthographicSize();
+		if (ImGui::DragFloat("Orthographic Size", &orthographicSize, 1.0f, 1.0f, 10000.0f))
+		{
+			camera->SetOrthographicSize(orthographicSize);
+			MarkCurrentSceneDirty();
+		}
+
+		float nearClip = camera->GetNearClip();
+		if (ImGui::DragFloat("Near Clip", &nearClip, 0.1f, 0.001f, 10000.0f))
+		{
+			camera->SetNearClip(nearClip);
+			MarkCurrentSceneDirty();
+		}
+
+		float farClip = camera->GetFarClip();
+		if (ImGui::DragFloat("Far Clip", &farClip, 1.0f, 1.0f, 100000.0f))
+		{
+			camera->SetFarClip(farClip);
+			MarkCurrentSceneDirty();
+		}
+
+		if (ImGui::Button("Reset Camera"))
+		{
+			camera->InitializeView();
+			MarkCurrentSceneDirty();
+		}
 	}
 
 	bool IsSameOrChild(GameObject* root, GameObject* target)
@@ -328,6 +399,8 @@ void EditorHierarchyWindow::Draw()
 		}
 		DrawOpenScenePopup();
 		DrawSaveSceneAsPopup();
+		ImGui::Separator();
+		DrawCameraSection();
 		ImGui::Separator();
 		EditorBuildSettingsPanel::Draw();
 		ImGui::Separator();

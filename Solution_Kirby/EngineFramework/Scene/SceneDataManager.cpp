@@ -5,6 +5,21 @@
 
 namespace
 {
+	const char* ToProjectionModeString(CameraProjectionMode mode)
+	{
+		return mode == CameraProjectionMode::Perspective ? "Perspective" : "Orthographic";
+	}
+
+	CameraProjectionMode ParseProjectionModeString(const std::string& mode)
+	{
+		if (mode == "Perspective")
+		{
+			return CameraProjectionMode::Perspective;
+		}
+
+		return CameraProjectionMode::Orthographic;
+	}
+
 	std::map<std::string, std::string>& GetCapturedSceneSnapshots()
 	{
 		static std::map<std::string, std::string> snapshots;
@@ -22,6 +37,11 @@ namespace
 		constexpr int kSceneDataVersion = 4;
 		const D3DXVECTOR3 cameraPosition = Camera::GetInstance()->GetPos();
 		const D3DXVECTOR3 cameraRotation = Camera::GetInstance()->GetRotation();
+		const CameraProjectionMode projectionMode = Camera::GetInstance()->GetProjectionMode();
+		const float fov = Camera::GetInstance()->GetFov();
+		const float orthographicSize = Camera::GetInstance()->GetOrthographicSize();
+		const float nearClip = Camera::GetInstance()->GetNearClip();
+		const float farClip = Camera::GetInstance()->GetFarClip();
 
 		std::ostringstream oss;
 		oss << "{\n";
@@ -29,7 +49,14 @@ namespace
 		oss << "  \"sceneName\": \"" << sceneName << "\",\n";
 		oss << "  \"camera\": {\n";
 		oss << "    \"position\": { \"x\": " << cameraPosition.x << ", \"y\": " << cameraPosition.y << ", \"z\": " << cameraPosition.z << " },\n";
-		oss << "    \"rotation\": { \"x\": " << cameraRotation.x << ", \"y\": " << cameraRotation.y << ", \"z\": " << cameraRotation.z << " }\n";
+		oss << "    \"rotation\": { \"x\": " << cameraRotation.x << ", \"y\": " << cameraRotation.y << ", \"z\": " << cameraRotation.z << " },\n";
+		oss << "    \"projection\": {\n";
+		oss << "      \"mode\": \"" << ToProjectionModeString(projectionMode) << "\",\n";
+		oss << "      \"fov\": " << fov << ",\n";
+		oss << "      \"orthographicSize\": " << orthographicSize << ",\n";
+		oss << "      \"nearClip\": " << nearClip << ",\n";
+		oss << "      \"farClip\": " << farClip << "\n";
+		oss << "    }\n";
 		oss << "  },\n";
 		oss << "  \"objects\": ";
 		oss << ObjectManager::GetInstance()->SerializeObjects(kSceneDataVersion);
@@ -45,6 +72,7 @@ namespace
 			return;
 		}
 
+		Camera::GetInstance()->InitializeView();
 		D3DXVECTOR3 position = Camera::GetInstance()->GetPos();
 		D3DXVECTOR3 rotation = Camera::GetInstance()->GetRotation();
 		SceneJson::ReadVector3(cameraJson, "position", &position);
@@ -52,6 +80,42 @@ namespace
 
 		Camera::GetInstance()->SetPos(position.x, position.y, position.z);
 		Camera::GetInstance()->SetRotation(&rotation);
+
+		std::string projectionJson;
+		if (!SceneJson::ExtractObject(cameraJson, "projection", projectionJson))
+		{
+			return;
+		}
+
+		std::string projectionMode;
+		if (SceneJson::ReadString(projectionJson, "mode", projectionMode))
+		{
+			Camera::GetInstance()->SetProjectionMode(ParseProjectionModeString(projectionMode));
+		}
+
+		float fov = Camera::GetInstance()->GetFov();
+		if (SceneJson::ReadFloat(projectionJson, "fov", fov))
+		{
+			Camera::GetInstance()->SetFov(fov);
+		}
+
+		float orthographicSize = Camera::GetInstance()->GetOrthographicSize();
+		if (SceneJson::ReadFloat(projectionJson, "orthographicSize", orthographicSize))
+		{
+			Camera::GetInstance()->SetOrthographicSize(orthographicSize);
+		}
+
+		float nearClip = Camera::GetInstance()->GetNearClip();
+		if (SceneJson::ReadFloat(projectionJson, "nearClip", nearClip))
+		{
+			Camera::GetInstance()->SetNearClip(nearClip);
+		}
+
+		float farClip = Camera::GetInstance()->GetFarClip();
+		if (SceneJson::ReadFloat(projectionJson, "farClip", farClip))
+		{
+			Camera::GetInstance()->SetFarClip(farClip);
+		}
 	}
 
 	bool WriteSceneDataFile(const std::string& sceneName, const std::string& json)

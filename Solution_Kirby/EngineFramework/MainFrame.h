@@ -76,6 +76,7 @@ public:
 	void RequestResize(UINT width, UINT height);
 	bool HandleResize(UINT width, UINT height);
 	void ProcessMouseInput();
+	void ApplyCameraProjection();
 
 	void AddBtnEvent(std::function<void()> p_event);
 private:

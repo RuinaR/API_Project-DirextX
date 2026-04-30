@@ -28,7 +28,13 @@ void Camera::InitializeView()
 	mPthis->m_at = { 0.0f, 0.0f, 0.0f };
 	mPthis->m_rotation = { 0.0f, 0.0f, 0.0f };
 	mPthis->m_distance = 20.0f;
+	mPthis->m_projectionMode = CameraProjectionMode::Orthographic;
+	mPthis->m_fov = D3DX_PI / 4.0f;
+	mPthis->m_orthographicSize = static_cast<float>(DRAWWINDOWH);
+	mPthis->m_nearClip = 1.0f;
+	mPthis->m_farClip = 1000.0f;
 	mPthis->UpdateViewMatrix();
+	mPthis->UpdateProjectionMatrix();
 }
 
 void Camera::SetPos(float x, float y)
@@ -100,6 +106,70 @@ D3DXVECTOR3 Camera::GetUp()
 	return RotateDirection(&direction);
 }
 
+void Camera::SetProjectionMode(CameraProjectionMode mode)
+{
+	m_projectionMode = mode;
+	UpdateProjectionMatrix();
+}
+
+CameraProjectionMode Camera::GetProjectionMode() const
+{
+	return m_projectionMode;
+}
+
+void Camera::SetFov(float fov)
+{
+	m_fov = max(0.01f, fov);
+	UpdateProjectionMatrix();
+}
+
+float Camera::GetFov() const
+{
+	return m_fov;
+}
+
+void Camera::SetOrthographicSize(float orthographicSize)
+{
+	m_orthographicSize = max(1.0f, orthographicSize);
+	UpdateProjectionMatrix();
+}
+
+float Camera::GetOrthographicSize() const
+{
+	return m_orthographicSize;
+}
+
+void Camera::SetNearClip(float nearClip)
+{
+	m_nearClip = max(0.001f, nearClip);
+	if (m_farClip <= m_nearClip)
+	{
+		m_farClip = m_nearClip + 1.0f;
+	}
+	UpdateProjectionMatrix();
+}
+
+float Camera::GetNearClip() const
+{
+	return m_nearClip;
+}
+
+void Camera::SetFarClip(float farClip)
+{
+	m_farClip = max(m_nearClip + 1.0f, farClip);
+	UpdateProjectionMatrix();
+}
+
+float Camera::GetFarClip() const
+{
+	return m_farClip;
+}
+
+void Camera::ApplyProjection()
+{
+	UpdateProjectionMatrix();
+}
+
 D3DXVECTOR3 Camera::RotateDirection(const D3DXVECTOR3* direction)
 {
 	if (!direction)
@@ -124,4 +194,14 @@ void Camera::UpdateViewMatrix()
 	D3DXMATRIX matView;
 	D3DXMatrixLookAtLH(&matView, &m_eye, &m_at, &m_up);
 	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_VIEW, &matView);
+}
+
+void Camera::UpdateProjectionMatrix()
+{
+	if (MainFrame::GetInstance() == nullptr)
+	{
+		return;
+	}
+
+	MainFrame::GetInstance()->ApplyCameraProjection();
 }

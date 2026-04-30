@@ -2,8 +2,15 @@
   "version": 4,
   "sceneName": "TestScene2",
   "camera": {
-    "position": { "x": 0, "y": 0, "z": 0 },
-    "rotation": { "x": 0, "y": 0, "z": 0 }
+    "position": { "x": 0, "y": 113, "z": -523 },
+    "rotation": { "x": 0, "y": -0.1, "z": -0.6 },
+    "projection": {
+      "mode": "Perspective",
+      "fov": 0.785398,
+      "orthographicSize": 900,
+      "nearClip": 1,
+      "farClip": 1873
+    }
   },
   "objects": [
     {
@@ -30,7 +37,7 @@
       "active": true,
       "transform": {
         "position": { "x": 89, "y": 194, "z": 225 },
-        "rotation": { "x": 0, "y": 4059, "z": 3928 },
+        "rotation": { "x": 0, "y": 6998, "z": 6867 },
         "size": { "x": 1, "y": 1, "z": 1 }
       },
       "components": [

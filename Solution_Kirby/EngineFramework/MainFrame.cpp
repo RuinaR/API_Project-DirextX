@@ -62,6 +62,16 @@ namespace
 		return value > 0 ? static_cast<UINT>(value) : 1u;
 	}
 
+	float ClampAspectRatio(int width, int height)
+	{
+		if (height <= 0)
+		{
+			return 1.0f;
+		}
+
+		return static_cast<float>(width > 0 ? width : 1) / static_cast<float>(height);
+	}
+
 	bool LoadEditorKoreanFont(ImGuiIO& io)
 	{
 		char windowsDirectory[MAX_PATH] = {};
@@ -147,10 +157,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 
     Camera::GetInstance()->InitializeView();
 
-    //float aspectRatio = (float)vp.Width / (float)vp.Height;
-    //D3DXMatrixPerspectiveFovLH(&m_matProj, D3DX_PI / 4, aspectRatio, 1.0f, 1000.0f);
-    D3DXMatrixOrthoLH(&m_matProj, DRAWWINDOWW, DRAWWINDOWH, 1.0f, 1000.0f);
-    m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+    ApplyCameraProjection();
     m_pd3dDevice->SetViewport(&vp);
 
     D3DXCreateFont(m_pd3dDevice, 30, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
@@ -381,6 +388,33 @@ void MainFrame::RequestResize(UINT width, UINT height)
     m_pendingResize = false;
 }
 
+void MainFrame::ApplyCameraProjection()
+{
+    if (m_pd3dDevice == nullptr || Camera::GetInstance() == nullptr)
+    {
+        return;
+    }
+
+    Camera* camera = Camera::GetInstance();
+    const float nearClip = camera->GetNearClip();
+    const float farClip = camera->GetFarClip();
+
+    if (camera->GetProjectionMode() == CameraProjectionMode::Perspective)
+    {
+        const float aspectRatio = ClampAspectRatio(m_width, m_height);
+        D3DXMatrixPerspectiveFovLH(&m_matProj, camera->GetFov(), aspectRatio, nearClip, farClip);
+    }
+    else
+    {
+        const float orthoHeight = camera->GetOrthographicSize();
+        const float aspectRatio = ClampAspectRatio(m_width, m_height);
+        const float orthoWidth = orthoHeight * aspectRatio;
+        D3DXMatrixOrthoLH(&m_matProj, orthoWidth, orthoHeight, nearClip, farClip);
+    }
+
+    m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+}
+
 bool MainFrame::HandleResize(UINT width, UINT height)
 {
     if (m_pd3dDevice == nullptr || width == 0 || height == 0)
@@ -409,7 +443,7 @@ bool MainFrame::HandleResize(UINT width, UINT height)
     vp.MinZ = 0.0f;
     vp.MaxZ = 1.0f;
     m_pd3dDevice->SetViewport(&vp);
-    m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+    ApplyCameraProjection();
     ApplyDeviceState();
     RestoreDeviceResources();
     m_pendingResize = false;
