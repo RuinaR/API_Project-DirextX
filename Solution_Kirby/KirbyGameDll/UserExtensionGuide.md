@@ -2,7 +2,7 @@
 
 ## User Component Checklist
 
-- `KirbyGameDll/UserComponents` 아래에 새 `.h/.cpp`를 만든다.
+- `KirbyGameDll/UserComponents/Scripts` 아래에 새 `.h/.cpp`를 만든다.
 - `Component`를 상속한다.
 - `static constexpr const char* kComponentType`를 작성한다.
 - `GetSerializableType()`이 `kComponentType`을 반환하게 한다.
@@ -13,7 +13,7 @@
 
 ## User Action Checklist
 
-- `KirbyGameDll/UserActions` 아래에 callback 코드를 작성한다.
+- `KirbyGameDll/UserActions/Scripts` 아래에 callback 코드를 작성한다.
 - `UserActions/GameActionRegistry.cpp`에서 `UIActionRegistry::RegisterAction("ActionKey", callback)`으로 등록한다.
 - 에디터의 `UIButton` Inspector에서 `actionKey`를 선택한다.
 - SceneData에는 callback/lambda 대신 `actionKey` 문자열만 저장된다.

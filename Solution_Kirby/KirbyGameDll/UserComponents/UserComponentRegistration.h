@@ -29,6 +29,7 @@ bool RegisterUserComponent(
 }
 
 // 권장 규칙:
+// - 실제 사용자 컴포넌트 구현 파일은 KirbyGameDll/UserComponents/Scripts 아래에 둔다.
 // - 컴포넌트에 static constexpr const char* kComponentType 를 둔다.
 // - GetSerializableType()은 같은 값을 반환한다.
 // - displayName/category만 바꿔서 아래 매크로로 등록한다.

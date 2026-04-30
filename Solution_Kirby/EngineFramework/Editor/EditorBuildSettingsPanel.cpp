@@ -1,10 +1,14 @@
 #include "pch.h"
 #include "EditorBuildSettingsPanel.h"
 #include "BuildSettingsManager.h"
+#include "ObjectManager.h"
 #include "SceneDataManager.h"
 #include <chrono>
+#include <fstream>
 #include <future>
 #include <mutex>
+#include <regex>
+#include <set>
 
 namespace
 {
@@ -319,6 +323,214 @@ namespace
 		return succeeded;
 	}
 
+	bool DeleteDirectoryRecursive(const std::string& directoryPath)
+	{
+		if (!DirectoryExists(directoryPath))
+		{
+			return true;
+		}
+
+		WIN32_FIND_DATAA findData = {};
+		HANDLE findHandle = FindFirstFileA((directoryPath + "\\*").c_str(), &findData);
+		if (findHandle == INVALID_HANDLE_VALUE)
+		{
+			return false;
+		}
+
+		bool succeeded = true;
+		do
+		{
+			const char* fileName = findData.cFileName;
+			if (strcmp(fileName, ".") == 0 || strcmp(fileName, "..") == 0)
+			{
+				continue;
+			}
+
+			const std::string childPath = directoryPath + "\\" + fileName;
+			if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+			{
+				if (!DeleteDirectoryRecursive(childPath))
+				{
+					succeeded = false;
+					break;
+				}
+				continue;
+			}
+
+			SetFileAttributesA(childPath.c_str(), FILE_ATTRIBUTE_NORMAL);
+			if (DeleteFileA(childPath.c_str()) == FALSE)
+			{
+				succeeded = false;
+				break;
+			}
+		}
+		while (FindNextFileA(findHandle, &findData) != FALSE);
+
+		FindClose(findHandle);
+		if (!succeeded)
+		{
+			return false;
+		}
+
+		SetFileAttributesA(directoryPath.c_str(), FILE_ATTRIBUTE_NORMAL);
+		return RemoveDirectoryA(directoryPath.c_str()) != FALSE;
+	}
+
+	bool ReadTextFile(const std::string& path, std::string& outText)
+	{
+		std::ifstream file(path, std::ios::in | std::ios::binary);
+		if (!file.is_open())
+		{
+			return false;
+		}
+
+		outText.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+		return true;
+	}
+
+	std::string NormalizeResourceKey(const std::string& resourceKey)
+	{
+		std::string normalized = resourceKey;
+		std::replace(normalized.begin(), normalized.end(), '/', '\\');
+		return normalized;
+	}
+
+	std::string ToLowerCopy(std::string value)
+	{
+		std::transform(value.begin(), value.end(), value.begin(), [](unsigned char ch)
+		{
+			return static_cast<char>(std::tolower(ch));
+		});
+		return value;
+	}
+
+	bool EndsWithLowercase(const std::string& value, const char* suffix)
+	{
+		const size_t suffixLength = strlen(suffix);
+		return value.length() >= suffixLength
+			&& value.compare(value.length() - suffixLength, suffixLength, suffix) == 0;
+	}
+
+	bool IsSoundResourceKey(const std::string& resourceKey)
+	{
+		const std::string lowered = ToLowerCopy(resourceKey);
+		return EndsWithLowercase(lowered, ".wav")
+			|| EndsWithLowercase(lowered, ".mp3")
+			|| EndsWithLowercase(lowered, ".ogg");
+	}
+
+	void CollectJsonStringValues(const std::string& jsonText, const char* fieldName, std::set<std::string>& outValues)
+	{
+		const std::regex pattern(std::string("\"") + fieldName + "\"\\s*:\\s*\"([^\"]*)\"");
+		for (std::sregex_iterator itr(jsonText.begin(), jsonText.end(), pattern), end; itr != end; ++itr)
+		{
+			const std::string value = (*itr)[1].str();
+			if (!value.empty())
+			{
+				outValues.insert(value);
+			}
+		}
+	}
+
+	void CollectJsonSoundLikeStringValues(const std::string& jsonText, std::set<std::string>& outValues)
+	{
+		const std::regex pattern("\"([^\"]+)\"");
+		for (std::sregex_iterator itr(jsonText.begin(), jsonText.end(), pattern), end; itr != end; ++itr)
+		{
+			const std::string value = (*itr)[1].str();
+			if (value.empty() || !IsSoundResourceKey(value))
+			{
+				continue;
+			}
+
+			outValues.insert(value);
+		}
+	}
+
+	bool CopySceneReferencedResources(
+		const std::vector<std::string>& sceneNames,
+		const std::string& sourceResourcesPath,
+		const std::string& buildResourcesPath,
+		std::string& outErrorMessage)
+	{
+		std::set<std::string> resourceFileKeys;
+		std::set<std::string> resourceDirectoryKeys;
+
+		for (std::vector<std::string>::const_iterator itr = sceneNames.begin(); itr != sceneNames.end(); ++itr)
+		{
+			std::string sceneJsonText;
+			if (!ReadTextFile(SceneDataManager::GetSceneDataPath(*itr), sceneJsonText))
+			{
+				outErrorMessage = "SceneData를 읽지 못했습니다: " + *itr;
+				return false;
+			}
+
+			CollectJsonStringValues(sceneJsonText, "texturePath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "imagePath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "fbxPath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "soundPath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "audioPath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "bgmPath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "sfxPath", resourceFileKeys);
+			CollectJsonStringValues(sceneJsonText, "animationFolderKey", resourceDirectoryKeys);
+			CollectJsonSoundLikeStringValues(sceneJsonText, resourceFileKeys);
+		}
+
+		if (DeleteDirectoryRecursive(buildResourcesPath) == false && DirectoryExists(buildResourcesPath))
+		{
+			outErrorMessage = "기존 BuildOutput\\Resources 정리에 실패했습니다.";
+			return false;
+		}
+
+		if (!EnsureDirectoryExists(buildResourcesPath))
+		{
+			outErrorMessage = "BuildOutput\\Resources 폴더 생성에 실패했습니다.";
+			return false;
+		}
+
+		for (std::set<std::string>::const_iterator itr = resourceFileKeys.begin(); itr != resourceFileKeys.end(); ++itr)
+		{
+			const std::string normalizedKey = NormalizeResourceKey(*itr);
+			const std::string sourcePath = sourceResourcesPath + "\\" + normalizedKey;
+			const std::string destinationPath = buildResourcesPath + "\\" + normalizedKey;
+			if (!CopySingleFile(sourcePath, destinationPath))
+			{
+				outErrorMessage = "사용 중인 리소스 파일 복사에 실패했습니다: " + *itr;
+				return false;
+			}
+
+			const size_t extensionPos = normalizedKey.find_last_of('.');
+			if (extensionPos != std::string::npos)
+			{
+				const std::string siblingFbmKey = normalizedKey.substr(0, extensionPos) + ".fbm";
+				const std::string siblingFbmSourcePath = sourceResourcesPath + "\\" + siblingFbmKey;
+				if (DirectoryExists(siblingFbmSourcePath))
+				{
+					const std::string siblingFbmDestinationPath = buildResourcesPath + "\\" + siblingFbmKey;
+					if (!CopyDirectoryRecursive(siblingFbmSourcePath, siblingFbmDestinationPath))
+					{
+						outErrorMessage = "FBX 연관 리소스 폴더 복사에 실패했습니다: " + *itr;
+						return false;
+					}
+				}
+			}
+		}
+
+		for (std::set<std::string>::const_iterator itr = resourceDirectoryKeys.begin(); itr != resourceDirectoryKeys.end(); ++itr)
+		{
+			const std::string normalizedKey = NormalizeResourceKey(*itr);
+			const std::string sourcePath = sourceResourcesPath + "\\" + normalizedKey;
+			const std::string destinationPath = buildResourcesPath + "\\" + normalizedKey;
+			if (!CopyDirectoryRecursive(sourcePath, destinationPath))
+			{
+				outErrorMessage = "사용 중인 리소스 폴더 복사에 실패했습니다: " + *itr;
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	bool TryRunBuildProcess(const std::string& applicationPath, const std::string& commandLine, const std::string& workingDirectory, DWORD& outExitCode)
 	{
 		STARTUPINFOA startupInfo = {};
@@ -436,6 +648,12 @@ namespace
 			return false;
 		}
 
+		if (DeleteDirectoryRecursive(buildSceneDataPath) == false && DirectoryExists(buildSceneDataPath))
+		{
+			SetBuildGameResult("기존 BuildOutput\\SceneData 정리에 실패했습니다.");
+			return false;
+		}
+
 		if (CreateDirectoryA(buildSceneDataPath.c_str(), nullptr) == FALSE && GetLastError() != ERROR_ALREADY_EXISTS)
 		{
 			SetBuildGameResult("BuildOutput\\SceneData 폴더 생성에 실패했습니다.");
@@ -514,14 +732,15 @@ namespace
 
 		FindClose(dllFindHandle);
 
-		SetBuildGameStage(6, 6, "6/6 Resources 폴더를 복사하는 중...");
-		if (!CopyDirectoryRecursive(sourceResourcesPath, buildResourcesPath))
+		SetBuildGameStage(6, 6, "6/6 사용 중인 Resources만 복사하는 중...");
+		std::string resourceCopyErrorMessage;
+		if (!CopySceneReferencedResources(sceneNames, sourceResourcesPath, buildResourcesPath, resourceCopyErrorMessage))
 		{
-			SetBuildGameResult("Resources 폴더 복사에 실패했습니다.");
+			SetBuildGameResult(resourceCopyErrorMessage);
 			return false;
 		}
 
-		SetBuildGameResult("BuildOutput 생성, SceneData/BuildSettings 저장, Release exe/dll/Resources 복사가 완료되었습니다.");
+		SetBuildGameResult("BuildOutput 생성, SceneData/BuildSettings 저장, 사용 중인 Release exe/dll/Resources 복사가 완료되었습니다.");
 		return true;
 	}
 
@@ -530,6 +749,21 @@ namespace
 		if (IsBuildGameRunning())
 		{
 			return;
+		}
+
+		if (ObjectManager::GetInstance() != nullptr)
+		{
+			ObjectManager::GetInstance()->FlushPendingObjects();
+		}
+
+		const std::string currentSceneName = GetCurrentSceneName();
+		if (!currentSceneName.empty() && SceneDataManager::IsSceneDirty(currentSceneName))
+		{
+			if (!SceneDataManager::SaveCurrentSceneData(currentSceneName))
+			{
+				SetBuildGameResult("현재 씬 저장에 실패해서 빌드를 시작하지 않았습니다.");
+				return;
+			}
 		}
 
 		BuildSettingsManager::Validate(g_buildSettingsUiState);

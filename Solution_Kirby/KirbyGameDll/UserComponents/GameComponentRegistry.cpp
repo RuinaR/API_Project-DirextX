@@ -1,16 +1,16 @@
 #include "pch.h"
 #include "GameComponentRegistry.h"
 #include "ComponentFactory.h"
-#include "SampleSpinComponent.h"
+#include "Scripts/SampleSpinComponent.h"
 #include "UserComponentRegistration.h"
 
 void RegisterGameComponents(ComponentFactory& factory)
 {
 	// UserComponents 등록 전용 지점:
-	// 새 사용자 컴포넌트는 KirbyGameDll/UserComponents 아래에 두고
+	// 새 사용자 컴포넌트는 KirbyGameDll/UserComponents/Scripts 아래에 두고
 	// 여기서 ComponentFactory에 등록한 뒤 DLL 재빌드/에디터 재실행으로 반영한다.
 	// 사용자 컴포넌트 에디터 노출 최소 규칙:
-	// 1) KirbyGameDll에 컴포넌트를 작성한다.
+	// 1) KirbyGameDll/UserComponents/Scripts에 컴포넌트를 작성한다.
 	// 2) 여기서 ComponentFactory에 typeName으로 등록한다.
 	// 3) GetSerializableType()은 등록한 typeName과 같은 값을 반환한다.
 	// 4) DrawInspector()에서 에디터 편집 항목을 그린다.

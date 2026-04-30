@@ -28,6 +28,12 @@
     <Filter Include="UserComponents">
       <UniqueIdentifier>{7af9f049-a689-44e9-a0f2-90dbd27ef53c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UserActions\Scripts">
+      <UniqueIdentifier>{3c9e5368-9a6d-4c63-a317-37da1785c5ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserComponents\Scripts">
+      <UniqueIdentifier>{ee89dbf5-7e83-44b2-a08d-922eb724415f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\plugin.h">
@@ -51,8 +57,11 @@
     <ClInclude Include="UserComponents\UserComponentRegistration.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
-    <ClInclude Include="UserComponents\SampleSpinComponent.h">
-      <Filter>UserComponents</Filter>
+    <ClInclude Include="UserComponents\Scripts\SampleSpinComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserActions\Scripts\SampleButtonAction.h">
+      <Filter>UserActions\Scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +80,11 @@
     <ClCompile Include="UserComponents\GameComponentRegistry.cpp">
       <Filter>UserComponents</Filter>
     </ClCompile>
-    <ClCompile Include="UserComponents\SampleSpinComponent.cpp">
-      <Filter>UserComponents</Filter>
+    <ClCompile Include="UserComponents\Scripts\SampleSpinComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserActions\Scripts\SampleButtonAction.cpp">
+      <Filter>UserActions\Scripts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

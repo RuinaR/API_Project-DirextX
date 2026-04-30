@@ -9,6 +9,12 @@ enum class RenderType
 	Game
 };
 
+enum class EditorPlaybackState
+{
+	Paused,
+	Playing
+};
+
 class CollisionListener : public b2ContactListener
 {
 public:
@@ -55,8 +61,11 @@ private:
 private:
 	MSG m_message;
 	double m_targetFrameTime;
+	double m_frameDeltaTime = 0.0;
 	int32 m_velocityIterations = 8;
 	int32 m_positionIterations = 3;
+	EditorPlaybackState m_editorPlaybackState = EditorPlaybackState::Paused;
+	bool m_editorStepRequested = false;
 
 	list<std::function<void()>> m_listBtnEvent;
 public:
@@ -77,6 +86,11 @@ public:
 	bool HandleResize(UINT width, UINT height);
 	void ProcessMouseInput();
 	void ApplyCameraProjection();
+	void SetEditorPlaying(bool playing);
+	void RequestEditorStep();
+	bool IsEditorPlaying() const;
+	bool IsEditorPaused() const;
+	bool IsEditorStepRequested() const;
 
 	void AddBtnEvent(std::function<void()> p_event);
 private:

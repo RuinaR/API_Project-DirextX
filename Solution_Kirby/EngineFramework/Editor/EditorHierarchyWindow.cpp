@@ -3,6 +3,7 @@
 #include "EditorBuildSettingsPanel.h"
 #include "EditorObjectFactory.h"
 #include "GameObject.h"
+#include "MainFrame.h"
 #include "ObjectManager.h"
 #include "Camera.h"
 #include "SceneDataManager.h"
@@ -193,6 +194,74 @@ namespace
 		}
 	}
 
+	void DrawEditorPlaybackControls()
+	{
+		MainFrame* mainFrame = MainFrame::GetInstance();
+		if (mainFrame == nullptr)
+		{
+			return;
+		}
+
+		const bool isPlaying = mainFrame->IsEditorPlaying();
+		const bool isPaused = mainFrame->IsEditorPaused();
+
+		if (isPlaying)
+		{
+			ImGui::BeginDisabled();
+		}
+		if (ImGui::Button("Play"))
+		{
+			mainFrame->SetEditorPlaying(true);
+		}
+		if (isPlaying)
+		{
+			ImGui::EndDisabled();
+		}
+
+		ImGui::SameLine();
+		if (isPaused)
+		{
+			ImGui::BeginDisabled();
+		}
+		if (ImGui::Button("Pause"))
+		{
+			mainFrame->SetEditorPlaying(false);
+		}
+		if (isPaused)
+		{
+			ImGui::EndDisabled();
+		}
+
+		ImGui::SameLine();
+		if (isPlaying)
+		{
+			ImGui::BeginDisabled();
+		}
+		if (ImGui::Button("Step"))
+		{
+			mainFrame->RequestEditorStep();
+		}
+		if (isPlaying)
+		{
+			ImGui::EndDisabled();
+		}
+
+		ImGui::SameLine();
+		const char* playbackLabel = "Playback: Paused";
+		ImVec4 playbackColor = ImVec4(1.0f, 0.85f, 0.2f, 1.0f);
+		if (isPlaying)
+		{
+			playbackLabel = "Playback: Playing";
+			playbackColor = ImVec4(0.35f, 1.0f, 0.35f, 1.0f);
+		}
+		else if (mainFrame->IsEditorStepRequested())
+		{
+			playbackLabel = "Playback: Step Pending";
+			playbackColor = ImVec4(0.4f, 0.8f, 1.0f, 1.0f);
+		}
+		ImGui::TextColored(playbackColor, "%s", playbackLabel);
+	}
+
 	bool IsSameOrChild(GameObject* root, GameObject* target)
 	{
 		if (root == nullptr || target == nullptr)
@@ -332,6 +401,8 @@ void EditorHierarchyWindow::Draw()
 		ImGui::Text("Scene: %s%s", sceneName != nullptr ? sceneName : "", isDirty ? " *" : "");
 		ImGui::SameLine();
 		ImGui::TextColored(isDirty ? ImVec4(1.0f, 0.75f, 0.15f, 1.0f) : ImVec4(0.35f, 1.0f, 0.35f, 1.0f), isDirty ? "Unsaved Changes" : "Saved");
+		DrawEditorPlaybackControls();
+
 		if (ImGui::Button("Create"))
 		{
 			ImGui::OpenPopup("CreateGameObjectPopup");

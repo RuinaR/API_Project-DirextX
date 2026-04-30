@@ -49,10 +49,7 @@ Timer& MainFrame::Timer()
 
 double MainFrame::DeltaTime()
 {
-    //cout << m_timer.getTotalDeltaTime() << endl;
-    if (m_timer.getTotalDeltaTime() > 0.02)
-        return 0.02f;
-	return m_timer.getTotalDeltaTime();
+	return m_frameDeltaTime;
 }
 
 namespace
@@ -102,11 +99,34 @@ namespace
 
 		return false;
 	}
+
+	bool ShouldRunEditorSimulation(MainFrame* mainFrame)
+	{
+		if (mainFrame == nullptr)
+		{
+			return false;
+		}
+
+		if (mainFrame->GetRenderType() != RenderType::Edit)
+		{
+			return true;
+		}
+
+		if (mainFrame->IsEditorPlaying())
+		{
+			return true;
+		}
+
+		return false;
+	}
 }
 
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 {
     m_released = false;
+    m_editorPlaybackState = EditorPlaybackState::Paused;
+    m_editorStepRequested = false;
+    m_frameDeltaTime = 0.0;
     m_pWorld = new b2World(m_gravity);
     m_pWorld->SetContactListener(&m_cListener);
     m_pWorld->SetContinuousPhysics(true);
@@ -337,6 +357,8 @@ bool MainFrame::Update()
 			if (NULL == m_pd3dDevice)
 				return false;
 
+            const double simulationDeltaTime = min(m_timer.getTotalDeltaTime(), 0.02);
+
             //버튼이벤트 일괄 처리
             for (auto itr = m_listBtnEvent.begin(); itr != m_listBtnEvent.end();)
             {
@@ -350,8 +372,30 @@ bool MainFrame::Update()
             ImGui::NewFrame();
 
             //UPDATE
-            m_pWorld->Step(m_timer.getTotalDeltaTime(), m_velocityIterations, m_positionIterations);
-            ObjectManager::GetInstance()->Update();
+            bool shouldRunSimulation = ShouldRunEditorSimulation(this);
+            if (m_type == RenderType::Edit && !shouldRunSimulation && m_editorStepRequested)
+            {
+                shouldRunSimulation = true;
+            }
+
+            m_frameDeltaTime = shouldRunSimulation ? simulationDeltaTime : 0.0;
+
+            if (shouldRunSimulation)
+            {
+                m_pWorld->Step(static_cast<float>(simulationDeltaTime), m_velocityIterations, m_positionIterations);
+                ObjectManager::GetInstance()->Update();
+
+                if (m_type == RenderType::Edit && m_editorStepRequested)
+                {
+                    m_editorStepRequested = false;
+                    m_editorPlaybackState = EditorPlaybackState::Paused;
+                }
+            }
+            else if (m_type == RenderType::Edit && ObjectManager::GetInstance() != nullptr)
+            {
+                // Paused 상태에서도 생성/삭제 pending 반영은 즉시 보여주고 저장에도 포함시킨다.
+                ObjectManager::GetInstance()->FlushPendingObjects();
+            }
 
             //RENDER
             if (m_type == RenderType::Edit)
@@ -363,6 +407,37 @@ bool MainFrame::Update()
         }
 
     return true;
+}
+
+void MainFrame::SetEditorPlaying(bool playing)
+{
+    m_editorPlaybackState = playing ? EditorPlaybackState::Playing : EditorPlaybackState::Paused;
+    m_editorStepRequested = false;
+    m_frameDeltaTime = 0.0;
+    m_timer.Resync();
+}
+
+void MainFrame::RequestEditorStep()
+{
+    m_editorPlaybackState = EditorPlaybackState::Paused;
+    m_editorStepRequested = true;
+    m_frameDeltaTime = 0.0;
+    m_timer.Resync();
+}
+
+bool MainFrame::IsEditorPlaying() const
+{
+    return m_editorPlaybackState == EditorPlaybackState::Playing;
+}
+
+bool MainFrame::IsEditorPaused() const
+{
+    return m_editorPlaybackState == EditorPlaybackState::Paused && !m_editorStepRequested;
+}
+
+bool MainFrame::IsEditorStepRequested() const
+{
+    return m_editorStepRequested;
 }
 
 ID3DXFont* MainFrame::GetFont()

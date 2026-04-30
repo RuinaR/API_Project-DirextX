@@ -6,7 +6,7 @@ enum class RenderType;
 // UIButton 등은 SceneData에 actionKey만 저장하고,
 // 실제 callback 연결은 DLL 재빌드 후 여기서 다시 등록한다.
 // 작성 절차:
-// 1) 실제 action callback은 KirbyGameDll/UserActions에 작성한다.
+// 1) 실제 action callback은 KirbyGameDll/UserActions/Scripts에 작성한다.
 // 2) 여기서 UIActionRegistry::RegisterAction("ActionKey", callback)으로 등록한다.
 // 3) UIButton Inspector에서 actionKey를 선택한다.
 // 4) SceneData에는 callback/lambda 대신 actionKey 문자열만 저장된다.

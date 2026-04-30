@@ -35,6 +35,13 @@ public:
         totalDeltaTime = 0.0; // 누적 델타 시간을 리셋
     }
 
+    void Resync()
+    {
+        QueryPerformanceCounter(&lastTime);
+        deltaTime = 0.0;
+        totalDeltaTime = 0.0;
+    }
+
 private:
     LARGE_INTEGER frequency;
     LARGE_INTEGER lastTime;

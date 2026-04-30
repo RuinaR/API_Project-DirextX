@@ -2,8 +2,15 @@
   "version": 4,
   "sceneName": "TestScene2",
   "camera": {
-    "position": { "x": 0, "y": 0, "z": 0 },
-    "rotation": { "x": 0, "y": 0, "z": 0 }
+    "position": { "x": 0, "y": 113, "z": -523 },
+    "rotation": { "x": 0, "y": 0, "z": -0.6 },
+    "projection": {
+      "mode": "Perspective",
+      "fov": 0.785398,
+      "orthographicSize": 900,
+      "nearClip": 1,
+      "farClip": 1873
+    }
   },
   "objects": [
     {
@@ -30,7 +37,7 @@
       "active": true,
       "transform": {
         "position": { "x": 89, "y": 194, "z": 225 },
-        "rotation": { "x": 0, "y": 4059, "z": 3928 },
+        "rotation": { "x": 0, "y": 9163, "z": 9032 },
         "size": { "x": 1, "y": 1, "z": 1 }
       },
       "components": [
@@ -51,6 +58,66 @@
       },
       "components": [
         { "type": "UIButton", "data": { "position": { "x": 327, "y": 97 }, "size": { "x": 180, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "imagePath": "", "useTexture": false, "normalColor": 4283463900, "hoverColor": 4284781040, "pressedColor": 4281817780, "actionKey": "SampleButtonAction" } }
+      ]
+    },
+    {
+      "id": 4,
+      "parentId": -1,
+      "name": "Sprite (1)",
+      "tag": "Sprite (1)",
+      "active": true,
+      "transform": {
+        "position": { "x": -159, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
+      ]
+    },
+    {
+      "id": 5,
+      "parentId": -1,
+      "name": "Sprite (2)",
+      "tag": "Sprite (2)",
+      "active": true,
+      "transform": {
+        "position": { "x": 134, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 160, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 6,
+      "parentId": -1,
+      "name": "UI Image",
+      "tag": "UI Image",
+      "active": true,
+      "transform": {
+        "position": { "x": 1075, "y": 97, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
+      "components": [
+        { "type": "UIImage", "data": { "position": { "x": 1011, "y": 33 }, "size": { "x": 128, "y": 128 }, "visible": true, "enabled": true, "orderInLayer": 0, "useTexture": false, "color": 4283479260, "imagePath": "" } }
+      ]
+    },
+    {
+      "id": 7,
+      "parentId": 2,
+      "name": "Sprite (3)",
+      "tag": "Sprite (3)",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 208 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/defaultObj.bmp" } }
       ]
     }
   ]

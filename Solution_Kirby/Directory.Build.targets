@@ -21,15 +21,19 @@
     </ItemGroup>
     <Copy SourceFiles="@(KirbyRuntimeBitmap)"
           DestinationFiles="@(KirbyRuntimeBitmap->'$(OutDir)Bitmaps\%(RecursiveDir)%(Filename)%(Extension)')"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="@(KirbyRuntimeMap)"
           DestinationFiles="@(KirbyRuntimeMap->'$(OutDir)Map\%(RecursiveDir)%(Filename)%(Extension)')"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="@(KirbyRuntimeFbx)"
           DestinationFiles="@(KirbyRuntimeFbx->'$(OutDir)FBX\%(RecursiveDir)%(Filename)%(Extension)')"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="@(KirbyRuntimeRootAsset)"
           DestinationFiles="@(KirbyRuntimeRootAsset->'$(OutDir)%(Filename)%(Extension)')"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="false"
+          OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>

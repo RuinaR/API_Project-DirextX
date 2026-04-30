@@ -304,6 +304,7 @@ bool SceneDataManager::SaveSceneData(const std::string& sceneName)
 
 bool SceneDataManager::SaveCurrentSceneData(const std::string& sceneName)
 {
+	ObjectManager::GetInstance()->FlushPendingObjects();
 	const std::string json = BuildSceneDataJson(sceneName);
 	if (!WriteSceneDataFile(sceneName, json))
 	{
@@ -317,6 +318,7 @@ bool SceneDataManager::SaveCurrentSceneData(const std::string& sceneName)
 
 bool SceneDataManager::CaptureSceneSnapshot(const std::string& sceneName)
 {
+	ObjectManager::GetInstance()->FlushPendingObjects();
 	GetCapturedSceneSnapshots()[sceneName] = BuildSceneDataJson(sceneName);
 	ClearSceneDirty(sceneName);
 	std::cout << "SceneData snapshot captured: " << sceneName << std::endl;
