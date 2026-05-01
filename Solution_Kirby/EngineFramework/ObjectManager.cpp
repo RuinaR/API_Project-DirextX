@@ -6,6 +6,9 @@
 #include "Editor/EditorHierarchyWindow.h"
 #include "Editor/EditorInspectorWindow.h"
 #include "Resource/ResourceBrowser.h"
+#include "Input/Mouse.h"
+#include "Physics2D/Physics2D.h"
+
 ObjectManager* ObjectManager::m_Pthis = nullptr;
 
 bool ObjectManager::IsInObjectList(GameObject* obj)
@@ -39,6 +42,39 @@ bool ObjectManager::IsPendingRemove(GameObject* obj)
 			return true;
 	}
 	return false;
+}
+
+GameObject* ObjectManager::RaycastMouseToGameObject()
+{
+	Mouse* mouse = Mouse::GetInstance();
+	if (mouse == nullptr)
+	{
+		m_hasLastMouseRay = false;
+		m_hasLastMouseRaycastHit = false;
+		m_lastMouseRaycastHit = RaycastHit2D();
+		return nullptr;
+	}
+
+	m_lastMouseRay = mouse->ScreenPointToRay();
+	m_hasLastMouseRay = true;
+	m_hasLastMouseRaycastHit = Physics2D::Raycast(m_lastMouseRay, m_lastMouseRaycastHit, FLT_MAX, true);
+	if (!m_hasLastMouseRaycastHit)
+	{
+		m_lastMouseRaycastHit = RaycastHit2D();
+		return nullptr;
+	}
+
+	if (m_lastMouseRaycastHit.collider == nullptr ||
+		m_lastMouseRaycastHit.gameObject == nullptr ||
+		m_lastMouseRaycastHit.gameObject->GetDestroy() ||
+		!m_lastMouseRaycastHit.gameObject->GetActive())
+	{
+		m_hasLastMouseRaycastHit = false;
+		m_lastMouseRaycastHit = RaycastHit2D();
+		return nullptr;
+	}
+
+	return m_lastMouseRaycastHit.gameObject;
 }
 
 void ObjectManager::AssignRuntimeObjectId(GameObject* obj)
@@ -677,40 +713,52 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 
 void ObjectManager::OnLBtnDown()
 {
-	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	GameObject* hitObject = RaycastMouseToGameObject();
+	if (hitObject != nullptr)
 	{
-		if ((*itr) == nullptr || (*itr)->GetDestroy())
-			continue;
-		(*itr)->OnLBtnDown();
+		hitObject->OnLBtnDown();
 	}
 }
 
 void ObjectManager::OnLBtnUp()
 {
-	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	GameObject* hitObject = RaycastMouseToGameObject();
+	if (hitObject != nullptr)
 	{
-		if ((*itr) == nullptr || (*itr)->GetDestroy())
-			continue;
-		(*itr)->OnLBtnUp();
+		hitObject->OnLBtnUp();
 	}
 }
 
 void ObjectManager::OnRBtnDown()
 {
-	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	GameObject* hitObject = RaycastMouseToGameObject();
+	if (hitObject != nullptr)
 	{
-		if ((*itr) == nullptr || (*itr)->GetDestroy())
-			continue;
-		(*itr)->OnRBtnDown();
+		hitObject->OnRBtnDown();
 	}
 }
 
 void ObjectManager::OnRBtnUp()
 {
-	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	GameObject* hitObject = RaycastMouseToGameObject();
+	if (hitObject != nullptr)
 	{
-		if ((*itr) == nullptr || (*itr)->GetDestroy())
-			continue;
-		(*itr)->OnRBtnUp();
+		hitObject->OnRBtnUp();
 	}
+}
+
+bool ObjectManager::GetLastMouseRaycastInfo(Ray& outRay, RaycastHit2D& outHit, bool& outHasHit) const
+{
+	if (!m_hasLastMouseRay)
+	{
+		outRay = Ray();
+		outHit = RaycastHit2D();
+		outHasHit = false;
+		return false;
+	}
+
+	outRay = m_lastMouseRay;
+	outHit = m_lastMouseRaycastHit;
+	outHasHit = m_hasLastMouseRaycastHit;
+	return true;
 }

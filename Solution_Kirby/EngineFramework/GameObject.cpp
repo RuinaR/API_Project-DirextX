@@ -558,7 +558,7 @@ void GameObject::OnCollisionStay(Collider* col)
 {
 	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
 	{
-		(*itr)->OnCollision(col);
+		(*itr)->OnCollisionStay(col);
 	}
 }
 
@@ -576,20 +576,8 @@ void GameObject::OnLBtnDown()
     if (!m_setActive || !m_vecComponent)
         return;
 
-    RECT rect = {
-         m_position.x + Camera::GetInstance()->GetPos().x,
-         m_position.y + Camera::GetInstance()->GetPos().y,
-         m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
-         m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { 
-        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y};
-
-    if (PtInRect(&rect, point))
-    {
-        for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-            (*itr)->OnLBtnDown();
-    }
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        (*itr)->OnLBtnDown();
 }
 
 void GameObject::OnLBtnUp()
@@ -597,20 +585,8 @@ void GameObject::OnLBtnUp()
     if (!m_setActive || !m_vecComponent)
         return;
 
-    RECT rect = {
-        m_position.x + Camera::GetInstance()->GetPos().x,
-        m_position.y + Camera::GetInstance()->GetPos().y,
-        m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
-        m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { 
-        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y };
-
-	if (PtInRect(&rect, point))
-	{
-		for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-		    	(*itr)->OnLBtnUp();
-	}
+	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+		(*itr)->OnLBtnUp();
 }
 
 void GameObject::OnRBtnDown()
@@ -618,20 +594,8 @@ void GameObject::OnRBtnDown()
     if (!m_setActive || !m_vecComponent)
         return;
 
-    RECT rect = {
-        m_position.x + Camera::GetInstance()->GetPos().x,
-        m_position.y + Camera::GetInstance()->GetPos().y,
-        m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
-        m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { 
-        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y};
-
-    if (PtInRect(&rect, point))
-    {
-        for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-            (*itr)->OnRBtnDown();
-    }
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        (*itr)->OnRBtnDown();
 }
 
 void GameObject::OnRBtnUp()
@@ -639,18 +603,6 @@ void GameObject::OnRBtnUp()
     if (!m_setActive || !m_vecComponent)
         return;
 
-    RECT rect = {
-         m_position.x + Camera::GetInstance()->GetPos().x,
-         m_position.y + Camera::GetInstance()->GetPos().y,
-         m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
-         m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
-    POINT point = { 
-        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x,
-        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y};
-
-    if (PtInRect(&rect, point))
-    {
-        for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-            (*itr)->OnRBtnUp();
-    }
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        (*itr)->OnRBtnUp();
 }

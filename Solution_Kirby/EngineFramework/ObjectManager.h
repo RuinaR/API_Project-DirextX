@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include "Math/Ray.h"
+#include "Physics2D/Physics2D.h"
 #include <unordered_map>
 
 class ObjectManager
@@ -12,6 +14,10 @@ private:
 	GameObject* m_selected;
 	bool m_isFlushing = false;
 	int m_nextRuntimeObjectId = 1;
+	Ray m_lastMouseRay;
+	RaycastHit2D m_lastMouseRaycastHit;
+	bool m_hasLastMouseRay = false;
+	bool m_hasLastMouseRaycastHit = false;
 
 	bool IsInObjectList(GameObject* obj);
 	bool IsPendingAdd(GameObject* obj);
@@ -22,6 +28,7 @@ private:
 	void QueueDestroyObjectTree(GameObject* obj);
 	bool IsSameOrChild(GameObject* root, GameObject* target);
 	void ReleaseAndDeleteObject(GameObject* obj);
+	GameObject* RaycastMouseToGameObject();
 	
 public:
 	static void Create();
@@ -56,5 +63,6 @@ public:
 	void OnLBtnUp();
 	void OnRBtnDown();
 	void OnRBtnUp();
+	bool GetLastMouseRaycastInfo(Ray& outRay, RaycastHit2D& outHit, bool& outHasHit) const;
 };
 

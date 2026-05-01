@@ -6,11 +6,8 @@
 #include "MainFrame.h"
 #include "ObjectManager.h"
 #include "Camera.h"
-#include "Mouse.h"
-#include "Physics2D/Physics2D.h"
 #include "RenderManager.h"
 #include "SceneDataManager.h"
-#include <cfloat>
 
 namespace
 {
@@ -28,36 +25,6 @@ namespace
 	std::string g_pendingOpenSceneName;
 	bool g_shouldExecutePendingSceneAction = false;
 	bool g_shouldOpenSceneChangeConfirmPopup = false;
-	bool g_enableDebugRaycast = false;
-	float g_debugRaycastMaxDistance = 1000.0f;
-	bool g_debugRaycastIncludeTriggers = false;
-
-	bool TryIntersectRayWithPhysicsPlane(const Ray& ray, D3DXVECTOR3& outPoint, float& outDistance)
-	{
-		const float epsilon = 0.000001f;
-
-		if (fabs(ray.direction.z) <= epsilon)
-		{
-			if (fabs(ray.origin.z) > epsilon)
-			{
-				return false;
-			}
-
-			outPoint = ray.origin;
-			outDistance = 0.0f;
-			return true;
-		}
-
-		const float t = -ray.origin.z / ray.direction.z;
-		if (t < 0.0f)
-		{
-			return false;
-		}
-
-		outPoint = ray.origin + (ray.direction * t);
-		outDistance = t;
-		return true;
-	}
 
 	std::string GetCurrentSceneName()
 	{
@@ -238,50 +205,27 @@ namespace
 		}
 	}
 
-	void DrawRaycastDebugSection()
+	void DrawMouseRaycastInfoSection()
 	{
-		if (!ImGui::CollapsingHeader("Raycast Debug", ImGuiTreeNodeFlags_DefaultOpen))
+		if (!ImGui::CollapsingHeader("Mouse Raycast Info", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			return;
 		}
 
-		if (g_debugRaycastMaxDistance <= 0.0f)
+		ObjectManager* objectManager = ObjectManager::GetInstance();
+		if (objectManager == nullptr)
 		{
-			g_debugRaycastMaxDistance = 1.0f;
-		}
-		if (ImGui::DragFloat("Max Distance", &g_debugRaycastMaxDistance, 10.0f, 1.0f, 100000.0f, "%.1f"))
-		{
-			if (g_debugRaycastMaxDistance <= 0.0f)
-			{
-				g_debugRaycastMaxDistance = 1.0f;
-			}
-		}
-		ImGui::Checkbox("Include Triggers", &g_debugRaycastIncludeTriggers);
-
-		Mouse* mouse = Mouse::GetInstance();
-		if (mouse == nullptr)
-		{
-			ImGui::TextDisabled("Mouse unavailable");
+			ImGui::TextDisabled("ObjectManager unavailable");
 			return;
 		}
 
-		const Ray ray = mouse->ScreenPointToRay();
+		Ray ray;
 		RaycastHit2D hit;
-		const bool hasHit = Physics2D::Raycast(ray, hit, g_debugRaycastMaxDistance, g_debugRaycastIncludeTriggers);
-		const D3DXVECTOR3 rayStart = ray.origin;
-		D3DXVECTOR3 rayEnd = ray.origin + (ray.direction * g_debugRaycastMaxDistance);
-		D3DXVECTOR3 planePoint;
-		float planeDistance = 0.0f;
-		if (TryIntersectRayWithPhysicsPlane(ray, planePoint, planeDistance))
+		bool hasHit = false;
+		if (!objectManager->GetLastMouseRaycastInfo(ray, hit, hasHit))
 		{
-			if (planeDistance <= g_debugRaycastMaxDistance)
-			{
-				rayEnd = planePoint;
-			}
-		}
-		if (hasHit)
-		{
-			rayEnd = hit.point;
+			ImGui::TextDisabled("No mouse click raycast yet");
+			return;
 		}
 
 		ImGui::Text("Ray Origin: %.2f, %.2f, %.2f", ray.origin.x, ray.origin.y, ray.origin.z);
@@ -583,7 +527,7 @@ void EditorHierarchyWindow::Draw()
 		ImGui::Separator();
 		DrawCameraSection();
 		ImGui::Separator();
-		DrawRaycastDebugSection();
+		DrawMouseRaycastInfoSection();
 		ImGui::Separator();
 		EditorBuildSettingsPanel::Draw();
 		ImGui::Separator();

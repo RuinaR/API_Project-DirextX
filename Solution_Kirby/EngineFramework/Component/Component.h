@@ -11,6 +11,7 @@ protected:
 
 	virtual void CollisionEnter(Collider* other) {};
 	virtual void CollisionExit(Collider* other) {};
+	virtual void CollisionStay(Collider* other) { Collision(other); }
 	virtual void Collision(Collider* other) {};
 
 public:
@@ -22,7 +23,8 @@ public:
 	virtual void Update() abstract;
 	void OnCollisionEnter(Collider* other) { CollisionEnter(other); }
 	void OnCollisionExit(Collider* other) { CollisionExit(other); }
-	void OnCollision(Collider* other) { Collision(other); }
+	void OnCollisionStay(Collider* other) { CollisionStay(other); }
+	void OnCollision(Collider* other) { OnCollisionStay(other); }
 	virtual void InitGameObj(GameObject* obj);
 	GameObject* GetGameObject();
 

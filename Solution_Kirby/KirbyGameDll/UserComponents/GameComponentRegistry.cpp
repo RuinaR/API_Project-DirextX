@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameComponentRegistry.h"
 #include "ComponentFactory.h"
+#include "Scripts/CollisionVisualTestComponent.h"
 #include "Scripts/SampleSpinComponent.h"
 #include "UserComponentRegistration.h"
 
@@ -21,6 +22,7 @@ void RegisterGameComponents(ComponentFactory& factory)
 	// - 새 C++ 컴포넌트 추가 후에는 DLL 재빌드 + 에디터 재실행이 필요하다.
 	// - 에디터 실행 중 C++ 컴포넌트 hot reload는 지원하지 않는다.
 	// - EngineFramework에는 게임별 사용자 컴포넌트 코드를 넣지 않는다.
+	REGISTER_GAME_COMPONENT(factory, CollisionVisualTestComponent, "Collision Visual Test", "User");
 	REGISTER_GAME_COMPONENT(factory, SampleSpinComponent, "Sample Spin", "User");
 	// 런타임 문맥, 생성자 인자, 싱글톤 소유권이 필요한 사용자 컴포넌트는
 	// 전용 생성 함수와 인스펙터/직렬화 지원을 갖춘 뒤 여기서 다시 등록한다.

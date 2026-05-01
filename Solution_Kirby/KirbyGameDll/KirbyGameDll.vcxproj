@@ -176,6 +176,7 @@
     <ClInclude Include="..\include\PluginManager.h" />
     <ClInclude Include="KirbyGame.h" />
     <ClInclude Include="UserComponents\GameComponentRegistry.h" />
+    <ClInclude Include="UserComponents\Scripts\CollisionVisualTestComponent.h" />
     <ClInclude Include="UserActions\GameActionRegistry.h" />
     <ClInclude Include="UserComponents\UserComponentPlaceholder.h" />
     <ClInclude Include="UserComponents\UserComponentRegistration.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="KirbyGame.cpp" />
     <ClCompile Include="UserActions\GameActionRegistry.cpp" />
     <ClCompile Include="UserComponents\GameComponentRegistry.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CollisionVisualTestComponent.cpp" />
     <ClCompile Include="UserComponents\Scripts\SampleSpinComponent.cpp" />
     <ClCompile Include="UserActions\Scripts\SampleButtonAction.cpp" />
   </ItemGroup>

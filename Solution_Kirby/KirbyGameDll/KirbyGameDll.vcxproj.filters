@@ -51,6 +51,9 @@
     <ClInclude Include="UserComponents\GameComponentRegistry.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CollisionVisualTestComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
     <ClInclude Include="UserComponents\UserComponentPlaceholder.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
@@ -79,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="UserComponents\GameComponentRegistry.cpp">
       <Filter>UserComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CollisionVisualTestComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
     </ClCompile>
     <ClCompile Include="UserComponents\Scripts\SampleSpinComponent.cpp">
       <Filter>UserComponents\Scripts</Filter>
