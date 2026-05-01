@@ -52,13 +52,16 @@
     <ClCompile Include="Rendering\UI\UIElement.cpp">
       <Filter>Rendering\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Collision\BoxCollider.cpp">
+    <ClCompile Include="Component\Collision\BoxCollider2D.cpp">
+      <Filter>Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collision\CircleCollider2D.cpp">
       <Filter>Component\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Component\Physics\Rigidbody2D.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Collision\Collider.cpp">
+    <ClCompile Include="Component\Collision\Collider2D.cpp">
       <Filter>Component\Collision</Filter>
     </ClCompile>
     <ClCompile Include="ImguiButton.cpp">
@@ -186,13 +189,16 @@
     <ClInclude Include="Rendering\UI\UIElement.h">
       <Filter>Rendering\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Collision\BoxCollider.h">
+    <ClInclude Include="Component\Collision\BoxCollider2D.h">
+      <Filter>Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collision\CircleCollider2D.h">
       <Filter>Component\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Component\Physics\Rigidbody2D.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Collision\Collider.h">
+    <ClInclude Include="Component\Collision\Collider2D.h">
       <Filter>Component\Collision</Filter>
     </ClInclude>
     <ClInclude Include="ImguiButton.h">

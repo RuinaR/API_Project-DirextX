@@ -54,6 +54,9 @@
     <ClInclude Include="UserComponents\Scripts\CollisionVisualTestComponent.h">
       <Filter>UserComponents\Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\Physics2DKeyboardTestComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
     <ClInclude Include="UserComponents\UserComponentPlaceholder.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
@@ -84,6 +87,9 @@
       <Filter>UserComponents</Filter>
     </ClCompile>
     <ClCompile Include="UserComponents\Scripts\CollisionVisualTestComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\Physics2DKeyboardTestComponent.cpp">
       <Filter>UserComponents\Scripts</Filter>
     </ClCompile>
     <ClCompile Include="UserComponents\Scripts\SampleSpinComponent.cpp">

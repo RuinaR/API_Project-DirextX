@@ -1,7 +1,6 @@
 #pragma once
 #include "Component.h"
 #include "structs.h"
-#include "BoxCollider.h"
 
 struct GameObjectSerializedData
 {
@@ -32,7 +31,6 @@ protected:
     vector<Component*>* m_pendingDeleteComponents = nullptr;
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
-    BoxCollider* m_box;
     void FlushPendingComponents();
 public:
     GameObject();
@@ -101,9 +99,12 @@ public:
     vector<GameObject*>* GetChild() { return m_children; }
 
 
-    void OnCollisionEnter(Collider* col);
-    void OnCollisionStay(Collider* col);
-    void OnCollisionExit(Collider* col);
+    void OnCollisionEnter(Collider2D* col);
+    void OnCollisionStay(Collider2D* col);
+    void OnCollisionExit(Collider2D* col);
+    void OnTriggerEnter(Collider2D* col);
+    void OnTriggerStay(Collider2D* col);
+    void OnTriggerExit(Collider2D* col);
 
     void OnLBtnDown();
     void OnLBtnUp();

@@ -226,7 +226,7 @@ void CollisionVisualTestComponent::MouseHoverExit()
 	RefreshVisualState();
 }
 
-void CollisionVisualTestComponent::CollisionEnter(Collider* other)
+void CollisionVisualTestComponent::CollisionEnter(Collider2D* other)
 {
 	(void)other;
 
@@ -241,7 +241,7 @@ void CollisionVisualTestComponent::CollisionEnter(Collider* other)
 	RefreshVisualState();
 }
 
-void CollisionVisualTestComponent::CollisionStay(Collider* other)
+void CollisionVisualTestComponent::CollisionStay(Collider2D* other)
 {
 	(void)other;
 
@@ -253,7 +253,7 @@ void CollisionVisualTestComponent::CollisionStay(Collider* other)
 	RefreshVisualState();
 }
 
-void CollisionVisualTestComponent::CollisionExit(Collider* other)
+void CollisionVisualTestComponent::CollisionExit(Collider2D* other)
 {
 	(void)other;
 

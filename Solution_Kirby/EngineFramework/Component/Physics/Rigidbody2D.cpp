@@ -1,7 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Rigidbody2D.h"
 
-#include "Collider.h"
+#include "Collider2D.h"
 #include "GameObject.h"
 #include "MainFrame.h"
 #include "SceneJsonUtility.h"
@@ -100,6 +100,16 @@ namespace
 		}
 		return Rigidbody2DInterpolation::None;
 	}
+
+	bool CanApplyVelocityToBody(b2Body* body)
+	{
+		return body != nullptr && body->GetType() != b2_staticBody;
+	}
+
+	bool CanApplyDynamicForce(b2Body* body)
+	{
+		return body != nullptr && body->GetType() == b2_dynamicBody;
+	}
 }
 
 Rigidbody2D::Rigidbody2D()
@@ -132,7 +142,7 @@ void Rigidbody2D::Release()
 		{
 			for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
 			{
-				Collider* collider = dynamic_cast<Collider*>(*itr);
+				Collider2D* collider = dynamic_cast<Collider2D*>(*itr);
 				if (collider != nullptr)
 				{
 					collider->ClearBodyReferenceIfMatches(releasedBody);
@@ -186,7 +196,7 @@ void Rigidbody2D::CreateBody(bool rebuildAttachedColliders)
 		{
 			for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
 			{
-				Collider* collider = dynamic_cast<Collider*>(*itr);
+				Collider2D* collider = dynamic_cast<Collider2D*>(*itr);
 				if (collider != nullptr)
 				{
 					collider->ClearBodyReferenceIfMatches(previousBody);
@@ -225,14 +235,18 @@ void Rigidbody2D::ApplyBodySettings()
 		return;
 	}
 
+	const bool lockRotation = m_fixedRotation || m_freezeRotationZ;
 	m_body->SetType(m_bodyType);
 	m_body->SetLinearDamping(m_drag);
 	m_body->SetAngularDamping(m_angularDrag);
 	m_body->SetGravityScale(m_useGravity ? m_gravityScale : 0.0f);
-	m_body->SetFixedRotation(m_fixedRotation || m_freezeRotationZ);
+	m_body->SetFixedRotation(lockRotation);
 	m_body->SetBullet(m_collisionDetection == Rigidbody2DCollisionDetection::Continuous);
-	m_body->SetLinearVelocity(b2Vec2(m_linearVelocity.x, m_linearVelocity.y));
-	m_body->SetAngularVelocity(m_angularVelocity);
+	if (CanApplyVelocityToBody(m_body))
+	{
+		m_body->SetLinearVelocity(b2Vec2(m_linearVelocity.x, m_linearVelocity.y));
+		m_body->SetAngularVelocity(lockRotation ? 0.0f : m_angularVelocity);
+	}
 }
 
 void Rigidbody2D::RebuildAttachedColliders()
@@ -250,7 +264,7 @@ void Rigidbody2D::RebuildAttachedColliders()
 
 	for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
 	{
-		Collider* collider = dynamic_cast<Collider*>(*itr);
+		Collider2D* collider = dynamic_cast<Collider2D*>(*itr);
 		if (collider == nullptr)
 		{
 			continue;
@@ -269,7 +283,7 @@ void Rigidbody2D::RebuildAttachedColliders()
 void Rigidbody2D::SetVelocity(const D3DXVECTOR2& velocity)
 {
 	m_linearVelocity = velocity;
-	if (m_body != nullptr)
+	if (CanApplyVelocityToBody(m_body))
 	{
 		m_body->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
 	}
@@ -286,9 +300,30 @@ D3DXVECTOR2 Rigidbody2D::GetVelocity() const
 	return m_linearVelocity;
 }
 
+void Rigidbody2D::SetAngularVelocity(float angularVelocity)
+{
+	const bool lockRotation = m_fixedRotation || m_freezeRotationZ;
+	m_angularVelocity = lockRotation ? 0.0f : angularVelocity;
+	if (CanApplyVelocityToBody(m_body))
+	{
+		m_body->SetAngularVelocity(lockRotation ? 0.0f : angularVelocity);
+	}
+}
+
+float Rigidbody2D::GetAngularVelocity() const
+{
+	if (m_body != nullptr)
+	{
+		return m_body->GetAngularVelocity();
+	}
+
+	return m_angularVelocity;
+}
+
 void Rigidbody2D::AddForce(const D3DXVECTOR2& force)
 {
-	if (m_body == nullptr)
+	// force는 dynamic body에서만 적용된다.
+	if (!CanApplyDynamicForce(m_body))
 	{
 		return;
 	}
@@ -298,7 +333,8 @@ void Rigidbody2D::AddForce(const D3DXVECTOR2& force)
 
 void Rigidbody2D::AddImpulse(const D3DXVECTOR2& impulse)
 {
-	if (m_body == nullptr)
+	// impulse는 dynamic body에서만 중심 기준으로 적용된다.
+	if (!CanApplyDynamicForce(m_body))
 	{
 		return;
 	}
@@ -308,7 +344,8 @@ void Rigidbody2D::AddImpulse(const D3DXVECTOR2& impulse)
 
 void Rigidbody2D::AddTorque(float torque)
 {
-	if (m_body == nullptr)
+	// torque는 dynamic body에서만 적용된다.
+	if (!CanApplyDynamicForce(m_body))
 	{
 		return;
 	}
@@ -344,6 +381,19 @@ void Rigidbody2D::DrawInspector()
 			m_body->SetType(m_bodyType);
 		}
 		needsApplySettings = true;
+	}
+
+	if (m_bodyType == b2_staticBody)
+	{
+		ImGui::TextDisabled("Static: Velocity is cached only. Force / impulse / torque are ignored.");
+	}
+	else if (m_bodyType == b2_kinematicBody)
+	{
+		ImGui::TextDisabled("Kinematic: Velocity is applied. Force / impulse / torque are ignored.");
+	}
+	else
+	{
+		ImGui::TextDisabled("Dynamic: Velocity, force, impulse, and torque are applied.");
 	}
 
 	if (ImGui::DragFloat("Drag", &m_drag, 0.01f, 0.0f, 100.0f, "%.2f"))
@@ -383,10 +433,7 @@ void Rigidbody2D::DrawInspector()
 
 	if (ImGui::DragFloat("Angular Velocity", &m_angularVelocity, 0.1f))
 	{
-		if (m_body != nullptr)
-		{
-			m_body->SetAngularVelocity(m_angularVelocity);
-		}
+		SetAngularVelocity(m_angularVelocity);
 		needsApplySettings = false;
 	}
 
@@ -408,23 +455,19 @@ void Rigidbody2D::DrawInspector()
 	ImGui::Separator();
 	ImGui::Text("Constraints");
 
-	if (ImGui::Checkbox("Freeze Position X", &m_freezePositionX))
-	{
-	}
-	ImGui::SameLine();
-	ImGui::TextDisabled("(Not Implemented)");
-
-	if (ImGui::Checkbox("Freeze Position Y", &m_freezePositionY))
-	{
-	}
-	ImGui::SameLine();
-	ImGui::TextDisabled("(Not Implemented)");
-
 	bool freezeRotationZ = m_freezeRotationZ;
-	if (ImGui::Checkbox("Freeze Rotation Z", &freezeRotationZ))
+	if (ImGui::Checkbox("Freeze Rotate Z", &freezeRotationZ))
 	{
 		m_freezeRotationZ = freezeRotationZ;
 		m_fixedRotation = freezeRotationZ;
+		if (freezeRotationZ)
+		{
+			m_angularVelocity = 0.0f;
+			if (m_body != nullptr)
+			{
+				m_body->SetAngularVelocity(0.0f);
+			}
+		}
 		needsApplySettings = true;
 	}
 
@@ -461,8 +504,6 @@ std::string Rigidbody2D::Serialize() const
 	oss << "\"angularVelocity\": " << m_angularVelocity << ", ";
 	oss << "\"collisionDetection\": \"" << ToCollisionDetectionString(m_collisionDetection) << "\", ";
 	oss << "\"interpolate\": \"" << ToInterpolationString(m_interpolate) << "\", ";
-	oss << "\"freezePositionX\": " << (m_freezePositionX ? "true" : "false") << ", ";
-	oss << "\"freezePositionY\": " << (m_freezePositionY ? "true" : "false") << ", ";
 	oss << "\"freezeRotationZ\": " << (m_freezeRotationZ ? "true" : "false");
 	oss << " }";
 	return oss.str();
@@ -496,13 +537,12 @@ bool Rigidbody2D::Deserialize(const std::string& componentJson)
 		m_interpolate = ParseInterpolationString(interpolateString);
 	}
 
-	SceneJson::ReadBool(componentJson, "freezePositionX", m_freezePositionX);
-	SceneJson::ReadBool(componentJson, "freezePositionY", m_freezePositionY);
 	SceneJson::ReadBool(componentJson, "freezeRotationZ", m_freezeRotationZ);
 
 	if (m_freezeRotationZ)
 	{
 		m_fixedRotation = true;
+		m_angularVelocity = 0.0f;
 	}
 
 	if (m_body != nullptr)
@@ -512,3 +552,4 @@ bool Rigidbody2D::Deserialize(const std::string& componentJson)
 
 	return true;
 }
+

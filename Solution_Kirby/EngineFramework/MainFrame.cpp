@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
 #include "ObjectManager.h"
-#include "CollisionManager.h"
 #include "RenderManager.h"
 #include "DebugWindow.h"
 #include "..\Imgui\source\imgui_impl_win32.h"
 #include "..\Imgui\source\imgui_impl_dx9.h"
 #include "Resource/AssetDatabase.h"
 #include "Resource/ResourceManager.h"
+#include <unordered_set>
 MainFrame* MainFrame::m_Pthis = nullptr;
 
 void MainFrame::Create(HINSTANCE hInstance)
@@ -77,6 +77,51 @@ void MainFrame::SetTimeScale(float timeScale)
 
 namespace
 {
+	struct CollisionPair
+	{
+		Collider2D* first = nullptr;
+		Collider2D* second = nullptr;
+
+		bool operator==(const CollisionPair& other) const
+		{
+			return first == other.first && second == other.second;
+		}
+	};
+
+	struct CollisionPairHasher
+	{
+		size_t operator()(const CollisionPair& pair) const
+		{
+			const size_t h1 = std::hash<Collider2D*>{}(pair.first);
+			const size_t h2 = std::hash<Collider2D*>{}(pair.second);
+			return h1 ^ (h2 << 1);
+		}
+	};
+
+	struct TriggerPair
+	{
+		Collider2D* first = nullptr;
+		Collider2D* second = nullptr;
+
+		bool operator==(const TriggerPair& other) const
+		{
+			return first == other.first && second == other.second;
+		}
+	};
+
+	struct TriggerPairHasher
+	{
+		size_t operator()(const TriggerPair& pair) const
+		{
+			const size_t h1 = std::hash<Collider2D*>{}(pair.first);
+			const size_t h2 = std::hash<Collider2D*>{}(pair.second);
+			return h1 ^ (h2 << 1);
+		}
+	};
+
+	std::unordered_set<CollisionPair, CollisionPairHasher> g_activeCollisionPairs;
+	std::unordered_set<TriggerPair, TriggerPairHasher> g_activeTriggerPairs;
+
 	UINT ClampClientSize(LONG value)
 	{
 		return value > 0 ? static_cast<UINT>(value) : 1u;
@@ -143,17 +188,17 @@ namespace
 		return false;
 	}
 
-	Collider* GetColliderFromFixture(b2Fixture* fixture)
+	Collider2D* GetColliderFromFixture(b2Fixture* fixture)
 	{
 		if (fixture == nullptr)
 		{
 			return nullptr;
 		}
 
-		return reinterpret_cast<Collider*>(fixture->GetUserData().pointer);
+		return reinterpret_cast<Collider2D*>(fixture->GetUserData().pointer);
 	}
 
-	GameObject* GetCollisionGameObject(Collider* collider)
+	GameObject* GetCollisionGameObject(Collider2D* collider)
 	{
 		if (collider == nullptr)
 		{
@@ -163,13 +208,37 @@ namespace
 		return collider->GetGameObject();
 	}
 
-	bool IsPendingDestroyCollisionObject(Collider* collider)
+	bool IsPendingDestroyCollisionObject(Collider2D* collider)
 	{
 		GameObject* gameObject = GetCollisionGameObject(collider);
 		return gameObject == nullptr || gameObject->GetDestroy();
 	}
 
-	void DispatchCollisionEnter(Collider* receiver, Collider* other)
+	bool IsTriggerContact(b2Fixture* fixtureA, b2Fixture* fixtureB)
+	{
+		return (fixtureA != nullptr && fixtureA->IsSensor()) ||
+			(fixtureB != nullptr && fixtureB->IsSensor());
+	}
+
+	CollisionPair MakeCollisionPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA < colliderB)
+		{
+			return { colliderA, colliderB };
+		}
+		return { colliderB, colliderA };
+	}
+
+	TriggerPair MakeTriggerPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA < colliderB)
+		{
+			return { colliderA, colliderB };
+		}
+		return { colliderB, colliderA };
+	}
+
+	void DispatchCollisionEnter(Collider2D* receiver, Collider2D* other)
 	{
 		// 충돌 Enter/Stay는 delete-pending 오브젝트가 포함되면 전달하지 않는다.
 		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
@@ -180,7 +249,7 @@ namespace
 		GetCollisionGameObject(receiver)->OnCollisionEnter(other);
 	}
 
-	void DispatchCollisionStay(Collider* receiver, Collider* other)
+	void DispatchCollisionStay(Collider2D* receiver, Collider2D* other)
 	{
 		// 충돌 Enter/Stay는 delete-pending 오브젝트가 포함되면 전달하지 않는다.
 		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
@@ -191,7 +260,7 @@ namespace
 		GetCollisionGameObject(receiver)->OnCollisionStay(other);
 	}
 
-	void DispatchCollisionExit(Collider* receiver, Collider* other)
+	void DispatchCollisionExit(Collider2D* receiver, Collider2D* other)
 	{
 		GameObject* receiverObject = GetCollisionGameObject(receiver);
 		if (receiverObject == nullptr || receiverObject->GetDestroy())
@@ -199,7 +268,7 @@ namespace
 			return;
 		}
 
-		Collider* safeOther = other;
+		Collider2D* safeOther = other;
 		GameObject* otherObject = GetCollisionGameObject(other);
 		if (otherObject == nullptr || otherObject->GetDestroy())
 		{
@@ -207,15 +276,264 @@ namespace
 			safeOther = nullptr;
 		}
 
-		// TODO: active contact pair tracking이 아직 없어서 삭제로 EndContact가 누락된 모든 경우의
-		// Exit(nullptr)를 완전하게 보장하지는 못한다.
 		receiverObject->OnCollisionExit(safeOther);
+	}
+
+	void DispatchTriggerEnter(Collider2D* receiver, Collider2D* other)
+	{
+		// Trigger Enter/Stay도 delete-pending 오브젝트가 포함되면 전달하지 않는다.
+		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		{
+			return;
+		}
+
+		GetCollisionGameObject(receiver)->OnTriggerEnter(other);
+	}
+
+	void DispatchTriggerStay(Collider2D* receiver, Collider2D* other)
+	{
+		// Trigger Enter/Stay도 delete-pending 오브젝트가 포함되면 전달하지 않는다.
+		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		{
+			return;
+		}
+
+		GetCollisionGameObject(receiver)->OnTriggerStay(other);
+	}
+
+	void DispatchTriggerExit(Collider2D* receiver, Collider2D* other)
+	{
+		GameObject* receiverObject = GetCollisionGameObject(receiver);
+		if (receiverObject == nullptr || receiverObject->GetDestroy())
+		{
+			return;
+		}
+
+		Collider2D* safeOther = other;
+		GameObject* otherObject = GetCollisionGameObject(other);
+	if (otherObject == nullptr || otherObject->GetDestroy())
+	{
+		safeOther = nullptr;
+	}
+
+	// Trigger pair tracking 기준으로 삭제/강제 종료 시 Exit(nullptr)를 허용한다.
+	receiverObject->OnTriggerExit(safeOther);
+}
+
+	void TrackCollisionPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA == nullptr || colliderB == nullptr || colliderA == colliderB)
+		{
+			return;
+		}
+
+		g_activeCollisionPairs.insert(MakeCollisionPair(colliderA, colliderB));
+	}
+
+	void UntrackCollisionPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA == nullptr || colliderB == nullptr || colliderA == colliderB)
+		{
+			return;
+		}
+
+		g_activeCollisionPairs.erase(MakeCollisionPair(colliderA, colliderB));
+	}
+
+	void TrackTriggerPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA == nullptr || colliderB == nullptr || colliderA == colliderB)
+		{
+			return;
+		}
+
+		g_activeTriggerPairs.insert(MakeTriggerPair(colliderA, colliderB));
+	}
+
+	void UntrackTriggerPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA == nullptr || colliderB == nullptr || colliderA == colliderB)
+		{
+			return;
+		}
+
+		g_activeTriggerPairs.erase(MakeTriggerPair(colliderA, colliderB));
+	}
+
+	void CleanupActiveCollisionPairs()
+	{
+		for (std::unordered_set<CollisionPair, CollisionPairHasher>::iterator itr = g_activeCollisionPairs.begin();
+			itr != g_activeCollisionPairs.end();)
+		{
+			const CollisionPair pair = *itr;
+			Collider2D* colliderA = pair.first;
+			Collider2D* colliderB = pair.second;
+
+			if (colliderA == nullptr || colliderB == nullptr)
+			{
+				itr = g_activeCollisionPairs.erase(itr);
+				continue;
+			}
+
+			const bool colliderADestroyed = IsPendingDestroyCollisionObject(colliderA);
+			const bool colliderBDestroyed = IsPendingDestroyCollisionObject(colliderB);
+			if (colliderADestroyed || colliderBDestroyed)
+			{
+				if (!colliderADestroyed)
+				{
+					DispatchCollisionExit(colliderA, nullptr);
+				}
+				if (!colliderBDestroyed)
+				{
+					DispatchCollisionExit(colliderB, nullptr);
+				}
+
+				itr = g_activeCollisionPairs.erase(itr);
+				continue;
+			}
+
+			++itr;
+		}
+	}
+
+	void DispatchActiveTriggerStayEvents()
+	{
+		for (std::unordered_set<TriggerPair, TriggerPairHasher>::iterator itr = g_activeTriggerPairs.begin();
+			itr != g_activeTriggerPairs.end();)
+		{
+			const TriggerPair pair = *itr;
+			Collider2D* colliderA = pair.first;
+			Collider2D* colliderB = pair.second;
+
+			if (colliderA == nullptr || colliderB == nullptr)
+			{
+				itr = g_activeTriggerPairs.erase(itr);
+				continue;
+			}
+
+			const bool colliderADestroyed = IsPendingDestroyCollisionObject(colliderA);
+			const bool colliderBDestroyed = IsPendingDestroyCollisionObject(colliderB);
+			if (colliderADestroyed || colliderBDestroyed)
+			{
+				if (!colliderADestroyed)
+				{
+					DispatchTriggerExit(colliderA, nullptr);
+				}
+				if (!colliderBDestroyed)
+				{
+					DispatchTriggerExit(colliderB, nullptr);
+				}
+
+				itr = g_activeTriggerPairs.erase(itr);
+				continue;
+			}
+
+			DispatchTriggerStay(colliderA, colliderB);
+			DispatchTriggerStay(colliderB, colliderA);
+			++itr;
+		}
+	}
+}
+
+void MainFrame::RemoveCollisionPairsForCollider(Collider2D* collider)
+{
+	if (collider == nullptr)
+	{
+		return;
+	}
+
+	for (std::unordered_set<CollisionPair, CollisionPairHasher>::iterator itr = g_activeCollisionPairs.begin();
+		itr != g_activeCollisionPairs.end();)
+	{
+		if (itr->first == collider || itr->second == collider)
+		{
+			itr = g_activeCollisionPairs.erase(itr);
+			continue;
+		}
+
+		++itr;
+	}
+}
+
+void MainFrame::RemoveTriggerPairsForCollider(Collider2D* collider)
+{
+	if (collider == nullptr)
+	{
+		return;
+	}
+
+	for (std::unordered_set<TriggerPair, TriggerPairHasher>::iterator itr = g_activeTriggerPairs.begin();
+		itr != g_activeTriggerPairs.end();)
+	{
+		if (itr->first == collider || itr->second == collider)
+		{
+			itr = g_activeTriggerPairs.erase(itr);
+			continue;
+		}
+
+		++itr;
+	}
+}
+
+void MainFrame::ResetCollisionPairsForCollider(Collider2D* collider)
+{
+	if (collider == nullptr)
+	{
+		return;
+	}
+
+	for (std::unordered_set<CollisionPair, CollisionPairHasher>::iterator itr = g_activeCollisionPairs.begin();
+		itr != g_activeCollisionPairs.end();)
+	{
+		if (itr->first != collider && itr->second != collider)
+		{
+			++itr;
+			continue;
+		}
+
+		Collider2D* other = itr->first == collider ? itr->second : itr->first;
+		DispatchCollisionExit(collider, other);
+		if (other != nullptr)
+		{
+			DispatchCollisionExit(other, collider);
+		}
+
+		itr = g_activeCollisionPairs.erase(itr);
+	}
+}
+
+void MainFrame::ResetTriggerPairsForCollider(Collider2D* collider)
+{
+	if (collider == nullptr)
+	{
+		return;
+	}
+
+	for (std::unordered_set<TriggerPair, TriggerPairHasher>::iterator itr = g_activeTriggerPairs.begin();
+		itr != g_activeTriggerPairs.end();)
+	{
+		if (itr->first != collider && itr->second != collider)
+		{
+			++itr;
+			continue;
+		}
+
+		Collider2D* other = itr->first == collider ? itr->second : itr->first;
+		DispatchTriggerExit(collider, other);
+		if (other != nullptr)
+		{
+			DispatchTriggerExit(other, collider);
+		}
+
+		itr = g_activeTriggerPairs.erase(itr);
 	}
 }
 
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
 {
     m_released = false;
+    g_activeCollisionPairs.clear();
+    g_activeTriggerPairs.clear();
     m_editorPlaybackState = EditorPlaybackState::Paused;
     m_editorStepRequested = false;
     m_unscaledDeltaTime = 0.0;
@@ -481,6 +799,8 @@ bool MainFrame::Update()
             if (shouldAdvanceSimulation)
             {
                 m_pWorld->Step(static_cast<float>(scaledSimulationDeltaTime), m_velocityIterations, m_positionIterations);
+                CleanupActiveCollisionPairs();
+                DispatchActiveTriggerStayEvents();
                 ObjectManager::GetInstance()->Update();
 
                 if (m_type == RenderType::Edit && m_editorStepRequested)
@@ -767,6 +1087,8 @@ void MainFrame::Release()
 
     delete m_pWorld;
     m_pWorld = nullptr;
+    g_activeCollisionPairs.clear();
+    g_activeTriggerPairs.clear();
 }
 
 void CollisionListener::BeginContact(b2Contact* contact)
@@ -774,13 +1096,22 @@ void CollisionListener::BeginContact(b2Contact* contact)
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
-    Collider* dataA = GetColliderFromFixture(fixtureA);
-    Collider* dataB = GetColliderFromFixture(fixtureB);
+    Collider2D* dataA = GetColliderFromFixture(fixtureA);
+    Collider2D* dataB = GetColliderFromFixture(fixtureB);
 	if (dataA == nullptr || dataB == nullptr)
 	{
 		return;
 	}
 
+	if (IsTriggerContact(fixtureA, fixtureB))
+	{
+		TrackTriggerPair(dataA, dataB);
+		DispatchTriggerEnter(dataA, dataB);
+		DispatchTriggerEnter(dataB, dataA);
+		return;
+	}
+
+	TrackCollisionPair(dataA, dataB);
 	DispatchCollisionEnter(dataA, dataB);
 	DispatchCollisionEnter(dataB, dataA);
 }
@@ -790,12 +1121,26 @@ void CollisionListener::EndContact(b2Contact* contact)
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
 
-	Collider* dataA = GetColliderFromFixture(fixtureA);
-	Collider* dataB = GetColliderFromFixture(fixtureB);
+	Collider2D* dataA = GetColliderFromFixture(fixtureA);
+	Collider2D* dataB = GetColliderFromFixture(fixtureB);
+	if (IsTriggerContact(fixtureA, fixtureB))
+	{
+		UntrackTriggerPair(dataA, dataB);
+		if (dataA != nullptr)
+			DispatchTriggerExit(dataA, dataB);
+		if (dataB != nullptr)
+			DispatchTriggerExit(dataB, dataA);
+		return;
+	}
+	UntrackCollisionPair(dataA, dataB);
 	if (dataA != nullptr)
+	{
 		DispatchCollisionExit(dataA, dataB);
+	}
 	if (dataB != nullptr)
+	{
 		DispatchCollisionExit(dataB, dataA);
+	}
 }
 
 void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
@@ -805,9 +1150,14 @@ void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifo
 
 	UNREFERENCED_PARAMETER(oldManifold);
 
-	Collider* dataA = GetColliderFromFixture(fixtureA);
-	Collider* dataB = GetColliderFromFixture(fixtureB);
+	Collider2D* dataA = GetColliderFromFixture(fixtureA);
+	Collider2D* dataB = GetColliderFromFixture(fixtureB);
 	if (dataA == nullptr || dataB == nullptr)
+	{
+		return;
+	}
+
+	if (IsTriggerContact(fixtureA, fixtureB))
 	{
 		return;
 	}

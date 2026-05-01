@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GameObject.h"
 #include "DebugWindow.h"
 #include "Rigidbody2D.h"
@@ -6,7 +6,56 @@
 
 namespace
 {
-	b2Body* GetPrimaryPhysicsBody(GameObject* gameObject, BoxCollider* boxCollider)
+	bool IsComponentStillAttached(GameObject* gameObject, Component* component)
+	{
+		if (gameObject == nullptr || component == nullptr)
+		{
+			return false;
+		}
+
+		vector<Component*>* components = gameObject->GetComponentVec();
+		if (components == nullptr)
+		{
+			return false;
+		}
+
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
+		{
+			if (*itr == component)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	template <typename Dispatcher>
+	void DispatchComponentEventSnapshot(GameObject* gameObject, Dispatcher&& dispatcher, bool stopOnDestroy)
+	{
+		if (gameObject == nullptr || gameObject->GetComponentVec() == nullptr)
+		{
+			return;
+		}
+
+		vector<Component*> snapshot = *gameObject->GetComponentVec();
+		for (vector<Component*>::iterator itr = snapshot.begin(); itr != snapshot.end(); itr++)
+		{
+			Component* component = *itr;
+			if (component == nullptr || !IsComponentStillAttached(gameObject, component))
+			{
+				continue;
+			}
+
+			dispatcher(component);
+			if (stopOnDestroy && gameObject->GetDestroy())
+			{
+				break;
+			}
+		}
+	}
+
+	b2Body* GetPrimaryPhysicsBody(GameObject* gameObject)
 	{
 		if (gameObject == nullptr)
 		{
@@ -19,9 +68,17 @@ namespace
 			return rigidbody2D->GetBody();
 		}
 
-		if (boxCollider != nullptr)
+		vector<Component*>* components = gameObject->GetComponentVec();
+		if (components != nullptr)
 		{
-			return boxCollider->GetBody();
+			for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
+			{
+				Collider2D* collider = dynamic_cast<Collider2D*>(*itr);
+				if (collider != nullptr && collider->GetBody() != nullptr)
+				{
+					return collider->GetBody();
+				}
+			}
 		}
 
 		return nullptr;
@@ -58,7 +115,6 @@ GameObject::GameObject() {
     m_angleX = 0.0f;
     m_angleY = 0.0f;
     m_angleZ = 0.0f;
-    m_box = nullptr;
 }
 
 GameObject::~GameObject() {
@@ -74,7 +130,7 @@ void GameObject::SetPosition(D3DXVECTOR3 v)
     m_position.x = v.x;
 	m_position.y = v.y;
     m_position.z = v.z;
-    b2Body* body = GetPrimaryPhysicsBody(this, m_box);
+    b2Body* body = GetPrimaryPhysicsBody(this);
     SyncBodyTransform(body, m_position, body != nullptr ? body->GetAngle() : 0.0f);
     
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
@@ -86,7 +142,7 @@ void GameObject::AddPosition(D3DXVECTOR3 v)
 	m_position.x += v.x;
 	m_position.y += v.y;
     m_position.z += v.z;
-    b2Body* body = GetPrimaryPhysicsBody(this, m_box);
+    b2Body* body = GetPrimaryPhysicsBody(this);
     SyncBodyTransform(body, m_position, body != nullptr ? body->GetAngle() : 0.0f);
 
 	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
@@ -292,10 +348,6 @@ Component* GameObject::AddComponent(Component* component, bool initializeCompone
     if (component) {
         component->InitGameObj(this);
         m_vecComponent->push_back(component);
-        if (BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(component))
-        {
-            m_box = boxCollider;
-        }
         if (initializeComponent)
             component->Initialize();
         if (startComponent && ObjectManager::GetInstance()->FindObject(this)) {
@@ -313,10 +365,6 @@ void GameObject::DeleteComponent(Component* component) {
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++) {
         if ((*itr) == component) {
             Component* target = *itr;
-            if (target == m_box)
-            {
-                m_box = nullptr;
-            }
             m_vecComponent->erase(itr);
             if (m_pendingDeleteComponents != nullptr)
             {
@@ -357,7 +405,6 @@ void GameObject::FlushPendingComponents()
 
 void GameObject::InitializeSet() {
     m_isDestroy = false;
-    m_box = GetComponent<BoxCollider>();
 	ObjectManager::GetInstance()->AddObject(this);
 }
 
@@ -511,7 +558,7 @@ void GameObject::SetAngleZ(float v)
 {
     const float delta = v - m_angleZ;
     m_angleZ = v;
-    b2Body* body = GetPrimaryPhysicsBody(this, m_box);
+    b2Body* body = GetPrimaryPhysicsBody(this);
     if (body != nullptr)
     {
         body->SetTransform(body->GetPosition(), v);
@@ -543,38 +590,70 @@ void GameObject::SetAngleY(float v)
         (*itr)->SetAngleY((*itr)->GetAngleY() + delta);
 }
 
-void GameObject::OnCollisionEnter(Collider* col)
+void GameObject::OnCollisionEnter(Collider2D* col)
 {
     if (m_vecComponent == nullptr || m_isDestroy)
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [col](Component* component)
     {
-        (*itr)->OnCollisionEnter(col);
-    }
+        component->OnCollisionEnter(col);
+    }, true);
 }
 
-void GameObject::OnCollisionStay(Collider* col)
+void GameObject::OnCollisionStay(Collider2D* col)
+{
+	if (m_vecComponent == nullptr || m_isDestroy)
+        return;
+
+	DispatchComponentEventSnapshot(this, [col](Component* component)
+	{
+		component->OnCollisionStay(col);
+	}, true);
+}
+
+void GameObject::OnCollisionExit(Collider2D* col)
+{
+	if (m_vecComponent == nullptr)
+        return;
+
+	DispatchComponentEventSnapshot(this, [col](Component* component)
+	{
+		component->OnCollisionExit(col);
+	}, false);
+}
+
+void GameObject::OnTriggerEnter(Collider2D* col)
 {
     if (m_vecComponent == nullptr || m_isDestroy)
         return;
 
-	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-	{
-		(*itr)->OnCollisionStay(col);
-	}
+    DispatchComponentEventSnapshot(this, [col](Component* component)
+    {
+        component->OnTriggerEnter(col);
+    }, true);
 }
 
-void GameObject::OnCollisionExit(Collider* col)
+void GameObject::OnTriggerStay(Collider2D* col)
+{
+    if (m_vecComponent == nullptr || m_isDestroy)
+        return;
+
+    DispatchComponentEventSnapshot(this, [col](Component* component)
+    {
+        component->OnTriggerStay(col);
+    }, true);
+}
+
+void GameObject::OnTriggerExit(Collider2D* col)
 {
     if (m_vecComponent == nullptr)
         return;
 
-	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-	{
-		if (*itr)
-			(*itr)->OnCollisionExit(col);
-	}
+    DispatchComponentEventSnapshot(this, [col](Component* component)
+    {
+        component->OnTriggerExit(col);
+    }, false);
 }
 
 void GameObject::OnLBtnDown()
@@ -582,13 +661,10 @@ void GameObject::OnLBtnDown()
     if (!CanDispatchMouseEvent(this))
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [](Component* component)
     {
-        (*itr)->OnLBtnDown();
-        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-        if (m_isDestroy)
-            break;
-    }
+        component->OnLBtnDown();
+    }, true);
 }
 
 void GameObject::OnLBtnUp()
@@ -596,13 +672,10 @@ void GameObject::OnLBtnUp()
     if (!CanDispatchMouseEvent(this))
         return;
 
-	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
-	{
-		(*itr)->OnLBtnUp();
-		// 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-		if (m_isDestroy)
-			break;
-	}
+    DispatchComponentEventSnapshot(this, [](Component* component)
+    {
+        component->OnLBtnUp();
+    }, true);
 }
 
 void GameObject::OnRBtnDown()
@@ -610,13 +683,10 @@ void GameObject::OnRBtnDown()
     if (!CanDispatchMouseEvent(this))
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [](Component* component)
     {
-        (*itr)->OnRBtnDown();
-        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-        if (m_isDestroy)
-            break;
-    }
+        component->OnRBtnDown();
+    }, true);
 }
 
 void GameObject::OnRBtnUp()
@@ -624,13 +694,10 @@ void GameObject::OnRBtnUp()
     if (!CanDispatchMouseEvent(this))
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [](Component* component)
     {
-        (*itr)->OnRBtnUp();
-        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-        if (m_isDestroy)
-            break;
-    }
+        component->OnRBtnUp();
+    }, true);
 }
 
 void GameObject::OnMouseHoverEnter()
@@ -638,13 +705,10 @@ void GameObject::OnMouseHoverEnter()
     if (!CanDispatchMouseEvent(this))
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [](Component* component)
     {
-        (*itr)->OnMouseHoverEnter();
-        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-        if (m_isDestroy)
-            break;
-    }
+        component->OnMouseHoverEnter();
+    }, true);
 }
 
 void GameObject::OnMouseHoverStay()
@@ -652,13 +716,10 @@ void GameObject::OnMouseHoverStay()
     if (!CanDispatchMouseEvent(this))
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [](Component* component)
     {
-        (*itr)->OnMouseHoverStay();
-        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-        if (m_isDestroy)
-            break;
-    }
+        component->OnMouseHoverStay();
+    }, true);
 }
 
 void GameObject::OnMouseHoverExit()
@@ -666,11 +727,10 @@ void GameObject::OnMouseHoverExit()
     if (!CanDispatchMouseEvent(this))
         return;
 
-    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    DispatchComponentEventSnapshot(this, [](Component* component)
     {
-        (*itr)->OnMouseHoverExit();
-        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
-        if (m_isDestroy)
-            break;
-    }
+        component->OnMouseHoverExit();
+    }, true);
 }
+
+

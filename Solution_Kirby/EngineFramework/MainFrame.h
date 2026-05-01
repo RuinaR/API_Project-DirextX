@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Timer.h"
-#include "BoxCollider.h"
+#include "Collider2D.h"
 
 enum class RenderType
 {
@@ -98,6 +98,10 @@ public:
 	bool IsEditorPlaying() const;
 	bool IsEditorPaused() const;
 	bool IsEditorStepRequested() const;
+	void RemoveCollisionPairsForCollider(Collider2D* collider);
+	void RemoveTriggerPairsForCollider(Collider2D* collider);
+	void ResetCollisionPairsForCollider(Collider2D* collider);
+	void ResetTriggerPairsForCollider(Collider2D* collider);
 
 	void AddBtnEvent(std::function<void()> p_event);
 private:

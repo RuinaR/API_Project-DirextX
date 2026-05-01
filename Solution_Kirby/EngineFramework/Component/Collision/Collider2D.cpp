@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "Collider.h"
+﻿#include "pch.h"
+#include "Collider2D.h"
 #include "Rigidbody2D.h"
 #include "SceneJsonUtility.h"
 
@@ -40,10 +40,36 @@ namespace
 
 		return false;
 	}
+
+	int CountCollidersOnGameObject(GameObject* gameObject)
+	{
+		if (gameObject == nullptr)
+		{
+			return 0;
+		}
+
+		vector<Component*>* components = gameObject->GetComponentVec();
+		if (components == nullptr)
+		{
+			return 0;
+		}
+
+		int colliderCount = 0;
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
+		{
+			if (dynamic_cast<Collider2D*>(*itr) != nullptr)
+			{
+				++colliderCount;
+			}
+		}
+
+		return colliderCount;
+	}
 }
 
-void Collider::RenderCollider()
+void Collider2D::RenderCollider()
 {
+		// base Collider2D debug render는 box outline 전용이다.
 		if (m_body == nullptr)
 			return;
 
@@ -85,11 +111,11 @@ void Collider::RenderCollider()
 		MainFrame::GetInstance()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 4, vertices, sizeof(DEBUGVERTEX));
 }
 
-Collider::Collider(b2BodyType type)
+Collider2D::Collider2D(b2BodyType type)
 	:m_type(type)
 {
 }
-void Collider::Start()
+void Collider2D::Start()
 {
 	if (m_gameObj == nullptr)
 	{
@@ -114,7 +140,7 @@ void Collider::Start()
 		CreateBody(m_colOffset, m_colSize, GetFixedRotation());
 	}
 }
-void Collider::Update()
+void Collider2D::Update()
 {
 	if (m_body == nullptr)
 		return;
@@ -127,17 +153,17 @@ void Collider::Update()
 	m_gameObj->SetAngleZ(m_body->GetAngle());
 
 }
-const Vector2D& Collider::GetColSize()
+const Vector2D& Collider2D::GetColSize()
 {
 	return m_colSize;
 }
 
-const Vector2D& Collider::GetColOffset()
+const Vector2D& Collider2D::GetColOffset()
 {
 	return m_colOffset;
 }
 
-void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
+void Collider2D::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 {
 	m_colSize = size;
 	m_colOffset = offset;
@@ -190,28 +216,8 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	{
 		return;
 	}
-	
-	b2PolygonShape box;
-	if (m_ownsBody)
-	{
-		box.SetAsBox(m_colSize.x / 2.0f, m_colSize.y / 2.0f);
-	}
-	else
-	{
-		box.SetAsBox(
-			m_colSize.x / 2.0f,
-			m_colSize.y / 2.0f,
-			b2Vec2(m_colOffset.x, m_colOffset.y),
-			0.0f);
-	}
 
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &box;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-	fixtureDef.restitution = 0.5f;
-	fixtureDef.isSensor = m_isTrigger;
-	m_fixture = m_body->CreateFixture(&fixtureDef);
+	m_fixture = CreateFixtureOnBody(m_body);
 	if (m_fixture != nullptr)
 	{
 		m_fixture->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
@@ -227,7 +233,7 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	m_body->GetUserData().pointer = (uintptr_t)this;
 }
 
-void Collider::SetBodyType(b2BodyType type)
+void Collider2D::SetBodyType(b2BodyType type)
 {
 	if (m_type == type)
 	{
@@ -242,7 +248,7 @@ void Collider::SetBodyType(b2BodyType type)
 	}
 }
 
-void Collider::SetColliderSize(Vector2D size)
+void Collider2D::SetColliderSize(Vector2D size)
 {
 	if (size.x < 0.0f)
 	{
@@ -262,7 +268,7 @@ void Collider::SetColliderSize(Vector2D size)
 	m_colSize = size;
 }
 
-void Collider::SetColliderOffset(Vector2D offset)
+void Collider2D::SetColliderOffset(Vector2D offset)
 {
 	const bool fixedRotation = GetFixedRotation();
 	if (m_body != nullptr && m_colSize.x > 0.0f && m_colSize.y > 0.0f)
@@ -273,7 +279,7 @@ void Collider::SetColliderOffset(Vector2D offset)
 	m_colOffset = offset;
 }
 
-void Collider::SetFixedRotation(bool fixedRotation)
+void Collider2D::SetFixedRotation(bool fixedRotation)
 {
 	if (m_body != nullptr)
 	{
@@ -281,22 +287,27 @@ void Collider::SetFixedRotation(bool fixedRotation)
 	}
 }
 
-bool Collider::GetFixedRotation() const
+bool Collider2D::GetFixedRotation() const
 {
 	return m_body != nullptr && m_body->IsFixedRotation();
 }
 
-void Collider::Initialize()
+void Collider2D::Initialize()
 {
 	//CollisionManager::GetInstance()->AddCollider(this);
 	ColInit();
 	RenderManager::GetInstance()->RegisterDebug(this);
 }
 
-void Collider::Release()
+void Collider2D::Release()
 {
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
 	b2World* world = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetBox2dWorld() : nullptr;
+	if (MainFrame::GetInstance() != nullptr)
+	{
+		MainFrame::GetInstance()->RemoveCollisionPairsForCollider(this);
+		MainFrame::GetInstance()->RemoveTriggerPairsForCollider(this);
+	}
 	const bool hasLiveBody = IsBodyInWorld(world, m_body);
 
 	if (hasLiveBody && m_body->GetUserData().pointer == reinterpret_cast<uintptr_t>(this))
@@ -320,29 +331,43 @@ void Collider::Release()
 	ColRelease();
 }
 
-void Collider::SetTrigger(bool b)
+void Collider2D::SetTrigger(bool b)
 {
+	if (m_isTrigger == b)
+	{
+		return;
+	}
+
+	if (MainFrame::GetInstance() != nullptr)
+	{
+		// Trigger 상태 전환은 기존 collision/trigger contact를 강제 종료시킨다.
+		MainFrame::GetInstance()->ResetCollisionPairsForCollider(this);
+		MainFrame::GetInstance()->ResetTriggerPairsForCollider(this);
+	}
+
 	m_isTrigger = b;
+	if (m_fixture != nullptr)
+	{
+		m_fixture->SetSensor(m_isTrigger);
+		m_fixture->Refilter();
+	}
 	if (m_body != nullptr)
 	{
-		for (b2Fixture* fixture = m_body->GetFixtureList(); fixture != nullptr; fixture = fixture->GetNext())
-		{
-			fixture->SetSensor(m_isTrigger);
-		}
+		m_body->SetAwake(true);
 	}
 }
 
-bool Collider::GetTrigger()
+bool Collider2D::GetTrigger()
 {
 	return m_isTrigger;
 }
 
-b2Body* Collider::GetBody()
+b2Body* Collider2D::GetBody()
 {
 	return m_body;
 }
 
-void Collider::ClearBodyReferenceIfMatches(b2Body* body)
+void Collider2D::ClearBodyReferenceIfMatches(b2Body* body)
 {
 	if (m_body != body)
 	{
@@ -354,22 +379,22 @@ void Collider::ClearBodyReferenceIfMatches(b2Body* body)
 	m_ownsBody = false;
 }
 
-bool Collider::OwnsBody() const
+bool Collider2D::OwnsBody() const
 {
 	return m_ownsBody;
 }
 
-void Collider::DebugRenderUpdate()
+void Collider2D::DebugRenderUpdate()
 {
 	RenderCollider();
 }
 
-const char* Collider::GetInspectorName() const
+const char* Collider2D::GetInspectorName() const
 {
-	return "Collider";
+	return "Collider 2D";
 }
 
-void Collider::DrawInspector()
+void Collider2D::DrawInspector()
 {
 	Rigidbody2D* rigidbody2D = m_gameObj != nullptr ? m_gameObj->GetComponent<Rigidbody2D>() : nullptr;
 	if (rigidbody2D == nullptr)
@@ -383,6 +408,15 @@ void Collider::DrawInspector()
 	else
 	{
 		ImGui::TextDisabled("Body Type is controlled by Rigidbody 2D");
+	}
+
+	if (rigidbody2D == nullptr && CountCollidersOnGameObject(m_gameObj) >= 2)
+	{
+		ImGui::Spacing();
+		ImGui::TextColored(
+			ImVec4(1.0f, 0.8f, 0.2f, 1.0f),
+			"Multiple colliders without Rigidbody2D are not recommended.");
+		ImGui::TextDisabled("Add Rigidbody2D to share one physics body.");
 	}
 
 	bool trigger = m_isTrigger;
@@ -430,7 +464,7 @@ void Collider::DrawInspector()
 	}
 }
 
-std::string Collider::Serialize() const
+std::string Collider2D::Serialize() const
 {
 	std::ostringstream oss;
 	oss << "{ ";
@@ -443,7 +477,7 @@ std::string Collider::Serialize() const
 	return oss.str();
 }
 
-bool Collider::Deserialize(const std::string& componentJson)
+bool Collider2D::Deserialize(const std::string& componentJson)
 {
 	int bodyType = static_cast<int>(m_type);
 	SceneJson::ReadInt(componentJson, "bodyType", bodyType);
@@ -469,4 +503,5 @@ bool Collider::Deserialize(const std::string& componentJson)
 	}
 	return true;
 }
+
 

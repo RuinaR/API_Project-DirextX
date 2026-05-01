@@ -4,7 +4,8 @@
 #include "ImageRender.h"
 #include "AnimationRender.h"
 #include "FBXRender.h"
-#include "BoxCollider.h"
+#include "BoxCollider2D.h"
+#include "CircleCollider2D.h"
 #include "Rigidbody2D.h"
 #include "UIImage.h"
 #include "UIButton.h"
@@ -92,11 +93,15 @@ void RegisterEngineComponents()
 		});
 	factory.Register("BoxCollider2D", "Box Collider 2D", "Physics2D", true, [](const std::string&) -> Component*
 		{
-			return new BoxCollider(b2_staticBody);
+			return new BoxCollider2D(b2_staticBody);
 		});
 	factory.Register("BoxCollider", "Box Collider", "Physics2D", false, [](const std::string&) -> Component*
 		{
-			return new BoxCollider(b2_staticBody);
+			return new BoxCollider2D(b2_staticBody);
+		});
+	factory.Register("CircleCollider2D", "Circle Collider 2D", "Physics2D", true, [](const std::string&) -> Component*
+		{
+			return new CircleCollider2D(b2_staticBody);
 		});
 	factory.Register("Rigidbody2D", "Rigidbody 2D", "Physics2D", true, [](const std::string&) -> Component*
 		{

@@ -38,9 +38,9 @@ public:
 	bool Deserialize(const std::string& componentJson) override;
 
 protected:
-	void CollisionEnter(Collider* other) override;
-	void CollisionStay(Collider* other) override;
-	void CollisionExit(Collider* other) override;
+	void CollisionEnter(Collider2D* other) override;
+	void CollisionStay(Collider2D* other) override;
+	void CollisionExit(Collider2D* other) override;
 	void LBtnDown() override;
 	void LBtnUp() override;
 	void RBtnDown() override;
