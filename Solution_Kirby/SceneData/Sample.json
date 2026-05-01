@@ -2,10 +2,10 @@
   "version": 4,
   "sceneName": "Sample",
   "camera": {
-    "position": { "x": 0, "y": 0, "z": 0 },
+    "position": { "x": 0, "y": 0, "z": -905 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "projection": {
-      "mode": "Orthographic",
+      "mode": "Perspective",
       "fov": 0.785398,
       "orthographicSize": 900,
       "nearClip": 1,
@@ -20,12 +20,12 @@
       "tag": "Sprite",
       "active": true,
       "transform": {
-        "position": { "x": 0, "y": 2, "z": 0 },
+        "position": { "x": 50, "y": -20, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 607, "y": 97, "z": 1 }
+        "size": { "x": 619, "y": 97, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/land.bmp" } },
         { "type": "Rigidbody2D", "data": { "bodyType": "Kinematic", "drag": 0, "angularDrag": 0, "useGravity": true, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezePositionX": false, "freezePositionY": false, "freezeRotationZ": false } },
         { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 595, "y": 106 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
@@ -42,7 +42,7 @@
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/download.jpg" } },
         { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 128, "y": 128 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } },
         { "type": "Rigidbody2D", "data": { "bodyType": "Dynamic", "drag": 0, "angularDrag": 0, "useGravity": true, "gravityScale": 3.07, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezePositionX": false, "freezePositionY": false, "freezeRotationZ": false } }
       ]
@@ -97,6 +97,51 @@
         { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "color": 4289554279, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
         { "type": "Rigidbody2D", "data": { "bodyType": "Dynamic", "drag": 0, "angularDrag": 0, "useGravity": true, "gravityScale": 1, "fixedRotation": true, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezePositionX": false, "freezePositionY": false, "freezeRotationZ": true } },
         { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 59, "y": 59 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 6,
+      "parentId": -1,
+      "name": "UI Image",
+      "tag": "UI Image",
+      "active": true,
+      "transform": {
+        "position": { "x": 360, "y": 170, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 128, "y": 128, "z": 1 }
+      },
+      "components": [
+        { "type": "UIImage", "data": { "position": { "x": 296, "y": 106 }, "size": { "x": 128, "y": 128 }, "visible": true, "enabled": true, "orderInLayer": 0, "useTexture": false, "color": 4283479260, "imagePath": "" } }
+      ]
+    },
+    {
+      "id": 7,
+      "parentId": 6,
+      "name": "UI Text",
+      "tag": "UI Text",
+      "active": true,
+      "transform": {
+        "position": { "x": 444, "y": 160, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 240, "y": 48, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "data": { "position": { "x": 324, "y": 136 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "Text", "color": 4294967295, "fontSize": 52, "scale": 1 } }
+      ]
+    },
+    {
+      "id": 8,
+      "parentId": -1,
+      "name": "FBXObject",
+      "tag": "FBXObject",
+      "active": true,
+      "transform": {
+        "position": { "x": 24, "y": -184, "z": -238 },
+        "rotation": { "x": 0, "y": -168.6, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample.fbx" } }
       ]
     }
   ]

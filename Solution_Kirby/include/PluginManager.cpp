@@ -4,6 +4,51 @@
 #include "Plugin.h"
 #include <io.h>
 
+namespace
+{
+	std::wstring Utf8ToWide(const std::string& text)
+	{
+		if (text.empty())
+		{
+			return std::wstring();
+		}
+
+		const int length = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
+		if (length <= 0)
+		{
+			return std::wstring(text.begin(), text.end());
+		}
+
+		std::wstring wideText(static_cast<size_t>(length - 1), L'\0');
+		if (!wideText.empty())
+		{
+			MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, &wideText[0], length);
+		}
+		return wideText;
+	}
+
+	std::string WideToUtf8(const wchar_t* text)
+	{
+		if (text == nullptr || *text == L'\0')
+		{
+			return std::string();
+		}
+
+		const int length = WideCharToMultiByte(CP_UTF8, 0, text, -1, nullptr, 0, nullptr, nullptr);
+		if (length <= 0)
+		{
+			return std::string();
+		}
+
+		std::string utf8Text(static_cast<size_t>(length - 1), '\0');
+		if (!utf8Text.empty())
+		{
+			WideCharToMultiByte(CP_UTF8, 0, text, -1, &utf8Text[0], length, nullptr, nullptr);
+		}
+		return utf8Text;
+	}
+}
+
 
 PluginManager *PluginManager::g_pInstance = nullptr;
 
@@ -50,20 +95,16 @@ std::vector<std::string> PluginManager::GetFileNames(const std::string dir) cons
 	std::string mask = dir + std::string("*.plug");
 	std::vector<std::string> files;
 
-	WIN32_FIND_DATA FindData;
+	WIN32_FIND_DATAW FindData;
 	HANDLE hFind;
 
-	std::wstring wtmp;
-	wtmp.assign(mask.begin(), mask.end());
-	hFind = FindFirstFile(wtmp.c_str(), &FindData);
+	std::wstring wtmp = Utf8ToWide(mask);
+	hFind = FindFirstFileW(wtmp.c_str(), &FindData);
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
 		do {
-			std::string stmp;
-			wtmp = std::wstring(FindData.cFileName);
-			stmp.assign(wtmp.begin(), wtmp.end());
-			files.push_back(stmp);
-		} while (FindNextFile(hFind, &FindData));
+			files.push_back(WideToUtf8(FindData.cFileName));
+		} while (FindNextFileW(hFind, &FindData));
 	}
 
 	FindClose(hFind);
@@ -72,7 +113,8 @@ std::vector<std::string> PluginManager::GetFileNames(const std::string dir) cons
 
 bool PluginManager::LoadPlugin(const std::string filename)
 {
-    HMODULE hDll = ::LoadLibraryA(filename.c_str());
+    const std::wstring wideFileName = Utf8ToWide(filename);
+    HMODULE hDll = ::LoadLibraryW(wideFileName.c_str());
     if (hDll == NULL)
     {
         LPVOID lpMsgBuf;

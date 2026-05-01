@@ -5,7 +5,8 @@ namespace
 {
 	bool DirectoryExists(const std::string& path)
 	{
-		DWORD attributes = GetFileAttributesA(path.c_str());
+		const std::wstring widePath = ConvertToWideString(path);
+		DWORD attributes = GetFileAttributesW(widePath.c_str());
 		return attributes != INVALID_FILE_ATTRIBUTES && (attributes & FILE_ATTRIBUTE_DIRECTORY);
 	}
 
@@ -24,9 +25,9 @@ namespace
 
 	std::string GetExeDirectory()
 	{
-		char path[MAX_PATH] = { 0 };
-		GetModuleFileNameA(NULL, path, MAX_PATH);
-		std::string exePath = path;
+		wchar_t path[MAX_PATH] = { 0 };
+		GetModuleFileNameW(NULL, path, MAX_PATH);
+		std::string exePath = ConvertToString(path);
 		size_t pos = exePath.find_last_of("\\/");
 		if (pos == std::string::npos)
 		{
@@ -37,12 +38,13 @@ namespace
 
 	std::string GetFullPath(const std::string& path)
 	{
-		char fullPath[MAX_PATH] = { 0 };
-		if (GetFullPathNameA(path.c_str(), MAX_PATH, fullPath, nullptr) == 0)
+		const std::wstring widePath = ConvertToWideString(path);
+		wchar_t fullPath[MAX_PATH] = { 0 };
+		if (GetFullPathNameW(widePath.c_str(), MAX_PATH, fullPath, nullptr) == 0)
 		{
 			return path;
 		}
-		return fullPath;
+		return ConvertToString(fullPath);
 	}
 
 	std::string GetExtension(const std::string& fileName)
@@ -173,8 +175,9 @@ void AssetDatabase::ScanDirectoryRecursive(const std::string& directoryPath, con
 	}
 
 	const std::string searchPath = JoinPath(directoryPath, "*");
-	WIN32_FIND_DATAA findData;
-	HANDLE findHandle = FindFirstFileA(searchPath.c_str(), &findData);
+	const std::wstring wideSearchPath = ConvertToWideString(searchPath);
+	WIN32_FIND_DATAW findData;
+	HANDLE findHandle = FindFirstFileW(wideSearchPath.c_str(), &findData);
 	if (findHandle == INVALID_HANDLE_VALUE)
 	{
 		return;
@@ -182,7 +185,7 @@ void AssetDatabase::ScanDirectoryRecursive(const std::string& directoryPath, con
 
 	do
 	{
-		const std::string fileName = findData.cFileName;
+		const std::string fileName = ConvertToString(findData.cFileName);
 		if (fileName == "." || fileName == "..")
 		{
 			continue;
@@ -214,7 +217,7 @@ void AssetDatabase::ScanDirectoryRecursive(const std::string& directoryPath, con
 		info.type = type;
 		info.extension = extension;
 		m_assets.push_back(info);
-	} while (FindNextFileA(findHandle, &findData));
+	} while (FindNextFileW(findHandle, &findData));
 
 	FindClose(findHandle);
 }

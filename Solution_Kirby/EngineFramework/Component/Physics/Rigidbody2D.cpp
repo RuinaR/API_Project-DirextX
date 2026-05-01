@@ -8,6 +8,24 @@
 
 namespace
 {
+	bool IsBodyInWorld(b2World* world, b2Body* body)
+	{
+		if (world == nullptr || body == nullptr)
+		{
+			return false;
+		}
+
+		for (b2Body* itr = world->GetBodyList(); itr != nullptr; itr = itr->GetNext())
+		{
+			if (itr == body)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	const char* ToBodyTypeString(b2BodyType bodyType)
 	{
 		switch (bodyType)
@@ -94,15 +112,16 @@ void Rigidbody2D::Initialize()
 
 void Rigidbody2D::Release()
 {
+	b2World* world = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetBox2dWorld() : nullptr;
 	const bool shouldRestoreColliderFallback =
 		m_gameObj != nullptr &&
 		m_gameObj->GetComponent<Rigidbody2D>() == nullptr &&
 		!m_gameObj->GetDestroy();
 
 	b2Body* releasedBody = m_body;
-	if (m_body != nullptr && MainFrame::GetInstance() != nullptr && MainFrame::GetInstance()->GetBox2dWorld() != nullptr)
+	if (IsBodyInWorld(world, m_body))
 	{
-		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+		world->DestroyBody(m_body);
 	}
 	m_body = nullptr;
 
@@ -153,7 +172,8 @@ void Rigidbody2D::Update()
 
 void Rigidbody2D::CreateBody(bool rebuildAttachedColliders)
 {
-	if (m_gameObj == nullptr || MainFrame::GetInstance() == nullptr || MainFrame::GetInstance()->GetBox2dWorld() == nullptr)
+	b2World* world = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetBox2dWorld() : nullptr;
+	if (m_gameObj == nullptr || world == nullptr)
 	{
 		return;
 	}
@@ -175,9 +195,13 @@ void Rigidbody2D::CreateBody(bool rebuildAttachedColliders)
 		}
 	}
 
-	if (m_body != nullptr)
+	if (IsBodyInWorld(world, m_body))
 	{
-		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+		world->DestroyBody(m_body);
+		m_body = nullptr;
+	}
+	else
+	{
 		m_body = nullptr;
 	}
 
@@ -185,7 +209,7 @@ void Rigidbody2D::CreateBody(bool rebuildAttachedColliders)
 	bodyDef.type = m_bodyType;
 	bodyDef.position.Set(m_gameObj->Position().x, m_gameObj->Position().y);
 	bodyDef.angle = m_gameObj->GetAngleZ();
-	m_body = MainFrame::GetInstance()->GetBox2dWorld()->CreateBody(&bodyDef);
+	m_body = world->CreateBody(&bodyDef);
 	ApplyBodySettings();
 
 	if (rebuildAttachedColliders)

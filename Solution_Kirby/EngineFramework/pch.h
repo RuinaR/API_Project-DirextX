@@ -82,7 +82,7 @@
 using namespace DirectX;
 using namespace std;
 
-inline std::string WideToAnsi(const wchar_t* value)
+inline std::string WideToSystemString(const wchar_t* value)
 {
     if (!value)
     {
@@ -98,6 +98,11 @@ inline std::string WideToAnsi(const wchar_t* value)
     std::string result(static_cast<size_t>(size - 1), '\0');
     WideCharToMultiByte(CP_ACP, 0, value, -1, &result[0], size, nullptr, nullptr);
     return result;
+}
+
+inline std::string WideToAnsi(const wchar_t* value)
+{
+    return WideToSystemString(value);
 }
 
 #define USES_CONVERSION

@@ -8,6 +8,9 @@
 
 namespace
 {
+    bool FileExists(const std::wstring& filepath);
+    std::wstring NormalizeCacheKey(std::wstring path);
+
     bool FileExists(const std::string& filepath)
     {
         if (filepath.empty())
@@ -15,9 +18,7 @@ namespace
             return false;
         }
 
-        const DWORD attributes = GetFileAttributesA(filepath.c_str());
-        return attributes != INVALID_FILE_ATTRIBUTES
-            && (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
+        return FileExists(ConvertToWideString(filepath));
     }
 
     bool FileExists(const std::wstring& filepath)
@@ -47,22 +48,23 @@ namespace
 
     std::string GetExeDirectory()
     {
-        char path[MAX_PATH] = { 0 };
-        GetModuleFileNameA(NULL, path, MAX_PATH);
-        std::string exePath = path;
+        wchar_t path[MAX_PATH] = { 0 };
+        GetModuleFileNameW(NULL, path, MAX_PATH);
+        std::string exePath = ConvertToString(path);
         const size_t pos = exePath.find_last_of("\\/");
         return pos == std::string::npos ? std::string(".") : exePath.substr(0, pos);
     }
 
     std::string GetFullPath(const std::string& path)
     {
-        char fullPath[MAX_PATH] = { 0 };
-        const DWORD length = GetFullPathNameA(path.c_str(), MAX_PATH, fullPath, nullptr);
+        const std::wstring widePath = ConvertToWideString(path);
+        wchar_t fullPath[MAX_PATH] = { 0 };
+        const DWORD length = GetFullPathNameW(widePath.c_str(), MAX_PATH, fullPath, nullptr);
         if (length == 0 || length >= MAX_PATH)
         {
             return path;
         }
-        return fullPath;
+        return ConvertToString(fullPath);
     }
 
     std::wstring GetFullPath(const std::wstring& path)
@@ -78,11 +80,7 @@ namespace
 
     std::string NormalizeCacheKey(std::string path)
     {
-        path = GetFullPath(path);
-        std::replace(path.begin(), path.end(), '\\', '/');
-        std::transform(path.begin(), path.end(), path.begin(),
-            [](unsigned char ch) { return static_cast<char>(std::tolower(ch)); });
-        return path;
+        return ConvertToString(NormalizeCacheKey(ConvertToWideString(path)));
     }
 
     std::wstring NormalizeCacheKey(std::wstring path)
@@ -160,7 +158,8 @@ namespace
         }
 
         D3DXIMAGE_INFO imageInfo = {};
-        return SUCCEEDED(D3DXGetImageInfoFromFileA(filepath.c_str(), &imageInfo));
+        const std::wstring widePath = ConvertToWideString(filepath);
+        return SUCCEEDED(D3DXGetImageInfoFromFileW(widePath.c_str(), &imageInfo));
     }
 
     void ReleaseTextureMap(std::unordered_map<std::string, IDirect3DTexture9*>& textureMap,
@@ -224,7 +223,8 @@ IDirect3DTexture9* TextureManager::GetTexture(const std::string& filepath)
     }
 
     IDirect3DTexture9* texture = nullptr;
-    if (SUCCEEDED(D3DXCreateTextureFromFileA(mainFrame->GetDevice(), resolvedPath.c_str(), &texture)))
+    const std::wstring wideResolvedPath = ConvertToWideString(resolvedPath);
+    if (SUCCEEDED(D3DXCreateTextureFromFileW(mainFrame->GetDevice(), wideResolvedPath.c_str(), &texture)))
     {
         m_textureMap[cacheKey] = texture;
         return texture;
@@ -260,9 +260,10 @@ IDirect3DTexture9* TextureManager::GetTexture(const std::string& filepath, bool 
     }
 
     IDirect3DTexture9* texture = nullptr;
-    if (SUCCEEDED(D3DXCreateTextureFromFileExA(
+    const std::wstring wideResolvedPath = ConvertToWideString(resolvedPath);
+    if (SUCCEEDED(D3DXCreateTextureFromFileExW(
         mainFrame->GetDevice(),
-        resolvedPath.c_str(),
+        wideResolvedPath.c_str(),
         D3DX_DEFAULT,
         D3DX_DEFAULT,
         D3DX_DEFAULT,

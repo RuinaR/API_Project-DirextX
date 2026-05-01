@@ -4,6 +4,7 @@
 #include "ImguiButton.h"
 #include "UIElement.h"
 #include "Camera.h"
+#include "ObjectManager.h"
 
 RenderManager* RenderManager::m_Pthis = nullptr;
 
@@ -467,6 +468,115 @@ void RenderManager::RenderImmediateDebugLines()
 	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
+void RenderManager::RenderSelectedObjectMarker(const ImVec2& imageScreenPos)
+{
+	ObjectManager* objectManager = ObjectManager::GetInstance();
+	if (objectManager == nullptr)
+	{
+		return;
+	}
+
+	GameObject* selectedObject = objectManager->GetSelectedObject();
+	if (selectedObject == nullptr || selectedObject->GetDestroy())
+	{
+		return;
+	}
+
+	ImageRender* imageRender = nullptr;
+	UIElement* uiElement = nullptr;
+	vector<Component*>* components = selectedObject->GetComponentVec();
+	if (components != nullptr)
+	{
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); ++itr)
+		{
+			Component* component = *itr;
+			if (component == nullptr)
+			{
+				continue;
+			}
+
+			if (imageRender == nullptr)
+			{
+				imageRender = dynamic_cast<ImageRender*>(component);
+			}
+			if (uiElement == nullptr)
+			{
+				uiElement = dynamic_cast<UIElement*>(component);
+			}
+
+			if (imageRender != nullptr && uiElement != nullptr)
+			{
+				break;
+			}
+		}
+	}
+
+	ImDrawList* drawList = ImGui::GetBackgroundDrawList(ImGui::GetMainViewport());
+	if (drawList == nullptr)
+	{
+		return;
+	}
+
+	if (uiElement != nullptr)
+	{
+		const D3DXVECTOR2 uiPosition = uiElement->GetPosition();
+		const D3DXVECTOR2 uiSize = uiElement->GetSize();
+		const float markerX = imageScreenPos.x + uiPosition.x + (uiSize.x * 0.5f);
+		const float markerY = imageScreenPos.y + uiPosition.y + (uiSize.y * 0.5f);
+		const float radius = min(max(max(uiSize.x, uiSize.y) * 0.12f, 10.0f), 18.0f);
+		drawList->AddCircle(ImVec2(markerX, markerY), radius, IM_COL32(255, 0, 0, 255), 32, 2.0f);
+		return;
+	}
+
+	if (imageRender != nullptr && imageRender->IsUIRender())
+	{
+		const D3DXVECTOR3 renderPosition = imageRender->GetRenderPosition();
+		const D3DXVECTOR2 size = selectedObject->Size2D();
+		const float markerX = imageScreenPos.x + renderPosition.x;
+		const float markerY = imageScreenPos.y + renderPosition.y;
+		const float radius = min(max(max(size.x, size.y) * 0.12f, 10.0f), 18.0f);
+		drawList->AddCircle(ImVec2(markerX, markerY), radius, IM_COL32(255, 0, 0, 255), 32, 2.0f);
+		return;
+	}
+
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetDevice() : nullptr;
+	if (device == nullptr)
+	{
+		return;
+	}
+
+	D3DXVECTOR3 markerWorldPosition = selectedObject->Position();
+	if (imageRender != nullptr)
+	{
+		markerWorldPosition = imageRender->GetRenderPosition();
+	}
+
+	D3DXMATRIX worldMatrix;
+	D3DXMATRIX viewMatrix;
+	D3DXMATRIX projectionMatrix;
+	D3DXMatrixIdentity(&worldMatrix);
+	if (FAILED(device->GetTransform(D3DTS_VIEW, &viewMatrix)) || FAILED(device->GetTransform(D3DTS_PROJECTION, &projectionMatrix)))
+	{
+		return;
+	}
+
+	D3DVIEWPORT9 viewport = {};
+	viewport.X = 0;
+	viewport.Y = 0;
+	viewport.Width = static_cast<DWORD>(DRAWWINDOWW);
+	viewport.Height = static_cast<DWORD>(DRAWWINDOWH);
+	viewport.MinZ = 0.0f;
+	viewport.MaxZ = 1.0f;
+
+	D3DXVECTOR3 projectedCenter;
+	D3DXVec3Project(&projectedCenter, &markerWorldPosition, &viewport, &projectionMatrix, &viewMatrix, &worldMatrix);
+
+	const float markerX = imageScreenPos.x + projectedCenter.x;
+	const float markerY = imageScreenPos.y + projectedCenter.y;
+	const float radius = 14.0f;
+	drawList->AddCircle(ImVec2(markerX, markerY), radius, IM_COL32(255, 0, 0, 255), 32, 2.0f);
+}
+
 void RenderManager::EditUpdate()
 {
 	LPDIRECT3DSURFACE9 renderTargetSurface = nullptr;
@@ -571,6 +681,7 @@ void RenderManager::EditUpdate()
 		ImVec2 windowSize(DRAWWINDOWW, DRAWWINDOWH);
 		ImVec2 imageMax(imageScreenPos.x + windowSize.x, imageScreenPos.y + windowSize.y);
 		ImGui::GetBackgroundDrawList(mainViewport)->AddImage((void*)renderTargetTexture, imageScreenPos, imageMax);
+		RenderSelectedObjectMarker(imageScreenPos);
 
 		m_gameViewScreenPos = D3DXVECTOR2(imageScreenPos.x, imageScreenPos.y);
 		POINT imageClientPos =

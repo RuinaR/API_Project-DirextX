@@ -121,6 +121,10 @@ void FBXRender::Render() {
 
 bool FBXRender::ReloadModel(const std::string& fbxPath)
 {
+    m_fbxFileName = fbxPath;
+    m_resource = nullptr;
+    m_loaded = false;
+
     if (fbxPath.empty())
     {
         m_logSystem.AddLog("Error: FBX path is empty.");
@@ -142,7 +146,6 @@ bool FBXRender::ReloadModel(const std::string& fbxPath)
     }
 
     m_resource = newResource;
-    m_fbxFileName = fbxPath;
     m_loaded = true;
     m_logSystem.AddLog("FBX file loaded successfully.");
     return true;

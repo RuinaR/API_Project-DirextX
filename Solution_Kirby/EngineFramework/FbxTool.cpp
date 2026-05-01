@@ -7,9 +7,185 @@
 
 namespace
 {
+class Win32FbxStream : public FbxStream
+{
+public:
+	Win32FbxStream(const std::wstring& filePath, int readerId)
+		: m_filePath(filePath), m_readerId(readerId)
+	{
+	}
+
+	~Win32FbxStream() override
+	{
+		Close();
+	}
+
+	EState GetState() override
+	{
+		return m_state;
+	}
+
+	bool Open(void* /*pStreamData*/) override
+	{
+		Close();
+		m_handle = CreateFileW(
+			m_filePath.c_str(),
+			GENERIC_READ,
+			FILE_SHARE_READ,
+			nullptr,
+			OPEN_EXISTING,
+			FILE_ATTRIBUTE_NORMAL,
+			nullptr);
+		if (m_handle == INVALID_HANDLE_VALUE)
+		{
+			m_handle = nullptr;
+			m_error = 1;
+			m_state = eClosed;
+			return false;
+		}
+
+		m_error = 0;
+		m_state = eOpen;
+		SetPosition(0);
+		return true;
+	}
+
+	bool Close() override
+	{
+		if (m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE)
+		{
+			CloseHandle(m_handle);
+		}
+		m_handle = nullptr;
+		m_state = eClosed;
+		m_error = 0;
+		return true;
+	}
+
+	bool Flush() override
+	{
+		return true;
+	}
+
+	int Write(const void* /*pData*/, int /*pSize*/) override
+	{
+		m_error = 1;
+		return 0;
+	}
+
+	int Read(void* pData, int pSize) const override
+	{
+		if (m_handle == nullptr || pData == nullptr || pSize <= 0)
+		{
+			m_error = 1;
+			return 0;
+		}
+
+		DWORD bytesRead = 0;
+		if (!ReadFile(m_handle, pData, static_cast<DWORD>(pSize), &bytesRead, nullptr))
+		{
+			m_error = 1;
+			return 0;
+		}
+
+		m_error = 0;
+		return static_cast<int>(bytesRead);
+	}
+
+	int GetReaderID() const override
+	{
+		return m_readerId;
+	}
+
+	int GetWriterID() const override
+	{
+		return -1;
+	}
+
+	void Seek(const FbxInt64& pOffset, const FbxFile::ESeekPos& pSeekPos) override
+	{
+		if (m_handle == nullptr)
+		{
+			m_error = 1;
+			return;
+		}
+
+		LARGE_INTEGER distance = {};
+		distance.QuadPart = pOffset;
+		DWORD moveMethod = FILE_BEGIN;
+		switch (pSeekPos)
+		{
+		case FbxFile::eBegin:
+			moveMethod = FILE_BEGIN;
+			break;
+		case FbxFile::eCurrent:
+			moveMethod = FILE_CURRENT;
+			break;
+		case FbxFile::eEnd:
+			moveMethod = FILE_END;
+			break;
+		}
+
+		if (!SetFilePointerEx(m_handle, distance, nullptr, moveMethod))
+		{
+			m_error = 1;
+			return;
+		}
+
+		m_error = 0;
+	}
+
+	long GetPosition() const override
+	{
+		if (m_handle == nullptr)
+		{
+			return 0L;
+		}
+
+		LARGE_INTEGER zero = {};
+		LARGE_INTEGER current = {};
+		if (!SetFilePointerEx(m_handle, zero, &current, FILE_CURRENT))
+		{
+			m_error = 1;
+			return 0L;
+		}
+
+		m_error = 0;
+		return static_cast<long>(current.QuadPart);
+	}
+
+	void SetPosition(long pPosition) override
+	{
+		Seek(static_cast<FbxInt64>(pPosition), FbxFile::eBegin);
+	}
+
+	int GetError() const override
+	{
+		return m_error;
+	}
+
+	void ClearError() override
+	{
+		m_error = 0;
+	}
+
+private:
+	std::wstring m_filePath;
+	mutable HANDLE m_handle = nullptr;
+	mutable int m_error = 0;
+	EState m_state = eClosed;
+	int m_readerId = -1;
+};
+
 bool FileExists(const std::string& path)
 {
-	return GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES;
+	if (path.empty())
+	{
+		return false;
+	}
+
+	const std::wstring widePath = ConvertToWideString(path);
+	return GetFileAttributesW(widePath.c_str()) != INVALID_FILE_ATTRIBUTES;
 }
 
 std::string GetDirectoryName(const std::string& path)
@@ -49,7 +225,7 @@ std::string GetExeDirectory()
 {
 	wchar_t path[MAX_PATH] = { 0 };
 	GetModuleFileNameW(NULL, path, MAX_PATH);
-	return GetDirectoryName(WideToAnsi(path));
+	return GetDirectoryName(ConvertToString(path));
 }
 
 std::string ResolveFbxPath(const char* fileName)
@@ -239,7 +415,11 @@ bool FbxTool::Load(const char* fileName, std::vector<Model>* outModels) {
 
     // FBX 파일 로드
     FbxImporter* importer = FbxImporter::Create(m_sdkManager, "");
-    if (!importer->Initialize(FilePath.c_str(), -1, m_sdkManager->GetIOSettings())) {
+	const int readerId = (m_sdkManager != nullptr && m_sdkManager->GetIOPluginRegistry() != nullptr)
+		? m_sdkManager->GetIOPluginRegistry()->FindReaderIDByExtension("fbx")
+		: -1;
+	Win32FbxStream fileStream(ConvertToWideString(FilePath), readerId);
+    if (!importer->Initialize(&fileStream, nullptr, -1, m_sdkManager->GetIOSettings())) {
         std::cerr << "Error: Unable to open FBX file! : "
             << importer->GetStatus().GetErrorString() << std::endl;
         importer->Destroy();

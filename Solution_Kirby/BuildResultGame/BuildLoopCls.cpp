@@ -11,12 +11,15 @@ void BuildLoopCls::Init(HINSTANCE hInstance)
 	// 현재 실행 폴더 경로
 	wchar_t path[MAX_PATH] = { 0 };
 	GetModuleFileName(NULL, path, MAX_PATH);
-	USES_CONVERSION;
-	std::string executepath = W2A(path);
+	std::string executepath = ConvertToString(path);
 	executepath = executepath.substr(0, executepath.find_last_of("\\/"));
 	PluginManager::GetInstance()->DirectLoadPlugin(executepath + "\\" + dllfilename);
 
 	auto plugincls = PluginManager::GetInstance()->GetPlugin(0);
+	if (plugincls == nullptr)
+	{
+		return;
+	}
 	plugincls->Initialize(hInstance, RenderType::Game);
 }
 

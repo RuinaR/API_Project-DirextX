@@ -49,6 +49,7 @@ private:
 	void SortWorldRenderQueues();
 	void SortUIQueue();
 	void RenderImmediateDebugLines();
+	void RenderSelectedObjectMarker(const ImVec2& imageScreenPos);
 	void RenderUIQueue();
 public:
 	static void Create();

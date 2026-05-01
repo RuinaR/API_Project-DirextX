@@ -3,6 +3,45 @@
 #include "Rigidbody2D.h"
 #include "SceneJsonUtility.h"
 
+namespace
+{
+	bool IsBodyInWorld(b2World* world, b2Body* body)
+	{
+		if (world == nullptr || body == nullptr)
+		{
+			return false;
+		}
+
+		for (b2Body* itr = world->GetBodyList(); itr != nullptr; itr = itr->GetNext())
+		{
+			if (itr == body)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool IsFixtureAttachedToBody(b2Body* body, b2Fixture* fixture)
+	{
+		if (body == nullptr || fixture == nullptr)
+		{
+			return false;
+		}
+
+		for (b2Fixture* itr = body->GetFixtureList(); itr != nullptr; itr = itr->GetNext())
+		{
+			if (itr == fixture)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+}
+
 void Collider::RenderCollider()
 {
 		if (m_body == nullptr)
@@ -103,15 +142,23 @@ void Collider::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	m_colSize = size;
 	m_colOffset = offset;
 
-	if (m_fixture != nullptr && m_body != nullptr)
+	b2World* world = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetBox2dWorld() : nullptr;
+	const bool hasLiveBody = IsBodyInWorld(world, m_body);
+
+	if (m_fixture != nullptr && hasLiveBody && IsFixtureAttachedToBody(m_body, m_fixture))
 	{
 		m_body->DestroyFixture(m_fixture);
-		m_fixture = nullptr;
 	}
+	m_fixture = nullptr;
 
-	if (m_ownsBody && m_body != nullptr)
+	if (m_ownsBody && hasLiveBody)
 	{
-		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+		world->DestroyBody(m_body);
+		m_body = nullptr;
+		m_ownsBody = false;
+	}
+	else if (!hasLiveBody)
+	{
 		m_body = nullptr;
 		m_ownsBody = false;
 	}
@@ -249,19 +296,22 @@ void Collider::Initialize()
 void Collider::Release()
 {
 	//CollisionManager::GetInstance()->UnregisterCollider(this);
-	if (m_body != nullptr && m_body->GetUserData().pointer == reinterpret_cast<uintptr_t>(this))
+	b2World* world = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetBox2dWorld() : nullptr;
+	const bool hasLiveBody = IsBodyInWorld(world, m_body);
+
+	if (hasLiveBody && m_body->GetUserData().pointer == reinterpret_cast<uintptr_t>(this))
 	{
 		m_body->GetUserData().pointer = 0;
 	}
-	if (m_fixture != nullptr && m_body != nullptr)
+	if (m_fixture != nullptr && hasLiveBody && IsFixtureAttachedToBody(m_body, m_fixture))
 	{
 		m_fixture->GetUserData().pointer = 0;
 		m_body->DestroyFixture(m_fixture);
-		m_fixture = nullptr;
 	}
-	if (m_ownsBody && m_body != nullptr)
+	m_fixture = nullptr;
+	if (m_ownsBody && hasLiveBody)
 	{
-		MainFrame::GetInstance()->GetBox2dWorld()->DestroyBody(m_body);
+		world->DestroyBody(m_body);
 	}
 	m_body = nullptr;
 	m_ownsBody = false;

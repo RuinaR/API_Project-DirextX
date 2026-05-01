@@ -73,8 +73,34 @@ void DrawTextInRect(HDC hdc, const std::wstring& text, const RECT* rect)
 
 wstring ConvertToWideString(const std::string& narrowStr)
 {
-    wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
-    return converter.from_bytes(narrowStr);
+    if (narrowStr.empty())
+    {
+        return std::wstring();
+    }
+
+    const int utf8Length = MultiByteToWideChar(CP_UTF8, 0, narrowStr.c_str(), -1, nullptr, 0);
+    if (utf8Length > 0)
+    {
+        std::wstring wideString(static_cast<size_t>(utf8Length - 1), L'\0');
+        if (!wideString.empty())
+        {
+            MultiByteToWideChar(CP_UTF8, 0, narrowStr.c_str(), -1, &wideString[0], utf8Length);
+        }
+        return wideString;
+    }
+
+    const int ansiLength = MultiByteToWideChar(CP_ACP, 0, narrowStr.c_str(), -1, nullptr, 0);
+    if (ansiLength <= 0)
+    {
+        return std::wstring(narrowStr.begin(), narrowStr.end());
+    }
+
+    std::wstring wideString(static_cast<size_t>(ansiLength - 1), L'\0');
+    if (!wideString.empty())
+    {
+        MultiByteToWideChar(CP_ACP, 0, narrowStr.c_str(), -1, &wideString[0], ansiLength);
+    }
+    return wideString;
 }
 
 string ConvertToString(const std::wstring& wstr)
