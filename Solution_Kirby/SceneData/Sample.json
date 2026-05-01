@@ -38,7 +38,7 @@
       "active": true,
       "transform": {
         "position": { "x": -2.11679, "y": 119.015, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 2.97608e-07 },
+        "rotation": { "x": 0, "y": 0, "z": 3.07107e-08 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
@@ -72,7 +72,7 @@
       "active": true,
       "transform": {
         "position": { "x": -215.354, "y": 119.016, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": -1.84173e-05 },
+        "rotation": { "x": 0, "y": 0, "z": -1.65187e-05 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
@@ -89,7 +89,7 @@
       "tag": "Sprite (3)",
       "active": true,
       "transform": {
-        "position": { "x": -243.14, "y": 342.044, "z": 0 },
+        "position": { "x": -243.14, "y": 320.67, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 2.601 },
         "size": { "x": 59, "y": 54, "z": 1 }
       },

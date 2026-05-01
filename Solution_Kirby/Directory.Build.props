@@ -16,6 +16,8 @@
     <D3DXIncludeDir Condition="'$(D3DXIncludeDir)' == '' and '$(DXSDK_DIR)' != ''">$(DXSDK_DIR)Include</D3DXIncludeDir>
     <D3DXLibraryDir Condition="'$(D3DXLibraryDir)' == '' and '$(Platform)' == 'Win32' and '$(DXSDK_DIR)' != ''">$(DXSDK_DIR)Lib\x86</D3DXLibraryDir>
     <D3DXLibraryDir Condition="'$(D3DXLibraryDir)' == '' and '$(Platform)' == 'x64' and '$(DXSDK_DIR)' != ''">$(DXSDK_DIR)Lib\x64</D3DXLibraryDir>
+    <D3DXBinaryDir Condition="'$(D3DXBinaryDir)' == '' and '$(Platform)' == 'Win32' and Exists('$(SystemRoot)\SysWOW64\D3DX9_43.dll')">$(SystemRoot)\SysWOW64</D3DXBinaryDir>
+    <D3DXBinaryDir Condition="'$(D3DXBinaryDir)' == '' and '$(Platform)' == 'x64' and Exists('$(SystemRoot)\System32\D3DX9_43.dll')">$(SystemRoot)\System32</D3DXBinaryDir>
     <OutDir>$(KirbySolutionDir)Bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>

@@ -4,7 +4,7 @@
     {
       "label": "Build Debug Win32",
       "type": "shell",
-      "command": "powershell",
+      "command": "${env:windir}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
       "args": [
         "-ExecutionPolicy",
         "Bypass",
@@ -27,7 +27,7 @@
     {
       "label": "Build Release Win32",
       "type": "shell",
-      "command": "powershell",
+      "command": "${env:windir}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
       "args": [
         "-ExecutionPolicy",
         "Bypass",
@@ -47,7 +47,7 @@
     {
       "label": "Build Debug x64",
       "type": "shell",
-      "command": "powershell",
+      "command": "${env:windir}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
       "args": [
         "-ExecutionPolicy",
         "Bypass",
@@ -67,7 +67,7 @@
     {
       "label": "Clean Debug Win32",
       "type": "shell",
-      "command": "powershell",
+      "command": "${env:windir}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
       "args": [
         "-ExecutionPolicy",
         "Bypass",
