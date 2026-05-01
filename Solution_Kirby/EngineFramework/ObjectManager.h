@@ -47,6 +47,7 @@ public:
 	void Initialize();
 	void Release();
 	void Update();
+	void UpdateMouseInteraction();
 	void FlushPendingObjects();
 	void Clear();
 	int Count();

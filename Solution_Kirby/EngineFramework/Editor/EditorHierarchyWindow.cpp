@@ -314,6 +314,15 @@ namespace
 			playbackColor = ImVec4(0.4f, 0.8f, 1.0f, 1.0f);
 		}
 		ImGui::TextColored(playbackColor, "%s", playbackLabel);
+
+		float timeScale = mainFrame->GetTimeScale();
+		ImGui::SameLine();
+		ImGui::SetNextItemWidth(120.0f);
+		if (ImGui::DragFloat("Time Scale", &timeScale, 0.01f, 0.0f, 10.0f, "%.2f"))
+		{
+			mainFrame->SetTimeScale(timeScale);
+			MarkCurrentSceneDirty();
+		}
 	}
 
 	bool IsSameOrChild(GameObject* root, GameObject* target)

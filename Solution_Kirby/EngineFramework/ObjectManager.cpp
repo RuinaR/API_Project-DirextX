@@ -389,7 +389,6 @@ void ObjectManager::Release()
 void ObjectManager::Update()
 {
 	FlushPendingObjects();
-	GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
 
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 	{
@@ -410,6 +409,14 @@ void ObjectManager::Update()
 		}
 	}
 
+	UpdateMouseInteraction();
+
+	FlushPendingObjects();
+}
+
+void ObjectManager::UpdateMouseInteraction()
+{
+	GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
 	m_currentMouseHoverObject = RaycastMouseToGameObject();
 
 	if (previousMouseHoverObject != m_currentMouseHoverObject)
@@ -435,8 +442,6 @@ void ObjectManager::Update()
 	{
 		m_currentMouseHoverObject->OnMouseHoverStay();
 	}
-
-	FlushPendingObjects();
 }
 
 void ObjectManager::FlushPendingObjects()

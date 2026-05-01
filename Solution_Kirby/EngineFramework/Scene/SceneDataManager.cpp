@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SceneDataManager.h"
+#include "MainFrame.h"
 #include "ObjectManager.h"
 #include "SceneJsonUtility.h"
 
@@ -47,6 +48,7 @@ namespace
 		oss << "{\n";
 		oss << "  \"version\": " << kSceneDataVersion << ",\n";
 		oss << "  \"sceneName\": \"" << sceneName << "\",\n";
+		oss << "  \"timeScale\": " << (MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetTimeScale() : 1.0f) << ",\n";
 		oss << "  \"camera\": {\n";
 		oss << "    \"position\": { \"x\": " << cameraPosition.x << ", \"y\": " << cameraPosition.y << ", \"z\": " << cameraPosition.z << " },\n";
 		oss << "    \"rotation\": { \"x\": " << cameraRotation.x << ", \"y\": " << cameraRotation.y << ", \"z\": " << cameraRotation.z << " },\n";
@@ -118,6 +120,21 @@ namespace
 		}
 	}
 
+	void DeserializeTimeScale(const std::string& sceneJson)
+	{
+		float timeScale = 1.0f;
+		if (SceneJson::ReadFloat(sceneJson, "timeScale", timeScale) && MainFrame::GetInstance() != nullptr)
+		{
+			MainFrame::GetInstance()->SetTimeScale(timeScale);
+			return;
+		}
+
+		if (MainFrame::GetInstance() != nullptr)
+		{
+			MainFrame::GetInstance()->SetTimeScale(1.0f);
+		}
+	}
+
 	bool WriteSceneDataFile(const std::string& sceneName, const std::string& json)
 	{
 		const std::string path = SceneDataManager::GetSceneDataPath(sceneName);
@@ -158,6 +175,7 @@ namespace
 	{
 		int sceneVersion = 3;
 		SceneJson::ReadInt(sceneJson, "version", sceneVersion);
+		DeserializeTimeScale(sceneJson);
 		DeserializeCamera(sceneJson);
 		if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson, sceneVersion))
 		{

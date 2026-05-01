@@ -52,6 +52,29 @@ double MainFrame::DeltaTime()
 	return m_frameDeltaTime;
 }
 
+double MainFrame::UnscaledDeltaTime() const
+{
+	return m_unscaledDeltaTime;
+}
+
+float MainFrame::GetTimeScale() const
+{
+	return m_scene != nullptr ? m_scene->GetTimeScale() : 1.0f;
+}
+
+void MainFrame::SetTimeScale(float timeScale)
+{
+	if (timeScale < 0.0f)
+	{
+		timeScale = 0.0f;
+	}
+
+	if (m_scene != nullptr)
+	{
+		m_scene->SetTimeScale(timeScale);
+	}
+}
+
 namespace
 {
 	UINT ClampClientSize(LONG value)
@@ -136,6 +159,7 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     m_released = false;
     m_editorPlaybackState = EditorPlaybackState::Paused;
     m_editorStepRequested = false;
+    m_unscaledDeltaTime = 0.0;
     m_frameDeltaTime = 0.0;
     m_pWorld = new b2World(m_gravity);
     m_pWorld->SetContactListener(&m_cListener);
@@ -388,11 +412,16 @@ bool MainFrame::Update()
                 shouldRunSimulation = true;
             }
 
-            m_frameDeltaTime = shouldRunSimulation ? simulationDeltaTime : 0.0;
+            m_unscaledDeltaTime = simulationDeltaTime;
+            const double scaledSimulationDeltaTime = shouldRunSimulation
+                ? simulationDeltaTime * static_cast<double>(GetTimeScale())
+                : 0.0;
+            const bool shouldAdvanceSimulation = shouldRunSimulation && scaledSimulationDeltaTime > 0.0;
+            m_frameDeltaTime = shouldAdvanceSimulation ? scaledSimulationDeltaTime : 0.0;
 
-            if (shouldRunSimulation)
+            if (shouldAdvanceSimulation)
             {
-                m_pWorld->Step(static_cast<float>(simulationDeltaTime), m_velocityIterations, m_positionIterations);
+                m_pWorld->Step(static_cast<float>(scaledSimulationDeltaTime), m_velocityIterations, m_positionIterations);
                 ObjectManager::GetInstance()->Update();
 
                 if (m_type == RenderType::Edit && m_editorStepRequested)
@@ -403,8 +432,9 @@ bool MainFrame::Update()
             }
             else if (m_type == RenderType::Edit && ObjectManager::GetInstance() != nullptr)
             {
-                // Paused 상태에서도 생성/삭제 pending 반영은 즉시 보여주고 저장에도 포함시킨다.
+                // Paused 상태에서도 생성/삭제 pending과 마우스 ray/hover 정보는 계속 갱신한다.
                 ObjectManager::GetInstance()->FlushPendingObjects();
+                ObjectManager::GetInstance()->UpdateMouseInteraction();
             }
 
             //RENDER
@@ -423,6 +453,7 @@ void MainFrame::SetEditorPlaying(bool playing)
 {
     m_editorPlaybackState = playing ? EditorPlaybackState::Playing : EditorPlaybackState::Paused;
     m_editorStepRequested = false;
+    m_unscaledDeltaTime = 0.0;
     m_frameDeltaTime = 0.0;
     m_timer.Resync();
 }
@@ -431,6 +462,7 @@ void MainFrame::RequestEditorStep()
 {
     m_editorPlaybackState = EditorPlaybackState::Paused;
     m_editorStepRequested = true;
+    m_unscaledDeltaTime = 0.0;
     m_frameDeltaTime = 0.0;
     m_timer.Resync();
 }

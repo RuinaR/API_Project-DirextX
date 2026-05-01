@@ -61,6 +61,7 @@ private:
 private:
 	MSG m_message;
 	double m_targetFrameTime;
+	double m_unscaledDeltaTime = 0.0;
 	double m_frameDeltaTime = 0.0;
 	int32 m_velocityIterations = 8;
 	int32 m_positionIterations = 3;
@@ -74,6 +75,9 @@ public:
 	static void Destroy();
 	Timer& Timer();
 	double DeltaTime();
+	double UnscaledDeltaTime() const;
+	float GetTimeScale() const;
+	void SetTimeScale(float timeScale);
 	void Initialize(int targetFPS, Scene* scene, RenderType type);
 	//int Run();
 	//void Set();
