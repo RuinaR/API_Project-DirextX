@@ -40,6 +40,15 @@ namespace
 			body->SetAwake(true);
 		}
 	}
+
+	bool CanDispatchMouseEvent(GameObject* gameObject)
+	{
+		// 마우스 Down/Up/Hover Stay는 delete-pending 오브젝트에 전달하지 않는다.
+		return gameObject != nullptr &&
+			gameObject->GetComponentVec() != nullptr &&
+			gameObject->GetActive() &&
+			!gameObject->GetDestroy();
+	}
 }
 
 GameObject::GameObject() {
@@ -536,6 +545,9 @@ void GameObject::SetAngleY(float v)
 
 void GameObject::OnCollisionEnter(Collider* col)
 {
+    if (m_vecComponent == nullptr || m_isDestroy)
+        return;
+
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
     {
         (*itr)->OnCollisionEnter(col);
@@ -544,6 +556,9 @@ void GameObject::OnCollisionEnter(Collider* col)
 
 void GameObject::OnCollisionStay(Collider* col)
 {
+    if (m_vecComponent == nullptr || m_isDestroy)
+        return;
+
 	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
 	{
 		(*itr)->OnCollisionStay(col);
@@ -552,6 +567,9 @@ void GameObject::OnCollisionStay(Collider* col)
 
 void GameObject::OnCollisionExit(Collider* col)
 {
+    if (m_vecComponent == nullptr)
+        return;
+
 	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
 	{
 		if (*itr)
@@ -561,63 +579,98 @@ void GameObject::OnCollisionExit(Collider* col)
 
 void GameObject::OnLBtnDown()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
         (*itr)->OnLBtnDown();
+        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+        if (m_isDestroy)
+            break;
+    }
 }
 
 void GameObject::OnLBtnUp()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
 	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+	{
 		(*itr)->OnLBtnUp();
+		// 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+		if (m_isDestroy)
+			break;
+	}
 }
 
 void GameObject::OnRBtnDown()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
         (*itr)->OnRBtnDown();
+        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+        if (m_isDestroy)
+            break;
+    }
 }
 
 void GameObject::OnRBtnUp()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
         (*itr)->OnRBtnUp();
+        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+        if (m_isDestroy)
+            break;
+    }
 }
 
 void GameObject::OnMouseHoverEnter()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
         (*itr)->OnMouseHoverEnter();
+        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+        if (m_isDestroy)
+            break;
+    }
 }
 
 void GameObject::OnMouseHoverStay()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
         (*itr)->OnMouseHoverStay();
+        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+        if (m_isDestroy)
+            break;
+    }
 }
 
 void GameObject::OnMouseHoverExit()
 {
-    if (!m_setActive || !m_vecComponent)
+    if (!CanDispatchMouseEvent(this))
         return;
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
         (*itr)->OnMouseHoverExit();
+        // 이벤트 처리 중 자기 자신이 삭제 예약되면 남은 Component 전파를 중단한다.
+        if (m_isDestroy)
+            break;
+    }
 }

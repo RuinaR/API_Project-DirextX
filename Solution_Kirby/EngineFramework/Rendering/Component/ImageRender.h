@@ -15,6 +15,8 @@ private:
 	bool m_renderEnabled = true;
 	bool m_useTexture = true;
 	bool m_useMagentaColorKey = false;
+	bool m_flipX = false;
+	bool m_flipY = false;
 	bool m_released = false;
 	int m_orderInLayer = 0;
 	D3DCOLOR m_color = 0xffffffff;
@@ -44,6 +46,10 @@ public:
 	bool IsUseTexture();
 	void SetUseMagentaColorKey(bool useMagentaColorKey);
 	bool IsUseMagentaColorKey() const;
+	void SetFlipX(bool flipX);
+	bool IsFlipX() const;
+	void SetFlipY(bool flipY);
+	bool IsFlipY() const;
 	void SetColor(D3DCOLOR color);
 	D3DCOLOR GetColor();
 	void SetPositionOffset(const D3DXVECTOR3& offset);

@@ -152,6 +152,65 @@ namespace
 
 		return reinterpret_cast<Collider*>(fixture->GetUserData().pointer);
 	}
+
+	GameObject* GetCollisionGameObject(Collider* collider)
+	{
+		if (collider == nullptr)
+		{
+			return nullptr;
+		}
+
+		return collider->GetGameObject();
+	}
+
+	bool IsPendingDestroyCollisionObject(Collider* collider)
+	{
+		GameObject* gameObject = GetCollisionGameObject(collider);
+		return gameObject == nullptr || gameObject->GetDestroy();
+	}
+
+	void DispatchCollisionEnter(Collider* receiver, Collider* other)
+	{
+		// 충돌 Enter/Stay는 delete-pending 오브젝트가 포함되면 전달하지 않는다.
+		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		{
+			return;
+		}
+
+		GetCollisionGameObject(receiver)->OnCollisionEnter(other);
+	}
+
+	void DispatchCollisionStay(Collider* receiver, Collider* other)
+	{
+		// 충돌 Enter/Stay는 delete-pending 오브젝트가 포함되면 전달하지 않는다.
+		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		{
+			return;
+		}
+
+		GetCollisionGameObject(receiver)->OnCollisionStay(other);
+	}
+
+	void DispatchCollisionExit(Collider* receiver, Collider* other)
+	{
+		GameObject* receiverObject = GetCollisionGameObject(receiver);
+		if (receiverObject == nullptr || receiverObject->GetDestroy())
+		{
+			return;
+		}
+
+		Collider* safeOther = other;
+		GameObject* otherObject = GetCollisionGameObject(other);
+		if (otherObject == nullptr || otherObject->GetDestroy())
+		{
+			// 상대가 이미 삭제 예약이면 Exit는 nullptr 정책으로 전달한다.
+			safeOther = nullptr;
+		}
+
+		// TODO: active contact pair tracking이 아직 없어서 삭제로 EndContact가 누락된 모든 경우의
+		// Exit(nullptr)를 완전하게 보장하지는 못한다.
+		receiverObject->OnCollisionExit(safeOther);
+	}
 }
 
 void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
@@ -722,8 +781,8 @@ void CollisionListener::BeginContact(b2Contact* contact)
 		return;
 	}
 
-    dataA->GetGameObject()->OnCollisionEnter(dataB);
-    dataB->GetGameObject()->OnCollisionEnter(dataA);
+	DispatchCollisionEnter(dataA, dataB);
+	DispatchCollisionEnter(dataB, dataA);
 }
 
 void CollisionListener::EndContact(b2Contact* contact)
@@ -733,10 +792,10 @@ void CollisionListener::EndContact(b2Contact* contact)
 
 	Collider* dataA = GetColliderFromFixture(fixtureA);
 	Collider* dataB = GetColliderFromFixture(fixtureB);
-	if (dataA)
-		dataA->GetGameObject()->OnCollisionExit(dataB);
-	if (dataB)
-		dataB->GetGameObject()->OnCollisionExit(dataA);
+	if (dataA != nullptr)
+		DispatchCollisionExit(dataA, dataB);
+	if (dataB != nullptr)
+		DispatchCollisionExit(dataB, dataA);
 }
 
 void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
@@ -753,8 +812,8 @@ void CollisionListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifo
 		return;
 	}
 
-	dataA->GetGameObject()->OnCollisionStay(dataB);
-	dataB->GetGameObject()->OnCollisionStay(dataA);
+	DispatchCollisionStay(dataA, dataB);
+	DispatchCollisionStay(dataB, dataA);
 }
 
 void CollisionListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)

@@ -11,6 +11,24 @@
 
 ObjectManager* ObjectManager::m_Pthis = nullptr;
 
+namespace
+{
+	GameObject* SanitizeMouseEventTarget(GameObject* object)
+	{
+		if (object == nullptr)
+		{
+			return nullptr;
+		}
+
+		if (object->GetDestroy() || !object->GetActive())
+		{
+			return nullptr;
+		}
+
+		return object;
+	}
+}
+
 bool ObjectManager::IsInObjectList(GameObject* obj)
 {
 	if (obj == nullptr || m_objList == nullptr)
@@ -417,7 +435,13 @@ void ObjectManager::Update()
 void ObjectManager::UpdateMouseInteraction()
 {
 	GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
-	m_currentMouseHoverObject = RaycastMouseToGameObject();
+	if (previousMouseHoverObject != nullptr && previousMouseHoverObject->GetDestroy())
+	{
+		// Hover 대상이 삭제 예약되면 HoverExit 없이 조용히 hover 상태만 해제한다.
+		previousMouseHoverObject = nullptr;
+	}
+
+	m_currentMouseHoverObject = SanitizeMouseEventTarget(RaycastMouseToGameObject());
 
 	if (previousMouseHoverObject != m_currentMouseHoverObject)
 	{
@@ -747,37 +771,61 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 
 void ObjectManager::OnLBtnDown()
 {
-	GameObject* hitObject = m_currentMouseHoverObject;
+	GameObject* hitObject = SanitizeMouseEventTarget(m_currentMouseHoverObject);
+	m_currentMouseHoverObject = hitObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnLBtnDown();
+		if (hitObject->GetDestroy())
+		{
+			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			m_currentMouseHoverObject = nullptr;
+		}
 	}
 }
 
 void ObjectManager::OnLBtnUp()
 {
-	GameObject* hitObject = m_currentMouseHoverObject;
+	GameObject* hitObject = SanitizeMouseEventTarget(m_currentMouseHoverObject);
+	m_currentMouseHoverObject = hitObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnLBtnUp();
+		if (hitObject->GetDestroy())
+		{
+			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			m_currentMouseHoverObject = nullptr;
+		}
 	}
 }
 
 void ObjectManager::OnRBtnDown()
 {
-	GameObject* hitObject = m_currentMouseHoverObject;
+	GameObject* hitObject = SanitizeMouseEventTarget(m_currentMouseHoverObject);
+	m_currentMouseHoverObject = hitObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnRBtnDown();
+		if (hitObject->GetDestroy())
+		{
+			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			m_currentMouseHoverObject = nullptr;
+		}
 	}
 }
 
 void ObjectManager::OnRBtnUp()
 {
-	GameObject* hitObject = m_currentMouseHoverObject;
+	GameObject* hitObject = SanitizeMouseEventTarget(m_currentMouseHoverObject);
+	m_currentMouseHoverObject = hitObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnRBtnUp();
+		if (hitObject->GetDestroy())
+		{
+			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			m_currentMouseHoverObject = nullptr;
+		}
 	}
 }
 

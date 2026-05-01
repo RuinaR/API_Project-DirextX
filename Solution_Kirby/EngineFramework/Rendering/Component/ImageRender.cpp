@@ -65,35 +65,39 @@ void ImageRender::SetupVertices()
 
     const float upperV = m_isUIRender ? 1.0f : 0.0f;
     const float lowerV = m_isUIRender ? 0.0f : 1.0f;
+    const float leftU = m_flipX ? 1.0f : 0.0f;
+    const float rightU = m_flipX ? 0.0f : 1.0f;
+    const float topV = m_flipY ? lowerV : upperV;
+    const float bottomV = m_flipY ? upperV : lowerV;
 
     CUSTOMVERTEX vertices[4];
     vertices[0].x = -0.5f; // 왼쪽 상단 모서리
     vertices[0].y = 0.5f;
     vertices[0].z = 0.0f;
     vertices[0].color = m_color;
-    vertices[0].tu = 0.0f;
-    vertices[0].tv = upperV;
+    vertices[0].tu = leftU;
+    vertices[0].tv = topV;
 
     vertices[1].x = -0.5f; // 왼쪽 하단 모서리
     vertices[1].y = -0.5f;
     vertices[1].z = 0.0f;
     vertices[1].color = m_color;
-    vertices[1].tu = 0.0f;
-    vertices[1].tv = lowerV;
+    vertices[1].tu = leftU;
+    vertices[1].tv = bottomV;
 
     vertices[2].x = 0.5f; // 오른쪽 상단 모서리
     vertices[2].y = 0.5f;
     vertices[2].z = 0.0f;
     vertices[2].color = m_color;
-    vertices[2].tu = 1.0f;
-    vertices[2].tv = upperV;
+    vertices[2].tu = rightU;
+    vertices[2].tv = topV;
 
     vertices[3].x = 0.5f; // 오른쪽 하단 모서리
     vertices[3].y = -0.5f;
     vertices[3].z = 0.0f;
     vertices[3].color = m_color;
-    vertices[3].tu = 1.0f;
-    vertices[3].tv = lowerV;
+    vertices[3].tu = rightU;
+    vertices[3].tv = bottomV;
 
     // 정점 버퍼에 사각형 정점 정보를 갱신한다.
     VOID* pVertices;
@@ -255,6 +259,26 @@ void ImageRender::SetUseMagentaColorKey(bool useMagentaColorKey)
 bool ImageRender::IsUseMagentaColorKey() const
 {
     return m_useMagentaColorKey;
+}
+
+void ImageRender::SetFlipX(bool flipX)
+{
+    m_flipX = flipX;
+}
+
+bool ImageRender::IsFlipX() const
+{
+    return m_flipX;
+}
+
+void ImageRender::SetFlipY(bool flipY)
+{
+    m_flipY = flipY;
+}
+
+bool ImageRender::IsFlipY() const
+{
+    return m_flipY;
 }
 
 void ImageRender::SetColor(D3DCOLOR color)
@@ -460,6 +484,18 @@ void ImageRender::DrawInspector()
         SetUseMagentaColorKey(useMagentaColorKey);
     }
 
+    bool flipX = m_flipX;
+    if (ImGui::Checkbox("Flip X", &flipX))
+    {
+        SetFlipX(flipX);
+    }
+
+    bool flipY = m_flipY;
+    if (ImGui::Checkbox("Flip Y", &flipY))
+    {
+        SetFlipY(flipY);
+    }
+
     bool trans = m_isTrans;
     if (ImGui::Checkbox("Transparent Queue", &trans))
     {
@@ -516,6 +552,8 @@ std::string ImageRender::Serialize() const
     oss << "\"renderEnabled\": " << (m_renderEnabled ? "true" : "false") << ", ";
     oss << "\"useTexture\": " << (m_useTexture ? "true" : "false") << ", ";
     oss << "\"magentaColorKey\": " << (m_useMagentaColorKey ? "true" : "false") << ", ";
+    oss << "\"flipX\": " << (m_flipX ? "true" : "false") << ", ";
+    oss << "\"flipY\": " << (m_flipY ? "true" : "false") << ", ";
     oss << "\"color\": " << static_cast<DWORD>(m_color) << ", ";
     oss << "\"isUIRender\": " << (m_isUIRender ? "true" : "false") << ", ";
     oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
@@ -530,6 +568,8 @@ bool ImageRender::Deserialize(const std::string& componentJson)
     bool renderEnabled = m_renderEnabled;
     bool useTexture = m_useTexture;
     bool magentaColorKey = m_useMagentaColorKey;
+    bool flipX = false;
+    bool flipY = false;
     bool isUIRender = m_isUIRender;
     bool trans = m_isTrans;
     int orderInLayer = m_orderInLayer;
@@ -539,6 +579,8 @@ bool ImageRender::Deserialize(const std::string& componentJson)
     SceneJson::ReadBool(componentJson, "renderEnabled", renderEnabled);
     SceneJson::ReadBool(componentJson, "useTexture", useTexture);
     SceneJson::ReadBool(componentJson, "magentaColorKey", magentaColorKey);
+    SceneJson::ReadBool(componentJson, "flipX", flipX);
+    SceneJson::ReadBool(componentJson, "flipY", flipY);
     SceneJson::ReadBool(componentJson, "isUIRender", isUIRender);
     SceneJson::ReadBool(componentJson, "trans", trans);
     SceneJson::ReadInt(componentJson, "orderInLayer", orderInLayer);
@@ -548,6 +590,8 @@ bool ImageRender::Deserialize(const std::string& componentJson)
     SetRenderEnabled(renderEnabled);
     SetUseTexture(useTexture);
     m_useMagentaColorKey = magentaColorKey;
+    SetFlipX(flipX);
+    SetFlipY(flipY);
     SetColor(static_cast<D3DCOLOR>(color));
     SetTrans(trans);
     SetOrderInLayer(orderInLayer);
