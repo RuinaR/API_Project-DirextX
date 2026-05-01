@@ -1,6 +1,7 @@
 {
   "version": 4,
   "sceneName": "TestScene2",
+  "timeScale": 1,
   "camera": {
     "position": { "x": 0, "y": 113, "z": -523 },
     "rotation": { "x": 0, "y": 0, "z": -0.6 },
@@ -26,7 +27,7 @@
       },
       "components": [
         { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/left/eat.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
       ]
     },
     {
@@ -37,7 +38,7 @@
       "active": true,
       "transform": {
         "position": { "x": 89, "y": 194, "z": 225 },
-        "rotation": { "x": 0, "y": 9297, "z": 9166 },
+        "rotation": { "x": 0, "y": 9402, "z": 9271 },
         "size": { "x": 1, "y": 1, "z": 1 }
       },
       "components": [
@@ -72,7 +73,7 @@
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
       ]
     },
     {
@@ -87,7 +88,7 @@
         "size": { "x": 128, "y": 160, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } },
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } },
         { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 128, "y": 171 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
@@ -114,11 +115,11 @@
       "active": true,
       "transform": {
         "position": { "x": 0, "y": 0, "z": 208 },
-        "rotation": { "x": 0, "y": 134, "z": 134 },
+        "rotation": { "x": 0, "y": 239, "z": 239 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/defaultObj.bmp" } }
+        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/defaultObj.bmp" } }
       ]
     }
   ]

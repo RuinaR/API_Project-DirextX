@@ -1,9 +1,17 @@
 {
   "version": 4,
   "sceneName": "TestScene1",
+  "timeScale": 1,
   "camera": {
     "position": { "x": 0, "y": 0, "z": 0 },
-    "rotation": { "x": 0, "y": 0, "z": 0 }
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "projection": {
+      "mode": "Orthographic",
+      "fov": 0.785398,
+      "orthographicSize": 900,
+      "nearClip": 1,
+      "farClip": 1000
+    }
   },
   "objects": [
     {
