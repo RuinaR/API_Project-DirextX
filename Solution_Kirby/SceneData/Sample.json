@@ -37,8 +37,8 @@
       "tag": "Sprite (1)",
       "active": true,
       "transform": {
-        "position": { "x": -2.11679, "y": 119.015, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 3.07107e-08 },
+        "position": { "x": -2.11679, "y": 101.087, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 2.28494e-06 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
@@ -54,8 +54,8 @@
       "tag": "Sprite (2)",
       "active": true,
       "transform": {
-        "position": { "x": 184.62, "y": 100.519, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": -1.57078 },
+        "position": { "x": 184.62, "y": 78.6101, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": -1.57079 },
         "size": { "x": 91, "y": 92, "z": 1 }
       },
       "components": [
@@ -71,8 +71,8 @@
       "tag": "anim",
       "active": true,
       "transform": {
-        "position": { "x": -215.354, "y": 119.016, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": -1.65187e-05 },
+        "position": { "x": -179.354, "y": 97.1118, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 1.90962e-06 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
@@ -89,7 +89,7 @@
       "tag": "Sprite (3)",
       "active": true,
       "transform": {
-        "position": { "x": -243.14, "y": 320.67, "z": 0 },
+        "position": { "x": -243.14, "y": 298.466, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 2.601 },
         "size": { "x": 59, "y": 54, "z": 1 }
       },
@@ -106,12 +106,12 @@
       "tag": "UI Image",
       "active": true,
       "transform": {
-        "position": { "x": 360, "y": 170, "z": 0 },
+        "position": { "x": 426, "y": 170, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
-        { "type": "UIImage", "data": { "position": { "x": 296, "y": 106 }, "size": { "x": 128, "y": 128 }, "visible": true, "enabled": true, "orderInLayer": 0, "useTexture": false, "color": 4283479260, "imagePath": "" } }
+        { "type": "UIImage", "data": { "position": { "x": 362, "y": 106 }, "size": { "x": 128, "y": 128 }, "visible": true, "enabled": true, "orderInLayer": 0, "useTexture": false, "color": 4283479260, "imagePath": "" } }
       ]
     },
     {
@@ -121,12 +121,12 @@
       "tag": "UI Text",
       "active": true,
       "transform": {
-        "position": { "x": 444, "y": 160, "z": 0 },
+        "position": { "x": 508, "y": 170, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 240, "y": 48, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 324, "y": 136 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "Text", "color": 4294967295, "fontSize": 52, "scale": 1 } }
+        { "type": "UILabel", "data": { "position": { "x": 388, "y": 146 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "Text", "color": 4294967295, "fontSize": 52, "scale": 1 } }
       ]
     },
     {

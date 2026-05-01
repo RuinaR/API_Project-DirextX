@@ -15,15 +15,16 @@ namespace
 
 	std::string GetExecutableDirectoryA()
 	{
-		char path[MAX_PATH] = { 0 };
-		GetModuleFileNameA(NULL, path, MAX_PATH);
-		std::string executePath = path;
+		wchar_t path[MAX_PATH] = { 0 };
+		GetModuleFileNameW(NULL, path, MAX_PATH);
+		std::string executePath = ConvertToString(path);
 		return executePath.substr(0, executePath.find_last_of("\\/"));
 	}
 
 	bool FileExistsA(const std::string& path)
 	{
-		DWORD attributes = GetFileAttributesA(path.c_str());
+		const std::wstring widePath = ConvertToWideString(path);
+		DWORD attributes = GetFileAttributesW(widePath.c_str());
 		return attributes != INVALID_FILE_ATTRIBUTES && (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0;
 	}
 

@@ -31,10 +31,6 @@ namespace
 	bool g_enableDebugRaycast = false;
 	float g_debugRaycastMaxDistance = 1000.0f;
 	bool g_debugRaycastIncludeTriggers = false;
-	bool g_debugRaycastShowNormal = true;
-	const float kDebugRaycastHitCrossHalfSize = 5.0f;
-	const float kDebugRaycastNormalLength = 20.0f;
-	const D3DCOLOR kDebugRaycastColor = D3DCOLOR_XRGB(255, 0, 0);
 
 	bool TryIntersectRayWithPhysicsPlane(const Ray& ray, D3DXVECTOR3& outPoint, float& outDistance)
 	{
@@ -249,17 +245,6 @@ namespace
 			return;
 		}
 
-		ImGui::Checkbox("Enable Debug Raycast", &g_enableDebugRaycast);
-		if (!g_enableDebugRaycast)
-		{
-			if (RenderManager::GetInstance() != nullptr)
-			{
-				RenderManager::GetInstance()->ClearImmediateDebugLines();
-			}
-			ImGui::TextDisabled("Enable to inspect the current mouse raycast.");
-			return;
-		}
-
 		if (g_debugRaycastMaxDistance <= 0.0f)
 		{
 			g_debugRaycastMaxDistance = 1.0f;
@@ -272,13 +257,11 @@ namespace
 			}
 		}
 		ImGui::Checkbox("Include Triggers", &g_debugRaycastIncludeTriggers);
-		ImGui::Checkbox("Show Hit Normal", &g_debugRaycastShowNormal);
 
 		Mouse* mouse = Mouse::GetInstance();
-		RenderManager* renderManager = RenderManager::GetInstance();
-		if (mouse == nullptr || renderManager == nullptr)
+		if (mouse == nullptr)
 		{
-			ImGui::TextDisabled("Mouse or RenderManager unavailable");
+			ImGui::TextDisabled("Mouse unavailable");
 			return;
 		}
 
@@ -301,20 +284,6 @@ namespace
 			rayEnd = hit.point;
 		}
 
-		renderManager->ClearImmediateDebugLines();
-		renderManager->AddImmediateDebugLine(rayStart, rayEnd, kDebugRaycastColor);
-		if (hasHit)
-		{
-			renderManager->AddImmediateDebugCross(hit.point, kDebugRaycastHitCrossHalfSize, kDebugRaycastColor);
-			if (g_debugRaycastShowNormal)
-			{
-				renderManager->AddImmediateDebugLine(
-					hit.point,
-					hit.point + (hit.normal * kDebugRaycastNormalLength),
-					kDebugRaycastColor);
-			}
-		}
-
 		ImGui::Text("Ray Origin: %.2f, %.2f, %.2f", ray.origin.x, ray.origin.y, ray.origin.z);
 		ImGui::Text("Ray Direction: %.3f, %.3f, %.3f", ray.direction.x, ray.direction.y, ray.direction.z);
 		ImGui::Text("Hit: %s", hasHit ? "true" : "false");
@@ -331,7 +300,7 @@ namespace
 			ImGui::Text("Hit GameObject: None");
 			ImGui::Text("Hit Distance: N/A");
 			ImGui::Text("Hit Point: N/A");
-			ImGui::Text("Hit Normal: N/A (AABB approximation)");
+			ImGui::Text("Hit Normal: N/A");
 		}
 	}
 

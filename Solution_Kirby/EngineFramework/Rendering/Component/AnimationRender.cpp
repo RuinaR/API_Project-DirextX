@@ -310,7 +310,8 @@ void AnimationRender::RebuildClipFromFolder()
 		return;
 	}
 
-	const DWORD attributes = GetFileAttributesA(assetInfo->path.c_str());
+	const std::wstring assetPath = ConvertToWideString(assetInfo->path);
+	const DWORD attributes = GetFileAttributesW(assetPath.c_str());
 	if (attributes == INVALID_FILE_ATTRIBUTES || (attributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
 	{
 		return;
@@ -324,8 +325,9 @@ void AnimationRender::RebuildClipFromFolder()
 	searchPath += "*";
 
 	std::vector<std::string> frameFiles;
-	WIN32_FIND_DATAA findData = {};
-	HANDLE findHandle = FindFirstFileA(searchPath.c_str(), &findData);
+	const std::wstring wideSearchPath = ConvertToWideString(searchPath);
+	WIN32_FIND_DATAW findData = {};
+	HANDLE findHandle = FindFirstFileW(wideSearchPath.c_str(), &findData);
 	if (findHandle == INVALID_HANDLE_VALUE)
 	{
 		return;
@@ -338,12 +340,12 @@ void AnimationRender::RebuildClipFromFolder()
 			continue;
 		}
 
-		std::string fileName = findData.cFileName;
+		std::string fileName = ConvertToString(findData.cFileName);
 		if (IsAnimationFrameExtension(GetFileExtension(fileName)))
 		{
 			frameFiles.push_back(fileName);
 		}
-	} while (FindNextFileA(findHandle, &findData) != 0);
+	} while (FindNextFileW(findHandle, &findData) != 0);
 
 	FindClose(findHandle);
 	std::sort(frameFiles.begin(), frameFiles.end());
