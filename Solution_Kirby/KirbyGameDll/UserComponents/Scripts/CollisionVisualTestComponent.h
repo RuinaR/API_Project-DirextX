@@ -15,6 +15,14 @@ public:
 		RightUp,
 	};
 
+	enum class HoverVisualState
+	{
+		None = 0,
+		Enter,
+		Stay,
+		Exit,
+	};
+
 	CollisionVisualTestComponent() = default;
 	~CollisionVisualTestComponent() override = default;
 
@@ -28,15 +36,18 @@ public:
 	const char* GetSerializableType() const override;
 	std::string Serialize() const override;
 	bool Deserialize(const std::string& componentJson) override;
-	void OnLBtnDown() override;
-	void OnLBtnUp() override;
-	void OnRBtnDown() override;
-	void OnRBtnUp() override;
 
 protected:
 	void CollisionEnter(Collider* other) override;
 	void CollisionStay(Collider* other) override;
 	void CollisionExit(Collider* other) override;
+	void LBtnDown() override;
+	void LBtnUp() override;
+	void RBtnDown() override;
+	void RBtnUp() override;
+	void MouseHoverEnter() override;
+	void MouseHoverStay() override;
+	void MouseHoverExit() override;
 
 private:
 	void CacheOriginalSize();
@@ -47,6 +58,8 @@ private:
 	D3DCOLOR GetMouseVisualColor() const;
 	D3DXVECTOR2 GetMouseVisualScale() const;
 	const char* GetMouseVisualLabel() const;
+	const char* GetHoverVisualLabel() const;
+	bool IsHoverStayActive() const;
 
 	bool m_enabled = true;
 	float m_scaleOnEnter = 1.2f;
@@ -58,5 +71,8 @@ private:
 	int m_activeCollisionCount = 0;
 	float m_visualTime = 0.0f;
 	float m_mouseVisualTimer = 0.0f;
+	float m_hoverTransitionTimer = 0.0f;
+	bool m_isHovering = false;
 	MouseVisualEvent m_mouseVisualEvent = MouseVisualEvent::None;
+	HoverVisualState m_hoverVisualState = HoverVisualState::None;
 };

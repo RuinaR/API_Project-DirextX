@@ -109,4 +109,7 @@ public:
     void OnLBtnUp();
     void OnRBtnDown();
     void OnRBtnUp();
+    void OnMouseHoverEnter();
+    void OnMouseHoverStay();
+    void OnMouseHoverExit();
 };

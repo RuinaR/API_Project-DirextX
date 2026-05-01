@@ -224,7 +224,7 @@ namespace
 		bool hasHit = false;
 		if (!objectManager->GetLastMouseRaycastInfo(ray, hit, hasHit))
 		{
-			ImGui::TextDisabled("No mouse click raycast yet");
+			ImGui::TextDisabled("No mouse raycast yet");
 			return;
 		}
 

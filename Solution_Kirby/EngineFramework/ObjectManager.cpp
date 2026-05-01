@@ -180,6 +180,8 @@ void ObjectManager::ReleaseAndDeleteObject(GameObject* obj)
 
 	if (m_selected == obj)
 		m_selected = nullptr;
+	if (m_currentMouseHoverObject == obj)
+		m_currentMouseHoverObject = nullptr;
 
 	obj->Release();
 	delete obj;
@@ -387,6 +389,7 @@ void ObjectManager::Release()
 void ObjectManager::Update()
 {
 	FlushPendingObjects();
+	GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
 
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 	{
@@ -405,6 +408,32 @@ void ObjectManager::Update()
 		{
 			QueueDestroyObject(*itr);
 		}
+	}
+
+	m_currentMouseHoverObject = RaycastMouseToGameObject();
+
+	if (previousMouseHoverObject != m_currentMouseHoverObject)
+	{
+		if (previousMouseHoverObject != nullptr &&
+			!previousMouseHoverObject->GetDestroy() &&
+			previousMouseHoverObject->GetActive())
+		{
+			previousMouseHoverObject->OnMouseHoverExit();
+		}
+
+		if (m_currentMouseHoverObject != nullptr &&
+			!m_currentMouseHoverObject->GetDestroy() &&
+			m_currentMouseHoverObject->GetActive())
+		{
+			m_currentMouseHoverObject->OnMouseHoverEnter();
+		}
+	}
+
+	if (m_currentMouseHoverObject != nullptr &&
+		!m_currentMouseHoverObject->GetDestroy() &&
+		m_currentMouseHoverObject->GetActive())
+	{
+		m_currentMouseHoverObject->OnMouseHoverStay();
 	}
 
 	FlushPendingObjects();
@@ -713,7 +742,7 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 
 void ObjectManager::OnLBtnDown()
 {
-	GameObject* hitObject = RaycastMouseToGameObject();
+	GameObject* hitObject = m_currentMouseHoverObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnLBtnDown();
@@ -722,7 +751,7 @@ void ObjectManager::OnLBtnDown()
 
 void ObjectManager::OnLBtnUp()
 {
-	GameObject* hitObject = RaycastMouseToGameObject();
+	GameObject* hitObject = m_currentMouseHoverObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnLBtnUp();
@@ -731,7 +760,7 @@ void ObjectManager::OnLBtnUp()
 
 void ObjectManager::OnRBtnDown()
 {
-	GameObject* hitObject = RaycastMouseToGameObject();
+	GameObject* hitObject = m_currentMouseHoverObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnRBtnDown();
@@ -740,7 +769,7 @@ void ObjectManager::OnRBtnDown()
 
 void ObjectManager::OnRBtnUp()
 {
-	GameObject* hitObject = RaycastMouseToGameObject();
+	GameObject* hitObject = m_currentMouseHoverObject;
 	if (hitObject != nullptr)
 	{
 		hitObject->OnRBtnUp();

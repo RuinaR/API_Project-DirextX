@@ -413,22 +413,10 @@ void GameObject::Update() {
         return;
     if (m_isDestroy)
         return;
-    RECT rect = {
-        m_position.x + Camera::GetInstance()->GetPos().x,
-        m_position.y + Camera::GetInstance()->GetPos().y,
-        m_position.x + Camera::GetInstance()->GetPos().x + m_size.x,
-		m_position.y + Camera::GetInstance()->GetPos().y + m_size.y };
-	POINT point = { 
-        Mouse::GetInstance()->GetDXPos().x + Camera::GetInstance()->GetPos().x, 
-        Mouse::GetInstance()->GetDXPos().y + Camera::GetInstance()->GetPos().y };
 
 	for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
 	{
 		(*itr)->Update();
-		if (PtInRect(&rect, point))
-		{
-			(*itr)->OnMouseHover();
-		}
 	}
 }
 
@@ -605,4 +593,31 @@ void GameObject::OnRBtnUp()
 
     for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
         (*itr)->OnRBtnUp();
+}
+
+void GameObject::OnMouseHoverEnter()
+{
+    if (!m_setActive || !m_vecComponent)
+        return;
+
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        (*itr)->OnMouseHoverEnter();
+}
+
+void GameObject::OnMouseHoverStay()
+{
+    if (!m_setActive || !m_vecComponent)
+        return;
+
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        (*itr)->OnMouseHoverStay();
+}
+
+void GameObject::OnMouseHoverExit()
+{
+    if (!m_setActive || !m_vecComponent)
+        return;
+
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+        (*itr)->OnMouseHoverExit();
 }

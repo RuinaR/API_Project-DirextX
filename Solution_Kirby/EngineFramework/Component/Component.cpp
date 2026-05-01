@@ -18,31 +18,6 @@ GameObject* Component::GetGameObject()
 	return this->m_gameObj;
 }
 
-void Component::OnLBtnDown()
-{
-
-}
-
-void Component::OnLBtnUp()
-{
-
-}
-
-void Component::OnRBtnDown()
-{
-	
-}
-
-void Component::OnRBtnUp()
-{
-	
-}
-
-void Component::OnMouseHover()
-{
-	
-}
-
 const char* Component::GetInspectorName() const
 {
 	return typeid(*this).name();

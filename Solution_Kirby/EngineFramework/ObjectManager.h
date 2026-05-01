@@ -18,6 +18,7 @@ private:
 	RaycastHit2D m_lastMouseRaycastHit;
 	bool m_hasLastMouseRay = false;
 	bool m_hasLastMouseRaycastHit = false;
+	GameObject* m_currentMouseHoverObject = nullptr;
 
 	bool IsInObjectList(GameObject* obj);
 	bool IsPendingAdd(GameObject* obj);
@@ -64,5 +65,6 @@ public:
 	void OnRBtnDown();
 	void OnRBtnUp();
 	bool GetLastMouseRaycastInfo(Ray& outRay, RaycastHit2D& outHit, bool& outHasHit) const;
+	GameObject* GetCurrentMouseHoverObject() const { return m_currentMouseHoverObject; }
 };
 

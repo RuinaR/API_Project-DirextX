@@ -14,6 +14,7 @@ namespace
 	}
 
 	constexpr float kMouseVisualDuration = 0.18f;
+	constexpr float kHoverTransitionDuration = 0.12f;
 }
 
 void CollisionVisualTestComponent::Initialize()
@@ -39,7 +40,10 @@ void CollisionVisualTestComponent::Release()
 	m_activeCollisionCount = 0;
 	m_visualTime = 0.0f;
 	m_mouseVisualTimer = 0.0f;
+	m_hoverTransitionTimer = 0.0f;
+	m_isHovering = false;
 	m_mouseVisualEvent = MouseVisualEvent::None;
+	m_hoverVisualState = HoverVisualState::None;
 }
 
 void CollisionVisualTestComponent::Start()
@@ -88,6 +92,19 @@ void CollisionVisualTestComponent::Update()
 		}
 	}
 
+	if (m_hoverTransitionTimer > 0.0f)
+	{
+		m_hoverTransitionTimer -= deltaTime;
+		if (m_hoverTransitionTimer <= 0.0f)
+		{
+			m_hoverTransitionTimer = 0.0f;
+			if (!m_isHovering && m_hoverVisualState == HoverVisualState::Exit)
+			{
+				m_hoverVisualState = HoverVisualState::None;
+			}
+		}
+	}
+
 	RefreshVisualState();
 }
 
@@ -101,6 +118,7 @@ void CollisionVisualTestComponent::DrawInspector()
 	ImGui::Checkbox("Enabled", &m_enabled);
 	ImGui::DragFloat("Scale On Enter", &m_scaleOnEnter, 0.01f, 1.0f, 3.0f, "%.2f");
 	m_scaleOnEnter = ClampScaleMultiplier(m_scaleOnEnter);
+	ImGui::Text("Hover State: %s", GetHoverVisualLabel());
 	ImGui::Text("Last Mouse Event: %s", GetMouseVisualLabel());
 }
 
@@ -127,7 +145,7 @@ bool CollisionVisualTestComponent::Deserialize(const std::string& componentJson)
 	return true;
 }
 
-void CollisionVisualTestComponent::OnLBtnDown()
+void CollisionVisualTestComponent::LBtnDown()
 {
 	if (!m_enabled)
 	{
@@ -137,7 +155,7 @@ void CollisionVisualTestComponent::OnLBtnDown()
 	TriggerMouseVisual(MouseVisualEvent::LeftDown);
 }
 
-void CollisionVisualTestComponent::OnLBtnUp()
+void CollisionVisualTestComponent::LBtnUp()
 {
 	if (!m_enabled)
 	{
@@ -147,7 +165,7 @@ void CollisionVisualTestComponent::OnLBtnUp()
 	TriggerMouseVisual(MouseVisualEvent::LeftUp);
 }
 
-void CollisionVisualTestComponent::OnRBtnDown()
+void CollisionVisualTestComponent::RBtnDown()
 {
 	if (!m_enabled)
 	{
@@ -157,7 +175,7 @@ void CollisionVisualTestComponent::OnRBtnDown()
 	TriggerMouseVisual(MouseVisualEvent::RightDown);
 }
 
-void CollisionVisualTestComponent::OnRBtnUp()
+void CollisionVisualTestComponent::RBtnUp()
 {
 	if (!m_enabled)
 	{
@@ -165,6 +183,47 @@ void CollisionVisualTestComponent::OnRBtnUp()
 	}
 
 	TriggerMouseVisual(MouseVisualEvent::RightUp);
+}
+
+void CollisionVisualTestComponent::MouseHoverEnter()
+{
+	if (!m_enabled)
+	{
+		return;
+	}
+
+	m_isHovering = true;
+	m_hoverVisualState = HoverVisualState::Enter;
+	m_hoverTransitionTimer = kHoverTransitionDuration;
+	RefreshVisualState();
+}
+
+void CollisionVisualTestComponent::MouseHoverStay()
+{
+	if (!m_enabled)
+	{
+		return;
+	}
+
+	m_isHovering = true;
+	if (m_hoverVisualState != HoverVisualState::Enter || m_hoverTransitionTimer <= 0.0f)
+	{
+		m_hoverVisualState = HoverVisualState::Stay;
+	}
+	RefreshVisualState();
+}
+
+void CollisionVisualTestComponent::MouseHoverExit()
+{
+	if (!m_enabled)
+	{
+		return;
+	}
+
+	m_isHovering = false;
+	m_hoverVisualState = HoverVisualState::Exit;
+	m_hoverTransitionTimer = kHoverTransitionDuration;
+	RefreshVisualState();
 }
 
 void CollisionVisualTestComponent::CollisionEnter(Collider* other)
@@ -285,6 +344,22 @@ void CollisionVisualTestComponent::RefreshVisualState()
 	scaledSize.x *= collisionScale;
 	scaledSize.y *= collisionScale;
 
+	if (m_hoverVisualState == HoverVisualState::Enter && m_hoverTransitionTimer > 0.0f)
+	{
+		scaledSize.x *= 1.10f;
+		scaledSize.y *= 1.10f;
+	}
+	else if (IsHoverStayActive())
+	{
+		scaledSize.x *= 1.04f;
+		scaledSize.y *= 1.04f;
+	}
+	else if (m_hoverVisualState == HoverVisualState::Exit && m_hoverTransitionTimer > 0.0f)
+	{
+		scaledSize.x *= 0.96f;
+		scaledSize.y *= 0.96f;
+	}
+
 	const D3DXVECTOR2 mouseScale = GetMouseVisualScale();
 	scaledSize.x *= mouseScale.x;
 	scaledSize.y *= mouseScale.y;
@@ -295,6 +370,18 @@ void CollisionVisualTestComponent::RefreshVisualState()
 		if (m_mouseVisualEvent != MouseVisualEvent::None && m_mouseVisualTimer > 0.0f)
 		{
 			imageRender->SetColor(GetMouseVisualColor());
+		}
+		else if (m_hoverVisualState == HoverVisualState::Enter && m_hoverTransitionTimer > 0.0f)
+		{
+			imageRender->SetColor(D3DCOLOR_ARGB(255, 120, 255, 180));
+		}
+		else if (IsHoverStayActive())
+		{
+			imageRender->SetColor(D3DCOLOR_ARGB(255, 150, 210, 255));
+		}
+		else if (m_hoverVisualState == HoverVisualState::Exit && m_hoverTransitionTimer > 0.0f)
+		{
+			imageRender->SetColor(D3DCOLOR_ARGB(255, 255, 170, 120));
 		}
 		else if (m_hasOriginalColor)
 		{
@@ -361,4 +448,25 @@ const char* CollisionVisualTestComponent::GetMouseVisualLabel() const
 	default:
 		return "None";
 	}
+}
+
+const char* CollisionVisualTestComponent::GetHoverVisualLabel() const
+{
+	switch (m_hoverVisualState)
+	{
+	case HoverVisualState::Enter:
+		return "Enter";
+	case HoverVisualState::Stay:
+		return "Stay";
+	case HoverVisualState::Exit:
+		return "Exit";
+	default:
+		return "None";
+	}
+}
+
+bool CollisionVisualTestComponent::IsHoverStayActive() const
+{
+	return m_isHovering && (m_hoverVisualState == HoverVisualState::Stay ||
+		(m_hoverVisualState == HoverVisualState::Enter && m_hoverTransitionTimer <= 0.0f));
 }

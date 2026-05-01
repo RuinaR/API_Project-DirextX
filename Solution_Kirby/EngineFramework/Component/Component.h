@@ -11,8 +11,14 @@ protected:
 
 	virtual void CollisionEnter(Collider* other) {};
 	virtual void CollisionExit(Collider* other) {};
-	virtual void CollisionStay(Collider* other) { Collision(other); }
-	virtual void Collision(Collider* other) {};
+	virtual void CollisionStay(Collider* other) {};
+	virtual void LBtnDown() {}
+	virtual void LBtnUp() {}
+	virtual void RBtnDown() {}
+	virtual void RBtnUp() {}
+	virtual void MouseHoverEnter() {}
+	virtual void MouseHoverExit() {}
+	virtual void MouseHoverStay() {}
 
 public:
 	Component();
@@ -24,15 +30,16 @@ public:
 	void OnCollisionEnter(Collider* other) { CollisionEnter(other); }
 	void OnCollisionExit(Collider* other) { CollisionExit(other); }
 	void OnCollisionStay(Collider* other) { CollisionStay(other); }
-	void OnCollision(Collider* other) { OnCollisionStay(other); }
 	virtual void InitGameObj(GameObject* obj);
 	GameObject* GetGameObject();
 
-	virtual void OnLBtnDown();
-	virtual void OnLBtnUp();
-	virtual void OnRBtnDown();
-	virtual void OnRBtnUp();
-	virtual void OnMouseHover();
+	void OnLBtnDown() { LBtnDown(); }
+	void OnLBtnUp() { LBtnUp(); }
+	void OnRBtnDown() { RBtnDown(); }
+	void OnRBtnUp() { RBtnUp(); }
+	void OnMouseHoverEnter() { MouseHoverEnter(); }
+	void OnMouseHoverExit() { MouseHoverExit(); }
+	void OnMouseHoverStay() { MouseHoverStay(); }
 	virtual const char* GetInspectorName() const;
 	virtual void DrawInspector();
 	virtual const char* GetSerializableType() const;
