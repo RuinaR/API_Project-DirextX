@@ -137,6 +137,11 @@ namespace
 		return static_cast<float>(width > 0 ? width : 1) / static_cast<float>(height);
 	}
 
+	float GetGameRenderAspectRatio()
+	{
+		return static_cast<float>(LOGICAL_RENDER_WIDTH) / static_cast<float>(LOGICAL_RENDER_HEIGHT);
+	}
+
 	bool LoadEditorKoreanFont(ImGuiIO& io)
 	{
 		char windowsDirectory[MAX_PATH] = {};
@@ -457,6 +462,78 @@ namespace
 			DispatchTriggerStay(colliderA, colliderB);
 			DispatchTriggerStay(colliderB, colliderA);
 			++itr;
+		}
+	}
+
+	void BroadcastDeviceLostToComponents()
+	{
+		ObjectManager* objectManager = ObjectManager::GetInstance();
+		if (objectManager == nullptr || objectManager->GetObjList() == nullptr)
+		{
+			return;
+		}
+
+		for (list<GameObject*>::iterator objItr = objectManager->GetObjList()->begin();
+			objItr != objectManager->GetObjList()->end();
+			++objItr)
+		{
+			GameObject* gameObject = *objItr;
+			if (gameObject == nullptr || gameObject->GetDestroy())
+			{
+				continue;
+			}
+
+			vector<Component*>* components = gameObject->GetComponentVec();
+			if (components == nullptr)
+			{
+				continue;
+			}
+
+			for (vector<Component*>::iterator componentItr = components->begin();
+				componentItr != components->end();
+				++componentItr)
+			{
+				if (*componentItr != nullptr)
+				{
+					(*componentItr)->OnDeviceLost();
+				}
+			}
+		}
+	}
+
+	void BroadcastDeviceResetToComponents()
+	{
+		ObjectManager* objectManager = ObjectManager::GetInstance();
+		if (objectManager == nullptr || objectManager->GetObjList() == nullptr)
+		{
+			return;
+		}
+
+		for (list<GameObject*>::iterator objItr = objectManager->GetObjList()->begin();
+			objItr != objectManager->GetObjList()->end();
+			++objItr)
+		{
+			GameObject* gameObject = *objItr;
+			if (gameObject == nullptr || gameObject->GetDestroy())
+			{
+				continue;
+			}
+
+			vector<Component*>* components = gameObject->GetComponentVec();
+			if (components == nullptr)
+			{
+				continue;
+			}
+
+			for (vector<Component*>::iterator componentItr = components->begin();
+				componentItr != components->end();
+				++componentItr)
+			{
+				if (*componentItr != nullptr)
+				{
+					(*componentItr)->OnDeviceReset();
+				}
+			}
 		}
 	}
 }
@@ -919,10 +996,14 @@ b2World* MainFrame::GetBox2dWorld()
 
 void MainFrame::RequestResize(UINT width, UINT height)
 {
-    UNREFERENCED_PARAMETER(width);
-    UNREFERENCED_PARAMETER(height);
-    // 현재 엔진은 고정 해상도 기반이며 실행 중 창 리사이즈를 지원하지 않는다.
-    m_pendingResize = false;
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
+    m_pendingResizeWidth = width;
+    m_pendingResizeHeight = height;
+    m_pendingResize = true;
 }
 
 void MainFrame::ApplyCameraProjection()
@@ -938,13 +1019,17 @@ void MainFrame::ApplyCameraProjection()
 
     if (camera->GetProjectionMode() == CameraProjectionMode::Perspective)
     {
-        const float aspectRatio = ClampAspectRatio(m_width, m_height);
+        const float aspectRatio = (m_type == RenderType::Game)
+            ? GetGameRenderAspectRatio()
+            : ClampAspectRatio(m_width, m_height);
         D3DXMatrixPerspectiveFovLH(&m_matProj, camera->GetFov(), aspectRatio, nearClip, farClip);
     }
     else
     {
         const float orthoHeight = camera->GetOrthographicSize();
-        const float aspectRatio = ClampAspectRatio(m_width, m_height);
+        const float aspectRatio = (m_type == RenderType::Game)
+            ? GetGameRenderAspectRatio()
+            : ClampAspectRatio(m_width, m_height);
         const float orthoWidth = orthoHeight * aspectRatio;
         D3DXMatrixOrthoLH(&m_matProj, orthoWidth, orthoHeight, nearClip, farClip);
     }
@@ -980,9 +1065,14 @@ bool MainFrame::HandleResize(UINT width, UINT height)
     vp.MinZ = 0.0f;
     vp.MaxZ = 1.0f;
     m_pd3dDevice->SetViewport(&vp);
+    if (Camera::GetInstance() != nullptr)
+    {
+        Camera::GetInstance()->ApplyView();
+    }
     ApplyCameraProjection();
     ApplyDeviceState();
     RestoreDeviceResources();
+    m_timer.Resync();
     m_pendingResize = false;
     return true;
 }
@@ -999,13 +1089,11 @@ void MainFrame::InvalidateDeviceResources()
         m_pFont->OnLostDevice();
     }
 
+    BroadcastDeviceLostToComponents();
+
     if (ImGui::GetCurrentContext() != nullptr)
     {
         ImGui_ImplDX9_InvalidateDeviceObjects();
-    }
-    if (RenderManager::GetInstance() != nullptr)
-    {
-        RenderManager::GetInstance()->ReleaseRenderTargetTexture();
     }
 
     m_deviceResourcesInvalidated = true;
@@ -1018,10 +1106,7 @@ void MainFrame::RestoreDeviceResources()
         m_pFont->OnResetDevice();
     }
 
-    if (RenderManager::GetInstance() != nullptr)
-    {
-        RenderManager::GetInstance()->CreateRenderTargetTexture();
-    }
+    BroadcastDeviceResetToComponents();
 
     if (ImGui::GetCurrentContext() != nullptr)
     {

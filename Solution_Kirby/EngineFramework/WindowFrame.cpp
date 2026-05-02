@@ -7,19 +7,16 @@ WindowFrame* WindowFrame::m_Pthis = nullptr;
 
 namespace
 {
-	constexpr DWORD kFixedResolutionWindowStyle =
-		WS_OVERLAPPED |
-		WS_CAPTION |
-		WS_SYSMENU |
-		WS_MINIMIZEBOX |
+	constexpr DWORD kResizableWindowStyle =
+		WS_OVERLAPPEDWINDOW |
 		WS_CLIPSIBLINGS |
 		WS_CLIPCHILDREN;
 
 	RECT BuildStartupWindowRect()
 	{
-		RECT rect = { 0, 0, DRAWWINDOWW, DRAWWINDOWH };
-		// 현재 엔진은 고정 해상도 기반이므로 실행 중 창 리사이즈와 최대화를 막는다.
-		AdjustWindowRect(&rect, kFixedResolutionWindowStyle, FALSE);
+		RECT rect = { 0, 0, DEFAULT_WINDOW_CLIENT_WIDTH, DEFAULT_WINDOW_CLIENT_HEIGHT };
+		// 시작 client 크기만 기본값으로 맞추고, 실행 중에는 창 리사이즈를 허용한다.
+		AdjustWindowRect(&rect, kResizableWindowStyle, FALSE);
 		return rect;
 	}
 
@@ -229,7 +226,7 @@ void WindowFrame::BuildWindow()
 
 	m_Pthis->m_hWnd =
 		CreateWindowW(WndClass.lpszClassName, kWindowTitle,
-			kFixedResolutionWindowStyle,
+			kResizableWindowStyle,
 			100, 100,
 			startupRect.right - startupRect.left,
 			startupRect.bottom - startupRect.top,

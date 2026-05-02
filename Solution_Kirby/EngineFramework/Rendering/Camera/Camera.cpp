@@ -30,7 +30,7 @@ void Camera::InitializeView()
 	mPthis->m_distance = 20.0f;
 	mPthis->m_projectionMode = CameraProjectionMode::Orthographic;
 	mPthis->m_fov = D3DX_PI / 4.0f;
-	mPthis->m_orthographicSize = static_cast<float>(DRAWWINDOWH);
+	mPthis->m_orthographicSize = DEFAULT_CAMERA_ORTHOGRAPHIC_SIZE;
 	mPthis->m_nearClip = 1.0f;
 	mPthis->m_farClip = 1000.0f;
 	mPthis->UpdateViewMatrix();
@@ -173,6 +173,11 @@ float Camera::GetFarClip() const
 void Camera::ApplyProjection()
 {
 	UpdateProjectionMatrix();
+}
+
+void Camera::ApplyView()
+{
+	UpdateViewMatrix();
 }
 
 D3DXVECTOR3 Camera::RotateDirection(const D3DXVECTOR3* direction)

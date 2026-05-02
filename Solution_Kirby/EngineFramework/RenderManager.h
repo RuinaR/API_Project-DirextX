@@ -43,11 +43,11 @@ private:
 	D3DXVECTOR2 m_gameViewSize = D3DXVECTOR2(0.0f, 0.0f);
 	bool m_useScreenSpaceUIMouse = false;
 	bool m_showColliderDebug = false;
-	LPDIRECT3DTEXTURE9 renderTargetTexture = nullptr;
 
 	float CalculateCameraDepth(ImageRender* ir);
 	void SortWorldRenderQueues();
 	void SortUIQueue();
+	void RenderSceneContents(bool renderColliderDebug);
 	void RenderImmediateDebugLines();
 	void RenderSelectedObjectMarker(const ImVec2& imageScreenPos);
 	void RenderUIQueue();
@@ -81,8 +81,6 @@ public:
 	void Initialize();
 	void EditUpdate();
 	void GameUpdate();
-	void ReleaseRenderTargetTexture();
-	bool CreateRenderTargetTexture();
 	void Release();
 
 	ImVec2 GetWinPos();

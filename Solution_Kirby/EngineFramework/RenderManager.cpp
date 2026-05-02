@@ -436,38 +436,6 @@ void RenderManager::Initialize()
 	m_uiRenderVec = new vector<UIRenderEntry>();
 	m_immediateDebugLines = new vector<DebugLine>();
 	m_nextUIRenderRegistrationOrder = 0;
-
-	CreateRenderTargetTexture();
-}
-
-void RenderManager::ReleaseRenderTargetTexture()
-{
-	if (renderTargetTexture != nullptr)
-	{
-		renderTargetTexture->Release();
-		renderTargetTexture = nullptr;
-	}
-}
-
-bool RenderManager::CreateRenderTargetTexture()
-{
-	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetDevice() : nullptr;
-	if (device == nullptr)
-	{
-		return false;
-	}
-
-	HRESULT hr = device->CreateTexture(
-		DRAWWINDOWW,
-		DRAWWINDOWH,
-		1,
-		D3DUSAGE_RENDERTARGET,
-		D3DFMT_A8R8G8B8,
-		D3DPOOL_DEFAULT,
-		&renderTargetTexture,
-		nullptr);
-
-	return SUCCEEDED(hr) && renderTargetTexture != nullptr;
 }
 
 void RenderManager::RenderImmediateDebugLines()
@@ -499,6 +467,79 @@ void RenderManager::RenderImmediateDebugLines()
 	}
 
 	device->SetRenderState(D3DRS_ZENABLE, TRUE);
+}
+
+void RenderManager::RenderSceneContents(bool renderColliderDebug)
+{
+	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetDevice() : nullptr;
+	if (device == nullptr)
+	{
+		return;
+	}
+
+	SortWorldRenderQueues();
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	device->SetFVF(D3DFVF_CUSTOMVERTEX);
+	device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
+	{
+		if (!CanRenderComponent(*itr))
+			continue;
+		(*itr)->Render();
+	}
+
+	device->SetFVF(D3DFVF_CUSTOMVERTEX);
+	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+	device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+	device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+	device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+
+	for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
+	{
+		if (!CanRenderComponent(*itr))
+			continue;
+		(*itr)->Render();
+	}
+
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+	for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
+	{
+		if (!CanRenderComponent(*itr))
+			continue;
+		(*itr)->Render();
+	}
+
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	if (renderColliderDebug)
+	{
+		device->SetRenderState(D3DRS_ZENABLE, FALSE);
+		for (vector<DebugRender*>::iterator itr = m_debugVec->begin(); itr != m_debugVec->end(); itr++)
+		{
+			(*itr)->DebugRenderUpdate();
+		}
+		device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	}
+
+	RenderImmediateDebugLines();
+	RenderUIQueue();
+
+	device->SetTexture(0, nullptr);
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 }
 
 void RenderManager::RenderSelectedObjectMarker(const ImVec2& imageScreenPos)
@@ -596,8 +637,8 @@ void RenderManager::RenderSelectedObjectMarker(const ImVec2& imageScreenPos)
 	D3DVIEWPORT9 viewport = {};
 	viewport.X = 0;
 	viewport.Y = 0;
-	viewport.Width = static_cast<DWORD>(DRAWWINDOWW);
-	viewport.Height = static_cast<DWORD>(DRAWWINDOWH);
+	viewport.Width = static_cast<DWORD>(LOGICAL_RENDER_WIDTH);
+	viewport.Height = static_cast<DWORD>(LOGICAL_RENDER_HEIGHT);
 	viewport.MinZ = 0.0f;
 	viewport.MaxZ = 1.0f;
 
@@ -612,121 +653,30 @@ void RenderManager::RenderSelectedObjectMarker(const ImVec2& imageScreenPos)
 
 void RenderManager::EditUpdate()
 {
-	LPDIRECT3DSURFACE9 renderTargetSurface = nullptr;
-	LPDIRECT3DSURFACE9 originalRenderTarget = nullptr;
-	LPDIRECT3DSURFACE9 originalDepthStencil = nullptr;
-
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
-	if (renderTargetTexture == nullptr)
-	{
-		CreateRenderTargetTexture();
-	}
-	if (device == nullptr || renderTargetTexture == nullptr)
-	{
-		EndImGuiFrameSafely();
-		return;
-	}
-	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-	
-	renderTargetTexture->GetSurfaceLevel(0, &renderTargetSurface);
-	if (renderTargetSurface == nullptr)
+	if (device == nullptr)
 	{
 		EndImGuiFrameSafely();
 		return;
 	}
 
-	device->GetRenderTarget(0, &originalRenderTarget);
-	device->GetDepthStencilSurface(&originalDepthStencil);
-	device->SetRenderTarget(0, renderTargetSurface);
+	RECT clientRect = {};
+	GetClientRect(WindowFrame::GetInstance()->GetHWND(), &clientRect);
+	const float clientWidth = static_cast<float>(max(1L, clientRect.right - clientRect.left));
+	const float clientHeight = static_cast<float>(max(1L, clientRect.bottom - clientRect.top));
+	m_gameViewPos = D3DXVECTOR2(0.0f, 0.0f);
+	m_gameViewSize = D3DXVECTOR2(clientWidth, clientHeight);
+	m_useScreenSpaceUIMouse = true;
+	POINT clientOrigin = { 0, 0 };
+	ClientToScreen(WindowFrame::GetInstance()->GetHWND(), &clientOrigin);
+	m_gameViewScreenPos = D3DXVECTOR2(static_cast<float>(clientOrigin.x), static_cast<float>(clientOrigin.y));
+	m_winPos = ImVec2(0.0f, 0.0f);
 
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
-	{	
-		SortWorldRenderQueues();
-		device->SetRenderState(D3DRS_ZENABLE, TRUE);
-		device->SetRenderState(D3DRS_LIGHTING, FALSE);
-		device->SetFVF(D3DFVF_CUSTOMVERTEX);
-		device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-		device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE); 
-		for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}	
-		//FBX Render
-		device->SetFVF(D3DFVF_CUSTOMVERTEX);
-		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-		device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-		device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-		device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-
-		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
-		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		//DebugRender
-		if (m_showColliderDebug)
-		{
-			device->SetRenderState(D3DRS_ZENABLE, FALSE);
-			for (vector<DebugRender*>::iterator itr = m_debugVec->begin(); itr != m_debugVec->end(); itr++)
-			{
-				(*itr)->DebugRenderUpdate();
-			}
-			device->SetRenderState(D3DRS_ZENABLE, TRUE);
-		}
-		RenderImmediateDebugLines();
-		RenderUIQueue();
-		device->SetTexture(0, nullptr);
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-
-		//imgui
-		device->SetRenderTarget(0, originalRenderTarget);
-		device->SetDepthStencilSurface(originalDepthStencil);
-		originalRenderTarget->Release();
-		originalDepthStencil->Release();
-
-		ImGuiViewport* mainViewport = ImGui::GetMainViewport();
-		ImVec2 imageScreenPos = mainViewport != nullptr ? mainViewport->Pos : ImVec2(0.0f, 0.0f);
-		ImVec2 windowSize(DRAWWINDOWW, DRAWWINDOWH);
-		ImVec2 imageMax(imageScreenPos.x + windowSize.x, imageScreenPos.y + windowSize.y);
-		ImGui::GetBackgroundDrawList(mainViewport)->AddImage((void*)renderTargetTexture, imageScreenPos, imageMax);
-		RenderSelectedObjectMarker(imageScreenPos);
-
-		m_gameViewScreenPos = D3DXVECTOR2(imageScreenPos.x, imageScreenPos.y);
-		POINT imageClientPos =
-		{
-			static_cast<LONG>(imageScreenPos.x),
-			static_cast<LONG>(imageScreenPos.y)
-		};
-		ScreenToClient(WindowFrame::GetInstance()->GetHWND(), &imageClientPos);
-		m_gameViewPos = D3DXVECTOR2(static_cast<float>(imageClientPos.x), static_cast<float>(imageClientPos.y));
-		m_gameViewSize = D3DXVECTOR2(windowSize.x, windowSize.y);
-		m_useScreenSpaceUIMouse = true;
-		m_winPos = ImVec2(m_gameViewPos.x, m_gameViewPos.y);
+	{
+		RenderSceneContents(m_showColliderDebug);
+		RenderSelectedObjectMarker(ImVec2(m_gameViewScreenPos.x, m_gameViewScreenPos.y));
 
 		if (!m_btnVec->empty())
 		{
@@ -748,38 +698,21 @@ void RenderManager::EditUpdate()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 		ImGui::End();
 
-		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-		//ImGui::EndFrame();
 		device->SetRenderState(D3DRS_ZENABLE, FALSE);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
-
 		ImGui::Render();
 		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-		// Update and Render additional Platform Windows
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			// TODO for OpenGL: restore current GL context.
 		}
 		device->EndScene();
 	}
 	else
 	{
-		if (originalRenderTarget != nullptr)
-		{
-			originalRenderTarget->Release();
-		}
-		if (originalDepthStencil != nullptr)
-		{
-			originalDepthStencil->Release();
-		}
-		if (renderTargetSurface != nullptr)
-		{
-			renderTargetSurface->Release();
-		}
 		EndImGuiFrameSafely();
 	}
 	device->Present(NULL, NULL, NULL, NULL);
@@ -795,11 +728,11 @@ void RenderManager::GameUpdate()
 	}
 	const float clientWidth = static_cast<float>(clientRect.right - clientRect.left);
 	const float clientHeight = static_cast<float>(clientRect.bottom - clientRect.top);
-	const float resolvedClientWidth = clientWidth > 0.0f ? clientWidth : static_cast<float>(DRAWWINDOWW);
-	const float resolvedClientHeight = clientHeight > 0.0f ? clientHeight : static_cast<float>(DRAWWINDOWH);
+	const float resolvedClientWidth = clientWidth > 0.0f ? clientWidth : static_cast<float>(DEFAULT_WINDOW_CLIENT_WIDTH);
+	const float resolvedClientHeight = clientHeight > 0.0f ? clientHeight : static_cast<float>(DEFAULT_WINDOW_CLIENT_HEIGHT);
 	const RECT presentRect = CalculateAspectFitRect(
-		static_cast<float>(DRAWWINDOWW),
-		static_cast<float>(DRAWWINDOWH),
+		static_cast<float>(LOGICAL_RENDER_WIDTH),
+		static_cast<float>(LOGICAL_RENDER_HEIGHT),
 		resolvedClientWidth,
 		resolvedClientHeight);
 	m_gameViewPos = D3DXVECTOR2(static_cast<float>(presentRect.left), static_cast<float>(presentRect.top));
@@ -831,49 +764,7 @@ void RenderManager::GameUpdate()
 		gameViewport.MaxZ = 1.0f;
 		device->SetViewport(&gameViewport);
 
-		SortWorldRenderQueues();
-		device->SetRenderState(D3DRS_ZENABLE, TRUE);
-		device->SetRenderState(D3DRS_LIGHTING, FALSE);
-		device->SetFVF(D3DFVF_CUSTOMVERTEX);
-		device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-		device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-		for (vector<ImageRender*>::iterator itr = m_noTransVec->begin(); itr != m_noTransVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
-		//FBX Render
-		device->SetFVF(D3DFVF_CUSTOMVERTEX);
-		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		for (vector<FBXRender*>::iterator itr = m_fbxVec->begin(); itr != m_fbxVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-		for (vector<ImageRender*>::iterator itr = m_transVec->begin(); itr != m_transVec->end(); itr++)
-		{
-			if (!CanRenderComponent(*itr))
-				continue;
-			(*itr)->Render();
-		}
-		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		RenderUIQueue();
-		device->SetTexture(0, nullptr);
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		RenderSceneContents(false);
 
 		device->SetViewport(&previousViewport);
 		device->EndScene();
@@ -906,12 +797,6 @@ void RenderManager::Release()
 	delete m_fbxVec;
 	delete m_uiRenderVec;
 	delete m_immediateDebugLines;
-
-	if (renderTargetTexture != nullptr)
-	{
-		renderTargetTexture->Release();
-		renderTargetTexture = nullptr;
-	}
 }
 
 ImVec2 RenderManager::GetWinPos()
@@ -934,8 +819,8 @@ D3DXVECTOR2 RenderManager::ScreenToUICoordinate(const D3DXVECTOR2* screenPositio
 
 	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
 	{
-		uiPosition.x *= static_cast<float>(DRAWWINDOWW) / m_gameViewSize.x;
-		uiPosition.y *= static_cast<float>(DRAWWINDOWH) / m_gameViewSize.y;
+		uiPosition.x *= static_cast<float>(LOGICAL_RENDER_WIDTH) / m_gameViewSize.x;
+		uiPosition.y *= static_cast<float>(LOGICAL_RENDER_HEIGHT) / m_gameViewSize.y;
 	}
 
 	return uiPosition;
@@ -958,8 +843,8 @@ D3DXVECTOR2 RenderManager::GetMouseUICoordinate()
 
 	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
 	{
-		mousePosition.x *= static_cast<float>(DRAWWINDOWW) / m_gameViewSize.x;
-		mousePosition.y *= static_cast<float>(DRAWWINDOWH) / m_gameViewSize.y;
+		mousePosition.x *= static_cast<float>(LOGICAL_RENDER_WIDTH) / m_gameViewSize.x;
+		mousePosition.y *= static_cast<float>(LOGICAL_RENDER_HEIGHT) / m_gameViewSize.y;
 	}
 
 	return mousePosition;
@@ -1013,7 +898,7 @@ void RenderManager::RenderUIQueue()
 	device->GetTransform(D3DTS_VIEW, &oldView);
 	device->GetTransform(D3DTS_PROJECTION, &oldProjection);
 	D3DXMatrixIdentity(&identity);
-	D3DXMatrixOrthoOffCenterLH(&uiProjection, 0.0f, static_cast<float>(DRAWWINDOWW), static_cast<float>(DRAWWINDOWH), 0.0f, -1.0f, 1.0f);
+	D3DXMatrixOrthoOffCenterLH(&uiProjection, 0.0f, static_cast<float>(LOGICAL_RENDER_WIDTH), static_cast<float>(LOGICAL_RENDER_HEIGHT), 0.0f, -1.0f, 1.0f);
 
 	device->SetTransform(D3DTS_WORLD, &identity);
 	device->SetTransform(D3DTS_VIEW, &identity);

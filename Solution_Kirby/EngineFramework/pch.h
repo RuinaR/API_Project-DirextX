@@ -60,13 +60,19 @@
 #define TRANSCOLORDX (D3DCOLOR_XRGB((255),(0),(255)))
 
 #define COLSIZEOFFSET 1.0f
-#define MAXWINDOWW 1600
-#define MAXWINDOWH 1000
-#define DRAWWINDOWW 1440        
-#define DRAWWINDOWH 900
-#define BUFFERBITW DRAWWINDOWW
-#define BUFFERBITH DRAWWINDOWH
 #define TARGETFPS 120
+
+#define LOGICAL_RENDER_WIDTH 1440
+#define LOGICAL_RENDER_HEIGHT 900
+
+// 현재 런타임은 기본적으로 고정 client 크기로 시작하지만,
+// 창 크기와 논리 렌더 해상도는 서로 다른 책임으로 분리해 관리한다.
+#define DEFAULT_WINDOW_CLIENT_WIDTH LOGICAL_RENDER_WIDTH
+#define DEFAULT_WINDOW_CLIENT_HEIGHT LOGICAL_RENDER_HEIGHT
+
+// 카메라 기본 줌은 논리 렌더 해상도와 분리해서,
+// 해상도를 바꿔도 월드 스케일이 암묵적으로 바뀌지 않게 한다.
+#define DEFAULT_CAMERA_ORTHOGRAPHIC_SIZE 900.0f
 
 #ifdef _DEBUG
 #define DEBUGMODE true

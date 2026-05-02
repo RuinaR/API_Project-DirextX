@@ -219,3 +219,25 @@ bool UILabel::Deserialize(const std::string& componentJson)
 	SetScale(scale);
 	return true;
 }
+
+void UILabel::OnDeviceLost()
+{
+	if (m_font != nullptr)
+	{
+		m_font->OnLostDevice();
+	}
+}
+
+void UILabel::OnDeviceReset()
+{
+	if (m_font != nullptr)
+	{
+		if (FAILED(m_font->OnResetDevice()))
+		{
+			RecreateFont();
+		}
+		return;
+	}
+
+	RecreateFont();
+}

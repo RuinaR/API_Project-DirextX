@@ -6,14 +6,40 @@ namespace
 {
 	D3DVIEWPORT9 CreateRayViewport()
 	{
+		RenderManager* renderManager = RenderManager::GetInstance();
 		D3DVIEWPORT9 viewport = {};
 		viewport.X = 0;
 		viewport.Y = 0;
-		viewport.Width = static_cast<DWORD>(max(1, MainFrame::GetInstance()->GetViewportWidth()));
-		viewport.Height = static_cast<DWORD>(max(1, MainFrame::GetInstance()->GetViewportHeight()));
+		if (renderManager != nullptr)
+		{
+			const D3DXVECTOR2 gameViewSize = renderManager->GetGameViewSize();
+			viewport.Width = static_cast<DWORD>(max(1, static_cast<int>(gameViewSize.x)));
+			viewport.Height = static_cast<DWORD>(max(1, static_cast<int>(gameViewSize.y)));
+		}
+		else
+		{
+			viewport.Width = static_cast<DWORD>(max(1, MainFrame::GetInstance()->GetViewportWidth()));
+			viewport.Height = static_cast<DWORD>(max(1, MainFrame::GetInstance()->GetViewportHeight()));
+		}
 		viewport.MinZ = 0.0f;
 		viewport.MaxZ = 1.0f;
 		return viewport;
+	}
+
+	D3DXVECTOR2 GetSceneViewportLocalMousePosition()
+	{
+		RenderManager* renderManager = RenderManager::GetInstance();
+		Mouse* mouse = Mouse::GetInstance();
+		if (renderManager == nullptr || mouse == nullptr)
+		{
+			return D3DXVECTOR2(0.0f, 0.0f);
+		}
+
+		const D3DXVECTOR2 mousePosition = mouse->GetWinPos();
+		const D3DXVECTOR2 gameViewPosition = renderManager->GetGameViewPos();
+		return D3DXVECTOR2(
+			mousePosition.x - gameViewPosition.x,
+			mousePosition.y - gameViewPosition.y);
 	}
 
 	Ray CreateFallbackRay()
@@ -76,8 +102,8 @@ D3DXVECTOR2 Mouse::GetDXPos()
 {
 	D3DXVECTOR2 gameViewPos = GetGameViewPos();
 	return D3DXVECTOR2(
-		gameViewPos.x - (DRAWWINDOWW * 0.5f),
-		(DRAWWINDOWH * 0.5f) - gameViewPos.y);
+		gameViewPos.x - (LOGICAL_RENDER_WIDTH * 0.5f),
+		(LOGICAL_RENDER_HEIGHT * 0.5f) - gameViewPos.y);
 }
 
 D3DXVECTOR2 Mouse::GetWinPos()
@@ -106,8 +132,8 @@ D3DXVECTOR2 Mouse::GetGameViewPos()
 
 	if (gameViewSize.x > 0.0f && gameViewSize.y > 0.0f)
 	{
-		localPos.x *= static_cast<float>(DRAWWINDOWW) / gameViewSize.x;
-		localPos.y *= static_cast<float>(DRAWWINDOWH) / gameViewSize.y;
+		localPos.x *= static_cast<float>(LOGICAL_RENDER_WIDTH) / gameViewSize.x;
+		localPos.y *= static_cast<float>(LOGICAL_RENDER_HEIGHT) / gameViewSize.y;
 	}
 
 	return localPos;
@@ -115,7 +141,7 @@ D3DXVECTOR2 Mouse::GetGameViewPos()
 
 Ray Mouse::ScreenPointToRay()
 {
-	return ScreenPointToRay(GetGameViewPos());
+	return ScreenPointToRay(GetSceneViewportLocalMousePosition());
 }
 
 Ray Mouse::ScreenPointToRay(const D3DXVECTOR2& screenPos)

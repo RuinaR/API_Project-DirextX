@@ -46,3 +46,11 @@ void Component::ResolveReferences(const std::unordered_map<int, GameObject*>& ob
 {
 	(void)objectMap;
 }
+
+void Component::OnDeviceLost()
+{
+}
+
+void Component::OnDeviceReset()
+{
+}

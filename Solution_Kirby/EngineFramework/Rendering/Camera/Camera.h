@@ -57,5 +57,6 @@ public:
 	float GetNearClip() const;
 	void SetFarClip(float farClip);
 	float GetFarClip() const;
+	void ApplyView();
 	void ApplyProjection();
 };

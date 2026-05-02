@@ -36,4 +36,6 @@ public:
 	const char* GetSerializableType() const override;
 	std::string Serialize() const override;
 	bool Deserialize(const std::string& componentJson) override;
+	void OnDeviceLost() override;
+	void OnDeviceReset() override;
 };

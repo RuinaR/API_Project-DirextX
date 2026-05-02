@@ -434,6 +434,22 @@ void ObjectManager::Update()
 
 void ObjectManager::UpdateMouseInteraction()
 {
+	if (WindowFrame::GetInstance() != nullptr &&
+		WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit &&
+		ImGui::GetCurrentContext() != nullptr &&
+		ImGui::GetIO().WantCaptureMouse)
+	{
+		GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
+		m_currentMouseHoverObject = nullptr;
+		if (previousMouseHoverObject != nullptr &&
+			!previousMouseHoverObject->GetDestroy() &&
+			previousMouseHoverObject->GetActive())
+		{
+			previousMouseHoverObject->OnMouseHoverExit();
+		}
+		return;
+	}
+
 	GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
 	if (previousMouseHoverObject != nullptr && previousMouseHoverObject->GetDestroy())
 	{
