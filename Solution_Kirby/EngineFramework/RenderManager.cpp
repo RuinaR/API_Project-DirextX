@@ -635,12 +635,10 @@ void RenderManager::RenderSelectedObjectMarker(const ImVec2& imageScreenPos)
 	}
 
 	D3DVIEWPORT9 viewport = {};
-	viewport.X = 0;
-	viewport.Y = 0;
-	viewport.Width = static_cast<DWORD>(LOGICAL_RENDER_WIDTH);
-	viewport.Height = static_cast<DWORD>(LOGICAL_RENDER_HEIGHT);
-	viewport.MinZ = 0.0f;
-	viewport.MaxZ = 1.0f;
+	if (FAILED(device->GetViewport(&viewport)))
+	{
+		return;
+	}
 
 	D3DXVECTOR3 projectedCenter;
 	D3DXVec3Project(&projectedCenter, &markerWorldPosition, &viewport, &projectionMatrix, &viewMatrix, &worldMatrix);
