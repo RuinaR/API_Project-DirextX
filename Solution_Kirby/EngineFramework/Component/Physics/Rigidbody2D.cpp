@@ -170,7 +170,7 @@ void Rigidbody2D::Start()
 
 void Rigidbody2D::Update()
 {
-	if (m_body == nullptr || m_gameObj == nullptr)
+	if (m_body == nullptr || m_gameObj == nullptr || !m_body->IsEnabled())
 	{
 		return;
 	}
@@ -221,6 +221,10 @@ void Rigidbody2D::CreateBody(bool rebuildAttachedColliders)
 	bodyDef.angle = m_gameObj->GetAngleZ();
 	m_body = world->CreateBody(&bodyDef);
 	ApplyBodySettings();
+	if (m_gameObj != nullptr && !m_gameObj->GetActive())
+	{
+		m_body->SetEnabled(false);
+	}
 
 	if (rebuildAttachedColliders)
 	{
@@ -277,6 +281,45 @@ void Rigidbody2D::RebuildAttachedColliders()
 		}
 
 		collider->CreateBody(collider->GetColOffset(), size, false);
+	}
+}
+
+void Rigidbody2D::SetPhysicsActive(bool active)
+{
+	if (m_body == nullptr)
+	{
+		return;
+	}
+
+	if (active)
+	{
+		SyncBodyToGameObjectTransform();
+		m_body->SetEnabled(true);
+		ApplyBodySettings();
+		if (m_body->GetType() != b2_staticBody)
+		{
+			m_body->SetAwake(true);
+		}
+		return;
+	}
+
+	m_body->SetEnabled(false);
+}
+
+void Rigidbody2D::SyncBodyToGameObjectTransform()
+{
+	if (m_body == nullptr || m_gameObj == nullptr)
+	{
+		return;
+	}
+
+	m_body->SetTransform(
+		{ m_gameObj->Position().x, m_gameObj->Position().y },
+		m_gameObj->GetAngleZ());
+
+	if (m_body->GetType() != b2_staticBody)
+	{
+		m_body->SetAwake(true);
 	}
 }
 

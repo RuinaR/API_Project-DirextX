@@ -25,6 +25,8 @@ protected:
 	virtual void MouseHoverEnter() {}
 	virtual void MouseHoverExit() {}
 	virtual void MouseHoverStay() {}
+	virtual void Enable() {}
+	virtual void Disable() {}
 
 public:
 	Component();
@@ -51,6 +53,8 @@ public:
 	void OnMouseHoverEnter() { MouseHoverEnter(); }
 	void OnMouseHoverExit() { MouseHoverExit(); }
 	void OnMouseHoverStay() { MouseHoverStay(); }
+	void OnEnable() { Enable(); }
+	void OnDisable() { Disable(); }
 	virtual const char* GetInspectorName() const;
 	virtual void DrawInspector();
 	virtual const char* GetSerializableType() const;

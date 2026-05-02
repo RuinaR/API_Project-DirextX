@@ -32,6 +32,10 @@ protected:
     GameObject* m_parent = nullptr;
     vector<GameObject*>* m_children;
     void FlushPendingComponents();
+    void FlushPendingStateChanges();
+    void ApplyPhysicsActiveState(bool isActive);
+    bool m_hasPendingPhysicsActiveStateChange = false;
+    bool m_pendingPhysicsActiveState = true;
 public:
     GameObject();
     virtual ~GameObject();
@@ -113,4 +117,6 @@ public:
     void OnMouseHoverEnter();
     void OnMouseHoverStay();
     void OnMouseHoverExit();
+    void OnEnable();
+    void OnDisable();
 };

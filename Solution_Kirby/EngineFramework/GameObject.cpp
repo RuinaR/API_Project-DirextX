@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "DebugWindow.h"
 #include "Rigidbody2D.h"
+#include "Collider2D.h"
 #include "SceneJsonUtility.h"
 
 namespace
@@ -106,6 +107,17 @@ namespace
 			gameObject->GetActive() &&
 			!gameObject->GetDestroy();
 	}
+
+	bool IsPhysicsWorldLocked()
+	{
+		MainFrame* mainFrame = MainFrame::GetInstance();
+		if (mainFrame == nullptr || mainFrame->GetBox2dWorld() == nullptr)
+		{
+			return false;
+		}
+
+		return mainFrame->GetBox2dWorld()->IsLocked();
+	}
 }
 
 GameObject::GameObject() {
@@ -187,7 +199,29 @@ string GameObject::GetTag() {
 }
 
 void GameObject::SetActive(bool isActive) {
+    const bool wasActive = m_setActive;
 	m_setActive = isActive;
+    if (wasActive != m_setActive)
+    {
+        if (IsPhysicsWorldLocked())
+        {
+            m_hasPendingPhysicsActiveStateChange = true;
+            m_pendingPhysicsActiveState = m_setActive;
+        }
+        else
+        {
+            ApplyPhysicsActiveState(m_setActive);
+        }
+    }
+
+    if (!wasActive && m_setActive)
+    {
+        OnEnable();
+    }
+    else if (wasActive && !m_setActive)
+    {
+        OnDisable();
+    }
 }
 
 bool GameObject::GetActive() {
@@ -384,6 +418,64 @@ vector<Component*>* GameObject::GetComponentVec() {
     return m_vecComponent;
 }
 
+void GameObject::FlushPendingStateChanges()
+{
+    if (!m_hasPendingPhysicsActiveStateChange || IsPhysicsWorldLocked())
+    {
+        return;
+    }
+
+    m_hasPendingPhysicsActiveStateChange = false;
+    ApplyPhysicsActiveState(m_pendingPhysicsActiveState);
+}
+
+void GameObject::ApplyPhysicsActiveState(bool isActive)
+{
+    if (m_vecComponent == nullptr)
+    {
+        return;
+    }
+
+    vector<Collider2D*> colliders;
+    colliders.reserve(m_vecComponent->size());
+
+    for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+    {
+        Collider2D* collider = dynamic_cast<Collider2D*>(*itr);
+        if (collider != nullptr)
+        {
+            colliders.push_back(collider);
+        }
+    }
+
+    MainFrame* mainFrame = MainFrame::GetInstance();
+    if (!isActive && mainFrame != nullptr)
+    {
+        for (vector<Collider2D*>::iterator itr = colliders.begin(); itr != colliders.end(); itr++)
+        {
+            mainFrame->ResetCollisionPairsForCollider(*itr);
+            mainFrame->ResetTriggerPairsForCollider(*itr);
+        }
+    }
+
+    Rigidbody2D* rigidbody2D = GetComponent<Rigidbody2D>();
+    if (rigidbody2D != nullptr)
+    {
+        rigidbody2D->SetPhysicsActive(isActive);
+    }
+
+    for (vector<Collider2D*>::iterator itr = colliders.begin(); itr != colliders.end(); itr++)
+    {
+        Collider2D* collider = *itr;
+        if (collider == nullptr)
+        {
+            continue;
+        }
+
+        collider->SetPhysicsActive(isActive);
+    }
+}
+
 void GameObject::FlushPendingComponents()
 {
     if (m_pendingDeleteComponents == nullptr || m_pendingDeleteComponents->empty())
@@ -463,6 +555,7 @@ void GameObject::Start() {
 }
 
 void GameObject::Update() {
+    FlushPendingStateChanges();
     FlushPendingComponents();
 
     if (!m_setActive)
@@ -730,6 +823,28 @@ void GameObject::OnMouseHoverExit()
     DispatchComponentEventSnapshot(this, [](Component* component)
     {
         component->OnMouseHoverExit();
+    }, true);
+}
+
+void GameObject::OnEnable()
+{
+    if (m_vecComponent == nullptr || m_isDestroy || !m_setActive)
+        return;
+
+    DispatchComponentEventSnapshot(this, [](Component* component)
+    {
+        component->OnEnable();
+    }, true);
+}
+
+void GameObject::OnDisable()
+{
+    if (m_vecComponent == nullptr || m_isDestroy || m_setActive)
+        return;
+
+    DispatchComponentEventSnapshot(this, [](Component* component)
+    {
+        component->OnDisable();
     }, true);
 }
 

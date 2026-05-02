@@ -214,6 +214,12 @@ namespace
 		return gameObject == nullptr || gameObject->GetDestroy();
 	}
 
+	bool IsActiveCollisionObject(Collider2D* collider)
+	{
+		GameObject* gameObject = GetCollisionGameObject(collider);
+		return gameObject != nullptr && !gameObject->GetDestroy() && gameObject->GetActive();
+	}
+
 	bool IsTriggerContact(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	{
 		return (fixtureA != nullptr && fixtureA->IsSensor()) ||
@@ -238,10 +244,30 @@ namespace
 		return { colliderB, colliderA };
 	}
 
+	bool HasTrackedCollisionPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA == nullptr || colliderB == nullptr || colliderA == colliderB)
+		{
+			return false;
+		}
+
+		return g_activeCollisionPairs.find(MakeCollisionPair(colliderA, colliderB)) != g_activeCollisionPairs.end();
+	}
+
+	bool HasTrackedTriggerPair(Collider2D* colliderA, Collider2D* colliderB)
+	{
+		if (colliderA == nullptr || colliderB == nullptr || colliderA == colliderB)
+		{
+			return false;
+		}
+
+		return g_activeTriggerPairs.find(MakeTriggerPair(colliderA, colliderB)) != g_activeTriggerPairs.end();
+	}
+
 	void DispatchCollisionEnter(Collider2D* receiver, Collider2D* other)
 	{
-		// 충돌 Enter/Stay는 delete-pending 오브젝트가 포함되면 전달하지 않는다.
-		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		// 충돌 Enter/Stay는 delete-pending 또는 inactive 오브젝트가 포함되면 전달하지 않는다.
+		if (!IsActiveCollisionObject(receiver) || !IsActiveCollisionObject(other))
 		{
 			return;
 		}
@@ -251,8 +277,8 @@ namespace
 
 	void DispatchCollisionStay(Collider2D* receiver, Collider2D* other)
 	{
-		// 충돌 Enter/Stay는 delete-pending 오브젝트가 포함되면 전달하지 않는다.
-		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		// 충돌 Enter/Stay는 delete-pending 또는 inactive 오브젝트가 포함되면 전달하지 않는다.
+		if (!IsActiveCollisionObject(receiver) || !IsActiveCollisionObject(other))
 		{
 			return;
 		}
@@ -281,8 +307,8 @@ namespace
 
 	void DispatchTriggerEnter(Collider2D* receiver, Collider2D* other)
 	{
-		// Trigger Enter/Stay도 delete-pending 오브젝트가 포함되면 전달하지 않는다.
-		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		// Trigger Enter/Stay도 delete-pending 또는 inactive 오브젝트가 포함되면 전달하지 않는다.
+		if (!IsActiveCollisionObject(receiver) || !IsActiveCollisionObject(other))
 		{
 			return;
 		}
@@ -292,8 +318,8 @@ namespace
 
 	void DispatchTriggerStay(Collider2D* receiver, Collider2D* other)
 	{
-		// Trigger Enter/Stay도 delete-pending 오브젝트가 포함되면 전달하지 않는다.
-		if (IsPendingDestroyCollisionObject(receiver) || IsPendingDestroyCollisionObject(other))
+		// Trigger Enter/Stay도 delete-pending 또는 inactive 오브젝트가 포함되면 전달하지 않는다.
+		if (!IsActiveCollisionObject(receiver) || !IsActiveCollisionObject(other))
 		{
 			return;
 		}
@@ -1125,14 +1151,24 @@ void CollisionListener::EndContact(b2Contact* contact)
 	Collider2D* dataB = GetColliderFromFixture(fixtureB);
 	if (IsTriggerContact(fixtureA, fixtureB))
 	{
+		const bool wasTracked = HasTrackedTriggerPair(dataA, dataB);
 		UntrackTriggerPair(dataA, dataB);
+		if (dataA != nullptr && dataB != nullptr && !wasTracked)
+		{
+			return;
+		}
 		if (dataA != nullptr)
 			DispatchTriggerExit(dataA, dataB);
 		if (dataB != nullptr)
 			DispatchTriggerExit(dataB, dataA);
 		return;
 	}
+	const bool wasTracked = HasTrackedCollisionPair(dataA, dataB);
 	UntrackCollisionPair(dataA, dataB);
+	if (dataA != nullptr && dataB != nullptr && !wasTracked)
+	{
+		return;
+	}
 	if (dataA != nullptr)
 	{
 		DispatchCollisionExit(dataA, dataB);

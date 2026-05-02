@@ -29,6 +29,8 @@ public:
 	void CreateBody(bool rebuildAttachedColliders = true);
 	void ApplyBodySettings();
 	void RebuildAttachedColliders();
+	void SetPhysicsActive(bool active);
+	void SyncBodyToGameObjectTransform();
 
 	// body가 없으면 캐시만 갱신한다.
 	// static body면 캐시만 갱신하고, kinematic/dynamic body면 runtime body에도 적용한다.

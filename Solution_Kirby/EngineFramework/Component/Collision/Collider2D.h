@@ -41,6 +41,8 @@ public:
 	void SetTrigger(bool b);
 	bool GetTrigger();
 	b2Body* GetBody();
+	void SetPhysicsActive(bool active);
+	void SyncBodyToGameObjectTransform();
 	void ClearBodyReferenceIfMatches(b2Body* body);
 	bool OwnsBody() const;
 

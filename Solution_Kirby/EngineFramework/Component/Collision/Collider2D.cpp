@@ -142,7 +142,7 @@ void Collider2D::Start()
 }
 void Collider2D::Update()
 {
-	if (m_body == nullptr)
+	if (m_body == nullptr || !m_body->IsEnabled())
 		return;
 
 	m_gameObj->SetPosition({
@@ -226,11 +226,18 @@ void Collider2D::CreateBody(Vector2D offset, Vector2D size, bool fixedRotation)
 	if (!m_ownsBody)
 	{
 		m_body->ResetMassData();
-		m_body->SetAwake(true);
+		if (m_gameObj == nullptr || m_gameObj->GetActive())
+		{
+			m_body->SetAwake(true);
+		}
 	}
 
 	//m_body->SetGravityScale(30.0);
 	m_body->GetUserData().pointer = (uintptr_t)this;
+	if (m_gameObj != nullptr && !m_gameObj->GetActive())
+	{
+		m_body->SetEnabled(false);
+	}
 }
 
 void Collider2D::SetBodyType(b2BodyType type)
@@ -365,6 +372,62 @@ bool Collider2D::GetTrigger()
 b2Body* Collider2D::GetBody()
 {
 	return m_body;
+}
+
+void Collider2D::SetPhysicsActive(bool active)
+{
+	if (m_body == nullptr)
+	{
+		return;
+	}
+
+	if (active)
+	{
+		SyncBodyToGameObjectTransform();
+		m_body->SetEnabled(true);
+		if (!m_ownsBody)
+		{
+			m_body->ResetMassData();
+		}
+		if (m_fixture != nullptr)
+		{
+			m_fixture->Refilter();
+		}
+		if (m_body->GetType() != b2_staticBody)
+		{
+			m_body->SetAwake(true);
+		}
+		return;
+	}
+
+	m_body->SetEnabled(false);
+}
+
+void Collider2D::SyncBodyToGameObjectTransform()
+{
+	if (m_body == nullptr || m_gameObj == nullptr)
+	{
+		return;
+	}
+
+	if (m_ownsBody)
+	{
+		m_body->SetTransform(
+			{ m_gameObj->Position().x + static_cast<float>(m_colOffset.x),
+			  m_gameObj->Position().y + static_cast<float>(m_colOffset.y) },
+			0.0f);
+	}
+	else
+	{
+		m_body->SetTransform(
+			{ m_gameObj->Position().x, m_gameObj->Position().y },
+			m_gameObj->GetAngleZ());
+	}
+
+	if (m_body->GetType() != b2_staticBody)
+	{
+		m_body->SetAwake(true);
+	}
 }
 
 void Collider2D::ClearBodyReferenceIfMatches(b2Body* body)
