@@ -7,6 +7,8 @@
 
 void UIButton::Update()
 {
+	UIElement::Update();
+
 	if (!m_enabled || !m_visible)
 	{
 		m_isHovered = false;
@@ -232,6 +234,7 @@ std::string UIButton::Serialize() const
 	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
 	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
 	oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
+	oss << "\"anchorPreset\": \"" << SceneJson::EscapeString(UIElement::AnchorPresetToString(m_anchorPreset)) << "\", ";
 	oss << "\"imagePath\": \"" << SceneJson::EscapeString(m_texturePath) << "\", ";
 	oss << "\"useTexture\": " << (IsUseTexture() ? "true" : "false") << ", ";
 	oss << "\"normalColor\": " << static_cast<DWORD>(m_normalColor) << ", ";

@@ -132,8 +132,9 @@ D3DXVECTOR2 Mouse::GetGameViewPos()
 
 	if (gameViewSize.x > 0.0f && gameViewSize.y > 0.0f)
 	{
-		localPos.x *= static_cast<float>(LOGICAL_RENDER_WIDTH) / gameViewSize.x;
-		localPos.y *= static_cast<float>(LOGICAL_RENDER_HEIGHT) / gameViewSize.y;
+		const D3DXVECTOR2 uiCanvasSize = RenderManager::GetInstance()->GetUICanvasSize();
+		localPos.x *= uiCanvasSize.x / gameViewSize.x;
+		localPos.y *= uiCanvasSize.y / gameViewSize.y;
 	}
 
 	return localPos;

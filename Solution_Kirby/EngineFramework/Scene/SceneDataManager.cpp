@@ -33,9 +33,15 @@ namespace
 		return dirtyFlags;
 	}
 
+	int& GetCurrentLoadingSceneVersionStorage()
+	{
+		static int sceneVersion = 3;
+		return sceneVersion;
+	}
+
 	std::string BuildSceneDataJson(const std::string& sceneName)
 	{
-		constexpr int kSceneDataVersion = 4;
+		constexpr int kSceneDataVersion = 6;
 		const D3DXVECTOR3 cameraPosition = Camera::GetInstance()->GetPos();
 		const D3DXVECTOR3 cameraRotation = Camera::GetInstance()->GetRotation();
 		const CameraProjectionMode projectionMode = Camera::GetInstance()->GetProjectionMode();
@@ -175,16 +181,19 @@ namespace
 	{
 		int sceneVersion = 3;
 		SceneJson::ReadInt(sceneJson, "version", sceneVersion);
+		GetCurrentLoadingSceneVersionStorage() = sceneVersion;
 		DeserializeTimeScale(sceneJson);
 		DeserializeCamera(sceneJson);
 		if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson, sceneVersion))
 		{
 			std::cout << "SceneData load failed: " << SceneDataManager::GetSceneDataPath(sceneName) << std::endl;
+			GetCurrentLoadingSceneVersionStorage() = 3;
 			return false;
 		}
 
 		ObjectManager::GetInstance()->FlushPendingObjects();
 		SceneDataManager::CaptureSceneSnapshot(sceneName);
+		GetCurrentLoadingSceneVersionStorage() = 3;
 		return true;
 	}
 
@@ -536,4 +545,9 @@ bool SceneDataManager::SaveSceneDataAs(const std::string& sceneName)
 	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
 	ClearSceneDirty(sceneName);
 	return true;
+}
+
+int SceneDataManager::GetCurrentLoadingSceneVersion()
+{
+	return GetCurrentLoadingSceneVersionStorage();
 }

@@ -43,6 +43,29 @@ namespace
 		return obj->GetActive() && !obj->GetDestroy();
 	}
 
+	void RefreshUILayoutForObject(GameObject* gameObject)
+	{
+		if (gameObject == nullptr)
+		{
+			return;
+		}
+
+		vector<Component*>* components = gameObject->GetComponentVec();
+		if (components == nullptr)
+		{
+			return;
+		}
+
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); ++itr)
+		{
+			UIElement* uiElement = dynamic_cast<UIElement*>(*itr);
+			if (uiElement != nullptr)
+			{
+				uiElement->RefreshLayout();
+			}
+		}
+	}
+
 	void EndImGuiFrameSafely()
 	{
 		if (ImGui::GetCurrentContext() != nullptr)
@@ -817,8 +840,9 @@ D3DXVECTOR2 RenderManager::ScreenToUICoordinate(const D3DXVECTOR2* screenPositio
 
 	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
 	{
-		uiPosition.x *= static_cast<float>(LOGICAL_RENDER_WIDTH) / m_gameViewSize.x;
-		uiPosition.y *= static_cast<float>(LOGICAL_RENDER_HEIGHT) / m_gameViewSize.y;
+		const D3DXVECTOR2 uiCanvasSize = GetUICanvasSize();
+		uiPosition.x *= uiCanvasSize.x / m_gameViewSize.x;
+		uiPosition.y *= uiCanvasSize.y / m_gameViewSize.y;
 	}
 
 	return uiPosition;
@@ -841,8 +865,9 @@ D3DXVECTOR2 RenderManager::GetMouseUICoordinate()
 
 	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
 	{
-		mousePosition.x *= static_cast<float>(LOGICAL_RENDER_WIDTH) / m_gameViewSize.x;
-		mousePosition.y *= static_cast<float>(LOGICAL_RENDER_HEIGHT) / m_gameViewSize.y;
+		const D3DXVECTOR2 uiCanvasSize = GetUICanvasSize();
+		mousePosition.x *= uiCanvasSize.x / m_gameViewSize.x;
+		mousePosition.y *= uiCanvasSize.y / m_gameViewSize.y;
 	}
 
 	return mousePosition;
@@ -873,6 +898,18 @@ D3DXVECTOR2 RenderManager::GetGameViewSize()
 	return m_gameViewSize;
 }
 
+D3DXVECTOR2 RenderManager::GetUICanvasSize()
+{
+	if (m_gameViewSize.x > 0.0f && m_gameViewSize.y > 0.0f)
+	{
+		return m_gameViewSize;
+	}
+
+	return D3DXVECTOR2(
+		static_cast<float>(DEFAULT_WINDOW_CLIENT_WIDTH),
+		static_cast<float>(DEFAULT_WINDOW_CLIENT_HEIGHT));
+}
+
 bool RenderManager::IsUsingScreenSpaceUIMouse()
 {
 	return m_useScreenSpaceUIMouse;
@@ -896,7 +933,8 @@ void RenderManager::RenderUIQueue()
 	device->GetTransform(D3DTS_VIEW, &oldView);
 	device->GetTransform(D3DTS_PROJECTION, &oldProjection);
 	D3DXMatrixIdentity(&identity);
-	D3DXMatrixOrthoOffCenterLH(&uiProjection, 0.0f, static_cast<float>(LOGICAL_RENDER_WIDTH), static_cast<float>(LOGICAL_RENDER_HEIGHT), 0.0f, -1.0f, 1.0f);
+	const D3DXVECTOR2 uiCanvasSize = GetUICanvasSize();
+	D3DXMatrixOrthoOffCenterLH(&uiProjection, 0.0f, uiCanvasSize.x, uiCanvasSize.y, 0.0f, -1.0f, 1.0f);
 
 	device->SetTransform(D3DTS_WORLD, &identity);
 	device->SetTransform(D3DTS_VIEW, &identity);
@@ -915,12 +953,14 @@ void RenderManager::RenderUIQueue()
 		{
 			if (!CanRenderComponent(itr->render))
 				continue;
+			RefreshUILayoutForObject(itr->render->GetGameObject());
 			itr->render->Render();
 		}
 		else if (itr->element)
 		{
 			if (!CanRenderComponent(itr->element))
 				continue;
+			itr->element->RefreshLayout();
 			itr->element->RenderUI();
 		}
 	}

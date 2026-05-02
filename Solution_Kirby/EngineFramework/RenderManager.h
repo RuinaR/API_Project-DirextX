@@ -90,6 +90,7 @@ public:
 	D3DXVECTOR2 GetGameViewPos();
 	D3DXVECTOR2 GetGameViewScreenPos();
 	D3DXVECTOR2 GetGameViewSize();
+	D3DXVECTOR2 GetUICanvasSize();
 	bool IsUsingScreenSpaceUIMouse();
 
 	static int FrameCount;

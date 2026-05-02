@@ -191,6 +191,7 @@ std::string UILabel::Serialize() const
 	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
 	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
 	oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
+	oss << "\"anchorPreset\": \"" << SceneJson::EscapeString(UIElement::AnchorPresetToString(m_anchorPreset)) << "\", ";
 	oss << "\"text\": \"" << SceneJson::EscapeString(ConvertToString(m_text)) << "\", ";
 	oss << "\"color\": " << static_cast<DWORD>(m_color) << ", ";
 	oss << "\"fontSize\": " << m_fontSize << ", ";

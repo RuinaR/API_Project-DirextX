@@ -33,4 +33,5 @@ public:
 	static bool OpenSceneData(const std::string& sceneName);
 	static bool IsValidSceneName(const std::string& sceneName);
 	static bool SaveSceneDataAs(const std::string& sceneName);
+	static int GetCurrentLoadingSceneVersion();
 };

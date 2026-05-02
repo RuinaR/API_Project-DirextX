@@ -209,6 +209,7 @@ std::string UIImage::Serialize() const
 	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
 	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
 	oss << "\"orderInLayer\": " << m_orderInLayer << ", ";
+	oss << "\"anchorPreset\": \"" << SceneJson::EscapeString(UIElement::AnchorPresetToString(m_anchorPreset)) << "\", ";
 	oss << "\"useTexture\": " << (IsUseTexture() ? "true" : "false") << ", ";
 	oss << "\"color\": " << static_cast<DWORD>(GetColor()) << ", ";
 	oss << "\"imagePath\": \"" << SceneJson::EscapeString(m_texturePath) << "\"";
