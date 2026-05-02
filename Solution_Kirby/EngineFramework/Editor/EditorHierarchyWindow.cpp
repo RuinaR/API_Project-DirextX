@@ -465,7 +465,7 @@ void EditorHierarchyWindow::Draw()
 		return;
 	}
 
-	ImGui::Begin("Hierarchy");
+	ImGui::Begin("Editor");
 	if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
 	{
 		const char* sceneName = WindowFrame::GetInstance()->GetCurrentSceneName();
@@ -552,41 +552,44 @@ void EditorHierarchyWindow::Draw()
 		ImGui::Separator();
 	}
 
-	if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
+	if (ImGui::CollapsingHeader("Hierarchy", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Selectable("Drop Here To Make Root", false);
-		if (ImGui::BeginDragDropTarget())
+		if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kHierarchyDragDropPayload))
+			ImGui::Selectable("Drop Here To Make Root", false);
+			if (ImGui::BeginDragDropTarget())
 			{
-				if (payload->DataSize == sizeof(GameObject*))
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kHierarchyDragDropPayload))
 				{
-					GameObject* draggedObject = *static_cast<GameObject* const*>(payload->Data);
-					ChangeParentInHierarchy(draggedObject, nullptr);
+					if (payload->DataSize == sizeof(GameObject*))
+					{
+						GameObject* draggedObject = *static_cast<GameObject* const*>(payload->Data);
+						ChangeParentInHierarchy(draggedObject, nullptr);
+					}
 				}
+				ImGui::EndDragDropTarget();
 			}
-			ImGui::EndDragDropTarget();
+			ImGui::Separator();
 		}
-		ImGui::Separator();
-	}
 
-	list<GameObject*>* objList = objectManager->GetObjList();
-	if (objList != nullptr)
-	{
-		int visibleIndex = 0;
-		for (list<GameObject*>::iterator itr = objList->begin(); itr != objList->end(); itr++)
+		list<GameObject*>* objList = objectManager->GetObjList();
+		if (objList != nullptr)
 		{
-			if ((*itr) == nullptr || (*itr)->GetDestroy())
+			int visibleIndex = 0;
+			for (list<GameObject*>::iterator itr = objList->begin(); itr != objList->end(); itr++)
 			{
-				continue;
-			}
+				if ((*itr) == nullptr || (*itr)->GetDestroy())
+				{
+					continue;
+				}
 
-			if ((*itr)->GetParent() != nullptr)
-			{
-				continue;
-			}
+				if ((*itr)->GetParent() != nullptr)
+				{
+					continue;
+				}
 
-			DrawGameObjectNode(*itr, 0, visibleIndex);
+				DrawGameObjectNode(*itr, 0, visibleIndex);
+			}
 		}
 	}
 
