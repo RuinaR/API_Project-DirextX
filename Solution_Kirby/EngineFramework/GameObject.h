@@ -21,11 +21,18 @@ protected:
     bool m_setActive = true;
     int m_objectId = -1;
     string m_tag = "";
-    D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
-    D3DXVECTOR3 m_size = { 0.0f, 0.0f, 0.0f };
-    float m_angleZ;
-    float m_angleX;
-    float m_angleY;
+    D3DXVECTOR3 m_localPosition = { 0.0f, 0.0f, 0.0f };
+    D3DXVECTOR3 m_localSize = { 0.0f, 0.0f, 0.0f };
+    D3DXVECTOR3 m_localAngle = { 0.0f, 0.0f, 0.0f };
+    mutable D3DXVECTOR3 m_position = { 0.0f, 0.0f, 0.0f };
+    mutable D3DXVECTOR3 m_size = { 0.0f, 0.0f, 0.0f };
+    mutable float m_angleZ = 0.0f;
+    mutable float m_angleX = 0.0f;
+    mutable float m_angleY = 0.0f;
+    mutable D3DXMATRIX m_worldMatrix = {};
+    mutable bool m_transformDirty = true;
+    mutable D3DXVECTOR3 m_sizeWriteProxy = { 0.0f, 0.0f, 0.0f };
+    mutable bool m_hasExternalSizeWrite = false;
 
     vector<Component*>* m_vecComponent = nullptr;
     vector<Component*>* m_pendingDeleteComponents = nullptr;
@@ -33,9 +40,27 @@ protected:
     vector<GameObject*>* m_children;
     void FlushPendingComponents();
     void FlushPendingStateChanges();
+    void FlushPendingTransformSync();
     void ApplyPhysicsActiveState(bool isActive);
+    void ApplyWorldPosition(const D3DXVECTOR3& worldPosition);
+    void ApplyWorldSize(const D3DXVECTOR3& worldSize);
+    void ApplyWorldAngleX(float worldAngleX);
+    void ApplyWorldAngleY(float worldAngleY);
+    void ApplyWorldAngleZ(float worldAngleZ);
+    void ApplyLocalPosition(const D3DXVECTOR3& localPosition);
+    void ApplyLocalSize(const D3DXVECTOR3& localSize);
+    void ApplyLocalAngleX(float localAngleX);
+    void ApplyLocalAngleY(float localAngleY);
+    void ApplyLocalAngleZ(float localAngleZ);
+    void MarkTransformDirty();
+    void MarkTransformDirtyRecursive();
+    void EnsureTransformCurrent() const;
+    void SyncExternalSizeWriteback() const;
+    void SyncHierarchyPhysicsTransform();
+    void QueueHierarchyPhysicsTransformSync();
     bool m_hasPendingPhysicsActiveStateChange = false;
     bool m_pendingPhysicsActiveState = true;
+    bool m_hasPendingPhysicsTransformSync = false;
 public:
     GameObject();
     virtual ~GameObject();
@@ -98,6 +123,7 @@ public:
     void SetAngleZ(float v);
     void SetAngleX(float v);
     void SetAngleY(float v);
+    const D3DXMATRIX& GetWorldMatrix();
 
     GameObject* GetParent() { return m_parent; }
     vector<GameObject*>* GetChild() { return m_children; }

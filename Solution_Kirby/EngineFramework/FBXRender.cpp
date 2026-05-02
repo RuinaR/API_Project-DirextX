@@ -160,16 +160,7 @@ void FBXRender::SetWorldTransform(D3DXMATRIX* matWorld) {
         return;
     }
 
-    D3DXVECTOR3 angle = { m_gameObj->GetAngleX(), m_gameObj->GetAngleY(), m_gameObj->GetAngleZ() };
-    D3DXVECTOR3 scale = m_gameObj->Size3D();
-    D3DXVECTOR3 position = m_gameObj->Position();
-
-    D3DXMATRIX matScale, matRotation, matTranslation;
-    D3DXMatrixScaling(&matScale, scale.x, scale.y, scale.z);
-    D3DXMatrixRotationYawPitchRoll(&matRotation, D3DXToRadian(angle.y), D3DXToRadian(angle.x), D3DXToRadian(angle.z));
-    D3DXMatrixTranslation(&matTranslation, position.x, position.y, position.z);
-
-    *matWorld = matScale * matRotation * matTranslation;
+    *matWorld = m_gameObj->GetWorldMatrix();
     MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, matWorld);
 }
 

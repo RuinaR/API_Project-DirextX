@@ -118,58 +118,79 @@ namespace
 
 		return mainFrame->GetBox2dWorld()->IsLocked();
 	}
+
+	D3DXMATRIX BuildEulerRotationMatrix(const D3DXVECTOR3& angle)
+	{
+		D3DXMATRIX rotationX;
+		D3DXMATRIX rotationY;
+		D3DXMATRIX rotationZ;
+		D3DXMATRIX rotation;
+		D3DXMatrixRotationX(&rotationX, angle.x);
+		D3DXMatrixRotationY(&rotationY, angle.y);
+		D3DXMatrixRotationZ(&rotationZ, angle.z);
+		rotation = rotationZ * rotationX * rotationY;
+		return rotation;
+	}
+
+	float SafeDivideScale(float value, float parentValue)
+	{
+		if (fabsf(parentValue) <= 0.0001f)
+		{
+			return value;
+		}
+
+		return value / parentValue;
+	}
 }
 
 GameObject::GameObject() {
     m_vecComponent = new vector<Component*>();
     m_pendingDeleteComponents = new vector<Component*>();
     m_children = new vector<GameObject*>();
-    m_angleX = 0.0f;
-    m_angleY = 0.0f;
-    m_angleZ = 0.0f;
+	D3DXMatrixIdentity(&m_worldMatrix);
+	m_sizeWriteProxy = m_localSize;
 }
 
 GameObject::~GameObject() {
 }
 
 const D3DXVECTOR3& GameObject::Position() {
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
     return m_position;
 }
 
 void GameObject::SetPosition(D3DXVECTOR3 v)
 {
-    D3DXVECTOR3 d = {v.x - m_position.x,  v.y - m_position.y,  v.z - m_position.z };
-    m_position.x = v.x;
-	m_position.y = v.y;
-    m_position.z = v.z;
-    b2Body* body = GetPrimaryPhysicsBody(this);
-    SyncBodyTransform(body, m_position, body != nullptr ? body->GetAngle() : 0.0f);
-    
-	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-		(*itr)->AddPosition(d);
+    SyncExternalSizeWriteback();
+    ApplyWorldPosition(v);
 }
 
 void GameObject::AddPosition(D3DXVECTOR3 v)
 {
-	m_position.x += v.x;
-	m_position.y += v.y;
-    m_position.z += v.z;
-    b2Body* body = GetPrimaryPhysicsBody(this);
-    SyncBodyTransform(body, m_position, body != nullptr ? body->GetAngle() : 0.0f);
-
-	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-		(*itr)->AddPosition(v);
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
+	ApplyWorldPosition(D3DXVECTOR3(
+		m_position.x + v.x,
+		m_position.y + v.y,
+		m_position.z + v.z));
 }
 
 D3DXVECTOR2 GameObject::Size2D() 
 {
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
     D3DXVECTOR2 size2d = { m_size.x, m_size.y };
 	return size2d;
 }
 
 D3DXVECTOR3& GameObject::Size3D()
 {
-    return m_size;
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
+    m_sizeWriteProxy = m_size;
+    m_hasExternalSizeWrite = true;
+    return m_sizeWriteProxy;
 }
 
 void GameObject::SetDestroy(bool destroy) {
@@ -228,6 +249,339 @@ bool GameObject::GetActive() {
 	return m_setActive;
 }
 
+void GameObject::MarkTransformDirty()
+{
+	m_transformDirty = true;
+}
+
+void GameObject::MarkTransformDirtyRecursive()
+{
+	MarkTransformDirty();
+
+	if (m_children == nullptr)
+	{
+		return;
+	}
+
+	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
+	{
+		if (*itr != nullptr)
+		{
+			(*itr)->MarkTransformDirtyRecursive();
+		}
+	}
+}
+
+void GameObject::EnsureTransformCurrent() const
+{
+	if (!m_transformDirty)
+	{
+		return;
+	}
+
+	if (m_parent != nullptr)
+	{
+		m_parent->SyncExternalSizeWriteback();
+		m_parent->EnsureTransformCurrent();
+	}
+
+	D3DXMATRIX scaleMatrix;
+	D3DXMatrixScaling(&scaleMatrix, m_localSize.x, m_localSize.y, m_localSize.z);
+	D3DXMATRIX rotationMatrix = BuildEulerRotationMatrix(m_localAngle);
+	D3DXMATRIX translationMatrix;
+	D3DXMatrixTranslation(&translationMatrix, m_localPosition.x, m_localPosition.y, m_localPosition.z);
+	D3DXMATRIX localMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+
+	if (m_parent != nullptr)
+	{
+		m_worldMatrix = localMatrix * m_parent->m_worldMatrix;
+		m_position = D3DXVECTOR3(m_worldMatrix._41, m_worldMatrix._42, m_worldMatrix._43);
+		m_size = D3DXVECTOR3(
+			m_localSize.x * m_parent->m_size.x,
+			m_localSize.y * m_parent->m_size.y,
+			m_localSize.z * m_parent->m_size.z);
+		m_angleX = m_parent->m_angleX + m_localAngle.x;
+		m_angleY = m_parent->m_angleY + m_localAngle.y;
+		m_angleZ = m_parent->m_angleZ + m_localAngle.z;
+	}
+	else
+	{
+		m_worldMatrix = localMatrix;
+		m_position = m_localPosition;
+		m_size = m_localSize;
+		m_angleX = m_localAngle.x;
+		m_angleY = m_localAngle.y;
+		m_angleZ = m_localAngle.z;
+	}
+
+	m_transformDirty = false;
+}
+
+void GameObject::SyncExternalSizeWriteback() const
+{
+	if (!m_hasExternalSizeWrite)
+	{
+		return;
+	}
+
+	EnsureTransformCurrent();
+	if (m_sizeWriteProxy.x == m_size.x &&
+		m_sizeWriteProxy.y == m_size.y &&
+		m_sizeWriteProxy.z == m_size.z)
+	{
+		m_hasExternalSizeWrite = false;
+		return;
+	}
+
+	const_cast<GameObject*>(this)->ApplyWorldSize(m_sizeWriteProxy);
+	const_cast<GameObject*>(this)->m_hasExternalSizeWrite = false;
+}
+
+void GameObject::QueueHierarchyPhysicsTransformSync()
+{
+	m_hasPendingPhysicsTransformSync = true;
+
+	if (m_children == nullptr)
+	{
+		return;
+	}
+
+	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
+	{
+		if (*itr != nullptr)
+		{
+			(*itr)->QueueHierarchyPhysicsTransformSync();
+		}
+	}
+}
+
+void GameObject::SyncHierarchyPhysicsTransform()
+{
+	SyncExternalSizeWriteback();
+	EnsureTransformCurrent();
+
+	Rigidbody2D* rigidbody2D = GetComponent<Rigidbody2D>();
+	if (rigidbody2D != nullptr)
+	{
+		rigidbody2D->SyncBodyToGameObjectTransform();
+	}
+
+	if (m_vecComponent != nullptr)
+	{
+		for (vector<Component*>::iterator itr = m_vecComponent->begin(); itr != m_vecComponent->end(); itr++)
+		{
+			Collider2D* collider = dynamic_cast<Collider2D*>(*itr);
+			if (collider != nullptr)
+			{
+				collider->SyncBodyToGameObjectTransform();
+			}
+		}
+	}
+
+	m_hasPendingPhysicsTransformSync = false;
+
+	if (m_children == nullptr)
+	{
+		return;
+	}
+
+	for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
+	{
+		if (*itr != nullptr)
+		{
+			(*itr)->SyncHierarchyPhysicsTransform();
+		}
+	}
+}
+
+void GameObject::FlushPendingTransformSync()
+{
+	if (!m_hasPendingPhysicsTransformSync)
+	{
+		return;
+	}
+
+	if (IsPhysicsWorldLocked())
+	{
+		return;
+	}
+
+	SyncHierarchyPhysicsTransform();
+}
+
+void GameObject::ApplyWorldPosition(const D3DXVECTOR3& worldPosition)
+{
+	if (m_parent != nullptr)
+	{
+		m_parent->SyncExternalSizeWriteback();
+		m_parent->EnsureTransformCurrent();
+		D3DXMATRIX inverseParentMatrix;
+		if (D3DXMatrixInverse(&inverseParentMatrix, nullptr, &m_parent->m_worldMatrix) != nullptr)
+		{
+			D3DXVec3TransformCoord(&m_localPosition, &worldPosition, &inverseParentMatrix);
+		}
+		else
+		{
+			m_localPosition = worldPosition;
+		}
+	}
+	else
+	{
+		m_localPosition = worldPosition;
+	}
+
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyWorldSize(const D3DXVECTOR3& worldSize)
+{
+	if (m_parent != nullptr)
+	{
+		m_parent->SyncExternalSizeWriteback();
+		m_parent->EnsureTransformCurrent();
+		m_localSize = D3DXVECTOR3(
+			SafeDivideScale(worldSize.x, m_parent->m_size.x),
+			SafeDivideScale(worldSize.y, m_parent->m_size.y),
+			SafeDivideScale(worldSize.z, m_parent->m_size.z));
+	}
+	else
+	{
+		m_localSize = worldSize;
+	}
+
+	m_sizeWriteProxy = worldSize;
+	m_hasExternalSizeWrite = false;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyWorldAngleX(float worldAngleX)
+{
+	m_localAngle.x = m_parent != nullptr ? worldAngleX - m_parent->GetAngleX() : worldAngleX;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyWorldAngleY(float worldAngleY)
+{
+	m_localAngle.y = m_parent != nullptr ? worldAngleY - m_parent->GetAngleY() : worldAngleY;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyWorldAngleZ(float worldAngleZ)
+{
+	m_localAngle.z = m_parent != nullptr ? worldAngleZ - m_parent->GetAngleZ() : worldAngleZ;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyLocalPosition(const D3DXVECTOR3& localPosition)
+{
+	m_localPosition = localPosition;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyLocalSize(const D3DXVECTOR3& localSize)
+{
+	m_localSize = localSize;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyLocalAngleX(float localAngleX)
+{
+	m_localAngle.x = localAngleX;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyLocalAngleY(float localAngleY)
+{
+	m_localAngle.y = localAngleY;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
+void GameObject::ApplyLocalAngleZ(float localAngleZ)
+{
+	m_localAngle.z = localAngleZ;
+	MarkTransformDirtyRecursive();
+	if (IsPhysicsWorldLocked())
+	{
+		QueueHierarchyPhysicsTransformSync();
+	}
+	else
+	{
+		SyncHierarchyPhysicsTransform();
+	}
+}
+
 std::string GameObject::Serialize() const
 {
     return Serialize(-1, -1);
@@ -240,6 +594,9 @@ std::string GameObject::Serialize(int objectId, int parentId) const
 
 std::string GameObject::Serialize(int objectId, int parentId, int sceneVersion) const
 {
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
+
     std::ostringstream oss;
     oss << "{\n";
     if (sceneVersion >= 4)
@@ -366,11 +723,11 @@ GameObject* GameObject::CreateFromSerializedData(const GameObjectSerializedData&
     obj->SetId(data.objectId);
     obj->SetTag(data.tag);
     obj->SetActive(data.active);
-    obj->SetPosition(data.position);
-    obj->Size3D() = data.size;
-    obj->SetAngleX(data.angle.x);
-    obj->SetAngleY(data.angle.y);
-    obj->SetAngleZ(data.angle.z);
+    obj->ApplyWorldPosition(data.position);
+    obj->ApplyWorldSize(data.size);
+    obj->ApplyWorldAngleX(data.angle.x);
+    obj->ApplyWorldAngleY(data.angle.y);
+    obj->ApplyWorldAngleZ(data.angle.z);
     return obj;
 }
 
@@ -422,11 +779,13 @@ void GameObject::FlushPendingStateChanges()
 {
     if (!m_hasPendingPhysicsActiveStateChange || IsPhysicsWorldLocked())
     {
+        FlushPendingTransformSync();
         return;
     }
 
     m_hasPendingPhysicsActiveStateChange = false;
     ApplyPhysicsActiveState(m_pendingPhysicsActiveState);
+    FlushPendingTransformSync();
 }
 
 void GameObject::ApplyPhysicsActiveState(bool isActive)
@@ -555,6 +914,7 @@ void GameObject::Start() {
 }
 
 void GameObject::Update() {
+    SyncExternalSizeWriteback();
     FlushPendingStateChanges();
     FlushPendingComponents();
 
@@ -583,15 +943,30 @@ void GameObject::SetParent(GameObject* obj)
     if (m_parent == obj)
         return;
 
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
+    const D3DXVECTOR3 worldPosition = m_position;
+    const D3DXVECTOR3 worldSize = m_size;
+    const float worldAngleX = m_angleX;
+    const float worldAngleY = m_angleY;
+    const float worldAngleZ = m_angleZ;
+
     if (m_parent != nullptr)
     {
         m_parent->DeleteChild(this);
     }
 
     m_parent = obj;
-    if (obj == nullptr)
-        return;
-    obj->m_children->push_back(this);
+    if (obj != nullptr)
+    {
+        obj->m_children->push_back(this);
+    }
+
+    ApplyWorldSize(worldSize);
+    ApplyWorldAngleX(worldAngleX);
+    ApplyWorldAngleY(worldAngleY);
+    ApplyWorldAngleZ(worldAngleZ);
+    ApplyWorldPosition(worldPosition);
 }
 
 void GameObject::AddChild(GameObject* obj)
@@ -613,8 +988,7 @@ void GameObject::AddChild(GameObject* obj)
         obj->m_parent->DeleteChild(obj);
     }
 
-    m_children->push_back(obj);
-    obj->m_parent = this;
+    obj->SetParent(this);
 }
 
 void GameObject::DeleteChild(GameObject* obj)
@@ -634,53 +1008,48 @@ void GameObject::DeleteChild(GameObject* obj)
 
 const float& GameObject::GetAngleZ()
 {
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
     return m_angleZ;
 }
 
 const float& GameObject::GetAngleX()
 {
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
     return m_angleX;
 }
 
 const float& GameObject::GetAngleY()
 {
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
     return m_angleY;
 }
 
 void GameObject::SetAngleZ(float v)
 {
-    const float delta = v - m_angleZ;
-    m_angleZ = v;
-    b2Body* body = GetPrimaryPhysicsBody(this);
-    if (body != nullptr)
-    {
-        body->SetTransform(body->GetPosition(), v);
-        if (body->GetType() != b2_staticBody)
-        {
-            body->SetAwake(true);
-        }
-    }
-
-    for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngleZ((*itr)->GetAngleZ() + delta);
+    SyncExternalSizeWriteback();
+    ApplyWorldAngleZ(v);
 }
 
 void GameObject::SetAngleX(float v)
 {
-    const float delta = v - m_angleX;
-    m_angleX = v;
-
-    for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngleX((*itr)->GetAngleX() + delta);
+    SyncExternalSizeWriteback();
+    ApplyWorldAngleX(v);
 }
 
 void GameObject::SetAngleY(float v)
 {
-    const float delta = v - m_angleY;
-    m_angleY = v;
+    SyncExternalSizeWriteback();
+    ApplyWorldAngleY(v);
+}
 
-    for (vector<GameObject*>::iterator itr = m_children->begin(); itr != m_children->end(); itr++)
-        (*itr)->SetAngleY((*itr)->GetAngleY() + delta);
+const D3DXMATRIX& GameObject::GetWorldMatrix()
+{
+    SyncExternalSizeWriteback();
+    EnsureTransformCurrent();
+    return m_worldMatrix;
 }
 
 void GameObject::OnCollisionEnter(Collider2D* col)

@@ -12,17 +12,13 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
     SetupVertices();
 
     // 월드 변환 행렬을 구성한다.
-    D3DXMATRIX matWorld, matScale, matTrans, matRotation;
-    D3DXMATRIX matRotationX, matRotationY, matRotationZ;
-    D3DXMatrixScaling(&matScale, m_gameObj->Size2D().x, m_gameObj->Size2D().y, 1.0f);
-    const D3DXVECTOR3 renderPosition = GetRenderPosition();
-    D3DXMatrixTranslation(&matTrans, renderPosition.x, renderPosition.y, renderPosition.z);
-
-    D3DXMatrixRotationX(&matRotationX, m_gameObj->GetAngleX());
-    D3DXMatrixRotationY(&matRotationY, m_gameObj->GetAngleY());
-    D3DXMatrixRotationZ(&matRotationZ, m_gameObj->GetAngleZ());
-    matRotation = matRotationZ * matRotationX * matRotationY;
-    matWorld = matScale * matRotation * matTrans;
+    D3DXMATRIX matWorld = m_gameObj->GetWorldMatrix();
+    if (m_positionOffset.x != 0.0f || m_positionOffset.y != 0.0f || m_positionOffset.z != 0.0f)
+    {
+        D3DXMATRIX offsetTranslation;
+        D3DXMatrixTranslation(&offsetTranslation, m_positionOffset.x, m_positionOffset.y, m_positionOffset.z);
+        matWorld *= offsetTranslation;
+    }
 
     m_device->SetTransform(D3DTS_WORLD, &matWorld);
 
