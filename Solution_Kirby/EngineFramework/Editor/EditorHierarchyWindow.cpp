@@ -391,6 +391,16 @@ namespace
 			return false;
 		}
 
+		std::string rejectionReason;
+		if (!child->CanSetParent(newParent, &rejectionReason))
+		{
+			if (!rejectionReason.empty())
+			{
+				std::cout << "Hierarchy parent change blocked: " << rejectionReason << std::endl;
+			}
+			return false;
+		}
+
 		child->SetParent(newParent);
 		MarkCurrentSceneDirty();
 		return true;

@@ -137,11 +137,6 @@ namespace
 		return static_cast<float>(width > 0 ? width : 1) / static_cast<float>(height);
 	}
 
-	float GetGameRenderAspectRatio()
-	{
-		return static_cast<float>(LOGICAL_RENDER_WIDTH) / static_cast<float>(LOGICAL_RENDER_HEIGHT);
-	}
-
 	bool LoadEditorKoreanFont(ImGuiIO& io)
 	{
 		char windowsDirectory[MAX_PATH] = {};
@@ -1017,22 +1012,18 @@ void MainFrame::ApplyCameraProjection()
     const float nearClip = camera->GetNearClip();
     const float farClip = camera->GetFarClip();
 
-    if (camera->GetProjectionMode() == CameraProjectionMode::Perspective)
-    {
-        const float aspectRatio = (m_type == RenderType::Game)
-            ? GetGameRenderAspectRatio()
-            : ClampAspectRatio(m_width, m_height);
-        D3DXMatrixPerspectiveFovLH(&m_matProj, camera->GetFov(), aspectRatio, nearClip, farClip);
-    }
-    else
-    {
-        const float orthoHeight = camera->GetOrthographicSize();
-        const float aspectRatio = (m_type == RenderType::Game)
-            ? GetGameRenderAspectRatio()
-            : ClampAspectRatio(m_width, m_height);
-        const float orthoWidth = orthoHeight * aspectRatio;
-        D3DXMatrixOrthoLH(&m_matProj, orthoWidth, orthoHeight, nearClip, farClip);
-    }
+	if (camera->GetProjectionMode() == CameraProjectionMode::Perspective)
+	{
+		const float aspectRatio = ClampAspectRatio(m_width, m_height);
+		D3DXMatrixPerspectiveFovLH(&m_matProj, camera->GetFov(), aspectRatio, nearClip, farClip);
+	}
+	else
+	{
+		const float orthoHeight = camera->GetOrthographicSize();
+		const float aspectRatio = ClampAspectRatio(m_width, m_height);
+		const float orthoWidth = orthoHeight * aspectRatio;
+		D3DXMatrixOrthoLH(&m_matProj, orthoWidth, orthoHeight, nearClip, farClip);
+	}
 
     m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
 }

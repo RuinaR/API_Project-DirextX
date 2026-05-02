@@ -5,6 +5,7 @@
 #include "ComponentFactory.h"
 #include "GameObject.h"
 #include "ObjectManager.h"
+#include "UIElement.h"
 #include "SceneDataManager.h"
 
 namespace
@@ -66,6 +67,30 @@ namespace
 				return true;
 			}
 		}
+		return false;
+	}
+
+	bool HasUIElementComponent(GameObject* obj)
+	{
+		if (obj == nullptr)
+		{
+			return false;
+		}
+
+		vector<Component*>* components = obj->GetComponentVec();
+		if (components == nullptr)
+		{
+			return false;
+		}
+
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
+		{
+			if (dynamic_cast<UIElement*>(*itr) != nullptr)
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -166,7 +191,35 @@ namespace
 				}
 
 				const bool alreadyAdded = HasComponentType(obj, info->typeName);
-				if (ImGui::MenuItem(info->displayName.c_str(), alreadyAdded ? "Added" : nullptr, false, !alreadyAdded))
+				bool canAdd = !alreadyAdded;
+				std::string blockReason;
+				if (!alreadyAdded)
+				{
+					Component* previewComponent = factory.Create(info->typeName, "{}");
+					if (previewComponent != nullptr)
+					{
+						canAdd = obj->CanAddComponent(previewComponent, &blockReason);
+						previewComponent->Release();
+						delete previewComponent;
+					}
+					else
+					{
+						canAdd = false;
+						blockReason = "컴포넌트를 미리 생성할 수 없습니다.";
+					}
+				}
+
+				const char* shortcutLabel = nullptr;
+				if (alreadyAdded)
+				{
+					shortcutLabel = "Added";
+				}
+				else if (!canAdd)
+				{
+					shortcutLabel = "Blocked";
+				}
+
+				if (ImGui::MenuItem(info->displayName.c_str(), shortcutLabel, false, canAdd))
 				{
 					Component* component = factory.Create(info->typeName, "{}");
 					if (component != nullptr)
@@ -178,6 +231,11 @@ namespace
 					{
 						std::cout << "Add Component failed: " << info->typeName << std::endl;
 					}
+				}
+
+				if (!canAdd && ImGui::IsItemHovered() && !blockReason.empty())
+				{
+					ImGui::SetTooltip("%s", blockReason.c_str());
 				}
 			}
 
@@ -294,7 +352,15 @@ void EditorInspectorWindow::DrawGameObjectInspector(GameObject* obj)
 	}
 
 	D3DXVECTOR3 position = obj->Position();
-	if (ImGui::DragFloat3("Position", &position.x, 1.0f))
+	const bool hasUIElementComponent = HasUIElementComponent(obj);
+	if (hasUIElementComponent)
+	{
+		ImGui::BeginDisabled();
+		ImGui::DragFloat3("Position", &position.x, 1.0f);
+		ImGui::EndDisabled();
+		ImGui::TextDisabled("UI 오브젝트의 Position은 anchor와 local offset으로 계산되는 결과값입니다.");
+	}
+	else if (ImGui::DragFloat3("Position", &position.x, 1.0f))
 	{
 		obj->SetPosition(position);
 	}

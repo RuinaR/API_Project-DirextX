@@ -50,6 +50,12 @@ namespace
 			return;
 		}
 
+		GameObject* parent = gameObject->GetParent();
+		if (parent != nullptr)
+		{
+			RefreshUILayoutForObject(parent);
+		}
+
 		vector<Component*>* components = gameObject->GetComponentVec();
 		if (components == nullptr)
 		{
@@ -63,6 +69,39 @@ namespace
 			{
 				uiElement->RefreshLayout();
 			}
+		}
+	}
+
+	void RefreshUILayoutHierarchy(GameObject* gameObject, vector<GameObject*>* visitedObjects)
+	{
+		if (gameObject == nullptr)
+		{
+			return;
+		}
+
+		if (visitedObjects != nullptr)
+		{
+			for (vector<GameObject*>::iterator itr = visitedObjects->begin(); itr != visitedObjects->end(); ++itr)
+			{
+				if (*itr == gameObject)
+				{
+					return;
+				}
+			}
+			visitedObjects->push_back(gameObject);
+		}
+
+		RefreshUILayoutForObject(gameObject);
+
+		vector<GameObject*>* children = gameObject->GetChild();
+		if (children == nullptr)
+		{
+			return;
+		}
+
+		for (vector<GameObject*>::iterator itr = children->begin(); itr != children->end(); ++itr)
+		{
+			RefreshUILayoutHierarchy(*itr, visitedObjects);
 		}
 	}
 
@@ -747,20 +786,16 @@ void RenderManager::GameUpdate()
 	{
 		GetClientRect(WindowFrame::GetInstance()->GetHWND(), &clientRect);
 	}
-	const float clientWidth = static_cast<float>(clientRect.right - clientRect.left);
-	const float clientHeight = static_cast<float>(clientRect.bottom - clientRect.top);
-	const float resolvedClientWidth = clientWidth > 0.0f ? clientWidth : static_cast<float>(DEFAULT_WINDOW_CLIENT_WIDTH);
-	const float resolvedClientHeight = clientHeight > 0.0f ? clientHeight : static_cast<float>(DEFAULT_WINDOW_CLIENT_HEIGHT);
-	const RECT presentRect = CalculateAspectFitRect(
-		static_cast<float>(LOGICAL_RENDER_WIDTH),
-		static_cast<float>(LOGICAL_RENDER_HEIGHT),
-		resolvedClientWidth,
-		resolvedClientHeight);
-	m_gameViewPos = D3DXVECTOR2(static_cast<float>(presentRect.left), static_cast<float>(presentRect.top));
-	m_gameViewScreenPos = m_gameViewPos;
-	m_gameViewSize = D3DXVECTOR2(
-		static_cast<float>(presentRect.right - presentRect.left),
-		static_cast<float>(presentRect.bottom - presentRect.top));
+	const float clientWidth = static_cast<float>(max(1L, clientRect.right - clientRect.left));
+	const float clientHeight = static_cast<float>(max(1L, clientRect.bottom - clientRect.top));
+	m_gameViewPos = D3DXVECTOR2(0.0f, 0.0f);
+	POINT clientOrigin = { 0, 0 };
+	if (WindowFrame::GetInstance() != nullptr)
+	{
+		ClientToScreen(WindowFrame::GetInstance()->GetHWND(), &clientOrigin);
+	}
+	m_gameViewScreenPos = D3DXVECTOR2(static_cast<float>(clientOrigin.x), static_cast<float>(clientOrigin.y));
+	m_gameViewSize = D3DXVECTOR2(clientWidth, clientHeight);
 	m_useScreenSpaceUIMouse = false;
 	m_winPos = ImVec2(0.0f, 0.0f);
 
@@ -777,10 +812,10 @@ void RenderManager::GameUpdate()
 		device->GetViewport(&previousViewport);
 
 		D3DVIEWPORT9 gameViewport = {};
-		gameViewport.X = static_cast<DWORD>(max(0L, presentRect.left));
-		gameViewport.Y = static_cast<DWORD>(max(0L, presentRect.top));
-		gameViewport.Width = static_cast<DWORD>(max(1L, presentRect.right - presentRect.left));
-		gameViewport.Height = static_cast<DWORD>(max(1L, presentRect.bottom - presentRect.top));
+		gameViewport.X = 0;
+		gameViewport.Y = 0;
+		gameViewport.Width = static_cast<DWORD>(max(1L, clientRect.right - clientRect.left));
+		gameViewport.Height = static_cast<DWORD>(max(1L, clientRect.bottom - clientRect.top));
 		gameViewport.MinZ = 0.0f;
 		gameViewport.MaxZ = 1.0f;
 		device->SetViewport(&gameViewport);
@@ -947,20 +982,45 @@ void RenderManager::RenderUIQueue()
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 
+	vector<GameObject*> visitedUILayoutObjects;
+	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); ++itr)
+	{
+		GameObject* uiObject = nullptr;
+		if (itr->render != nullptr)
+		{
+			uiObject = itr->render->GetGameObject();
+		}
+		else if (itr->element != nullptr)
+		{
+			uiObject = itr->element->GetGameObject();
+		}
+
+		if (uiObject == nullptr)
+		{
+			continue;
+		}
+
+		GameObject* rootObject = uiObject;
+		while (rootObject->GetParent() != nullptr)
+		{
+			rootObject = rootObject->GetParent();
+		}
+
+		RefreshUILayoutHierarchy(rootObject, &visitedUILayoutObjects);
+	}
+
 	for (vector<UIRenderEntry>::iterator itr = m_uiRenderVec->begin(); itr != m_uiRenderVec->end(); itr++)
 	{
 		if (itr->render)
 		{
 			if (!CanRenderComponent(itr->render))
 				continue;
-			RefreshUILayoutForObject(itr->render->GetGameObject());
 			itr->render->Render();
 		}
 		else if (itr->element)
 		{
 			if (!CanRenderComponent(itr->element))
 				continue;
-			itr->element->RefreshLayout();
 			itr->element->RenderUI();
 		}
 	}

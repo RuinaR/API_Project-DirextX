@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 6,
   "sceneName": "ActivePhysicsToggleTestScene",
   "timeScale": 1,
   "camera": {
@@ -204,12 +204,12 @@
       "tag": "ToggleActiveButton",
       "active": true,
       "transform": {
-        "position": { "x": 128, "y": 518, "z": 0 },
+        "position": { "x": 264, "y": 518, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 220, "y": 44, "z": 1 }
+        "size": { "x": 212, "y": 44, "z": 1 }
       },
       "components": [
-        { "type": "UIButton", "data": { "position": { "x": 18, "y": 496 }, "size": { "x": 220, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "imagePath": "", "useTexture": false, "normalColor": 4284132608, "hoverColor": 4287094783, "pressedColor": 4289384447, "actionKey": "ActivePhysicsTest.TogglePlayerActive" } }
+        { "type": "UIButton", "data": { "position": { "x": -1070, "y": 68 }, "size": { "x": 212, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "MiddleRight", "imagePath": "", "useTexture": false, "normalColor": 4284132608, "hoverColor": 4287094783, "pressedColor": 4289384447, "actionKey": "ActivePhysicsTest.TogglePlayerActive" } }
       ]
     },
     {
@@ -219,12 +219,12 @@
       "tag": "ToggleActiveButtonLabel",
       "active": true,
       "transform": {
-        "position": { "x": 164, "y": 521, "z": 0 },
+        "position": { "x": 300.363, "y": 521, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 200, "y": 30, "z": 1 }
+        "size": { "x": 192.727, "y": 30, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 46, "y": 10 }, "size": { "x": 200, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "text": "Toggle Player Active", "color": 4294967295, "fontSize": 22, "scale": 1 } }
+        { "type": "UILabel", "data": { "position": { "x": 46, "y": 10 }, "size": { "x": 192.727, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Toggle Player Active", "color": 4294967295, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
@@ -239,7 +239,7 @@
         "size": { "x": 220, "y": 44, "z": 1 }
       },
       "components": [
-        { "type": "UIButton", "data": { "position": { "x": 18, "y": 604 }, "size": { "x": 220, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "imagePath": "", "useTexture": false, "normalColor": 4281565510, "hoverColor": 4283791257, "pressedColor": 4286029610, "actionKey": "ActivePhysicsTest.TogglePlayerTrigger" } }
+        { "type": "UIButton", "data": { "position": { "x": 18, "y": 604 }, "size": { "x": 220, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "TopLeft", "imagePath": "", "useTexture": false, "normalColor": 4281565510, "hoverColor": 4283791257, "pressedColor": 4286029610, "actionKey": "ActivePhysicsTest.TogglePlayerTrigger" } }
       ]
     },
     {
@@ -254,7 +254,7 @@
         "size": { "x": 205, "y": 30, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 44, "y": 12 }, "size": { "x": 205, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "text": "Toggle Player Trigger", "color": 4294967295, "fontSize": 22, "scale": 1 } }
+        { "type": "UILabel", "data": { "position": { "x": 44, "y": 12 }, "size": { "x": 205, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Toggle Player Trigger", "color": 4294967295, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
@@ -269,7 +269,7 @@
         "size": { "x": 440, "y": 398, "z": 1 }
       },
       "components": [
-        { "type": "UIImage", "data": { "position": { "x": 8, "y": -59 }, "size": { "x": 440, "y": 398 }, "visible": true, "enabled": true, "orderInLayer": 1, "useTexture": false, "color": 3356364578, "imagePath": "" } }
+        { "type": "UIImage", "data": { "position": { "x": 8, "y": -59 }, "size": { "x": 440, "y": 398 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "TopLeft", "useTexture": false, "color": 3356364578, "imagePath": "" } }
       ]
     },
     {
@@ -284,7 +284,7 @@
         "size": { "x": 420, "y": 260, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 18, "y": 10 }, "size": { "x": 420, "y": 260 }, "visible": true, "enabled": true, "orderInLayer": 2, "text": "Player Active: true\nPlayer Trigger: false\nCollision Contacts: 1\nTrigger Contacts: 0\nEnable Count: 0\nDisable Count: 0\nCollision Enter Count: 1\nTrigger Enter Count: 0\nLast Event: CollisionEnter\nRecent Events:\n- CollisionEnter", "color": 4294967295, "fontSize": 20, "scale": 1 } }
+        { "type": "UILabel", "data": { "position": { "x": 18, "y": 10 }, "size": { "x": 420, "y": 260 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Player Active: true\nPlayer Trigger: false\nCollision Contacts: 1\nTrigger Contacts: 0\nEnable Count: 0\nDisable Count: 0\nCollision Enter Count: 1\nTrigger Enter Count: 0\nLast Event: CollisionEnter\nRecent Events:\n- CollisionEnter", "color": 4294967295, "fontSize": 20, "scale": 1 } }
       ]
     },
     {
@@ -299,7 +299,7 @@
         "size": { "x": 460, "y": 84, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 18, "y": 378 }, "size": { "x": 460, "y": 84 }, "visible": true, "enabled": true, "orderInLayer": 2, "text": "WASD / Arrow / Space\\nUse buttons to test Active and Trigger changes.", "color": 4294967295, "fontSize": 22, "scale": 1 } }
+        { "type": "UILabel", "data": { "position": { "x": 18, "y": 378 }, "size": { "x": 460, "y": 84 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "WASD / Arrow / Space\\nUse buttons to test Active and Trigger changes.", "color": 4294967295, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
@@ -324,12 +324,12 @@
       "tag": "UI Text",
       "active": true,
       "transform": {
-        "position": { "x": 390, "y": 528, "z": 0 },
+        "position": { "x": 525.636, "y": 528, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 240, "y": 48, "z": 1 }
+        "size": { "x": 231.273, "y": 48, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 206, "y": -2.00006 }, "size": { "x": 240, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "text": "Text", "color": 4294967295, "fontSize": 24, "scale": 1 } }
+        { "type": "UILabel", "data": { "position": { "x": 206, "y": -2.00006 }, "size": { "x": 231.273, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "anchorPreset": "TopLeft", "text": "Text", "color": 4294967295, "fontSize": 24, "scale": 1 } }
       ]
     },
     {

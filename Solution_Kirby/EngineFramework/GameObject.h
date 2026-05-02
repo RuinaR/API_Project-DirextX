@@ -105,6 +105,8 @@ public:
     static bool Deserialize(const std::string& objectJson, GameObjectSerializedData& outData);
     static bool Deserialize(const std::string& objectJson, GameObjectSerializedData& outData, int sceneVersion);
     static GameObject* CreateFromSerializedData(const GameObjectSerializedData& data);
+    bool CanAddComponent(Component* component, std::string* outReason = nullptr) const;
+    bool CanSetParent(GameObject* parent, std::string* outReason = nullptr) const;
     Component* AddComponent(Component* component);
     Component* AddComponent(Component* component, bool initializeComponent, bool startComponent);
     void DeleteComponent(Component* component);

@@ -209,12 +209,25 @@ D3DXVECTOR2 UIElement::GetAnchorPoint() const
 		GameObject* parent = m_gameObj->GetParent();
 		if (parent != nullptr)
 		{
-			const D3DXVECTOR2 parentSize = parent->Size2D();
-			const D3DXVECTOR3 parentPosition = parent->Position();
-			left = parentPosition.x - (parentSize.x * 0.5f);
-			top = parentPosition.y - (parentSize.y * 0.5f);
-			width = parentSize.x;
-			height = parentSize.y;
+			UIElement* parentUIElement = parent->GetComponent<UIElement>();
+			if (parentUIElement != nullptr)
+			{
+				const D3DXVECTOR2 parentPosition = parentUIElement->GetPosition();
+				const D3DXVECTOR2 parentSize = parentUIElement->GetSize();
+				left = parentPosition.x;
+				top = parentPosition.y;
+				width = parentSize.x;
+				height = parentSize.y;
+			}
+			else
+			{
+				const D3DXVECTOR2 parentSize = parent->Size2D();
+				const D3DXVECTOR3 parentPosition = parent->Position();
+				left = parentPosition.x - (parentSize.x * 0.5f);
+				top = parentPosition.y - (parentSize.y * 0.5f);
+				width = parentSize.x;
+				height = parentSize.y;
+			}
 		}
 		else if (RenderManager::GetInstance() != nullptr)
 		{

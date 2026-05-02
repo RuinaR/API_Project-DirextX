@@ -3,6 +3,10 @@
 #include "DebugWindow.h"
 #include "Rigidbody2D.h"
 #include "Collider2D.h"
+#include "ImageRender.h"
+#include "AnimationRender.h"
+#include "FBXRender.h"
+#include "UIElement.h"
 #include "SceneJsonUtility.h"
 
 namespace
@@ -106,6 +110,99 @@ namespace
 			gameObject->GetComponentVec() != nullptr &&
 			gameObject->GetActive() &&
 			!gameObject->GetDestroy();
+	}
+
+	bool IsDirectUIRenderComponent(Component* component)
+	{
+		return dynamic_cast<UIElement*>(component) != nullptr;
+	}
+
+	bool HasUIElementComponent(GameObject* gameObject)
+	{
+		if (gameObject == nullptr)
+		{
+			return false;
+		}
+
+		vector<Component*>* components = gameObject->GetComponentVec();
+		if (components == nullptr)
+		{
+			return false;
+		}
+
+		for (vector<Component*>::const_iterator itr = components->begin(); itr != components->end(); ++itr)
+		{
+			if (*itr != nullptr && IsDirectUIRenderComponent(*itr))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool IsDirectWorldRenderComponent(Component* component)
+	{
+		return dynamic_cast<ImageRender*>(component) != nullptr ||
+			dynamic_cast<AnimationRender*>(component) != nullptr ||
+			dynamic_cast<FBXRender*>(component) != nullptr;
+	}
+
+	bool HasComponentMatching(const vector<Component*>* components, bool(*predicate)(Component*))
+	{
+		if (components == nullptr || predicate == nullptr)
+		{
+			return false;
+		}
+
+		for (vector<Component*>::const_iterator itr = components->begin(); itr != components->end(); ++itr)
+		{
+			if (*itr != nullptr && predicate(*itr))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool CanAttachRenderPolicyComponent(GameObject* gameObject, Component* component, std::string& outReason)
+	{
+		if (gameObject == nullptr || component == nullptr)
+		{
+			return false;
+		}
+
+		const bool addingUIRenderComponent = IsDirectUIRenderComponent(component);
+		const bool addingWorldRenderComponent = IsDirectWorldRenderComponent(component);
+		if (!addingUIRenderComponent && !addingWorldRenderComponent)
+		{
+			return true;
+		}
+
+		vector<Component*>* components = gameObject->GetComponentVec();
+		const bool hasUIRenderComponent = HasComponentMatching(components, IsDirectUIRenderComponent);
+		const bool hasWorldRenderComponent = HasComponentMatching(components, IsDirectWorldRenderComponent);
+
+		if (addingUIRenderComponent && hasUIRenderComponent)
+		{
+			outReason = "UIElement 계열 컴포넌트는 같은 GameObject에 하나만 추가할 수 있습니다.";
+			return false;
+		}
+
+		if (addingUIRenderComponent && hasWorldRenderComponent)
+		{
+			outReason = "UIElement 계열 컴포넌트와 일반 렌더 컴포넌트는 같은 GameObject에 함께 추가할 수 없습니다.";
+			return false;
+		}
+
+		if (addingWorldRenderComponent && hasUIRenderComponent)
+		{
+			outReason = "일반 렌더 컴포넌트와 UIElement 계열 컴포넌트는 같은 GameObject에 함께 추가할 수 없습니다.";
+			return false;
+		}
+
+		return true;
 	}
 
 	bool IsPhysicsWorldLocked()
@@ -735,18 +832,98 @@ Component* GameObject::AddComponent(Component* component) {
     return AddComponent(component, true, true);
 }
 
+bool GameObject::CanAddComponent(Component* component, std::string* outReason) const
+{
+	if (component == nullptr)
+	{
+		if (outReason != nullptr)
+		{
+			*outReason = "추가할 컴포넌트가 없습니다.";
+		}
+		return false;
+	}
+
+	std::string rejectionReason;
+	const bool canAttach = CanAttachRenderPolicyComponent(const_cast<GameObject*>(this), component, rejectionReason);
+	if (outReason != nullptr)
+	{
+		*outReason = rejectionReason;
+	}
+	return canAttach;
+}
+
+bool GameObject::CanSetParent(GameObject* parent, std::string* outReason) const
+{
+	if (parent == this)
+	{
+		if (outReason != nullptr)
+		{
+			*outReason = "자기 자신을 부모로 설정할 수 없습니다.";
+		}
+		return false;
+	}
+
+	for (GameObject* ancestor = parent; ancestor != nullptr; ancestor = ancestor->GetParent())
+	{
+		if (ancestor == this)
+		{
+			if (outReason != nullptr)
+			{
+				*outReason = "자식 계층을 부모로 설정할 수 없습니다.";
+			}
+			return false;
+		}
+	}
+
+	if (parent == nullptr)
+	{
+		if (outReason != nullptr)
+		{
+			outReason->clear();
+		}
+		return true;
+	}
+
+	const bool thisIsUIObject = HasUIElementComponent(const_cast<GameObject*>(this));
+	const bool parentIsUIObject = HasUIElementComponent(parent);
+	if (thisIsUIObject != parentIsUIObject)
+	{
+		if (outReason != nullptr)
+		{
+			*outReason = "UI 오브젝트와 비UI 오브젝트는 부모-자식 관계로 연결할 수 없습니다.";
+		}
+		return false;
+	}
+
+	if (outReason != nullptr)
+	{
+		outReason->clear();
+	}
+	return true;
+}
+
 Component* GameObject::AddComponent(Component* component, bool initializeComponent, bool startComponent) {
-    if (component) {
-        component->InitGameObj(this);
-        m_vecComponent->push_back(component);
-        if (initializeComponent)
-            component->Initialize();
-        if (startComponent && ObjectManager::GetInstance()->FindObject(this)) {
-            component->Start();
-        }
-        return component;
+    if (component == nullptr) {
+        return nullptr;
     }
-    return nullptr;
+
+    std::string rejectionReason;
+    if (!CanAddComponent(component, &rejectionReason))
+    {
+        std::cout << "Add Component blocked [" << m_tag << "]: " << rejectionReason << std::endl;
+        component->Release();
+        delete component;
+        return nullptr;
+    }
+
+    component->InitGameObj(this);
+    m_vecComponent->push_back(component);
+    if (initializeComponent)
+        component->Initialize();
+    if (startComponent && ObjectManager::GetInstance()->FindObject(this)) {
+        component->Start();
+    }
+    return component;
 }
 
 void GameObject::DeleteComponent(Component* component) {
@@ -931,13 +1108,11 @@ void GameObject::Update() {
 
 void GameObject::SetParent(GameObject* obj)
 {
-    if (obj == this)
-        return;
-
-    for (GameObject* parent = obj; parent != nullptr; parent = parent->GetParent())
+    std::string rejectionReason;
+    if (!CanSetParent(obj, &rejectionReason))
     {
-        if (parent == this)
-            return;
+        std::cout << "SetParent blocked [" << m_tag << "]: " << rejectionReason << std::endl;
+        return;
     }
 
     if (m_parent == obj)

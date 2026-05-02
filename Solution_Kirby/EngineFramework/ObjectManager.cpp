@@ -668,10 +668,15 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 			continue;
 		}
 
-		obj->AddComponent(component, false, false);
+		Component* addedComponent = obj->AddComponent(component, false, false);
+		if (addedComponent == nullptr)
+		{
+			std::cout << "SceneData component skipped by policy: " << type << std::endl;
+			continue;
+		}
 
 		PendingComponentData pendingComponent;
-		pendingComponent.component = component;
+		pendingComponent.component = addedComponent;
 		pendingComponent.type = type;
 		pendingComponent.dataJson = dataJson;
 		pendingComponents.push_back(pendingComponent);
@@ -769,6 +774,14 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 		if (parentItr == objectMap.end())
 		{
 			std::cout << "SceneData parent not found. Object is loaded as root: " << objectDataList[i].tag << std::endl;
+			continue;
+		}
+
+		std::string parentRejectReason;
+		if (!createdObjects[i]->CanSetParent(parentItr->second, &parentRejectReason))
+		{
+			std::cout << "SceneData parent skipped by policy. Object is loaded as root: "
+				<< objectDataList[i].tag << " / reason: " << parentRejectReason << std::endl;
 			continue;
 		}
 
