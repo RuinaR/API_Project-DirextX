@@ -205,7 +205,6 @@
     <ClCompile Include="Rendering\Buffer\Buffer.cpp" />
     <ClCompile Include="Rendering\Camera\Camera.cpp" />
     <ClCompile Include="Component\Collision\Collider2D.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Debugging\DebugWindow.cpp" />
@@ -256,7 +255,6 @@
     <ClInclude Include="Rendering\Buffer\Buffer.h" />
     <ClInclude Include="Rendering\Camera\Camera.h" />
     <ClInclude Include="Component\Collision\Collider2D.h" />
-    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Debugging\DebugWindow.h" />

@@ -85,9 +85,6 @@
     <ClCompile Include="Resource\Animation\AnimationManager.cpp">
       <Filter>Resource\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentFactory.cpp">
       <Filter>Component</Filter>
     </ClCompile>
@@ -224,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="Resource\Animation\AnimationManager.h">
       <Filter>Resource\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionManager.h">
-      <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="ComponentFactory.h">
       <Filter>Component</Filter>
