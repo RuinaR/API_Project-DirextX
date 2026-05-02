@@ -13,6 +13,7 @@ void UIElement::Release()
 
 void UIElement::Start()
 {
+	ApplyPendingTransform();
 }
 
 void UIElement::Update()
@@ -74,8 +75,21 @@ void UIElement::SetLocalOffset(const D3DXVECTOR2* offset)
 	}
 
 	GameObject* parent = m_gameObj->GetParent();
-	D3DXVECTOR3 basePosition = parent ? parent->Position() : D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_gameObj->SetPosition(D3DXVECTOR3(basePosition.x + offset->x, basePosition.y + offset->y, m_gameObj->Position().z));
+	if (parent == nullptr)
+	{
+		SetPosition(offset);
+		return;
+	}
+
+	D3DXVECTOR2 parentSize = parent->Size2D();
+	D3DXVECTOR3 parentPosition = parent->Position();
+	D3DXVECTOR2 size = GetSize();
+	const float parentLeft = parentPosition.x - (parentSize.x * 0.5f);
+	const float parentTop = parentPosition.y - (parentSize.y * 0.5f);
+	m_gameObj->SetPosition(D3DXVECTOR3(
+		parentLeft + offset->x + (size.x * 0.5f),
+		parentTop + offset->y + (size.y * 0.5f),
+		m_gameObj->Position().z));
 }
 
 D3DXVECTOR2 UIElement::GetLocalOffset() const
@@ -86,9 +100,17 @@ D3DXVECTOR2 UIElement::GetLocalOffset() const
 	}
 
 	GameObject* parent = m_gameObj->GetParent();
-	D3DXVECTOR3 basePosition = parent ? parent->Position() : D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 position = m_gameObj->Position();
-	return D3DXVECTOR2(position.x - basePosition.x, position.y - basePosition.y);
+	if (parent == nullptr)
+	{
+		return GetPosition();
+	}
+
+	D3DXVECTOR2 parentSize = parent->Size2D();
+	D3DXVECTOR3 parentPosition = parent->Position();
+	D3DXVECTOR2 position = GetPosition();
+	const float parentLeft = parentPosition.x - (parentSize.x * 0.5f);
+	const float parentTop = parentPosition.y - (parentSize.y * 0.5f);
+	return D3DXVECTOR2(position.x - parentLeft, position.y - parentTop);
 }
 
 void UIElement::SetSize(const D3DXVECTOR2* size)
@@ -217,12 +239,12 @@ void UIElement::DrawInspector()
 
 std::string UIElement::Serialize() const
 {
-	D3DXVECTOR2 position = GetPosition();
+	D3DXVECTOR2 localOffset = GetLocalOffset();
 	D3DXVECTOR2 size = GetSize();
 
 	std::ostringstream oss;
 	oss << "{ ";
-	oss << SceneJson::WriteVector2("position", &position) << ", ";
+	oss << SceneJson::WriteVector2("position", &localOffset) << ", ";
 	oss << SceneJson::WriteVector2("size", &size) << ", ";
 	oss << "\"visible\": " << (m_visible ? "true" : "false") << ", ";
 	oss << "\"enabled\": " << (m_enabled ? "true" : "false") << ", ";
@@ -256,7 +278,6 @@ bool UIElement::Deserialize(const std::string& componentJson)
 	SetVisible(visible);
 	SetEnabled(enabled);
 	SetOrderInLayer(orderInLayer);
-	ApplyPendingTransform();
 	return true;
 }
 
@@ -276,6 +297,6 @@ void UIElement::ApplyPendingTransform()
 	if (m_hasPendingPosition)
 	{
 		m_hasPendingPosition = false;
-		UIElement::SetPosition(&m_pendingPosition);
+		UIElement::SetLocalOffset(&m_pendingPosition);
 	}
 }

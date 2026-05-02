@@ -199,8 +199,17 @@ void WindowFrame::Initialize(RenderType type)
 {
 	m_type = type;
 	BuildWindow();
-	if(type == RenderType::Game)
-		MoveWindow(m_Pthis->m_hWnd, 100, 100, DRAWWINDOWW, DRAWWINDOWH, TRUE);
+	if (type == RenderType::Game)
+	{
+		const RECT startupRect = BuildStartupWindowRect();
+		MoveWindow(
+			m_Pthis->m_hWnd,
+			100,
+			100,
+			startupRect.right - startupRect.left,
+			startupRect.bottom - startupRect.top,
+			TRUE);
+	}
 	SetFocus(m_Pthis->m_hWnd);
 }
 

@@ -181,7 +181,7 @@ const char* UILabel::GetSerializableType() const
 
 std::string UILabel::Serialize() const
 {
-	D3DXVECTOR2 position = GetPosition();
+	D3DXVECTOR2 position = GetLocalOffset();
 	D3DXVECTOR2 size = GetSize();
 
 	std::ostringstream oss;

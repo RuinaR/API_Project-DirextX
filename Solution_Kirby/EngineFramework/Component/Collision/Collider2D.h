@@ -12,6 +12,8 @@ protected:
 	// 기본 debug render는 box outline 기준이다.
 	// box 이외의 shape은 DebugRenderUpdate()를 override해서 자체 윤곽을 그린다.
 	void RenderCollider();
+	bool CanRenderDebugCollider() const;
+	D3DCOLOR GetDebugRenderColor() const;
 
 	bool m_isTrigger = false;
 

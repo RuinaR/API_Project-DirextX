@@ -71,7 +71,7 @@ void CircleCollider2D::SetRadius(float radius)
 void CircleCollider2D::DebugRenderUpdate()
 {
 	// CircleCollider2D는 base box debug render를 쓰지 않고 원형 윤곽을 직접 그린다.
-	if (m_body == nullptr || MainFrame::GetInstance() == nullptr || MainFrame::GetInstance()->GetDevice() == nullptr)
+	if (!CanRenderDebugCollider())
 	{
 		return;
 	}
@@ -98,6 +98,7 @@ void CircleCollider2D::DebugRenderUpdate()
 	MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &identityWorld);
 	MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_DEBUGVERTEX);
 
+	const D3DCOLOR debugColor = GetDebugRenderColor();
 	DEBUGVERTEX vertices[kCircleDebugSegmentCount * 2];
 	const float twoPi = 6.28318530718f;
 	for (int i = 0; i < kCircleDebugSegmentCount; i++)
@@ -110,14 +111,14 @@ void CircleCollider2D::DebugRenderUpdate()
 			center.x + cosf(t0) * radius,
 			center.y + sinf(t0) * radius,
 			0.0f,
-			DEBUGCOLORDX1
+			debugColor
 		};
 		vertices[(i * 2) + 1] =
 		{
 			center.x + cosf(t1) * radius,
 			center.y + sinf(t1) * radius,
 			0.0f,
-			DEBUGCOLORDX1
+			debugColor
 		};
 	}
 

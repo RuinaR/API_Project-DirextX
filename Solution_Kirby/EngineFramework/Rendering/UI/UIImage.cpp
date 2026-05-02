@@ -199,7 +199,7 @@ const char* UIImage::GetSerializableType() const
 
 std::string UIImage::Serialize() const
 {
-	D3DXVECTOR2 position = GetPosition();
+	D3DXVECTOR2 position = GetLocalOffset();
 	D3DXVECTOR2 size = GetSize();
 
 	std::ostringstream oss;

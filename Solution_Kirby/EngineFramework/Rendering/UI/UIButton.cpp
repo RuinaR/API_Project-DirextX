@@ -222,7 +222,7 @@ const char* UIButton::GetSerializableType() const
 
 std::string UIButton::Serialize() const
 {
-	D3DXVECTOR2 position = GetPosition();
+	D3DXVECTOR2 position = GetLocalOffset();
 	D3DXVECTOR2 size = GetSize();
 
 	std::ostringstream oss;

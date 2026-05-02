@@ -50,6 +50,39 @@ namespace
 			ImGui::EndFrame();
 		}
 	}
+
+	RECT CalculateAspectFitRect(float targetWidth, float targetHeight, float clientWidth, float clientHeight)
+	{
+		RECT rect = { 0, 0, static_cast<LONG>(clientWidth), static_cast<LONG>(clientHeight) };
+		if (targetWidth <= 0.0f || targetHeight <= 0.0f || clientWidth <= 0.0f || clientHeight <= 0.0f)
+		{
+			return rect;
+		}
+
+		const float targetAspect = targetWidth / targetHeight;
+		const float clientAspect = clientWidth / clientHeight;
+		float drawWidth = clientWidth;
+		float drawHeight = clientHeight;
+
+		if (clientAspect > targetAspect)
+		{
+			drawHeight = clientHeight;
+			drawWidth = drawHeight * targetAspect;
+		}
+		else
+		{
+			drawWidth = clientWidth;
+			drawHeight = drawWidth / targetAspect;
+		}
+
+		const float offsetX = (clientWidth - drawWidth) * 0.5f;
+		const float offsetY = (clientHeight - drawHeight) * 0.5f;
+		rect.left = static_cast<LONG>(offsetX);
+		rect.top = static_cast<LONG>(offsetY);
+		rect.right = static_cast<LONG>(offsetX + drawWidth);
+		rect.bottom = static_cast<LONG>(offsetY + drawHeight);
+		return rect;
+	}
 }
 
 void RenderManager::Create()
@@ -755,8 +788,6 @@ void RenderManager::EditUpdate()
 void RenderManager::GameUpdate()
 {
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
-	m_gameViewPos = D3DXVECTOR2(0.0f, 0.0f);
-	m_gameViewScreenPos = D3DXVECTOR2(0.0f, 0.0f);
 	RECT clientRect = {};
 	if (WindowFrame::GetInstance() != nullptr)
 	{
@@ -764,14 +795,42 @@ void RenderManager::GameUpdate()
 	}
 	const float clientWidth = static_cast<float>(clientRect.right - clientRect.left);
 	const float clientHeight = static_cast<float>(clientRect.bottom - clientRect.top);
+	const float resolvedClientWidth = clientWidth > 0.0f ? clientWidth : static_cast<float>(DRAWWINDOWW);
+	const float resolvedClientHeight = clientHeight > 0.0f ? clientHeight : static_cast<float>(DRAWWINDOWH);
+	const RECT presentRect = CalculateAspectFitRect(
+		static_cast<float>(DRAWWINDOWW),
+		static_cast<float>(DRAWWINDOWH),
+		resolvedClientWidth,
+		resolvedClientHeight);
+	m_gameViewPos = D3DXVECTOR2(static_cast<float>(presentRect.left), static_cast<float>(presentRect.top));
+	m_gameViewScreenPos = m_gameViewPos;
 	m_gameViewSize = D3DXVECTOR2(
-		clientWidth > 0.0f ? clientWidth : static_cast<float>(DRAWWINDOWW),
-		clientHeight > 0.0f ? clientHeight : static_cast<float>(DRAWWINDOWH));
+		static_cast<float>(presentRect.right - presentRect.left),
+		static_cast<float>(presentRect.bottom - presentRect.top));
 	m_useScreenSpaceUIMouse = false;
 	m_winPos = ImVec2(0.0f, 0.0f);
+
+	if (device == nullptr)
+	{
+		EndImGuiFrameSafely();
+		return;
+	}
+
 	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	if (SUCCEEDED(device->BeginScene()))
 	{
+		D3DVIEWPORT9 previousViewport = {};
+		device->GetViewport(&previousViewport);
+
+		D3DVIEWPORT9 gameViewport = {};
+		gameViewport.X = static_cast<DWORD>(max(0L, presentRect.left));
+		gameViewport.Y = static_cast<DWORD>(max(0L, presentRect.top));
+		gameViewport.Width = static_cast<DWORD>(max(1L, presentRect.right - presentRect.left));
+		gameViewport.Height = static_cast<DWORD>(max(1L, presentRect.bottom - presentRect.top));
+		gameViewport.MinZ = 0.0f;
+		gameViewport.MaxZ = 1.0f;
+		device->SetViewport(&gameViewport);
+
 		SortWorldRenderQueues();
 		device->SetRenderState(D3DRS_ZENABLE, TRUE);
 		device->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -816,44 +875,9 @@ void RenderManager::GameUpdate()
 		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
 		device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
-		//imgui
-		//ImGui::SetNextWindowSize(ImVec2(DRAWWINDOWW, DRAWWINDOWH), ImGuiCond_Once);
-		//ImGui::Begin(WINDOWTEXT, nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize);
-
-		if (!m_btnVec->empty())
-		{
-			ImGui::Begin("Button");
-			for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
-			{
-				ImGui::SameLine();
-				(*itr)->UpdateRender();
-			}
-			ImGui::End();
-		}
-
-		//ImVec2 windowSize = ImGui::GetContentRegionAvail();
-		//Game
-		//ImGui::Image((void*)renderTargetTexture, windowSize);
-		//m_winPos = ImGui::GetWindowPos();
-
-		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-		//ImGui::EndFrame();
-		device->SetRenderState(D3DRS_ZENABLE, FALSE);
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-
-		ImGuiIO& io = ImGui::GetIO();
-		ImGui::Render();
-		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-		// Update and Render additional Platform Windows
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			// TODO for OpenGL: restore current GL context.
-		}
-
+		device->SetViewport(&previousViewport);
 		device->EndScene();
+		EndImGuiFrameSafely();
 	}
 	else
 	{

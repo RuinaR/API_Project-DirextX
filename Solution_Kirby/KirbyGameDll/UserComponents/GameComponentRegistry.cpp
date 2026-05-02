@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GameComponentRegistry.h"
 #include "ComponentFactory.h"
+#include "Scripts/ActivePhysicsTestInfoComponent.h"
+#include "Scripts/ActivePhysicsTestStatusComponent.h"
 #include "Scripts/CollisionVisualTestComponent.h"
 #include "Scripts/Physics2DKeyboardTestComponent.h"
 #include "Scripts/SampleSpinComponent.h"
@@ -23,6 +25,8 @@ void RegisterGameComponents(ComponentFactory& factory)
 	// - 새 C++ 컴포넌트 추가 후에는 DLL 재빌드 + 에디터 재실행이 필요하다.
 	// - 에디터 실행 중 C++ 컴포넌트 hot reload는 지원하지 않는다.
 	// - EngineFramework에는 게임별 사용자 컴포넌트 코드를 넣지 않는다.
+	REGISTER_GAME_COMPONENT(factory, ActivePhysicsTestStatusComponent, "Active Physics Test Status", "User");
+	REGISTER_GAME_COMPONENT(factory, ActivePhysicsTestInfoComponent, "Active Physics Test Info", "User");
 	REGISTER_GAME_COMPONENT(factory, CollisionVisualTestComponent, "Collision Visual Test", "User");
 	REGISTER_GAME_COMPONENT(factory, Physics2DKeyboardTestComponent, "Physics2D Keyboard Test", "User");
 	REGISTER_GAME_COMPONENT(factory, SampleSpinComponent, "Sample Spin", "User");

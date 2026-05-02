@@ -46,7 +46,7 @@
     },
     {
       "id": 3,
-      "parentId": 2,
+      "parentId": -1,
       "name": "UI Text",
       "tag": "UI Text",
       "active": true,

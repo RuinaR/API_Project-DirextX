@@ -70,7 +70,7 @@ namespace
 void Collider2D::RenderCollider()
 {
 		// base Collider2D debug render는 box outline 전용이다.
-		if (m_body == nullptr)
+		if (!CanRenderDebugCollider())
 			return;
 
 		D3DXMATRIX matTranslate, matScale, matRotate, matWorld;
@@ -96,16 +96,17 @@ void Collider2D::RenderCollider()
 		MainFrame::GetInstance()->GetDevice()->SetTransform(D3DTS_WORLD, &matWorld);
 		MainFrame::GetInstance()->GetDevice()->SetFVF(D3DFVF_DEBUGVERTEX);
 
+		const D3DCOLOR debugColor = GetDebugRenderColor();
 		DEBUGVERTEX vertices[] =
 		{
-			{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-			{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-			{ 0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
-			{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-			{ 0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-			{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-			{-0.5f,  0.5f, 0.0f, DEBUGCOLORDX1},
-			{-0.5f, -0.5f, 0.0f, DEBUGCOLORDX1},
+			{-0.5f, -0.5f, 0.0f, debugColor},
+			{ 0.5f, -0.5f, 0.0f, debugColor},
+			{ 0.5f, -0.5f, 0.0f, debugColor},
+			{ 0.5f,  0.5f, 0.0f, debugColor},
+			{ 0.5f,  0.5f, 0.0f, debugColor},
+			{-0.5f,  0.5f, 0.0f, debugColor},
+			{-0.5f,  0.5f, 0.0f, debugColor},
+			{-0.5f, -0.5f, 0.0f, debugColor},
 		};
 
 		MainFrame::GetInstance()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 4, vertices, sizeof(DEBUGVERTEX));
@@ -445,6 +446,36 @@ void Collider2D::ClearBodyReferenceIfMatches(b2Body* body)
 bool Collider2D::OwnsBody() const
 {
 	return m_ownsBody;
+}
+
+bool Collider2D::CanRenderDebugCollider() const
+{
+	if (m_body == nullptr || !m_body->IsEnabled())
+	{
+		return false;
+	}
+
+	if (m_gameObj == nullptr || !m_gameObj->GetActive() || m_gameObj->GetDestroy())
+	{
+		return false;
+	}
+
+	if (MainFrame::GetInstance() == nullptr || MainFrame::GetInstance()->GetDevice() == nullptr)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+D3DCOLOR Collider2D::GetDebugRenderColor() const
+{
+	if (m_isTrigger)
+	{
+		return D3DCOLOR_XRGB(0, 160, 0);
+	}
+
+	return DEBUGCOLORDX1;
 }
 
 void Collider2D::DebugRenderUpdate()
