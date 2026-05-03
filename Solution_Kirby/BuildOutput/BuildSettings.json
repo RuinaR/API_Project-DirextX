@@ -1,5 +1,0 @@
-{
-  "version": 1,
-  "startScene": "ActivePhysicsToggleTestScene",
-  "scenes": ["TestScene1", "TestScene2", "Sample", "Physics2DTestScene", "Physics2DInteractionTestScene", "ActivePhysicsToggleTestScene", "ActivePhysicsToggleTestScene_0"]
-}

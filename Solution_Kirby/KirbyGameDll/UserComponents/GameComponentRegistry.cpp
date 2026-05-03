@@ -1,13 +1,6 @@
 #include "pch.h"
 #include "GameComponentRegistry.h"
 #include "ComponentFactory.h"
-#include "Scripts/ActivePhysicsTestInfoComponent.h"
-#include "Scripts/ActivePhysicsTestStatusComponent.h"
-#include "Scripts/CollisionVisualTestComponent.h"
-#include "Scripts/ObjectManagerSearchApiTestComponent.h"
-#include "Scripts/Physics2DKeyboardTestComponent.h"
-#include "Scripts/ReferenceFieldRegistryTestComponent.h"
-#include "Scripts/SampleSpinComponent.h"
 #include "UserComponentRegistration.h"
 
 void RegisterGameComponents(ComponentFactory& factory)
@@ -22,14 +15,4 @@ void RegisterGameComponents(ComponentFactory& factory)
 	// - 게임 전용 컴포넌트 코드는 EngineFrameworkDll보다 KirbyGameDll에 두는 편이 좋다.
 	// 사용 예:
 	// REGISTER_GAME_COMPONENT(factory, MyComponent, "My Component", "Game");
-	REGISTER_GAME_COMPONENT(factory, ActivePhysicsTestStatusComponent, "Active Physics Test Status", "User");
-	REGISTER_GAME_COMPONENT(factory, ActivePhysicsTestInfoComponent, "Active Physics Test Info", "User");
-	REGISTER_GAME_COMPONENT(factory, CollisionVisualTestComponent, "Collision Visual Test", "User");
-	REGISTER_GAME_COMPONENT(factory, ObjectManagerSearchApiTestComponent, "ObjectManager Search API Test", "User");
-	REGISTER_GAME_COMPONENT(factory, Physics2DKeyboardTestComponent, "Physics2D Keyboard Test", "User");
-	REGISTER_GAME_COMPONENT(factory, ReferenceFieldRegistryTestComponent, "Reference Field Registry Test", "User");
-	REGISTER_GAME_COMPONENT(factory, SampleSpinComponent, "Sample Spin", "User");
-
-	// 특별한 생성 방식이나 초기화가 필요한 컴포넌트는
-	// 전용 생성 함수를 따로 두고 여기서 다시 등록하면 된다.
 }

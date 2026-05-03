@@ -1,7 +1,6 @@
 #pragma once
 #include <functional>
 #include "EngineFrameworkAPI.h"
-#include "Buffer.h"
 #include "Scene.h"
 
 class ENGINEFRAMEWORK_API WindowFrame

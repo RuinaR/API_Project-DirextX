@@ -54,29 +54,11 @@
     <ClInclude Include="UserComponents\GameComponentRegistry.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
-    <ClInclude Include="UserComponents\Scripts\CollisionVisualTestComponent.h">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="UserComponents\Scripts\Physics2DKeyboardTestComponent.h">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="UserComponents\Scripts\ReferenceFieldRegistryTestComponent.h">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="UserComponents\Scripts\ObjectManagerSearchApiTestComponent.h">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClInclude>
     <ClInclude Include="UserComponents\UserComponentPlaceholder.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
     <ClInclude Include="UserComponents\UserComponentRegistration.h">
       <Filter>UserComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="UserComponents\Scripts\SampleSpinComponent.h">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="UserActions\Scripts\SampleButtonAction.h">
-      <Filter>UserActions\Scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,24 +79,6 @@
     </ClCompile>
     <ClCompile Include="UserComponents\GameComponentRegistry.cpp">
       <Filter>UserComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="UserComponents\Scripts\CollisionVisualTestComponent.cpp">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="UserComponents\Scripts\Physics2DKeyboardTestComponent.cpp">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="UserComponents\Scripts\ReferenceFieldRegistryTestComponent.cpp">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="UserComponents\Scripts\ObjectManagerSearchApiTestComponent.cpp">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="UserComponents\Scripts\SampleSpinComponent.cpp">
-      <Filter>UserComponents\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="UserActions\Scripts\SampleButtonAction.cpp">
-      <Filter>UserActions\Scripts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

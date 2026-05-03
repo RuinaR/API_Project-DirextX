@@ -42,12 +42,10 @@
 #include "Resource/ResourceManager.h"
 #include "ObjectManager.h"
 #include "TextureManager.h"
-//#include "CollisionManager.h"
 #include "MainFrame.h"
 #include "WindowFrame.h"
 #include "Mouse.h"
 #include "Camera.h"
-#include "Buffer.h"
 
 
 //#include "game.h"

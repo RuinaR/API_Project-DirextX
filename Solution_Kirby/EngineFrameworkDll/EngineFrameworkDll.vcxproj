@@ -227,7 +227,6 @@
     <ClCompile Include="Component\Collision\BoxCollider2D.cpp" />
     <ClCompile Include="Component\Collision\CircleCollider2D.cpp" />
     <ClCompile Include="Component\Physics\Rigidbody2D.cpp" />
-    <ClCompile Include="Rendering\Buffer\Buffer.cpp" />
     <ClCompile Include="Rendering\Camera\Camera.cpp" />
     <ClCompile Include="Component\Collision\Collider2D.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
@@ -282,7 +281,6 @@
     <ClInclude Include="Component\Collision\BoxCollider2D.h" />
     <ClInclude Include="Component\Collision\CircleCollider2D.h" />
     <ClInclude Include="Component\Physics\Rigidbody2D.h" />
-    <ClInclude Include="Rendering\Buffer\Buffer.h" />
     <ClInclude Include="Rendering\Camera\Camera.h" />
     <ClInclude Include="Component\Collision\Collider2D.h" />
     <ClInclude Include="ComponentFactory.h" />

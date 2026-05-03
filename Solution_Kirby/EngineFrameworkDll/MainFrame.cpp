@@ -713,7 +713,6 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     ObjectManager::GetInstance()->Initialize();
     RenderManager::Create();
     RenderManager::GetInstance()->Initialize();
-	//CollisionManager::Create();
 
     m_scene = scene;
     WindowFrame::GetInstance()->SetScene(m_scene);
@@ -1172,7 +1171,6 @@ void MainFrame::Release()
         RenderManager::GetInstance()->Release();
         RenderManager::Destroy();
     }
-	//CollisionManager::Destroy();
 
     if (m_pFont != NULL)
     {

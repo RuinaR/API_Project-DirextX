@@ -305,14 +305,12 @@ bool Collider2D::GetFixedRotation() const
 
 void Collider2D::Initialize()
 {
-	//CollisionManager::GetInstance()->AddCollider(this);
 	ColInit();
 	RenderManager::GetInstance()->RegisterDebug(this);
 }
 
 void Collider2D::Release()
 {
-	//CollisionManager::GetInstance()->UnregisterCollider(this);
 	b2World* world = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetBox2dWorld() : nullptr;
 	if (MainFrame::GetInstance() != nullptr)
 	{

@@ -2,6 +2,7 @@
 
 #include "../EngineFrameworkDll/pch.h"
 #include "../EngineFrameworkDll/Scene/BuildSettingsManager.h"
+#include "../EngineFrameworkDll/Scene/SceneDataManager.h"
 
 namespace
 {
@@ -17,7 +18,9 @@ AppLaunchDesc BuildEditorLaunchDesc()
 	desc.createNewSceneIfMissing = true;
 	desc.targetFps = TARGETFPS;
 
-	if (!BuildSettingsManager::TryGetStartupSceneName(desc.startupSceneName))
+	if (!BuildSettingsManager::TryGetStartupSceneName(desc.startupSceneName) ||
+		desc.startupSceneName.empty() ||
+		!SceneDataManager::Exists(desc.startupSceneName))
 	{
 		desc.startupSceneName = kDefaultEditorStartupSceneName;
 	}
