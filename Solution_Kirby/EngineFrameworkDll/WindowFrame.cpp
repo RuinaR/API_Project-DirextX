@@ -15,7 +15,7 @@ namespace
 	RECT BuildStartupWindowRect()
 	{
 		RECT rect = { 0, 0, DEFAULT_WINDOW_CLIENT_WIDTH, DEFAULT_WINDOW_CLIENT_HEIGHT };
-		// 시작 client 크기만 기본값으로 맞추고, 실행 중에는 창 리사이즈를 허용한다.
+		// 처음 열릴 때 client 크기만 기본값으로 맞추고, 실행 중에는 창 크기 변경을 허용한다.
 		AdjustWindowRect(&rect, kResizableWindowStyle, FALSE);
 		return rect;
 	}
@@ -82,7 +82,7 @@ void WindowFrame::ClearSceneSnapshotCallback()
 	GetSceneSnapshotCallbackStorage() = SceneSnapshotCallback();
 }
 
-// imgui_impl_win32.cpp에 구현된 메시지 처리 함수를 미리 선언한다.
+// imgui_impl_win32.cpp에 있는 메시지 처리 함수를 여기서 먼저 선언해 둔다.
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
@@ -92,7 +92,7 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, iMessage, wParam, lParam))
 	{
-		return true; // 메시지가 ImGui에 의해 처리되었음을 나타냄
+		return true; // 이 메시지는 ImGui가 이미 처리했다.
 	}
 
 	switch (iMessage)

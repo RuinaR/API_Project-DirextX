@@ -6,11 +6,11 @@
 class ENGINEFRAMEWORK_API EditorSceneWorkflow
 {
 public:
-	// EditorSceneWorkflow는 editor 전용 scene workflow를 담당한다.
-	// snapshot/dirty 기준선 관리와 New/Open/Save As workflow,
-	// rollback 시 dirty/current scene name 복원 정책을 포함한다.
-	// JSON 직렬화 코어는 직접 담당하지 않고
-	// SceneSerializationService와 SceneDataManager facade를 이용한다.
+	// EditorSceneWorkflow는 에디터에서 쓰는 scene 작업 흐름을 맡는다.
+	// snapshot/dirty 기준 관리, New/Open/Save As,
+	// 실패했을 때 이전 scene으로 되돌리는 흐름도 여기서 다룬다.
+	// JSON 저장/복원 핵심은 직접 처리하지 않고
+	// SceneSerializationService와 SceneDataManager를 이용한다.
 	static bool CaptureSceneSnapshot(const std::string& sceneName);
 	static std::string GetCapturedSnapshot(const std::string& sceneName);
 	static void MarkSceneDirty(const std::string& sceneName);

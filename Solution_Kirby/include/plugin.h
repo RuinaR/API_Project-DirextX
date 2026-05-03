@@ -13,8 +13,6 @@
 
 class PluginManager;
 
-
-//
 class IPlugin
 {
 public:
@@ -27,7 +25,7 @@ public:
 };
 
 typedef IPlugin* (*CREATEPLUGIN)(PluginManager &mgr);
-// 플러그인 메인함수
+// 플러그인 객체를 만들어 주는 함수
 extern "C" PLUGINDECL  IPlugin* CreatePlugin(PluginManager &mgr);
 
 

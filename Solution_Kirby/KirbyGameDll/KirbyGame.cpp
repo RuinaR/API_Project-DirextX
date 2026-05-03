@@ -33,7 +33,7 @@ const std::string KirbyGame::GetName()
 
 void KirbyGame::ReleaseGameContent()
 {
-	// Clear DLL-registered callbacks/factories before the DLL unloads.
+	// DLL이 내려가기 전에 여기서 등록한 callback과 factory를 먼저 비운다.
 	UIActionRegistry::Clear();
 	ComponentFactory::GetInstance().Clear();
 }

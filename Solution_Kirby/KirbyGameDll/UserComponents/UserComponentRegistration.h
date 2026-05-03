@@ -30,11 +30,11 @@ bool RegisterUserComponent(
 
 // 권장 규칙:
 // - 실제 사용자 컴포넌트 구현 파일은 KirbyGameDll/UserComponents/Scripts 아래에 둔다.
-// - 컴포넌트에 static constexpr const char* kComponentType 를 둔다.
-// - GetSerializableType()은 같은 값을 반환한다.
-// - displayName/category만 바꿔서 아래 매크로로 등록한다.
-// - 새 C++ 컴포넌트 추가 후에는 DLL 재빌드 + 에디터 재실행이 필요하다.
-// - 에디터 실행 중 C++ 컴포넌트 hot reload는 지원하지 않는다.
+// - 컴포넌트 안에는 static constexpr const char* kComponentType 를 둔다.
+// - GetSerializableType()는 같은 값을 돌려준다.
+// - displayName/category만 바꾸고 싶으면 아래 매크로로 등록하면 된다.
+// - 새 C++ 컴포넌트를 추가했다면 DLL을 다시 빌드하고 에디터도 다시 실행해야 한다.
+// - 에디터 실행 중 C++ 컴포넌트를 바로 다시 읽는 기능은 아직 없다.
 #define REGISTER_GAME_COMPONENT(factory, ComponentType, displayName, category) \
 	RegisterUserComponent<ComponentType>((factory), ComponentType::kComponentType, (displayName), (category), true)
 

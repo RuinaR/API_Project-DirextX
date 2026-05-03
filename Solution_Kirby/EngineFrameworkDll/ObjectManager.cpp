@@ -558,7 +558,7 @@ void ObjectManager::UpdateMouseInteraction()
 {
     if (IsMouseInteractionBlocked())
     {
-        // 에디터 쪽에서 입력 차단 flag를 세운 동안에는 runtime hover 갱신을 멈춘다.
+        // 에디터가 입력을 잡고 있는 동안에는 게임 오브젝트 hover 갱신을 잠시 멈춘다.
         GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
         m_currentMouseHoverObject = nullptr;
         if (previousMouseHoverObject != nullptr &&
@@ -573,7 +573,7 @@ void ObjectManager::UpdateMouseInteraction()
     GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
     if (previousMouseHoverObject != nullptr && previousMouseHoverObject->GetDestroy())
     {
-        // Hover 대상이 이미 파괴됐다면 HoverExit 없이 조용히 hover 상태만 해제한다.
+        // hover 대상이 이미 지워졌다면 HoverExit은 보내지 않고 상태만 정리한다.
         previousMouseHoverObject = nullptr;
     }
 
@@ -971,7 +971,7 @@ void ObjectManager::OnLBtnDown()
 		hitObject->OnLBtnDown();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 지워졌다면 뒤쪽 Up/Stay가 가지 않게 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}
@@ -986,7 +986,7 @@ void ObjectManager::OnLBtnUp()
 		hitObject->OnLBtnUp();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 지워졌다면 뒤쪽 Up/Stay가 가지 않게 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}
@@ -1001,7 +1001,7 @@ void ObjectManager::OnRBtnDown()
 		hitObject->OnRBtnDown();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 지워졌다면 뒤쪽 Up/Stay가 가지 않게 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}
@@ -1016,7 +1016,7 @@ void ObjectManager::OnRBtnUp()
 		hitObject->OnRBtnUp();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 지워졌다면 뒤쪽 Up/Stay가 가지 않게 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}

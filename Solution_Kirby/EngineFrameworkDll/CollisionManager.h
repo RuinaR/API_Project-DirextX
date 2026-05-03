@@ -1,23 +1,2 @@
-//#pragma once
-//
-//class Collider;
-//class BoxCollider;
-//
-//class CollisionManager
-//{
-//private:
-//	static CollisionManager* m_Pthis;
-//	vector<Collider*>* m_objVec = nullptr;
-//public:
-//	static void Create();
-//	static CollisionManager* GetInstance();
-//	static void Destroy();
-//public:
-//	void AddCollider(Collider* col);
-//	bool UnregisterCollider(Collider* col);
-//	void CollisionUpdate(vector<Collider*>* vec, const RECT& rect, int maxAreaCnt);
-//	void Update();	
-//	void Clear();
-//	int Count();
-//};
-//
+// 예전에 쓰던 충돌 관리자 코드 보관용 파일이다.
+// 지금 프로젝트에서는 사용하지 않는다.

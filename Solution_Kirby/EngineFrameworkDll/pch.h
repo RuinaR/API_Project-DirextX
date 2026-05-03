@@ -65,13 +65,13 @@
 #define LOGICAL_RENDER_WIDTH 1440
 #define LOGICAL_RENDER_HEIGHT 900
 
-// 현재 런타임은 기본적으로 고정 client 크기로 시작하지만,
-// 창 크기와 논리 렌더 해상도는 서로 다른 책임으로 분리해 관리한다.
+// 런타임은 기본 client 크기로 시작하지만,
+// 창 크기와 논리 렌더 해상도는 따로 관리한다.
 #define DEFAULT_WINDOW_CLIENT_WIDTH LOGICAL_RENDER_WIDTH
 #define DEFAULT_WINDOW_CLIENT_HEIGHT LOGICAL_RENDER_HEIGHT
 
 // 카메라 기본 줌은 논리 렌더 해상도와 분리해서,
-// 해상도를 바꿔도 월드 스케일이 암묵적으로 바뀌지 않게 한다.
+// 해상도를 바꿔도 월드 크기가 같이 달라지지 않게 한다.
 #define DEFAULT_CAMERA_ORTHOGRAPHIC_SIZE 900.0f
 
 #ifdef _DEBUG
@@ -115,30 +115,30 @@ inline std::string WideToAnsi(const wchar_t* value)
 #define W2A(value) WideToAnsi(value).c_str()
 struct CUSTOMVERTEX
 {
-    FLOAT x, y, z;         // The transformed position for the vertex
-    DWORD color;        // The vertex color
+    FLOAT x, y, z;         // 변환이 끝난 정점 위치
+    DWORD color;        // 정점 색상
     FLOAT tu, tv;
 };
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
 struct DEBUGVERTEX
 {
-    FLOAT x, y, z;         // The transformed position for the vertex
-    DWORD color;        // The vertex color
+    FLOAT x, y, z;         // 변환이 끝난 정점 위치
+    DWORD color;        // 정점 색상
 };
 #define D3DFVF_DEBUGVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE)
-// 메테리얼 구조체
+// 재질 정보
 struct Material
 {
     std::vector<std::string> texturePaths;
     std::vector<IDirect3DTexture9*> textures;
-    D3DCOLOR diffuseColor;  // 재질의 확산 색상
+    D3DCOLOR diffuseColor;  // 재질 기본 색상
 };
 
 struct SubMesh {
     unsigned int startIndex; // 시작 인덱스
-    unsigned int indexCount; // 인덱스 수
-    unsigned int vertexCount; // 정점 수
+    unsigned int indexCount; // 인덱스 개수
+    unsigned int vertexCount; // 정점 개수
     unsigned int vertexStart;
     unsigned int materialIndex;
     D3DCOLOR diffuseColor; // 색상
@@ -150,7 +150,7 @@ struct SubMesh {
     FLOAT uvOffsetV;   // UV 오프셋 V
 };
 
-//모델
+// 모델 데이터
 struct Model
 {
     std::vector<CUSTOMVERTEX> vertices;
@@ -160,10 +160,10 @@ struct Model
     IDirect3DIndexBuffer9* indexBuffer = nullptr;
     int indexCount = 0;
     int vertexCount = 0;
-    // 생성자: 버퍼 초기화
+    // 생성자
     Model() = default;
 
-    // 소멸자: 버퍼 해제
+    // 소멸자
     ~Model() {
         if (vertexBuffer) {
             vertexBuffer->Release();

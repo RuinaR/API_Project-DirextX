@@ -10,7 +10,7 @@ void BuildLoopCls::Init(HINSTANCE hInstance)
 {
 	std::string dllfilename = "KirbyGameDll.dll";
 
-	// 현재 실행 폴더 경로
+	// 지금 실행 중인 exe 폴더를 구해서 DLL 경로를 만든다.
 	wchar_t path[MAX_PATH] = { 0 };
 	GetModuleFileName(NULL, path, MAX_PATH);
 	std::string executepath = ConvertToString(path);

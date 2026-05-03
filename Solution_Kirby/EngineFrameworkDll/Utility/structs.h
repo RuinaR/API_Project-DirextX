@@ -33,8 +33,8 @@ struct AnimationRuntimeFrame
 	float duration = 0.1f;
 };
 
-// Deprecated legacy runtime structure.
-// Use AnimationClipData for saved data and AnimationRuntimeFrame for runtime texture frames.
+// 예전에 쓰던 실행용 구조체다.
+// 지금은 저장용으로 AnimationClipData를, 실행 중 프레임 데이터로는 AnimationRuntimeFrame을 쓴다.
 struct Animation
 {
 	vector<IDirect3DTexture9*> textures;

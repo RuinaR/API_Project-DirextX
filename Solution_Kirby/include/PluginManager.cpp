@@ -124,7 +124,7 @@ bool PluginManager::LoadPlugin(const std::string filename)
             FORMAT_MESSAGE_IGNORE_INSERTS,
             NULL,
             GetLastError(),
-            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // 기본 언어
             (LPTSTR) &lpMsgBuf,
             0,
             NULL 

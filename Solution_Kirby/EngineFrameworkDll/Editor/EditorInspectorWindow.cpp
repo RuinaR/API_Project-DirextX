@@ -621,7 +621,7 @@ void EditorInspectorWindow::DrawGameObjectInspector(GameObject* obj)
 	D3DXVECTOR3 size = obj->Size3D();
 	if (ImGui::DragFloat3("Size", &size.x, 1.0f, 0.0f, 10000.0f))
 	{
-		// TODO: Collider/Box2D body size is not automatically rebuilt when Size3D changes.
+		// 지금은 Size3D를 바꿔도 Collider나 Box2D body 크기가 자동으로 다시 만들어지지는 않는다.
 		obj->Size3D() = size;
 	}
 

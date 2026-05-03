@@ -7,7 +7,7 @@ public:
     {
         QueryPerformanceFrequency(&frequency);
         QueryPerformanceCounter(&lastTime);
-        totalDeltaTime = 0.0; // 총 누적 시간 초기화
+        totalDeltaTime = 0.0; // 지금까지 누적된 시간을 0으로 맞춘다.
     }
 
     void tick()
@@ -17,7 +17,7 @@ public:
         LONGLONG elapsedTime = currentTime.QuadPart - lastTime.QuadPart;
         deltaTime = double(elapsedTime) / frequency.QuadPart;
         lastTime = currentTime;
-        totalDeltaTime += deltaTime; // deltaTime을 계속 누적
+        totalDeltaTime += deltaTime; // 프레임 시간을 계속 더해 간다.
     }
 
     double getDeltaTime() const
@@ -27,12 +27,12 @@ public:
 
     double getTotalDeltaTime() const
     {
-        return totalDeltaTime; // 누적된 deltaTime을 반환
+        return totalDeltaTime; // 지금까지 누적된 시간을 돌려준다.
     }
 
     void resetTotalDeltaTime()
     {
-        totalDeltaTime = 0.0; // 누적 델타 시간을 리셋
+        totalDeltaTime = 0.0; // 누적 시간을 다시 0으로 만든다.
     }
 
     void Resync()
@@ -45,6 +45,6 @@ public:
 private:
     LARGE_INTEGER frequency;
     LARGE_INTEGER lastTime;
-    double deltaTime = 0.0; // 현재 프레임과 이전 프레임 사이의 시간 차이
-    double totalDeltaTime = 0.0; // 누적된 deltaTime
+    double deltaTime = 0.0; // 현재 프레임과 이전 프레임 사이 시간
+    double totalDeltaTime = 0.0; // 지금까지 더해 온 전체 시간
 };

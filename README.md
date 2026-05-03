@@ -1,195 +1,159 @@
 # KirbyEngine
 
-C++17, Win32API, DirectX9, ImGui, Box2D, FBX SDK 기반으로 만드는 미니 게임엔진/에디터 프로젝트입니다.
+KirbyEngine은 제가 C++로 직접 만들고 있는 미니 게임엔진 + 에디터 프로젝트입니다.
 
-## 현재 프로젝트 상태
+이 프로젝트의 목표는 두 가지입니다.
 
-- `EngineFramework` 안에 런타임과 에디터 코드가 함께 들어 있습니다.
-- `KirbyGameDll`은 게임별 `Component`, `Action`, bootstrap 코드를 두는 확장 계층입니다.
-- 실행 경로는 크게 둘입니다.
-  - `BuildEdit`: 에디터 실행기
-  - `BuildResultGame`: 게임 실행기
-- 둘 다 `KirbyGameDll.dll`을 로드해 공통 게임 초기화를 사용합니다.
+- 게임 클라이언트 프로그래머 취업 준비용 포트폴리오 만들기
+- 단순히 기능만 붙이는 것이 아니라, 엔진 구조를 직접 정리하고 개선해 보는 경험 쌓기
 
-## 장기 구조 목표
+현재 프로젝트는 완전히 새 엔진을 처음부터 다 만든 상태라기보다는,
+"돌아가는 기능을 유지하면서 구조를 점점 정리해 가는 중간 단계"에 더 가깝습니다.
 
-- `EngineRuntime`
-  - 게임 실행에 필요한 기능만 포함
+## 1. 프로젝트 한눈에 보기
+
+현재 솔루션의 큰 구성은 아래와 같습니다.
+
+- `EngineFrameworkDll`
+  - 공통 엔진 기능이 들어 있는 DLL
+  - 렌더링, SceneData 저장/로드, GameObject/Component 구조, Physics2D, 입력, 기본 에디터 연결부 포함
 - `EngineEditor`
-  - ImGui, Hierarchy, Inspector, BuildSettings, Scene 편집 기능 포함
+  - 에디터 전용 코드를 따로 분리하기 위해 만든 프로젝트
+  - 아직 1차 분리 단계이며, 일부 editor 코드는 여전히 `EngineFrameworkDll` 안에 남아 있음
 - `KirbyGameDll`
-  - 게임별 `Component`, `Action`만 포함
-  - 장기적으로 `EngineRuntime`만 의존
+  - 게임별 사용자 컴포넌트, 사용자 액션, 테스트용 스크립트가 들어 있는 DLL
 - `EditorApp`
-  - `EngineRuntime + EngineEditor + KirbyGameDll`
+  - 에디터 실행기
+  - `EngineFrameworkDll + EngineEditor + KirbyGameDll` 조합으로 동작
 - `GameApp`
-  - `EngineRuntime + KirbyGameDll`
+  - 게임 실행기
+  - `EngineFrameworkDll + KirbyGameDll` 조합으로 동작
 
-현재는 아직 완전히 분리되지 않았고, `MainFrame`, `WindowFrame`, `RenderManager`, `ObjectManager`, `SceneDataManager`에 Runtime/Editor 책임이 함께 섞여 있습니다.
+## 2. 주요 기술
 
-## 현재 핵심 구조
+- C++17
+- Win32 API
+- DirectX 9
+- ImGui
+- Box2D
+- FBX SDK
+- MSBuild / Visual Studio 프로젝트 기반 빌드
 
-### 런타임
+## 3. 현재 구현된 핵심 기능
 
-- `GameObject + Component` 구조
-- local/world transform hierarchy 지원
-- parent-child 관계 유지 시 world transform 보존
-- `ObjectManager`가 object lifecycle, pending add/remove, mouse raycast hover, SceneData 복원을 담당
-- `RenderManager`가 월드 렌더, UI 렌더, debug render를 담당
-- `MainFrame`이 DX9 device, frame loop, physics step, collision dispatch, resize/reset을 담당
+### 3-1. GameObject / Component 구조
 
-### 에디터
+- `GameObject + Component` 구조 사용
+- parent-child 계층 구조 지원
+- local / world transform 유지
+- SceneData 저장/로드 시 parent-child 관계 복원
 
-- ImGui 기반 편집 UI 사용
-- 현재 `Hierarchy` 창 이름은 `Editor`로 변경됨
-- `Editor` 창 내부의 하이어라키 구역은 접기/펼치기 가능
-- `Hierarchy / Inspector / ResourceBrowser / Scene 저장/열기 / BuildSettings / Camera 편집` 기능이 이미 들어가 있음
+### 3-2. 에디터 기능
 
-### 물리
+- Hierarchy
+- Inspector
+- ResourceBrowser
+- BuildSettings
+- Scene 저장 / 열기 / 새 Scene 만들기
+- ImGui 기반 편집 UI
+- Debug Log 창
 
-- 2D 전용 `Physics2D` 구조 사용
-- 주요 타입:
-  - `Rigidbody2D`
-  - `Collider2D`
-  - `BoxCollider2D`
-  - `CircleCollider2D`
-- 실제 충돌 이벤트는 Box2D `ContactListener` 기반
-- `fixture userData -> Collider2D*` 경로로 `GameObject / Component` 이벤트를 전달
+### 3-3. Physics2D
 
-## SceneData 상태
+- `Rigidbody2D`
+- `Collider2D`
+- `BoxCollider2D`
+- `CircleCollider2D`
+- `Physics2D::Raycast`
+- Collision / Trigger 이벤트 전달
 
-### 현재 저장 버전
+### 3-4. SceneData 저장/로드
 
-- 최신 저장 버전: `6`
+- JSON 기반 SceneData 사용
+- object / component / transform / camera / timeScale 저장
+- 구버전 SceneData도 가능한 범위에서 계속 읽을 수 있게 유지
+- 최신 SceneData 버전: `9`
 
-### 현재 저장 구조
+### 3-5. 사용자 확장
 
-- 최상위:
-  - `version`
-  - `sceneName`
-  - `timeScale`
-  - `camera`
-  - `objects`
-- object:
-  - `id`
-  - `parentId`
-  - `name`
-  - `tag`
-  - `active`
-  - `transform`
-  - `components`
-- component:
-  - `{ "type": "...", "data": { ... } }`
+- `KirbyGameDll`에서 사용자 컴포넌트 추가 가능
+- Inspector 표시, 직렬화, 참조 복원 등도 사용자 컴포넌트 단위로 확장 가능
+- 테스트용 컴포넌트와 샘플 컴포넌트도 함께 관리 중
 
-### 저장하는 것
+## 4. 최근에 정리된 구조 변화
 
-- scene 이름
-- timeScale
-- camera position / rotation / projection 설정
-- object id / parentId / name / tag / active / transform
-- component type 문자열
-- component별 직렬화 데이터
-- asset key / path 문자열
-- user action의 `actionKey`
-- object reference id
+이번 정리에서 특히 큰 변화는 아래와 같습니다.
 
-### 저장하지 않는 것
+- `BuildEdit` -> `EditorApp` 이름 변경
+- `BuildResultGame` -> `GameApp` 이름 변경
+- `EngineFramework` -> `EngineFrameworkDll` DLL 구조로 변경
+- plugin 표면 단순화
+  - `RegisterGameContent(...)`
+  - `GetName()`
+  - `ReleaseGameContent()`
+- `MainFrame` 생명주기 정리
+  - `AppBootstrap`을 통해 실행 흐름을 더 분명하게 정리
+- `Runtime -> Editor` 직접 include 일부 제거
+  - `WindowFrame -> EditorSceneWorkflow` 직접 호출 제거
+  - `RenderManager -> EditorRenderFacade` 직접 호출 제거
+- `ReferenceFieldRegistry` 추가
+  - Inspector에서 `GameObject` / `Component` 참조 필드를 등록 기반으로 그릴 수 있게 정리
+- `Component`에 persistent `componentId` 추가
+- registry 기반 reference field의 SceneData 저장/로드 기반 추가
 
-- raw pointer
-- `IDirect3DTexture9*`
-- `b2Body*`, fixture pointer
-- callback / lambda 본체
-- DirectX runtime object
-- Box2D runtime object
-- editor UI 상태
-- raycast debug 상태
+## 5. 아직 정리 중인 부분
 
-### 호환 정책
+현재 프로젝트는 동작은 되지만, 구조적으로 더 정리할 부분이 남아 있습니다.
 
-- v3 SceneData도 계속 로드 가능
-- `BoxCollider2D`가 canonical type
-- legacy `"BoxCollider"` alias는 구버전 SceneData 호환용으로 계속 로드 가능
-- 현재 원본 `SceneData/`에는 legacy `"BoxCollider"` 문자열이 남아 있지 않음
+- `MainFrame`, `WindowFrame`, `RenderManager` 안에 runtime/editor 책임이 아직 함께 있음
+- `EngineEditor` 분리가 완전히 끝난 상태는 아님
+- 일부 editor 코드가 아직 `EngineFrameworkDll` 안에 남아 있음
+- 사용자 컴포넌트 쪽 reference field 활용 예시는 계속 늘려갈 예정
 
-## Physics2D 상태 요약
+즉, 지금 상태는 "기능 구현 완료"보다 "기능을 유지하면서 구조를 더 좋은 방향으로 고쳐 가는 중"이라고 보는 편이 맞습니다.
 
-- `Rigidbody2D`가 있으면 collider는 그 body에 fixture로 붙습니다.
-- `Rigidbody2D`가 없으면 collider가 static fallback body를 직접 소유합니다.
-- collider만 삭제하면 fixture만 제거되고 body는 남을 수 있습니다.
-- `Rigidbody2D`만 삭제하면 collider는 fallback body로 복귀합니다.
-- `Physics2D::Raycast`는 `BoxCollider2D`, `CircleCollider2D`를 지원합니다.
-- `CollisionEnter/Stay/Exit`는 둘 다 non-trigger일 때만 호출됩니다.
-- 둘 중 하나라도 trigger면 `TriggerEnter/Stay/Exit`가 호출됩니다.
-- 삭제 예약 또는 강제 종료 상황에서는 `OnCollisionExit(nullptr)`, `OnTriggerExit(nullptr)`를 허용합니다.
+## 6. 실행 프로젝트
 
-## 현재 샘플 / 테스트 씬 분류
+- `EditorApp`
+  - 에디터 실행
+- `GameApp`
+  - 게임 실행
 
-### 예시 씬
+실행에 필요한 출력물은 보통 아래 폴더에 생성됩니다.
 
-- `SceneData/Sample.json`
-  - Sprite / Animation / UI / FBX / collision visual 예시
+- `Solution_Kirby/Bin/Debug_x64`
+- `Solution_Kirby/Bin/Release_x64`
 
-### 검증 씬
+## 7. 문서 안내
 
-- `SceneData/Physics2DTestScene.json`
-  - 기본 Physics2D 검증
-- `SceneData/Physics2DInteractionTestScene.json`
-  - Dynamic / Kinematic / Trigger interaction 검증
-- `SceneData/ActivePhysicsToggleTestScene.json`
-  - Active / Trigger / UI action 연동 검증
+문서 이름도 가능한 한 역할이 바로 보이도록 한글 기준으로 정리했습니다.
 
-## 현재 테스트 / 샘플 컴포넌트 정책
+프로젝트를 볼 때 같이 보면 좋은 문서는 아래와 같습니다.
 
-### 샘플 유지
+- `README.md`
+  - 프로젝트 전체 소개
+- `프로젝트_정책_및_가이드.md`
+  - 현재 적용 중인 규칙과 방향
+- `설계_배경_및_문제해결_기록.md`
+  - 왜 이런 구조를 선택했는지, 어떤 문제를 해결했는지 기록
+- `물리2D_상태.md`
+  - Physics2D 현재 상태 정리
+- `VSCode_MSBuild_가이드.md`
+  - VSCode / MSBuild 사용 방법
+- `GameObject_이벤트_호출시점.md`
+  - collision, trigger, mouse, active 관련 이벤트 호출 시점 정리
+- `사용자_컴포넌트_액션_가이드.md`
+  - 사용자 컴포넌트 / 액션 확장 방법
 
-- `SampleSpinComponent`
-- `Physics2DKeyboardTestComponent`
-- `CollisionVisualTestComponent`
+## 8. 앞으로 보강하고 싶은 부분
 
-### 임시 테스트 유지
+- EngineEditor 분리 마무리
+- Runtime / Editor 경계 더 명확하게 정리
+- 사용자 컴포넌트 예제 추가
+- SceneData 저장/로드 예제 문서 추가
+- 테스트 씬과 샘플 씬 설명 강화
 
-- `ActivePhysicsTestStatusComponent`
-- `ActivePhysicsTestInfoComponent`
+## 9. 한 줄 정리
 
-자세한 정책은 `UserExtensionGuide.md`를 참고하면 됩니다.
-
-## 최근 구조 정리 반영 사항
-
-- `CollisionManager.h/.cpp`는 더 이상 활성 충돌 시스템이 아님
-- `EngineFramework.vcxproj`, `EngineFramework.vcxproj.filters`에서는 `CollisionManager` 항목 제거 완료
-- 디스크에는 deprecated 후보 파일로만 남아 있음
-- 실제 충돌 흐름은 `MainFrame::CollisionListener` 기반
-
-## 현재 남아 있는 구조적 혼합 지점
-
-### Runtime 쪽에 남아 있는 Editor 책임 흔적
-
-- `MainFrame`
-  - ImGui 초기화
-  - editor playback (`Play / Pause / Step`)
-- `RenderManager`
-  - `EditUpdate()`
-  - selected object marker
-  - editor frame window
-- `ObjectManager`
-  - `ImguiUpdate()`
-  - editor windows 직접 호출
-- `SceneDataManager`
-  - dirty / snapshot
-  - open / new / save-as 같은 editor workflow
-- `WindowFrame`
-  - scene open 정책과 SceneData load failure UI 처리
-
-## 문서 안내
-
-- 현재 구조/정책 요약:
-  - `README.md`
-  - `프로젝트_정책_및_가이드.md`
-- 사용자 확장과 테스트/샘플 정책:
-  - `UserExtensionGuide.md`
-- Physics2D 상태:
-  - `Physics2D_Status.md`
-- 이벤트 호출 시점:
-  - `GameObject_이벤트_호출시점.md`
-- 정책을 택한 이유와 문제 해결 경험:
-  - `설계_배경_및_문제해결_기록.md`
+KirbyEngine은 "게임을 실행하는 기능"만 만드는 프로젝트가 아니라,
+"직접 엔진 구조를 설계하고 고쳐 가는 과정"까지 보여 주기 위한 포트폴리오 프로젝트입니다.

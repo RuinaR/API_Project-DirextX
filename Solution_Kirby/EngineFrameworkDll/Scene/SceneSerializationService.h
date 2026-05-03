@@ -10,10 +10,10 @@ class ObjectManager;
 class ENGINEFRAMEWORK_API SceneSerializationService
 {
 public:
-	// SceneSerializationService는 순수 scene serialization core를 담당한다.
-	// scene file read/write, scene json build, scene json deserialize core,
-	// camera/timeScale deserialize를 제공한다.
-	// editor dirty/snapshot/open workflow는 여기서 담당하지 않는다.
+	// SceneSerializationService는 scene 저장/로드 핵심만 맡는다.
+	// scene 파일 읽기/쓰기, scene json 만들기, scene json 복원,
+	// camera/timeScale 복원 같은 공통 작업을 여기서 처리한다.
+	// editor의 dirty, snapshot, open 같은 작업 흐름은 여기서 맡지 않는다.
 	static bool WriteSceneDataFile(const std::string& sceneFilePath, const std::string& json);
 	static bool ReadSceneDataFile(const std::string& sceneFilePath, std::string* outSceneJson);
 	static void DeserializeTimeScale(const std::string& sceneJson, MainFrame* mainFrame);

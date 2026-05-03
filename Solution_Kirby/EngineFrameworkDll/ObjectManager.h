@@ -34,8 +34,8 @@ private:
 	void ResolveComponentReferences(
 		const std::unordered_map<int, GameObject*>& objectMap,
 		const std::unordered_map<int, Component*>& componentMap);
-	// 삭제는 즉시 하지 않고 pending remove 예약으로 처리한다.
-	// 실제 Release/delete는 FlushPendingObjects()에서 일괄 수행한다.
+	// 오브젝트 삭제는 바로 하지 않고 예약만 걸어 둔다.
+	// 실제 Release/delete는 FlushPendingObjects()에서 한 번에 처리한다.
 	void QueueDestroyObject(GameObject* obj);
 	void QueueDestroyObjectTree(GameObject* obj);
 	void ReleaseAndDeleteObject(GameObject* obj);
@@ -54,12 +54,12 @@ public:
 	bool UnregisterObject(GameObject* obj);
 	void RegisterObject(GameObject* obj);
 	bool DestroyObject(GameObject* obj);
-	// Legacy tag-based delete wrapper. Prefer DestroyFirstObjectByTag/DestroyObjectsByTag in new code.
+	// 예전 방식의 tag 삭제 함수다. 새 코드에서는 더 구체적인 함수를 쓰는 편이 좋다.
 	bool DestroyObject(string tag);
 	bool DestroyObjectByName(const string& name);
 	bool DestroyFirstObjectByTag(const string& tag);
 	int DestroyObjectsByTag(const string& tag);
-	// Legacy tag-based search wrapper. Prefer FindObjectByName/FindFirstObjectByTag in new code.
+	// 예전 방식의 tag 검색 함수다. 새 코드에서는 이름/태그 전용 함수를 쓰는 편이 좋다.
 	GameObject* FindObject(string tag);
 	GameObject* FindObjectByName(const string& name);
 	GameObject* FindFirstObjectByTag(const string& tag);

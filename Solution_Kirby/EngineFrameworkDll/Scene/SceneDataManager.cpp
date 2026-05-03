@@ -7,15 +7,15 @@
 
 namespace
 {
-	// Temporary facade storage so deserialize paths can expose the currently
-	// loading scene version to legacy/runtime callers during scene load.
+	// scene을 읽는 동안 현재 버전을 잠시 보관해 둔다.
+	// 그러면 로드 중인 다른 코드에서도 이 값을 확인할 수 있다.
 	int& GetCurrentLoadingSceneVersionStorage()
 	{
 		static int sceneVersion = 3;
 		return sceneVersion;
 	}
 
-	// Scene file lists are exposed without the .json extension.
+	// 바깥에는 .json 확장자를 뺀 scene 이름만 보여 준다.
 	std::string TrimSceneFileExtension(const std::string& fileName)
 	{
 		const size_t extensionPos = fileName.rfind(".json");
@@ -26,7 +26,7 @@ namespace
 		return fileName.substr(0, extensionPos);
 	}
 
-	// Reject whitespace-only scene names in validation.
+	// 공백만 있는 scene 이름은 올바른 이름으로 보지 않는다.
 	bool ContainsOnlyWhitespace(const std::string& text)
 	{
 		for (std::string::const_iterator itr = text.begin(); itr != text.end(); ++itr)
@@ -178,8 +178,9 @@ bool SceneDataManager::LoadSceneData(const std::string& sceneName)
 
 bool SceneDataManager::DeserializeSceneDataForWorkflow(const std::string& sceneName, const std::string& sceneJson)
 {
-	// Workflow-facing facade: records the loading version, forwards deserialize
-	// to SceneSerializationService, and keeps path-based failure logging here.
+	// 에디터 쪽에서 쓰는 복원 진입점이다.
+	// 여기서 로드 버전을 기록하고, 실제 복원은 SceneSerializationService에 맡긴다.
+	// 파일 경로 기준 실패 로그도 여기서 남긴다.
 	int sceneVersion = 3;
 	SceneJson::ReadInt(sceneJson, "version", sceneVersion);
 	GetCurrentLoadingSceneVersionStorage() = sceneVersion;

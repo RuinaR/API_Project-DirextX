@@ -9,14 +9,14 @@
 
 namespace
 {
-	// editor가 씬 기준선을 비교할 수 있도록 scene별 snapshot을 유지한다.
+	// 에디터가 변경 전후를 비교할 수 있게 scene별 snapshot을 보관한다.
 	std::map<std::string, std::string>& GetCapturedSceneSnapshots()
 	{
 		static std::map<std::string, std::string> snapshots;
 		return snapshots;
 	}
 
-	// editor dirty 상태를 scene name 기준으로 유지한다.
+	// scene 이름별로 dirty 상태를 따로 보관한다.
 	std::map<std::string, bool>& GetSceneDirtyFlags()
 	{
 		static std::map<std::string, bool> dirtyFlags;

@@ -14,10 +14,9 @@ private:
 	static std::string JoinPath(const std::string& lhs, const std::string& rhs);
 
 public:
-	// Runtime-facing facade for scene path/file list/name validation,
-	// save/load entry points, and loading scene version access.
-	// Serialization core lives in SceneSerializationService, while
-	// editor scene workflow lives in EditorSceneWorkflow.
+	// 이 클래스는 SceneData 경로, 파일 목록, 이름 검사, 저장/로드 진입점을 맡는다.
+	// 실제 JSON 저장/복원 코어는 SceneSerializationService가 맡고,
+	// 에디터 쪽 scene 작업 흐름은 EditorSceneWorkflow가 맡는다.
 	static std::string GetSceneDataDirectory();
 	static std::string GetSceneDataPath(const std::string& sceneName);
 	static bool Exists(const std::string& sceneName);
@@ -26,9 +25,9 @@ public:
 	static bool SaveCurrentSceneData(const std::string& sceneName);
 	static bool LoadSceneData(const std::string& sceneName);
 
-	// Workflow-facing deserialize entry point.
-	// This keeps loading scene version storage and failure logging in the facade,
-	// while delegating actual JSON deserialize core to SceneSerializationService.
+	// 에디터 작업 흐름에서 쓰는 scene 복원 진입점이다.
+	// 여기서는 로드 중 버전 보관과 실패 로그를 맡고,
+	// 실제 JSON 복원 코어는 SceneSerializationService에 맡긴다.
 	static bool DeserializeSceneDataForWorkflow(const std::string& sceneName, const std::string& sceneJson);
 
 	static std::vector<std::string> GetSceneFileList();

@@ -10,7 +10,7 @@ void ImageRender::DrawImage(int x, int y, int z, int w, int h)
 
     SetupVertices();
 
-    // 월드 변환 행렬을 구성한다.
+    // 오브젝트 위치, 회전, 크기를 기준으로 월드 행렬을 만든다.
     D3DXMATRIX matWorld = m_gameObj->GetWorldMatrix();
     if (m_positionOffset.x != 0.0f || m_positionOffset.y != 0.0f || m_positionOffset.z != 0.0f)
     {
@@ -43,7 +43,7 @@ void ImageRender::InitGameObj(GameObject* obj)
 {
     Component::InitGameObj(obj);
 
-    //추가 잡업 필요?
+    // 필요하면 여기서 추가 작업을 넣을 수 있다.
 }
 
 void ImageRender::LoadTextureCallback(IDirect3DTexture9* tex)
@@ -66,35 +66,35 @@ void ImageRender::SetupVertices()
     const float bottomV = m_flipY ? upperV : lowerV;
 
     CUSTOMVERTEX vertices[4];
-    vertices[0].x = -0.5f; // 왼쪽 상단 모서리
+    vertices[0].x = -0.5f; // 왼쪽 위 모서리
     vertices[0].y = 0.5f;
     vertices[0].z = 0.0f;
     vertices[0].color = m_color;
     vertices[0].tu = leftU;
     vertices[0].tv = topV;
 
-    vertices[1].x = -0.5f; // 왼쪽 하단 모서리
+    vertices[1].x = -0.5f; // 왼쪽 아래 모서리
     vertices[1].y = -0.5f;
     vertices[1].z = 0.0f;
     vertices[1].color = m_color;
     vertices[1].tu = leftU;
     vertices[1].tv = bottomV;
 
-    vertices[2].x = 0.5f; // 오른쪽 상단 모서리
+    vertices[2].x = 0.5f; // 오른쪽 위 모서리
     vertices[2].y = 0.5f;
     vertices[2].z = 0.0f;
     vertices[2].color = m_color;
     vertices[2].tu = rightU;
     vertices[2].tv = topV;
 
-    vertices[3].x = 0.5f; // 오른쪽 하단 모서리
+    vertices[3].x = 0.5f; // 오른쪽 아래 모서리
     vertices[3].y = -0.5f;
     vertices[3].z = 0.0f;
     vertices[3].color = m_color;
     vertices[3].tu = rightU;
     vertices[3].tv = bottomV;
 
-    // 정점 버퍼에 사각형 정점 정보를 갱신한다.
+    // 사각형 정점 정보를 정점 버퍼에 다시 넣는다.
     VOID* pVertices;
     if (FAILED(m_vertexBuffer->Lock(0, sizeof(CUSTOMVERTEX) * 4, (void**)&pVertices, 0)))
     {
@@ -110,7 +110,7 @@ void ImageRender::SetupVertices()
         2, 1, 3     // 두 번째 삼각형
     };
 
-    // 인덱스 버퍼에 인덱스 정보를 갱신한다.
+    // 인덱스 정보를 인덱스 버퍼에 다시 넣는다.
     WORD* pIndices;
     if (FAILED(m_indexBuffer->Lock(0, sizeof(indices), (void**)&pIndices, 0)))
     {
@@ -119,7 +119,7 @@ void ImageRender::SetupVertices()
     memcpy(pIndices, indices, sizeof(indices));
     m_indexBuffer->Unlock();
 
-    // 갱신된 인덱스 버퍼를 장치에 바인딩한다.
+    // 갱신한 인덱스 버퍼를 장치에 연결한다.
     m_device->SetIndices(m_indexBuffer);
 
     // 인덱스 버퍼 해제는 Release에서 처리한다.

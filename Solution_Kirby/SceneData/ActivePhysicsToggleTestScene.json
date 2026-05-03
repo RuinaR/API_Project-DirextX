@@ -92,7 +92,7 @@
       "components": [
         { "type": "AnimationRender", "componentId": 9, "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/right/walk.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
         { "type": "ImageRender", "componentId": 10, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294924890, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "" } },
-        { "type": "Rigidbody2D", "componentId": 11, "data": { "bodyType": "Dynamic", "drag": 0.2, "angularDrag": 0.2, "useGravity": true, "gravityScale": 1, "fixedRotation": true, "linearVelocity": { "x": 0, "y": -5.81349e-09 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": true } },
+        { "type": "Rigidbody2D", "componentId": 11, "data": { "bodyType": "Dynamic", "drag": 0.2, "angularDrag": 0.2, "useGravity": true, "gravityScale": 1, "fixedRotation": true, "linearVelocity": { "x": 0, "y": 5.03496e-09 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": true } },
         { "type": "BoxCollider2D", "componentId": 12, "data": { "bodyType": 2, "trigger": false, "size": { "x": 86, "y": 92 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
         { "type": "Physics2DKeyboardTestComponent", "componentId": 13, "data": { "enabled": true, "forcePower": 25000, "impulsePower": 90000, "torquePower": 0, "useVelocityMode": true } },
         { "type": "ActivePhysicsTestStatusComponent", "componentId": 14, "data": {} }
@@ -154,7 +154,7 @@
       "tag": "Kinematic_Box_Mover",
       "active": true,
       "transform": {
-        "position": { "x": -48202.9, "y": -40, "z": 0 },
+        "position": { "x": -48793.6, "y": -40, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 83.2238 },
         "size": { "x": 100, "y": 100, "z": 1 }
       },
@@ -356,7 +356,7 @@
       "tag": "fbxobj",
       "active": true,
       "transform": {
-        "position": { "x": -266.329, "y": 122.079, "z": 49.8655 },
+        "position": { "x": -266.329, "y": 122.082, "z": 49.8655 },
         "rotation": { "x": 0, "y": 66.2, "z": 0 },
         "size": { "x": 1, "y": 1, "z": 1 }
       },

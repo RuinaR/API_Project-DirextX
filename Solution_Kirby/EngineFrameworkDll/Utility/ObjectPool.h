@@ -9,8 +9,8 @@ template <typename T>
 class ObjectPool
 {
 private:
-    std::vector<SharedPointer<T>> m_freeObjects; // 사용되지 않는 오브젝트
-    std::vector<SharedPointer<T>> m_usedObjects; // 사용 중인 오브젝트
+    std::vector<SharedPointer<T>> m_freeObjects; // 지금 비어 있는 오브젝트 목록
+    std::vector<SharedPointer<T>> m_usedObjects; // 현재 사용 중인 오브젝트 목록
 public:
     // 생성자
     ObjectPool(int initialSize = OBJNUM)
@@ -34,12 +34,12 @@ public:
         std::cout << "usedObjects : " << m_usedObjects.size() << std::endl << std::endl;
     }
 
-    // 오브젝트 할당 함수
+    // 오브젝트를 하나 꺼내 쓴다.
     SharedPointer<T> AcquireObject()
     {
         if (m_freeObjects.empty())
         {
-            // 사용 가능한 오브젝트가 없으면 새 오브젝트 생성
+            // 남아 있는 오브젝트가 없으면 새로 만든다.
             SharedPointer<T> obj(new T());
             obj.SetPool(this);
             m_usedObjects.push_back(obj);
@@ -47,7 +47,7 @@ public:
         }
         else
         {
-            // 사용 가능한 오브젝트가 있으면 반환
+            // 남아 있는 오브젝트가 있으면 그걸 다시 쓴다.
             SharedPointer<T> obj = m_freeObjects.back();
             m_freeObjects.pop_back();
             m_usedObjects.push_back(obj);
@@ -55,7 +55,7 @@ public:
         }
     }
 
-    // 오브젝트 해제 함수 (사용 종료 시)
+    // 사용이 끝난 오브젝트를 다시 pool로 돌려보낸다.
     void ReleaseObject(SharedPointer<T> obj)
     {
         auto it = find(m_usedObjects.begin(), m_usedObjects.end(), obj);

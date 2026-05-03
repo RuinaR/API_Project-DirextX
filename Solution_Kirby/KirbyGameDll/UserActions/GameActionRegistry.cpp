@@ -8,11 +8,11 @@ void RegisterGameUIActions(RenderType type)
 {
 	(void)type;
 
-	// 사용자 UI action 등록 지점:
-	// - 실제 action callback은 KirbyGameDll/UserActions/Scripts에 둔다.
-	// - UIButton은 SceneData에 actionKey만 저장하고, startup 시 registry에서 다시 bind 된다.
-	// - 새 C++ action 추가 후에는 DLL 재빌드 + 에디터 재실행이 필요하다.
-	// - 에디터 실행 중 C++ action hot reload는 지원하지 않는다.
+	// 사용자 UI 액션을 등록하는 곳이다.
+	// - 실제 액션 함수는 KirbyGameDll/UserActions/Scripts 아래에 둔다.
+	// - UIButton은 SceneData에 actionKey만 저장하고, 시작할 때 registry에서 다시 연결한다.
+	// - 새 C++ 액션을 추가했다면 DLL을 다시 빌드하고 에디터도 다시 실행해야 한다.
+	// - 에디터를 켠 상태에서 C++ 액션만 바로 바꿔 끼우는 기능은 아직 없다.
 	UIActionRegistry::RegisterAction(
 		ActivePhysicsTestActionKeys::kToggleActiveActionKey,
 		[]() { ExecuteActivePhysicsTestTogglePlayerActiveAction(); });
