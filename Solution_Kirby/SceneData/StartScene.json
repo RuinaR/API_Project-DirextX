@@ -21,7 +21,7 @@
       "tag": "Background",
       "active": true,
       "transform": {
-        "position": { "x": 720, "y": 450, "z": 0 },
+        "position": { "x": 823, "y": 531, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 1440, "y": 900, "z": 1 }
       },
@@ -36,7 +36,7 @@
       "tag": "UI",
       "active": true,
       "transform": {
-        "position": { "x": 716.5, "y": 190, "z": 0 },
+        "position": { "x": 819.5, "y": 271, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 265, "y": 60, "z": 1 }
       },
@@ -51,7 +51,7 @@
       "tag": "UI",
       "active": true,
       "transform": {
-        "position": { "x": 720, "y": 425, "z": 0 },
+        "position": { "x": 823, "y": 506, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 260, "y": 90, "z": 1 }
       },
@@ -66,7 +66,7 @@
       "tag": "UI",
       "active": true,
       "transform": {
-        "position": { "x": 757, "y": 432, "z": 0 },
+        "position": { "x": 860, "y": 513, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 160, "y": 40, "z": 1 }
       },

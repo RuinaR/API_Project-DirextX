@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EditorBuildSettingsPanel.h"
 #include "BuildSettingsManager.h"
 #include "EditorSceneWorkflow.h"
@@ -106,11 +106,11 @@ namespace
 		}
 		catch (const std::exception& ex)
 		{
-			SetBuildGameResult(std::string("비동기 빌드 작업에서 예외가 발생했습니다: ") + ex.what());
+			SetBuildGameResult(std::string("鍮꾨룞湲?鍮뚮뱶 ?묒뾽?먯꽌 ?덉쇅媛 諛쒖깮?덉뒿?덈떎: ") + ex.what());
 		}
 		catch (...)
 		{
-			SetBuildGameResult("비동기 빌드 작업에서 알 수 없는 예외가 발생했습니다.");
+			SetBuildGameResult("鍮꾨룞湲?鍮뚮뱶 ?묒뾽?먯꽌 ?????녿뒗 ?덉쇅媛 諛쒖깮?덉뒿?덈떎.");
 		}
 	}
 
@@ -454,28 +454,7 @@ namespace
 		const std::string& buildResourcesPath,
 		std::string& outErrorMessage)
 	{
-		std::set<std::string> resourceFileKeys;
-		std::set<std::string> resourceDirectoryKeys;
-
-		for (std::vector<std::string>::const_iterator itr = sceneNames.begin(); itr != sceneNames.end(); ++itr)
-		{
-			std::string sceneJsonText;
-			if (!ReadTextFile(SceneDataManager::GetSceneDataPath(*itr), sceneJsonText))
-			{
-				outErrorMessage = "SceneData를 읽지 못했습니다: " + *itr;
-				return false;
-			}
-
-			CollectJsonStringValues(sceneJsonText, "texturePath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "imagePath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "fbxPath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "soundPath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "audioPath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "bgmPath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "sfxPath", resourceFileKeys);
-			CollectJsonStringValues(sceneJsonText, "animationFolderKey", resourceDirectoryKeys);
-			CollectJsonSoundLikeStringValues(sceneJsonText, resourceFileKeys);
-		}
+		(void)sceneNames;
 
 		if (DeleteDirectoryRecursive(buildResourcesPath) == false && DirectoryExists(buildResourcesPath))
 		{
@@ -483,50 +462,16 @@ namespace
 			return false;
 		}
 
-		if (!EnsureDirectoryExists(buildResourcesPath))
+		if (!DirectoryExists(sourceResourcesPath))
 		{
-			outErrorMessage = "BuildOutput\\Resources 폴더 생성에 실패했습니다.";
+			outErrorMessage = "원본 Resources 폴더를 찾지 못했습니다.";
 			return false;
 		}
 
-		for (std::set<std::string>::const_iterator itr = resourceFileKeys.begin(); itr != resourceFileKeys.end(); ++itr)
+		if (!CopyDirectoryRecursive(sourceResourcesPath, buildResourcesPath))
 		{
-			const std::string normalizedKey = NormalizeResourceKey(*itr);
-			const std::string sourcePath = sourceResourcesPath + "\\" + normalizedKey;
-			const std::string destinationPath = buildResourcesPath + "\\" + normalizedKey;
-			if (!CopySingleFile(sourcePath, destinationPath))
-			{
-				outErrorMessage = "사용 중인 리소스 파일 복사에 실패했습니다: " + *itr;
-				return false;
-			}
-
-			const size_t extensionPos = normalizedKey.find_last_of('.');
-			if (extensionPos != std::string::npos)
-			{
-				const std::string siblingFbmKey = normalizedKey.substr(0, extensionPos) + ".fbm";
-				const std::string siblingFbmSourcePath = sourceResourcesPath + "\\" + siblingFbmKey;
-				if (DirectoryExists(siblingFbmSourcePath))
-				{
-					const std::string siblingFbmDestinationPath = buildResourcesPath + "\\" + siblingFbmKey;
-					if (!CopyDirectoryRecursive(siblingFbmSourcePath, siblingFbmDestinationPath))
-					{
-						outErrorMessage = "FBX 연관 리소스 폴더 복사에 실패했습니다: " + *itr;
-						return false;
-					}
-				}
-			}
-		}
-
-		for (std::set<std::string>::const_iterator itr = resourceDirectoryKeys.begin(); itr != resourceDirectoryKeys.end(); ++itr)
-		{
-			const std::string normalizedKey = NormalizeResourceKey(*itr);
-			const std::string sourcePath = sourceResourcesPath + "\\" + normalizedKey;
-			const std::string destinationPath = buildResourcesPath + "\\" + normalizedKey;
-			if (!CopyDirectoryRecursive(sourcePath, destinationPath))
-			{
-				outErrorMessage = "사용 중인 리소스 폴더 복사에 실패했습니다: " + *itr;
-				return false;
-			}
+			outErrorMessage = "Resources 폴더 전체 복사에 실패했습니다.";
+			return false;
 		}
 
 		return true;
@@ -566,13 +511,13 @@ namespace
 		return true;
 	}
 
-	bool RunReleaseBuildResultGameBuild(const std::string& solutionRoot)
+	bool RunReleaseGameAppBuild(const std::string& solutionRoot)
 	{
 		SetBuildGameStage(1, 6, "1/6 Release|x64 게임 빌드를 실행하는 중...");
 
 		const std::string projectMsbuildScriptPath = solutionRoot + "\\Tools\\MSBuild\\msbuild.cmd";
 		const std::string solutionPath = solutionRoot + "\\Solution_Kirby.sln";
-		const std::string msbuildArguments = "\"" + solutionPath + "\" /t:BuildResultGame /p:Configuration=Release /p:Platform=x64 /m:1 /p:UseMultiToolTask=false /p:CL_MPCount=1";
+		const std::string msbuildArguments = "\"" + solutionPath + "\" /t:GameApp /p:Configuration=Release /p:Platform=x64 /m:1 /p:UseMultiToolTask=false /p:CL_MPCount=1";
 		char comSpecBuffer[MAX_PATH] = { 0 };
 		const DWORD comSpecLength = GetEnvironmentVariableA("ComSpec", comSpecBuffer, MAX_PATH);
 		const std::string comSpecPath =
@@ -584,7 +529,7 @@ namespace
 		DWORD exitCode = 1;
 		if (!TryRunBuildProcess(comSpecPath, scriptCommandLine, solutionRoot, exitCode))
 		{
-			SetBuildGameResult("프로젝트의 MSBuild 실행 스크립트를 시작하지 못했습니다: " + comSpecPath);
+			SetBuildGameResult("프로젝트 MSBuild 실행 스크립트를 시작하지 못했습니다: " + comSpecPath);
 			return false;
 		}
 
@@ -592,7 +537,7 @@ namespace
 		{
 			if (exitCode == 9009)
 			{
-				SetBuildGameResult("MSBuild를 찾지 못했습니다. Visual Studio 또는 Visual Studio Build Tools를 설치한 뒤 에디터를 다시 실행하세요.");
+				SetBuildGameResult("MSBuild를 찾지 못했습니다. Visual Studio 또는 Visual Studio Build Tools를 설치한 뒤 다시 실행해 주세요.");
 				return false;
 			}
 
@@ -610,7 +555,7 @@ namespace
 		BuildSettingsData settings = sourceSettings;
 		if (!BuildSettingsManager::Validate(settings))
 		{
-			SetBuildGameResult("BuildSettings가 유효하지 않아서 빌드를 진행할 수 없습니다.");
+			SetBuildGameResult("BuildSettings가 올바르지 않아 빌드를 진행할 수 없습니다.");
 			return false;
 		}
 
@@ -627,7 +572,7 @@ namespace
 
 		if (!startSceneIncluded)
 		{
-			SetBuildGameResult("startScene이 빌드 대상 scenes에 포함되어 있지 않습니다.");
+			SetBuildGameResult("startScene은 빌드 대상 scenes에 포함되어 있어야 합니다.");
 			return false;
 		}
 
@@ -639,11 +584,11 @@ namespace
 		const std::string buildResourcesPath = buildOutputPath + "\\Resources";
 		const std::string outputBuildSettingsPath = buildOutputPath + "\\BuildSettings.json";
 		const std::string releaseOutputPath = solutionRoot + "\\Bin\\Release_x64";
-		const std::string sourceExePath = releaseOutputPath + "\\BuildResultGame.exe";
+		const std::string sourceExePath = releaseOutputPath + "\\GameApp.exe";
 		const std::string sourceGameDllPath = releaseOutputPath + "\\KirbyGameDll.dll";
 		const std::string sourceResourcesPath = solutionRoot + "\\Resources";
 
-		if (!RunReleaseBuildResultGameBuild(solutionRoot))
+		if (!RunReleaseGameAppBuild(solutionRoot))
 		{
 			return false;
 		}
@@ -669,7 +614,7 @@ namespace
 
 		if (!FileExists(sourceExePath))
 		{
-			SetBuildGameResult("Release|x64 출력에서 BuildResultGame.exe를 찾지 못했습니다.");
+			SetBuildGameResult("Release|x64 출력에서 GameApp.exe를 찾지 못했습니다.");
 			return false;
 		}
 
@@ -684,7 +629,7 @@ namespace
 		{
 			if (!SceneDataManager::Exists(*itr))
 			{
-				SetBuildGameResult("누락된 SceneData가 있어서 빌드를 중단했습니다: " + *itr);
+				SetBuildGameResult("빠진 SceneData가 있어 빌드를 중단했습니다: " + *itr);
 				return false;
 			}
 
@@ -700,14 +645,14 @@ namespace
 		SetBuildGameStage(4, 6, "4/6 BuildSettings.json을 생성하는 중...");
 		if (!BuildSettingsManager::SaveToPath(settings, outputBuildSettingsPath))
 		{
-			SetBuildGameResult("BuildOutput용 BuildSettings.json 생성에 실패했습니다.");
+			SetBuildGameResult("BuildOutput에 BuildSettings.json 생성에 실패했습니다.");
 			return false;
 		}
 
 		SetBuildGameStage(5, 6, "5/6 Release 실행 파일과 DLL을 복사하는 중...");
-		if (!CopySingleFile(sourceExePath, buildOutputPath + "\\BuildResultGame.exe"))
+		if (!CopySingleFile(sourceExePath, buildOutputPath + "\\GameApp.exe"))
 		{
-			SetBuildGameResult("BuildResultGame.exe 복사에 실패했습니다.");
+			SetBuildGameResult("GameApp.exe 복사에 실패했습니다.");
 			return false;
 		}
 
@@ -747,7 +692,7 @@ namespace
 			return false;
 		}
 
-		SetBuildGameResult("BuildOutput 생성, SceneData/BuildSettings 저장, 사용 중인 Release exe/dll/Resources 복사가 완료되었습니다.");
+		SetBuildGameResult("BuildOutput 생성과 SceneData/BuildSettings, 사용 중인 Release exe/dll/Resources 복사가 완료되었습니다.");
 		return true;
 	}
 
@@ -768,7 +713,7 @@ namespace
 		{
 			if (!EditorSceneWorkflow::SaveCurrentSceneDataWithBaseline(currentSceneName))
 			{
-				SetBuildGameResult("현재 씬 저장에 실패해서 빌드를 시작하지 않았습니다.");
+				SetBuildGameResult("현재 씬 저장에 실패해서 빌드를 시작하지 않습니다.");
 				return;
 			}
 		}
@@ -776,7 +721,7 @@ namespace
 		BuildSettingsManager::Validate(g_buildSettingsUiState);
 		if (!BuildSettingsManager::Save(g_buildSettingsUiState))
 		{
-			SetBuildGameResult("BuildSettings 저장에 실패해서 빌드를 시작하지 않았습니다.");
+			SetBuildGameResult("BuildSettings 저장에 실패해서 빌드를 시작하지 않습니다.");
 			return;
 		}
 
