@@ -106,11 +106,11 @@ namespace
 		}
 		catch (const std::exception& ex)
 		{
-			SetBuildGameResult(std::string("鍮꾨룞湲?鍮뚮뱶 ?묒뾽?먯꽌 ?덉쇅媛 諛쒖깮?덉뒿?덈떎: ") + ex.what());
+			SetBuildGameResult(std::string("비동기 빌드 작업에서 예외가 발생했습니다: ") + ex.what());
 		}
 		catch (...)
 		{
-			SetBuildGameResult("鍮꾨룞湲?鍮뚮뱶 ?묒뾽?먯꽌 ?????녿뒗 ?덉쇅媛 諛쒖깮?덉뒿?덈떎.");
+			SetBuildGameResult("비동기 빌드 작업에서 알 수 없는 예외가 발생했습니다.");
 		}
 	}
 
