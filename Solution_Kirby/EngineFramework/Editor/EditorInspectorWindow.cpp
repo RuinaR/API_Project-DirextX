@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EditorInspectorWindow.h"
 #include "EditorObjectFactory.h"
+#include "EditorSelectionService.h"
 #include "Component.h"
 #include "ComponentFactory.h"
 #include "GameObject.h"
@@ -11,6 +12,8 @@
 namespace
 {
 	const char* kHierarchyGameObjectPayload = "HierarchyGameObject";
+	const char* kDefaultGameplayTag = "Untagged";
+	std::string g_nameValidationMessage;
 
 	void MarkCurrentSceneDirty()
 	{
@@ -26,6 +29,45 @@ namespace
 		}
 
 		SceneDataManager::MarkSceneDirty(sceneName);
+	}
+
+	std::string NormalizeTagInput(const char* input)
+	{
+		if (input == nullptr)
+		{
+			return kDefaultGameplayTag;
+		}
+
+		std::string normalized = input;
+		bool hasNonWhitespace = false;
+		for (std::string::const_iterator itr = normalized.begin(); itr != normalized.end(); ++itr)
+		{
+			if (!isspace(static_cast<unsigned char>(*itr)))
+			{
+				hasNonWhitespace = true;
+				break;
+			}
+		}
+
+		if (!hasNonWhitespace)
+		{
+			return kDefaultGameplayTag;
+		}
+
+		return normalized;
+	}
+
+	bool ContainsOnlyWhitespace(const std::string& text)
+	{
+		for (std::string::const_iterator itr = text.begin(); itr != text.end(); ++itr)
+		{
+			if (!isspace(static_cast<unsigned char>(*itr)))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	bool IsSameComponentType(Component* component, const std::string& typeName)
@@ -259,7 +301,7 @@ bool EditorInspectorWindow::DrawGameObjectReferenceField(const char* label, Game
 	std::string displayText = "(None)";
 	if (ref != nullptr)
 	{
-		displayText = ref->GetTag();
+		displayText = ref->GetName();
 		displayText += " [id=" + std::to_string(ref->GetId()) + "]";
 	}
 	else if (refObjectId >= 0)
@@ -320,7 +362,7 @@ void EditorInspectorWindow::Draw()
 		return;
 	}
 
-	GameObject* selected = objectManager->GetSelectedObject();
+	GameObject* selected = EditorSelectionService::GetSelectedObject();
 	if (selected != nullptr && !selected->GetDestroy())
 	{
 		DrawGameObjectInspector(selected);
@@ -335,14 +377,44 @@ void EditorInspectorWindow::DrawGameObjectInspector(GameObject* obj)
 	}
 
 	const std::string beforeInspectorState = obj->Serialize();
+	bool inspectorChanged = false;
 
 	ImGui::Begin("Inspector");
+
+	char nameBuffer[128] = {};
+	strcpy_s(nameBuffer, obj->GetName().c_str());
+	if (ImGui::InputText("Name", nameBuffer, IM_ARRAYSIZE(nameBuffer)))
+	{
+		const std::string newName = nameBuffer;
+		ObjectManager* objectManager = ObjectManager::GetInstance();
+		GameObject* duplicatedObject = objectManager != nullptr ? objectManager->FindObjectByName(newName) : nullptr;
+		if (newName.empty() || ContainsOnlyWhitespace(newName))
+		{
+			g_nameValidationMessage = "Name cannot be empty.";
+		}
+		else if (duplicatedObject != nullptr && duplicatedObject != obj)
+		{
+			g_nameValidationMessage = "Name already exists.";
+		}
+		else
+		{
+			obj->SetName(newName);
+			g_nameValidationMessage.clear();
+			inspectorChanged = true;
+		}
+	}
+
+	if (!g_nameValidationMessage.empty())
+	{
+		ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.3f, 1.0f), "%s", g_nameValidationMessage.c_str());
+	}
 
 	char tagBuffer[128] = {};
 	strcpy_s(tagBuffer, obj->GetTag().c_str());
 	if (ImGui::InputText("Tag", tagBuffer, IM_ARRAYSIZE(tagBuffer)))
 	{
-		obj->SetTag(tagBuffer);
+		obj->SetTag(NormalizeTagInput(tagBuffer));
+		inspectorChanged = true;
 	}
 
 	bool active = obj->GetActive();
@@ -404,7 +476,7 @@ void EditorInspectorWindow::DrawGameObjectInspector(GameObject* obj)
 
 	DrawAddComponentMenu(obj);
 
-	if (beforeInspectorState != obj->Serialize())
+	if (inspectorChanged || beforeInspectorState != obj->Serialize())
 	{
 		MarkCurrentSceneDirty();
 	}

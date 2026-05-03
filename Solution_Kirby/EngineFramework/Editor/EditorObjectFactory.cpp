@@ -7,6 +7,11 @@
 #include "UIButton.h"
 #include "UILabel.h"
 
+namespace
+{
+	const char* kDefaultGameplayTag = "Untagged";
+}
+
 std::string EditorObjectFactory::CreateUniqueGameObjectName(const std::string& baseName)
 {
 	ObjectManager* objectManager = ObjectManager::GetInstance();
@@ -32,7 +37,9 @@ std::string EditorObjectFactory::CreateUniqueGameObjectName(const std::string& b
 GameObject* EditorObjectFactory::CreateEmptyGameObject()
 {
 	GameObject* obj = new GameObject();
-	obj->SetTag(CreateUniqueGameObjectName("New GameObject"));
+	const std::string uniqueName = CreateUniqueGameObjectName("New GameObject");
+	obj->SetName(uniqueName);
+	obj->SetTag(kDefaultGameplayTag);
 	obj->InitializeSet();
 	return obj;
 }
@@ -45,7 +52,7 @@ GameObject* EditorObjectFactory::CreateSpriteGameObject()
 		return nullptr;
 	}
 
-	obj->SetTag(CreateUniqueGameObjectName("Sprite"));
+	obj->SetName(CreateUniqueGameObjectName("Sprite"));
 	ImageRender* imageRender = new ImageRender(nullptr);
 	Component* addedComponent = obj->AddComponent(imageRender);
 	ApplyDefaultComponentValues(obj, addedComponent);
@@ -60,7 +67,7 @@ GameObject* EditorObjectFactory::CreateUIImageGameObject()
 		return nullptr;
 	}
 
-	obj->SetTag(CreateUniqueGameObjectName("UI Image"));
+	obj->SetName(CreateUniqueGameObjectName("UI Image"));
 	UIImage* image = new UIImage();
 	Component* addedComponent = obj->AddComponent(image);
 	ApplyDefaultComponentValues(obj, addedComponent);
@@ -75,7 +82,7 @@ GameObject* EditorObjectFactory::CreateUIButtonGameObject()
 		return nullptr;
 	}
 
-	obj->SetTag(CreateUniqueGameObjectName("UI Button"));
+	obj->SetName(CreateUniqueGameObjectName("UI Button"));
 	UIButton* button = new UIButton();
 	Component* addedComponent = obj->AddComponent(button);
 	ApplyDefaultComponentValues(obj, addedComponent);
@@ -90,7 +97,7 @@ GameObject* EditorObjectFactory::CreateUITextGameObject()
 		return nullptr;
 	}
 
-	obj->SetTag(CreateUniqueGameObjectName("UI Text"));
+	obj->SetName(CreateUniqueGameObjectName("UI Text"));
 	UILabel* label = new UILabel();
 	Component* addedComponent = obj->AddComponent(label);
 	ApplyDefaultComponentValues(obj, addedComponent);

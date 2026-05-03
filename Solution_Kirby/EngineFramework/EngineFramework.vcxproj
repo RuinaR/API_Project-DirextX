@@ -184,6 +184,9 @@
     <ClCompile Include="Editor\EditorHierarchyWindow.cpp" />
     <ClCompile Include="Editor\EditorInspectorWindow.cpp" />
     <ClCompile Include="Editor\EditorObjectFactory.cpp" />
+    <ClCompile Include="Editor\EditorObjectManagerBridge.cpp" />
+    <ClCompile Include="Editor\EditorSceneWorkflow.cpp" />
+    <ClCompile Include="Editor\EditorRenderFacade.cpp" />
     <ClCompile Include="Resource\AssetDatabase.cpp" />
     <ClCompile Include="Resource\FBXManager.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
@@ -214,6 +217,7 @@
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Physics2D\Physics2D.cpp" />
+    <ClCompile Include="Scene\SceneSerializationService.cpp" />
     <ClCompile Include="Scene\SceneDataManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -232,6 +236,8 @@
     <ClInclude Include="Editor\EditorHierarchyWindow.h" />
     <ClInclude Include="Editor\EditorInspectorWindow.h" />
     <ClInclude Include="Editor\EditorObjectFactory.h" />
+    <ClInclude Include="Editor\EditorSceneWorkflow.h" />
+    <ClInclude Include="Editor\EditorRenderFacade.h" />
     <ClInclude Include="Resource\AssetDatabase.h" />
     <ClInclude Include="Resource\FBXManager.h" />
     <ClInclude Include="Resource\IResourceTypeManager.h" />
@@ -246,6 +252,7 @@
     <ClInclude Include="Rendering\UI\UILabel.h" />
     <ClInclude Include="Rendering\UI\UIElement.h" />
     <ClInclude Include="Debugging\DebugRender.h" />
+    <ClInclude Include="Scene\SceneSerializationService.h" />
     <ClInclude Include="FBXRender.h" />
     <ClInclude Include="FbxTool.h" />
     <ClInclude Include="Rendering\Component\ImageRender.h" />

@@ -308,8 +308,22 @@ void GameObject::SetId(int objectId)
     m_objectId = objectId;
 }
 
+void GameObject::SetName(string name)
+{
+    m_name = name;
+}
+
+string GameObject::GetName()
+{
+    return m_name;
+}
+
 void GameObject::SetTag(string tag) {
     m_tag = tag;
+    if (m_name.empty())
+    {
+        m_name = tag;
+    }
 }
 
 string GameObject::GetTag() {
@@ -696,7 +710,23 @@ std::string GameObject::Serialize(int objectId, int parentId, int sceneVersion) 
 
     std::ostringstream oss;
     oss << "{\n";
-    if (sceneVersion >= 4)
+    if (sceneVersion >= 7)
+    {
+        if (objectId >= 0)
+        {
+            oss << "      \"id\": " << objectId << ",\n";
+            oss << "      \"parentId\": " << parentId << ",\n";
+        }
+        oss << "      \"name\": \"" << SceneJson::EscapeString(m_name) << "\",\n";
+        oss << "      \"tag\": \"" << SceneJson::EscapeString(m_tag) << "\",\n";
+        oss << "      \"active\": " << (m_setActive ? "true" : "false") << ",\n";
+        oss << "      \"transform\": {\n";
+        oss << "        \"position\": { \"x\": " << m_position.x << ", \"y\": " << m_position.y << ", \"z\": " << m_position.z << " },\n";
+        oss << "        \"rotation\": { \"x\": " << m_angleX << ", \"y\": " << m_angleY << ", \"z\": " << m_angleZ << " },\n";
+        oss << "        \"size\": { \"x\": " << m_size.x << ", \"y\": " << m_size.y << ", \"z\": " << m_size.z << " }\n";
+        oss << "      },\n";
+    }
+    else if (sceneVersion >= 4)
     {
         if (objectId >= 0)
         {
@@ -763,7 +793,37 @@ bool GameObject::Deserialize(const std::string& objectJson, GameObjectSerialized
 bool GameObject::Deserialize(const std::string& objectJson, GameObjectSerializedData& outData, int sceneVersion)
 {
     GameObjectSerializedData data;
-    if (sceneVersion >= 4)
+    if (sceneVersion >= 7)
+    {
+        std::string transformJson;
+        const bool hasName = SceneJson::ReadString(objectJson, "name", data.name);
+        const bool hasTag = SceneJson::ReadString(objectJson, "tag", data.tag);
+        SceneJson::ReadInt(objectJson, "id", data.objectId);
+        SceneJson::ReadInt(objectJson, "parentId", data.parentId);
+        if (!hasName && !hasTag)
+        {
+            return false;
+        }
+        if (data.name.empty())
+        {
+            data.name = data.tag;
+        }
+        if (data.tag.empty())
+        {
+            data.tag = "Untagged";
+        }
+        if (!SceneJson::ReadBool(objectJson, "active", data.active))
+            return false;
+        if (!SceneJson::ExtractObject(objectJson, "transform", transformJson))
+            return false;
+        if (!SceneJson::ReadVector3(transformJson, "position", &data.position))
+            return false;
+        if (!SceneJson::ReadVector3(transformJson, "size", &data.size))
+            return false;
+        if (!SceneJson::ReadVector3(transformJson, "rotation", &data.angle))
+            return false;
+    }
+    else if (sceneVersion >= 4)
     {
         std::string transformJson;
         const bool hasName = SceneJson::ReadString(objectJson, "name", data.name);
@@ -818,6 +878,7 @@ GameObject* GameObject::CreateFromSerializedData(const GameObjectSerializedData&
 {
     GameObject* obj = new GameObject();
     obj->SetId(data.objectId);
+    obj->SetName(data.name);
     obj->SetTag(data.tag);
     obj->SetActive(data.active);
     obj->ApplyWorldPosition(data.position);
@@ -1179,6 +1240,34 @@ void GameObject::DeleteChild(GameObject* obj)
             return;
         }
     }
+}
+
+bool GameObject::IsSameOrChild(const GameObject* target) const
+{
+    if (target == nullptr)
+    {
+        return false;
+    }
+
+    if (this == target)
+    {
+        return true;
+    }
+
+    if (m_children == nullptr)
+    {
+        return false;
+    }
+
+    for (vector<GameObject*>::const_iterator itr = m_children->begin(); itr != m_children->end(); ++itr)
+    {
+        if (*itr != nullptr && (*itr)->IsSameOrChild(target))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const float& GameObject::GetAngleZ()

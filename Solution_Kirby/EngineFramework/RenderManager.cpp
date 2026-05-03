@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "RenderManager.h"
+#include "Editor/EditorRenderFacade.h"
 #include "ImageRender.h"
 #include "ImguiButton.h"
 #include "UIElement.h"
 #include "Camera.h"
-#include "ObjectManager.h"
 
 RenderManager* RenderManager::m_Pthis = nullptr;
 
@@ -604,113 +604,6 @@ void RenderManager::RenderSceneContents(bool renderColliderDebug)
 	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 }
 
-void RenderManager::RenderSelectedObjectMarker(const ImVec2& imageScreenPos)
-{
-	ObjectManager* objectManager = ObjectManager::GetInstance();
-	if (objectManager == nullptr)
-	{
-		return;
-	}
-
-	GameObject* selectedObject = objectManager->GetSelectedObject();
-	if (selectedObject == nullptr || selectedObject->GetDestroy())
-	{
-		return;
-	}
-
-	ImageRender* imageRender = nullptr;
-	UIElement* uiElement = nullptr;
-	vector<Component*>* components = selectedObject->GetComponentVec();
-	if (components != nullptr)
-	{
-		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); ++itr)
-		{
-			Component* component = *itr;
-			if (component == nullptr)
-			{
-				continue;
-			}
-
-			if (imageRender == nullptr)
-			{
-				imageRender = dynamic_cast<ImageRender*>(component);
-			}
-			if (uiElement == nullptr)
-			{
-				uiElement = dynamic_cast<UIElement*>(component);
-			}
-
-			if (imageRender != nullptr && uiElement != nullptr)
-			{
-				break;
-			}
-		}
-	}
-
-	ImDrawList* drawList = ImGui::GetBackgroundDrawList(ImGui::GetMainViewport());
-	if (drawList == nullptr)
-	{
-		return;
-	}
-
-	if (uiElement != nullptr)
-	{
-		const D3DXVECTOR2 uiPosition = uiElement->GetPosition();
-		const D3DXVECTOR2 uiSize = uiElement->GetSize();
-		const float markerX = imageScreenPos.x + uiPosition.x + (uiSize.x * 0.5f);
-		const float markerY = imageScreenPos.y + uiPosition.y + (uiSize.y * 0.5f);
-		const float radius = min(max(max(uiSize.x, uiSize.y) * 0.12f, 10.0f), 18.0f);
-		drawList->AddCircle(ImVec2(markerX, markerY), radius, IM_COL32(255, 0, 0, 255), 32, 2.0f);
-		return;
-	}
-
-	if (imageRender != nullptr && imageRender->IsUIRender())
-	{
-		const D3DXVECTOR3 renderPosition = imageRender->GetRenderPosition();
-		const D3DXVECTOR2 size = selectedObject->Size2D();
-		const float markerX = imageScreenPos.x + renderPosition.x;
-		const float markerY = imageScreenPos.y + renderPosition.y;
-		const float radius = min(max(max(size.x, size.y) * 0.12f, 10.0f), 18.0f);
-		drawList->AddCircle(ImVec2(markerX, markerY), radius, IM_COL32(255, 0, 0, 255), 32, 2.0f);
-		return;
-	}
-
-	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetDevice() : nullptr;
-	if (device == nullptr)
-	{
-		return;
-	}
-
-	D3DXVECTOR3 markerWorldPosition = selectedObject->Position();
-	if (imageRender != nullptr)
-	{
-		markerWorldPosition = imageRender->GetRenderPosition();
-	}
-
-	D3DXMATRIX worldMatrix;
-	D3DXMATRIX viewMatrix;
-	D3DXMATRIX projectionMatrix;
-	D3DXMatrixIdentity(&worldMatrix);
-	if (FAILED(device->GetTransform(D3DTS_VIEW, &viewMatrix)) || FAILED(device->GetTransform(D3DTS_PROJECTION, &projectionMatrix)))
-	{
-		return;
-	}
-
-	D3DVIEWPORT9 viewport = {};
-	if (FAILED(device->GetViewport(&viewport)))
-	{
-		return;
-	}
-
-	D3DXVECTOR3 projectedCenter;
-	D3DXVec3Project(&projectedCenter, &markerWorldPosition, &viewport, &projectionMatrix, &viewMatrix, &worldMatrix);
-
-	const float markerX = imageScreenPos.x + projectedCenter.x;
-	const float markerY = imageScreenPos.y + projectedCenter.y;
-	const float radius = 14.0f;
-	drawList->AddCircle(ImVec2(markerX, markerY), radius, IM_COL32(255, 0, 0, 255), 32, 2.0f);
-}
-
 void RenderManager::EditUpdate()
 {
 	LPDIRECT3DDEVICE9 device = MainFrame::GetInstance()->GetDevice();
@@ -736,27 +629,8 @@ void RenderManager::EditUpdate()
 	if (SUCCEEDED(device->BeginScene()))
 	{
 		RenderSceneContents(m_showColliderDebug);
-		RenderSelectedObjectMarker(ImVec2(m_gameViewScreenPos.x, m_gameViewScreenPos.y));
-
-		if (!m_btnVec->empty())
-		{
-			ImGui::Begin("Button");
-			for (vector<ImguiButton*>::iterator itr = m_btnVec->begin(); itr != m_btnVec->end(); itr++)
-			{
-				ImGui::SameLine();
-				(*itr)->UpdateRender();
-			}
-			ImGui::End();
-		}
-
-		//ObjMgr
-		ObjectManager::GetInstance()->ImguiUpdate();
-
-		//FrameCheck
+		EditorRenderFacade::DrawOverlay(*this);
 		ImGuiIO& io = ImGui::GetIO();
-		ImGui::Begin("Frame");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
 
 		device->SetRenderState(D3DRS_ZENABLE, FALSE);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
@@ -948,6 +822,11 @@ D3DXVECTOR2 RenderManager::GetUICanvasSize()
 bool RenderManager::IsUsingScreenSpaceUIMouse()
 {
 	return m_useScreenSpaceUIMouse;
+}
+
+const vector<ImguiButton*>* RenderManager::GetRegisteredButtons() const
+{
+	return m_btnVec;
 }
 
 void RenderManager::RenderUIQueue()

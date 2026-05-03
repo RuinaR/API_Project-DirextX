@@ -1,202 +1,22 @@
 #include "pch.h"
 #include "SceneDataManager.h"
+#include "Editor/EditorSceneWorkflow.h"
 #include "MainFrame.h"
 #include "ObjectManager.h"
+#include "SceneSerializationService.h"
 #include "SceneJsonUtility.h"
 
 namespace
 {
-	const char* ToProjectionModeString(CameraProjectionMode mode)
-	{
-		return mode == CameraProjectionMode::Perspective ? "Perspective" : "Orthographic";
-	}
-
-	CameraProjectionMode ParseProjectionModeString(const std::string& mode)
-	{
-		if (mode == "Perspective")
-		{
-			return CameraProjectionMode::Perspective;
-		}
-
-		return CameraProjectionMode::Orthographic;
-	}
-
-	std::map<std::string, std::string>& GetCapturedSceneSnapshots()
-	{
-		static std::map<std::string, std::string> snapshots;
-		return snapshots;
-	}
-
-	std::map<std::string, bool>& GetSceneDirtyFlags()
-	{
-		static std::map<std::string, bool> dirtyFlags;
-		return dirtyFlags;
-	}
-
+	// 로드 중 하위 역직렬화 경로가 현재 SceneData 버전을 조회할 수 있도록
+	// 일시적으로 유지하는 facade용 저장소다.
 	int& GetCurrentLoadingSceneVersionStorage()
 	{
 		static int sceneVersion = 3;
 		return sceneVersion;
 	}
 
-	std::string BuildSceneDataJson(const std::string& sceneName)
-	{
-		constexpr int kSceneDataVersion = 6;
-		const D3DXVECTOR3 cameraPosition = Camera::GetInstance()->GetPos();
-		const D3DXVECTOR3 cameraRotation = Camera::GetInstance()->GetRotation();
-		const CameraProjectionMode projectionMode = Camera::GetInstance()->GetProjectionMode();
-		const float fov = Camera::GetInstance()->GetFov();
-		const float orthographicSize = Camera::GetInstance()->GetOrthographicSize();
-		const float nearClip = Camera::GetInstance()->GetNearClip();
-		const float farClip = Camera::GetInstance()->GetFarClip();
-
-		std::ostringstream oss;
-		oss << "{\n";
-		oss << "  \"version\": " << kSceneDataVersion << ",\n";
-		oss << "  \"sceneName\": \"" << sceneName << "\",\n";
-		oss << "  \"timeScale\": " << (MainFrame::GetInstance() != nullptr ? MainFrame::GetInstance()->GetTimeScale() : 1.0f) << ",\n";
-		oss << "  \"camera\": {\n";
-		oss << "    \"position\": { \"x\": " << cameraPosition.x << ", \"y\": " << cameraPosition.y << ", \"z\": " << cameraPosition.z << " },\n";
-		oss << "    \"rotation\": { \"x\": " << cameraRotation.x << ", \"y\": " << cameraRotation.y << ", \"z\": " << cameraRotation.z << " },\n";
-		oss << "    \"projection\": {\n";
-		oss << "      \"mode\": \"" << ToProjectionModeString(projectionMode) << "\",\n";
-		oss << "      \"fov\": " << fov << ",\n";
-		oss << "      \"orthographicSize\": " << orthographicSize << ",\n";
-		oss << "      \"nearClip\": " << nearClip << ",\n";
-		oss << "      \"farClip\": " << farClip << "\n";
-		oss << "    }\n";
-		oss << "  },\n";
-		oss << "  \"objects\": ";
-		oss << ObjectManager::GetInstance()->SerializeObjects(kSceneDataVersion);
-		oss << "\n}\n";
-		return oss.str();
-	}
-
-	void DeserializeCamera(const std::string& sceneJson)
-	{
-		std::string cameraJson;
-		if (!SceneJson::ExtractObject(sceneJson, "camera", cameraJson))
-		{
-			return;
-		}
-
-		Camera::GetInstance()->InitializeView();
-		D3DXVECTOR3 position = Camera::GetInstance()->GetPos();
-		D3DXVECTOR3 rotation = Camera::GetInstance()->GetRotation();
-		SceneJson::ReadVector3(cameraJson, "position", &position);
-		SceneJson::ReadVector3(cameraJson, "rotation", &rotation);
-
-		Camera::GetInstance()->SetPos(position.x, position.y, position.z);
-		Camera::GetInstance()->SetRotation(&rotation);
-
-		std::string projectionJson;
-		if (!SceneJson::ExtractObject(cameraJson, "projection", projectionJson))
-		{
-			return;
-		}
-
-		std::string projectionMode;
-		if (SceneJson::ReadString(projectionJson, "mode", projectionMode))
-		{
-			Camera::GetInstance()->SetProjectionMode(ParseProjectionModeString(projectionMode));
-		}
-
-		float fov = Camera::GetInstance()->GetFov();
-		if (SceneJson::ReadFloat(projectionJson, "fov", fov))
-		{
-			Camera::GetInstance()->SetFov(fov);
-		}
-
-		float orthographicSize = Camera::GetInstance()->GetOrthographicSize();
-		if (SceneJson::ReadFloat(projectionJson, "orthographicSize", orthographicSize))
-		{
-			Camera::GetInstance()->SetOrthographicSize(orthographicSize);
-		}
-
-		float nearClip = Camera::GetInstance()->GetNearClip();
-		if (SceneJson::ReadFloat(projectionJson, "nearClip", nearClip))
-		{
-			Camera::GetInstance()->SetNearClip(nearClip);
-		}
-
-		float farClip = Camera::GetInstance()->GetFarClip();
-		if (SceneJson::ReadFloat(projectionJson, "farClip", farClip))
-		{
-			Camera::GetInstance()->SetFarClip(farClip);
-		}
-	}
-
-	void DeserializeTimeScale(const std::string& sceneJson)
-	{
-		float timeScale = 1.0f;
-		if (SceneJson::ReadFloat(sceneJson, "timeScale", timeScale) && MainFrame::GetInstance() != nullptr)
-		{
-			MainFrame::GetInstance()->SetTimeScale(timeScale);
-			return;
-		}
-
-		if (MainFrame::GetInstance() != nullptr)
-		{
-			MainFrame::GetInstance()->SetTimeScale(1.0f);
-		}
-	}
-
-	bool WriteSceneDataFile(const std::string& sceneName, const std::string& json)
-	{
-		const std::string path = SceneDataManager::GetSceneDataPath(sceneName);
-		std::ofstream file(path.c_str(), std::ios::out | std::ios::trunc);
-		if (!file.is_open())
-		{
-			std::cout << "SceneData save failed: " << path << std::endl;
-			return false;
-		}
-
-		file << json;
-		std::cout << "SceneData saved: " << path << std::endl;
-		return true;
-	}
-
-	bool ReadSceneDataFile(const std::string& sceneName, std::string* outSceneJson)
-	{
-		if (outSceneJson == nullptr)
-		{
-			return false;
-		}
-
-		const std::string path = SceneDataManager::GetSceneDataPath(sceneName);
-		std::ifstream file(path.c_str(), std::ios::in);
-		if (!file.is_open())
-		{
-			std::cout << "SceneData load failed: " << path << std::endl;
-			return false;
-		}
-
-		std::ostringstream oss;
-		oss << file.rdbuf();
-		*outSceneJson = oss.str();
-		return true;
-	}
-
-	bool DeserializeSceneDataJson(const std::string& sceneName, const std::string& sceneJson)
-	{
-		int sceneVersion = 3;
-		SceneJson::ReadInt(sceneJson, "version", sceneVersion);
-		GetCurrentLoadingSceneVersionStorage() = sceneVersion;
-		DeserializeTimeScale(sceneJson);
-		DeserializeCamera(sceneJson);
-		if (!ObjectManager::GetInstance()->DeserializeObjects(sceneJson, sceneVersion))
-		{
-			std::cout << "SceneData load failed: " << SceneDataManager::GetSceneDataPath(sceneName) << std::endl;
-			GetCurrentLoadingSceneVersionStorage() = 3;
-			return false;
-		}
-
-		ObjectManager::GetInstance()->FlushPendingObjects();
-		SceneDataManager::CaptureSceneSnapshot(sceneName);
-		GetCurrentLoadingSceneVersionStorage() = 3;
-		return true;
-	}
-
+	// scene file 목록을 UI에 노출할 때 .json 확장자를 제거한다.
 	std::string TrimSceneFileExtension(const std::string& fileName)
 	{
 		const size_t extensionPos = fileName.rfind(".json");
@@ -207,6 +27,7 @@ namespace
 		return fileName.substr(0, extensionPos);
 	}
 
+	// scene 이름 validation에서 공백-only 입력을 걸러내기 위한 helper다.
 	bool ContainsOnlyWhitespace(const std::string& text)
 	{
 		for (std::string::const_iterator itr = text.begin(); itr != text.end(); ++itr)
@@ -332,116 +153,91 @@ bool SceneDataManager::SaveSceneData(const std::string& sceneName)
 bool SceneDataManager::SaveCurrentSceneData(const std::string& sceneName)
 {
 	ObjectManager::GetInstance()->FlushPendingObjects();
-	const std::string json = BuildSceneDataJson(sceneName);
-	if (!WriteSceneDataFile(sceneName, json))
+	const std::string json = SceneSerializationService::BuildSceneDataJson(
+		sceneName,
+		MainFrame::GetInstance(),
+		Camera::GetInstance(),
+		ObjectManager::GetInstance());
+	if (!SceneSerializationService::WriteSceneDataFile(GetSceneDataPath(sceneName), json))
 	{
 		return false;
 	}
 
-	GetCapturedSceneSnapshots()[sceneName] = json;
+	EditorSceneWorkflow::UpdateCapturedSnapshot(sceneName, json);
 	ClearSceneDirty(sceneName);
 	return true;
 }
 
+// 아래 snapshot/dirty API는 editor workflow 구현으로 전달하는 facade wrapper다.
 bool SceneDataManager::CaptureSceneSnapshot(const std::string& sceneName)
 {
-	ObjectManager::GetInstance()->FlushPendingObjects();
-	GetCapturedSceneSnapshots()[sceneName] = BuildSceneDataJson(sceneName);
-	ClearSceneDirty(sceneName);
-	std::cout << "SceneData snapshot captured: " << sceneName << std::endl;
-	return true;
+	return EditorSceneWorkflow::CaptureSceneSnapshot(sceneName);
 }
 
 std::string SceneDataManager::GetCapturedSnapshot(const std::string& sceneName)
 {
-	std::map<std::string, std::string>::iterator itr = GetCapturedSceneSnapshots().find(sceneName);
-	if (itr == GetCapturedSceneSnapshots().end())
-	{
-		return std::string();
-	}
-	return itr->second;
+	return EditorSceneWorkflow::GetCapturedSnapshot(sceneName);
 }
 
 void SceneDataManager::MarkSceneDirty(const std::string& sceneName)
 {
-	if (sceneName.empty())
-	{
-		return;
-	}
-	GetSceneDirtyFlags()[sceneName] = true;
+	EditorSceneWorkflow::MarkSceneDirty(sceneName);
 }
 
 void SceneDataManager::ClearSceneDirty(const std::string& sceneName)
 {
-	if (sceneName.empty())
-	{
-		return;
-	}
-	GetSceneDirtyFlags()[sceneName] = false;
+	EditorSceneWorkflow::ClearSceneDirty(sceneName);
 }
 
 bool SceneDataManager::IsSceneDirty(const std::string& sceneName)
 {
-	std::map<std::string, bool>::iterator dirtyItr = GetSceneDirtyFlags().find(sceneName);
-	if (dirtyItr != GetSceneDirtyFlags().end() && dirtyItr->second)
-	{
-		return true;
-	}
-
-	const std::string snapshot = GetCapturedSnapshot(sceneName);
-	if (snapshot.empty())
-	{
-		return false;
-	}
-	return snapshot != BuildSceneDataJson(sceneName);
+	return EditorSceneWorkflow::IsSceneDirty(sceneName);
 }
 
 bool SceneDataManager::SaveCapturedSnapshot(const std::string& sceneName)
 {
-	const std::string snapshot = GetCapturedSnapshot(sceneName);
-	if (snapshot.empty())
-	{
-		std::cout << "SceneData snapshot not found: " << sceneName << std::endl;
-		return false;
-	}
-	const bool saved = WriteSceneDataFile(sceneName, snapshot);
-	if (saved)
-	{
-		ClearSceneDirty(sceneName);
-	}
-	return saved;
+	return EditorSceneWorkflow::SaveCapturedSnapshot(sceneName);
 }
 
 bool SceneDataManager::LoadSceneData(const std::string& sceneName)
 {
 	std::string sceneJson;
-	if (!ReadSceneDataFile(sceneName, &sceneJson))
+	if (!SceneSerializationService::ReadSceneDataFile(GetSceneDataPath(sceneName), &sceneJson))
 	{
 		return false;
 	}
 
-	return DeserializeSceneDataJson(sceneName, sceneJson);
+	return DeserializeSceneDataForWorkflow(sceneName, sceneJson);
 }
 
+bool SceneDataManager::DeserializeSceneDataForWorkflow(const std::string& sceneName, const std::string& sceneJson)
+{
+	// editor workflow가 scene json 역직렬화를 요청할 때 사용하는 facade 진입점이다.
+	// loading scene version 저장소와 실패 로그는 여기서 관리하고,
+	// 실제 역직렬화 코어는 SceneSerializationService로 위임된다.
+	int sceneVersion = 3;
+	SceneJson::ReadInt(sceneJson, "version", sceneVersion);
+	GetCurrentLoadingSceneVersionStorage() = sceneVersion;
+	if (!SceneSerializationService::DeserializeSceneDataJson(
+		sceneJson,
+		MainFrame::GetInstance(),
+		Camera::GetInstance(),
+		ObjectManager::GetInstance(),
+		&sceneVersion))
+	{
+		std::cout << "SceneData load failed: " << GetSceneDataPath(sceneName) << std::endl;
+		GetCurrentLoadingSceneVersionStorage() = 3;
+		return false;
+	}
+
+	GetCurrentLoadingSceneVersionStorage() = 3;
+	return true;
+}
+
+// New Scene은 editor 전용 workflow 구현으로 위임된다.
 bool SceneDataManager::CreateNewScene(const std::string& sceneName)
 {
-	if (sceneName.empty() || WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
-	{
-		return false;
-	}
-
-	ObjectManager* objectManager = ObjectManager::GetInstance();
-	if (objectManager == nullptr)
-	{
-		return false;
-	}
-
-	objectManager->Clear();
-	objectManager->FlushPendingObjects();
-	Camera::GetInstance()->InitializeView();
-	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
-	MarkSceneDirty(sceneName);
-	return true;
+	return EditorSceneWorkflow::CreateNewScene(sceneName);
 }
 
 std::vector<std::string> SceneDataManager::GetSceneFileList()
@@ -471,80 +267,16 @@ std::vector<std::string> SceneDataManager::GetSceneFileList()
 	return sceneNames;
 }
 
+// Open Scene은 rollback/dirty/snapshot 복원을 포함한 editor workflow 구현으로 위임된다.
 bool SceneDataManager::OpenSceneData(const std::string& sceneName)
 {
-	if (sceneName.empty() || WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
-	{
-		return false;
-	}
-
-	ObjectManager* objectManager = ObjectManager::GetInstance();
-	if (objectManager == nullptr)
-	{
-		return false;
-	}
-
-	std::string targetSceneJson;
-	if (!ReadSceneDataFile(sceneName, &targetSceneJson))
-	{
-		return false;
-	}
-
-	const char* currentSceneName = WindowFrame::GetInstance()->GetCurrentSceneName();
-	const std::string previousSceneName = currentSceneName != nullptr ? currentSceneName : "";
-	const bool previousSceneDirty = !previousSceneName.empty() && IsSceneDirty(previousSceneName);
-	const std::string previousSceneJson = previousSceneName.empty() ? std::string() : BuildSceneDataJson(previousSceneName);
-
-	// TODO: dirty 상태 저장 확인 팝업은 Open Scene / Save As 흐름과 함께 다음 단계에서 정리한다.
-	objectManager->Clear();
-	objectManager->FlushPendingObjects();
-
-	if (!DeserializeSceneDataJson(sceneName, targetSceneJson))
-	{
-		objectManager->Clear();
-		objectManager->FlushPendingObjects();
-
-		if (!previousSceneJson.empty() && DeserializeSceneDataJson(previousSceneName, previousSceneJson))
-		{
-			WindowFrame::GetInstance()->SetCurrentSceneName(previousSceneName);
-			if (previousSceneDirty)
-			{
-				MarkSceneDirty(previousSceneName);
-			}
-			else
-			{
-				ClearSceneDirty(previousSceneName);
-			}
-		}
-		return false;
-	}
-
-	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
-	ClearSceneDirty(sceneName);
-	return true;
+	return EditorSceneWorkflow::OpenSceneData(sceneName);
 }
 
+// Save Scene As는 editor 전용 scene name/current scene 갱신 정책을 포함한 workflow로 위임된다.
 bool SceneDataManager::SaveSceneDataAs(const std::string& sceneName)
 {
-	if (WindowFrame::GetInstance() == nullptr || WindowFrame::GetInstance()->GetRenderType() != RenderType::Edit)
-	{
-		return false;
-	}
-
-	if (!IsValidSceneName(sceneName))
-	{
-		std::cout << "Save Scene As failed: invalid scene name: " << sceneName << std::endl;
-		return false;
-	}
-
-	if (!SaveCurrentSceneData(sceneName))
-	{
-		return false;
-	}
-
-	WindowFrame::GetInstance()->SetCurrentSceneName(sceneName);
-	ClearSceneDirty(sceneName);
-	return true;
+	return EditorSceneWorkflow::SaveSceneDataAs(sceneName);
 }
 
 int SceneDataManager::GetCurrentLoadingSceneVersion()

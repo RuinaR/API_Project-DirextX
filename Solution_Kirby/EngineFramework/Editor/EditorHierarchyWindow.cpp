@@ -1,10 +1,11 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EditorHierarchyWindow.h"
 #include "EditorBuildSettingsPanel.h"
 #include "EditorObjectFactory.h"
 #include "GameObject.h"
 #include "MainFrame.h"
 #include "ObjectManager.h"
+#include "EditorSelectionService.h"
 #include "Camera.h"
 #include "RenderManager.h"
 #include "SceneDataManager.h"
@@ -25,6 +26,7 @@ namespace
 	std::string g_pendingOpenSceneName;
 	bool g_shouldExecutePendingSceneAction = false;
 	bool g_shouldOpenSceneChangeConfirmPopup = false;
+	bool g_shouldOpenDuplicateSceneNamePopup = false;
 
 	std::string GetCurrentSceneName()
 	{
@@ -234,7 +236,7 @@ namespace
 
 		if (hasHit && hit.gameObject != nullptr)
 		{
-			ImGui::Text("Hit GameObject: %s", hit.gameObject->GetTag().c_str());
+			ImGui::Text("Hit GameObject: %s", hit.gameObject->GetName().c_str());
 			ImGui::Text("Hit Distance: %.3f", hit.distance);
 			ImGui::Text("Hit Point: %.2f, %.2f, %.2f", hit.point.x, hit.point.y, hit.point.z);
 			ImGui::Text("Hit Normal: %.2f, %.2f, %.2f", hit.normal.x, hit.normal.y, hit.normal.z);
@@ -325,34 +327,6 @@ namespace
 		}
 	}
 
-	bool IsSameOrChild(GameObject* root, GameObject* target)
-	{
-		if (root == nullptr || target == nullptr)
-		{
-			return false;
-		}
-
-		if (root == target)
-		{
-			return true;
-		}
-
-		vector<GameObject*>* childList = root->GetChild();
-		if (childList == nullptr)
-		{
-			return false;
-		}
-
-		for (vector<GameObject*>::iterator itr = childList->begin(); itr != childList->end(); itr++)
-		{
-			if (IsSameOrChild(*itr, target))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 	void DeleteGameObjectFromHierarchy(GameObject* obj)
 	{
 		ObjectManager* objectManager = ObjectManager::GetInstance();
@@ -361,10 +335,6 @@ namespace
 			return;
 		}
 
-		if (IsSameOrChild(obj, objectManager->GetSelectedObject()))
-		{
-			objectManager->ClearSelectedObject();
-		}
 		objectManager->DestroyObject(obj);
 		MarkCurrentSceneDirty();
 	}
@@ -381,7 +351,7 @@ namespace
 			return false;
 		}
 
-		if (newParent != nullptr && IsSameOrChild(child, newParent))
+		if (newParent != nullptr && child->IsSameOrChild(newParent))
 		{
 			return false;
 		}
@@ -438,7 +408,7 @@ namespace
 		{
 			GameObject* payloadObject = obj;
 			ImGui::SetDragDropPayload(kHierarchyDragDropPayload, &payloadObject, sizeof(payloadObject));
-			ImGui::Text("%s", obj->GetTag().c_str());
+			ImGui::Text("%s", obj->GetName().c_str());
 			ImGui::EndDragDropSource();
 		}
 
@@ -454,6 +424,31 @@ namespace
 			}
 			ImGui::EndDragDropTarget();
 		}
+	}
+
+	void DrawDuplicateSceneNamePopup()
+	{
+		if (g_shouldOpenDuplicateSceneNamePopup)
+		{
+			ImGui::OpenPopup("DuplicateSceneNamePopup");
+			g_shouldOpenDuplicateSceneNamePopup = false;
+		}
+
+		if (!ImGui::BeginPopupModal("DuplicateSceneNamePopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			return;
+		}
+
+		ImGui::Text("이미 존재하는 씬 이름입니다.");
+		ImGui::Text("다른 이름을 입력해주세요.");
+		ImGui::Separator();
+
+		if (ImGui::Button("OK"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
 	}
 }
 
@@ -481,7 +476,7 @@ void EditorHierarchyWindow::Draw()
 			ImGui::OpenPopup("CreateGameObjectPopup");
 		}
 		ImGui::SameLine();
-		DrawGameObjectDeleteControls(objectManager->GetSelectedObject());
+		DrawGameObjectDeleteControls(EditorSelectionService::GetSelectedObject());
 		ImGui::Dummy(ImVec2(0.0f, ImGui::GetTextLineHeight()));
 
 		if (ImGui::Button("New Scene"))
@@ -536,13 +531,14 @@ void EditorHierarchyWindow::Draw()
 
 			if (newObj != nullptr)
 			{
-				objectManager->SetSelectedObject(newObj);
+				EditorSelectionService::SetSelectedObject(newObj);
 				MarkCurrentSceneDirty();
 			}
 			ImGui::EndPopup();
 		}
 		DrawOpenScenePopup();
 		DrawSaveSceneAsPopup();
+		DrawDuplicateSceneNamePopup();
 		ImGui::Separator();
 		DrawCameraSection();
 		ImGui::Separator();
@@ -630,11 +626,11 @@ void EditorHierarchyWindow::DrawGameObjectNode(GameObject* obj, int depth, int& 
 	}
 
 	visibleIndex++;
-	sprintf_s(str, 128, "%s%d. %s", prefix.c_str(), visibleIndex, obj->GetTag().c_str());
+	sprintf_s(str, 128, "%s%d. %s", prefix.c_str(), visibleIndex, obj->GetName().c_str());
 	ImGui::PushID(obj);
-	if (ImGui::Selectable(str, objectManager->GetSelectedObject() == obj))
+	if (ImGui::Selectable(str, EditorSelectionService::GetSelectedObject() == obj))
 	{
-		objectManager->SetSelectedObject(obj);
+		EditorSelectionService::SetSelectedObject(obj);
 	}
 	DrawHierarchyDragDrop(obj);
 	DrawHierarchyContextMenu(obj);
@@ -656,8 +652,10 @@ void EditorHierarchyWindow::ProcessChildNode(GameObject* obj, int depth)
 		return;
 	}
 
+	// 하이어라키를 그리는 도중 부모 변경으로 childList가 수정될 수 있으므로 스냅샷으로 순회한다.
+	vector<GameObject*> childSnapshot = *childList;
 	int visibleIndex = 0;
-	for (vector<GameObject*>::iterator node = childList->begin(); node != childList->end(); node++)
+	for (vector<GameObject*>::iterator node = childSnapshot.begin(); node != childSnapshot.end(); node++)
 	{
 		if ((*node) == nullptr || (*node)->GetDestroy())
 		{
@@ -725,6 +723,7 @@ void EditorHierarchyWindow::DrawSaveSceneAsPopup()
 	ImGui::TextDisabled("Invalid chars: \\ / : * ? \" < > |");
 
 	const std::string newSceneName = g_saveSceneAsName;
+	const std::string currentSceneName = GetCurrentSceneName();
 	const bool canSave = SceneDataManager::IsValidSceneName(newSceneName);
 	if (!canSave)
 	{
@@ -733,11 +732,22 @@ void EditorHierarchyWindow::DrawSaveSceneAsPopup()
 
 	if (ImGui::Button("Save"))
 	{
-		const bool saved = SceneDataManager::SaveSceneDataAs(newSceneName);
-		std::cout << (saved ? "Save Scene As succeeded: " : "Save Scene As failed: ") << newSceneName << std::endl;
-		if (saved)
+		const bool isDuplicateSceneName =
+			SceneDataManager::Exists(newSceneName) &&
+			newSceneName != currentSceneName;
+
+		if (isDuplicateSceneName)
 		{
-			ImGui::CloseCurrentPopup();
+			g_shouldOpenDuplicateSceneNamePopup = true;
+		}
+		else
+		{
+			const bool saved = SceneDataManager::SaveSceneDataAs(newSceneName);
+			std::cout << (saved ? "Save Scene As succeeded: " : "Save Scene As failed: ") << newSceneName << std::endl;
+			if (saved)
+			{
+				ImGui::CloseCurrentPopup();
+			}
 		}
 	}
 
@@ -763,7 +773,7 @@ void EditorHierarchyWindow::DrawSceneDirtyConfirmPopup()
 	}
 
 	ImGui::Text("현재 씬에 저장되지 않은 변경사항이 있습니다.");
-	ImGui::Text("저장 후 계속할까요?");
+	ImGui::Text("저장하고 계속할까요?");
 	ImGui::Separator();
 
 	if (ImGui::Button("Save"))

@@ -1,6 +1,6 @@
 {
-  "version": 7,
-  "sceneName": "ActivePhysicsToggleTestScene",
+  "version": 6,
+  "sceneName": "ActivePhysicsToggleTestScene1",
   "timeScale": 2.15,
   "camera": {
     "position": { "x": 0, "y": 0, "z": -1268 },
@@ -171,7 +171,7 @@
       "tag": "Dynamic_Crate",
       "active": true,
       "transform": {
-        "position": { "x": 235.811, "y": -267.985, "z": 0 },
+        "position": { "x": 229.811, "y": -267.985, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 2.93939e-08 },
         "size": { "x": 84, "y": 84, "z": 1 }
       },
@@ -188,7 +188,7 @@
       "tag": "Static_Circle_Obstacle",
       "active": true,
       "transform": {
-        "position": { "x": 157, "y": 180, "z": 0 },
+        "position": { "x": 430, "y": 180, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 96, "y": 96, "z": 1 }
       },
@@ -364,86 +364,6 @@
         { "type": "CircleCollider2D", "data": { "bodyType": 0, "trigger": false, "radius": 64, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } },
         { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample.fbx" } }
       ]
-    },
-    {
-      "id": 23,
-      "parentId": -1,
-      "name": "New GameObject",
-      "tag": "Untagged",
-      "active": true,
-      "transform": {
-        "position": { "x": 0, "y": 0, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 0, "y": 0, "z": 0 }
-      },
-      "components": []
-    },
-    {
-      "id": 24,
-      "parentId": -1,
-      "name": "New GameObjectq",
-      "tag": "Untagged",
-      "active": true,
-      "transform": {
-        "position": { "x": 0, "y": 0, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 0, "y": 0, "z": 0 }
-      },
-      "components": [
-        { "type": "ObjectManagerSearchApiTestComponent", "data": { "enabled": true, "testTag": "ObjectManagerApiTest", "spawnCount": 3, "spacingX": 120 } }
-      ]
-    },
-    {
-      "id": 25,
-      "parentId": -1,
-      "name": "ObjectManagerApiTest",
-      "tag": "ObjectManagerApiTest",
-      "active": true,
-      "transform": {
-        "position": { "x": 0, "y": 0, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 0, "y": 0, "z": 0 }
-      },
-      "components": []
-    },
-    {
-      "id": 26,
-      "parentId": -1,
-      "name": "ObjectManagerApiTest",
-      "tag": "ObjectManagerApiTest",
-      "active": true,
-      "transform": {
-        "position": { "x": 120, "y": 0, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 0, "y": 0, "z": 0 }
-      },
-      "components": []
-    },
-    {
-      "id": 27,
-      "parentId": -1,
-      "name": "ObjectManagerApiTest",
-      "tag": "ObjectManagerApiTest",
-      "active": true,
-      "transform": {
-        "position": { "x": 240, "y": 0, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 0, "y": 0, "z": 0 }
-      },
-      "components": []
-    },
-    {
-      "id": 28,
-      "parentId": -1,
-      "name": "New GameObject (1)",
-      "tag": "Untagged 2",
-      "active": true,
-      "transform": {
-        "position": { "x": 0, "y": 0, "z": 0 },
-        "rotation": { "x": 0, "y": 0, "z": 0 },
-        "size": { "x": 0, "y": 0, "z": 0 }
-      },
-      "components": []
     }
   ]
 }

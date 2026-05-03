@@ -16,6 +16,15 @@
     <ClCompile Include="Editor\EditorObjectFactory.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorObjectManagerBridge.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorSceneWorkflow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorRenderFacade.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
     <ClCompile Include="Resource\AssetDatabase.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
@@ -130,6 +139,9 @@
     <ClCompile Include="Scene\SceneDataManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\SceneSerializationService.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorAssetField.h">
@@ -146,6 +158,15 @@
     </ClInclude>
     <ClInclude Include="Editor\EditorObjectFactory.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorSceneWorkflow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorRenderFacade.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneSerializationService.h">
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Resource\AssetDatabase.h">
       <Filter>Resource</Filter>

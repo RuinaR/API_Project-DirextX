@@ -20,6 +20,7 @@ protected:
     bool m_isDestroy = false;
     bool m_setActive = true;
     int m_objectId = -1;
+    string m_name = "";
     string m_tag = "";
     D3DXVECTOR3 m_localPosition = { 0.0f, 0.0f, 0.0f };
     D3DXVECTOR3 m_localSize = { 0.0f, 0.0f, 0.0f };
@@ -95,6 +96,8 @@ public:
     bool GetDestroy();
     int GetId() const;
     void SetId(int objectId);
+    void SetName(string name);
+    string GetName();
     void SetTag(string tag);
     string GetTag();
     void SetActive(bool isActive);
@@ -118,6 +121,7 @@ public:
     void SetParent(GameObject* obj);
     void AddChild(GameObject* obj);
     void DeleteChild(GameObject* obj);
+    bool IsSameOrChild(const GameObject* target) const;
     const float& GetAngleZ();
     const float& GetAngleX();
     const float& GetAngleY();

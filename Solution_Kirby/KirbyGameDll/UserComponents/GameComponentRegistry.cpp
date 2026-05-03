@@ -4,6 +4,7 @@
 #include "Scripts/ActivePhysicsTestInfoComponent.h"
 #include "Scripts/ActivePhysicsTestStatusComponent.h"
 #include "Scripts/CollisionVisualTestComponent.h"
+#include "Scripts/ObjectManagerSearchApiTestComponent.h"
 #include "Scripts/Physics2DKeyboardTestComponent.h"
 #include "Scripts/SampleSpinComponent.h"
 #include "UserComponentRegistration.h"
@@ -28,6 +29,7 @@ void RegisterGameComponents(ComponentFactory& factory)
 	REGISTER_GAME_COMPONENT(factory, ActivePhysicsTestStatusComponent, "Active Physics Test Status", "User");
 	REGISTER_GAME_COMPONENT(factory, ActivePhysicsTestInfoComponent, "Active Physics Test Info", "User");
 	REGISTER_GAME_COMPONENT(factory, CollisionVisualTestComponent, "Collision Visual Test", "User");
+	REGISTER_GAME_COMPONENT(factory, ObjectManagerSearchApiTestComponent, "ObjectManager Search API Test", "User");
 	REGISTER_GAME_COMPONENT(factory, Physics2DKeyboardTestComponent, "Physics2D Keyboard Test", "User");
 	REGISTER_GAME_COMPONENT(factory, SampleSpinComponent, "Sample Spin", "User");
 	// 런타임 문맥, 생성자 인자, 싱글톤 소유권이 필요한 사용자 컴포넌트는

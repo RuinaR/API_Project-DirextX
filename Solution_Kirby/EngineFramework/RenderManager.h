@@ -8,6 +8,7 @@ using namespace std;
 class ImageRender;
 class ImguiButton;
 class UIElement;
+class EditorRenderFacade;
 class RenderManager
 {
 private:
@@ -49,7 +50,6 @@ private:
 	void SortUIQueue();
 	void RenderSceneContents(bool renderColliderDebug);
 	void RenderImmediateDebugLines();
-	void RenderSelectedObjectMarker(const ImVec2& imageScreenPos);
 	void RenderUIQueue();
 public:
 	static void Create();
@@ -92,6 +92,7 @@ public:
 	D3DXVECTOR2 GetGameViewSize();
 	D3DXVECTOR2 GetUICanvasSize();
 	bool IsUsingScreenSpaceUIMouse();
+	const vector<ImguiButton*>* GetRegisteredButtons() const;
 
 	static int FrameCount;
 };

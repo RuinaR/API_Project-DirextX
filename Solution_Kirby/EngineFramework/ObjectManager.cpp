@@ -1,11 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "SceneJsonUtility.h"
 #include "ComponentFactory.h"
-#include "Editor/EditorHierarchyWindow.h"
-#include "Editor/EditorInspectorWindow.h"
-#include "Resource/ResourceBrowser.h"
 #include "Input/Mouse.h"
 #include "Physics2D/Physics2D.h"
 
@@ -136,6 +133,58 @@ void ObjectManager::ResolveComponentReferences(const std::unordered_map<int, Gam
 	}
 }
 
+void ObjectManager::NotifyObjectDestroyRequested(GameObject* obj)
+{
+	for (vector<std::function<void(GameObject*)>>::iterator itr = m_objectDestroyRequestedCallbacks.begin();
+		itr != m_objectDestroyRequestedCallbacks.end();
+		itr++)
+	{
+		if (*itr)
+		{
+			(*itr)(obj);
+		}
+	}
+}
+
+void ObjectManager::NotifyObjectReleased(GameObject* obj)
+{
+	for (vector<std::function<void(GameObject*)>>::iterator itr = m_objectReleasedCallbacks.begin();
+		itr != m_objectReleasedCallbacks.end();
+		itr++)
+	{
+		if (*itr)
+		{
+			(*itr)(obj);
+		}
+	}
+}
+
+void ObjectManager::NotifyObjectsClearing()
+{
+	for (vector<std::function<void()>>::iterator itr = m_objectsClearingCallbacks.begin();
+		itr != m_objectsClearingCallbacks.end();
+		itr++)
+	{
+		if (*itr)
+		{
+			(*itr)();
+		}
+	}
+}
+
+void ObjectManager::NotifyObjectsCleared()
+{
+	for (vector<std::function<void()>>::iterator itr = m_objectsClearedCallbacks.begin();
+		itr != m_objectsClearedCallbacks.end();
+		itr++)
+	{
+		if (*itr)
+		{
+			(*itr)();
+		}
+	}
+}
+
 void ObjectManager::QueueDestroyObject(GameObject* obj)
 {
 	if (obj == nullptr || IsPendingRemove(obj))
@@ -171,33 +220,12 @@ void ObjectManager::QueueDestroyObjectTree(GameObject* obj)
 	QueueDestroyObject(obj);
 }
 
-bool ObjectManager::IsSameOrChild(GameObject* root, GameObject* target)
-{
-	if (root == nullptr || target == nullptr)
-		return false;
-
-	if (root == target)
-		return true;
-
-	vector<GameObject*>* childList = root->GetChild();
-	if (childList == nullptr)
-		return false;
-
-	for (vector<GameObject*>::iterator itr = childList->begin(); itr != childList->end(); itr++)
-	{
-		if (IsSameOrChild(*itr, target))
-			return true;
-	}
-	return false;
-}
-
 void ObjectManager::ReleaseAndDeleteObject(GameObject* obj)
 {
 	if (obj == nullptr)
 		return;
 
-	if (m_selected == obj)
-		m_selected = nullptr;
+	NotifyObjectReleased(obj);
 	if (m_currentMouseHoverObject == obj)
 		m_currentMouseHoverObject = nullptr;
 
@@ -211,7 +239,7 @@ bool ObjectManager::HasGameObjectName(const string& name)
 	{
 		for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 		{
-			if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == name)
+			if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetName() == name)
 			{
 				return true;
 			}
@@ -220,23 +248,13 @@ bool ObjectManager::HasGameObjectName(const string& name)
 
 	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
 	{
-		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == name)
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetName() == name)
 		{
 			return true;
 		}
 	}
 
 	return false;
-}
-
-void ObjectManager::ImguiUpdate()
-{
-	EditorHierarchyWindow::Draw();
-	if (WindowFrame::GetInstance() != nullptr && WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit)
-	{
-		ResourceBrowser::Draw();
-	}
-	EditorInspectorWindow::Draw();
 }
 
 void ObjectManager::Create()
@@ -339,38 +357,113 @@ bool ObjectManager::DestroyObject(GameObject* obj)
 	if (!IsInObjectList(obj) && !IsPendingAdd(obj))
 		return false;
 
-	if (IsSameOrChild(obj, m_selected))
-	{
-		m_selected = nullptr;
-	}
+	NotifyObjectDestroyRequested(obj);
 	QueueDestroyObjectTree(obj);
 	return true;
 }
 
 bool ObjectManager::DestroyObject(string tag)
 {
+	return DestroyFirstObjectByTag(tag);
+}
+
+bool ObjectManager::DestroyObjectByName(const string& name)
+{
+	GameObject* target = FindObjectByName(name);
+	if (target == nullptr)
+	{
+		return false;
+	}
+
+	return DestroyObject(target);
+}
+
+bool ObjectManager::DestroyFirstObjectByTag(const string& tag)
+{
 	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
 	{
 		if ((*itr) != nullptr && (*itr)->GetTag() == tag)
 		{
-			DestroyObject(*itr);
-			return true;
+			return DestroyObject(*itr);
 		}
 	}
 
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 	{
-		if ((*itr) != nullptr && (*itr)->GetTag() == tag)
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
 		{
-			DestroyObject(*itr);
-			return true;
+			return DestroyObject(*itr);
 		}
 	}
+
 	return false;
+}
+
+int ObjectManager::DestroyObjectsByTag(const string& tag)
+{
+	int destroyRequestedCount = 0;
+
+	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
+		{
+			if (DestroyObject(*itr))
+			{
+				destroyRequestedCount++;
+			}
+		}
+	}
+
+	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
+		{
+			if (DestroyObject(*itr))
+			{
+				destroyRequestedCount++;
+			}
+		}
+	}
+
+	return destroyRequestedCount;
 }
 
 GameObject* ObjectManager::FindObject(string tag)
 {
+	return FindFirstObjectByTag(tag);
+}
+
+GameObject* ObjectManager::FindObjectByName(const string& name)
+{
+	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetName() == name)
+		{
+			return *itr;
+		}
+	}
+
+	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetName() == name)
+		{
+			return *itr;
+		}
+	}
+
+	return nullptr;
+}
+
+GameObject* ObjectManager::FindFirstObjectByTag(const string& tag)
+{
+	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
+		{
+			return *itr;
+		}
+	}
+
 	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
 	{
 		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
@@ -378,7 +471,31 @@ GameObject* ObjectManager::FindObject(string tag)
 			return (*itr);
 		}
 	}
+
 	return nullptr;
+}
+
+vector<GameObject*> ObjectManager::FindObjectsByTag(const string& tag)
+{
+	vector<GameObject*> matchedObjects;
+
+	for (vector<GameObject*>::iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
+		{
+			matchedObjects.push_back(*itr);
+		}
+	}
+
+	for (list<GameObject*>::iterator itr = m_objList->begin(); itr != m_objList->end(); itr++)
+	{
+		if ((*itr) != nullptr && !(*itr)->GetDestroy() && (*itr)->GetTag() == tag)
+		{
+			matchedObjects.push_back(*itr);
+		}
+	}
+
+	return matchedObjects;
 }
 
 bool ObjectManager::FindObject(GameObject* obj)
@@ -389,8 +506,10 @@ bool ObjectManager::FindObject(GameObject* obj)
 void ObjectManager::Initialize()
 {
 	m_objList = new list<GameObject*>();
-	m_selected = nullptr;
+	m_mouseInteractionBlocked = false;
+	m_isClearInProgress = false;
 	m_nextRuntimeObjectId = 1;
+	NotifyObjectsCleared();
 }
 
 void ObjectManager::Release()
@@ -434,54 +553,52 @@ void ObjectManager::Update()
 
 void ObjectManager::UpdateMouseInteraction()
 {
-	if (WindowFrame::GetInstance() != nullptr &&
-		WindowFrame::GetInstance()->GetRenderType() == RenderType::Edit &&
-		ImGui::GetCurrentContext() != nullptr &&
-		ImGui::GetIO().WantCaptureMouse)
-	{
-		GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
-		m_currentMouseHoverObject = nullptr;
-		if (previousMouseHoverObject != nullptr &&
-			!previousMouseHoverObject->GetDestroy() &&
-			previousMouseHoverObject->GetActive())
-		{
-			previousMouseHoverObject->OnMouseHoverExit();
-		}
-		return;
-	}
+    if (IsMouseInteractionBlocked())
+    {
+        // 에디터 쪽에서 입력 차단 flag를 세운 동안에는 runtime hover 갱신을 멈춘다.
+        GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
+        m_currentMouseHoverObject = nullptr;
+        if (previousMouseHoverObject != nullptr &&
+            !previousMouseHoverObject->GetDestroy() &&
+            previousMouseHoverObject->GetActive())
+        {
+            previousMouseHoverObject->OnMouseHoverExit();
+        }
+        return;
+    }
 
-	GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
-	if (previousMouseHoverObject != nullptr && previousMouseHoverObject->GetDestroy())
-	{
-		// Hover 대상이 삭제 예약되면 HoverExit 없이 조용히 hover 상태만 해제한다.
-		previousMouseHoverObject = nullptr;
-	}
+    GameObject* previousMouseHoverObject = m_currentMouseHoverObject;
+    if (previousMouseHoverObject != nullptr && previousMouseHoverObject->GetDestroy())
+    {
+        // Hover 대상이 이미 파괴됐다면 HoverExit 없이 조용히 hover 상태만 해제한다.
+        previousMouseHoverObject = nullptr;
+    }
 
-	m_currentMouseHoverObject = SanitizeMouseEventTarget(RaycastMouseToGameObject());
+    m_currentMouseHoverObject = SanitizeMouseEventTarget(RaycastMouseToGameObject());
 
-	if (previousMouseHoverObject != m_currentMouseHoverObject)
-	{
-		if (previousMouseHoverObject != nullptr &&
-			!previousMouseHoverObject->GetDestroy() &&
-			previousMouseHoverObject->GetActive())
-		{
-			previousMouseHoverObject->OnMouseHoverExit();
-		}
+    if (previousMouseHoverObject != m_currentMouseHoverObject)
+    {
+        if (previousMouseHoverObject != nullptr &&
+            !previousMouseHoverObject->GetDestroy() &&
+            previousMouseHoverObject->GetActive())
+        {
+            previousMouseHoverObject->OnMouseHoverExit();
+        }
 
-		if (m_currentMouseHoverObject != nullptr &&
-			!m_currentMouseHoverObject->GetDestroy() &&
-			m_currentMouseHoverObject->GetActive())
-		{
-			m_currentMouseHoverObject->OnMouseHoverEnter();
-		}
-	}
+        if (m_currentMouseHoverObject != nullptr &&
+            !m_currentMouseHoverObject->GetDestroy() &&
+            m_currentMouseHoverObject->GetActive())
+        {
+            m_currentMouseHoverObject->OnMouseHoverEnter();
+        }
+    }
 
-	if (m_currentMouseHoverObject != nullptr &&
-		!m_currentMouseHoverObject->GetDestroy() &&
-		m_currentMouseHoverObject->GetActive())
-	{
-		m_currentMouseHoverObject->OnMouseHoverStay();
-	}
+    if (m_currentMouseHoverObject != nullptr &&
+        !m_currentMouseHoverObject->GetDestroy() &&
+        m_currentMouseHoverObject->GetActive())
+    {
+        m_currentMouseHoverObject->OnMouseHoverStay();
+    }
 }
 
 void ObjectManager::FlushPendingObjects()
@@ -532,6 +649,12 @@ void ObjectManager::FlushPendingObjects()
 		ReleaseAndDeleteObject(obj);
 	}
 
+	if (m_isClearInProgress && m_pendingRemoveObjects.empty())
+	{
+		m_isClearInProgress = false;
+		NotifyObjectsCleared();
+	}
+
 	m_isFlushing = false;
 }
 
@@ -539,7 +662,8 @@ void ObjectManager::Clear()
 {
 	if (m_Pthis)
 	{
-		m_Pthis->ClearSelectedObject();
+		m_Pthis->NotifyObjectsClearing();
+		m_Pthis->m_isClearInProgress = true;
 
 		for (vector<GameObject*>::iterator itr = m_Pthis->m_pendingAddObjects.begin(); itr != m_Pthis->m_pendingAddObjects.end(); itr++)
 		{
@@ -566,19 +690,34 @@ list<GameObject*>* ObjectManager::GetObjList()
 	return m_objList;
 }
 
-GameObject* ObjectManager::GetSelectedObject()
+void ObjectManager::RegisterOnObjectDestroyRequested(const std::function<void(GameObject*)>& callback)
 {
-	return m_selected;
+	m_objectDestroyRequestedCallbacks.push_back(callback);
 }
 
-void ObjectManager::SetSelectedObject(GameObject* obj)
+void ObjectManager::RegisterOnObjectReleased(const std::function<void(GameObject*)>& callback)
 {
-	m_selected = obj;
+	m_objectReleasedCallbacks.push_back(callback);
 }
 
-void ObjectManager::ClearSelectedObject()
+void ObjectManager::RegisterOnObjectsClearing(const std::function<void()>& callback)
 {
-	m_selected = nullptr;
+	m_objectsClearingCallbacks.push_back(callback);
+}
+
+void ObjectManager::RegisterOnObjectsCleared(const std::function<void()>& callback)
+{
+	m_objectsClearedCallbacks.push_back(callback);
+}
+
+void ObjectManager::SetMouseInteractionBlocked(bool blocked)
+{
+	m_mouseInteractionBlocked = blocked;
+}
+
+bool ObjectManager::IsMouseInteractionBlocked() const
+{
+	return m_mouseInteractionBlocked;
 }
 
 std::string ObjectManager::SerializeObjects()
@@ -807,7 +946,7 @@ void ObjectManager::OnLBtnDown()
 		hitObject->OnLBtnDown();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}
@@ -822,7 +961,7 @@ void ObjectManager::OnLBtnUp()
 		hitObject->OnLBtnUp();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}
@@ -837,7 +976,7 @@ void ObjectManager::OnRBtnDown()
 		hitObject->OnRBtnDown();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}
@@ -852,7 +991,7 @@ void ObjectManager::OnRBtnUp()
 		hitObject->OnRBtnUp();
 		if (hitObject->GetDestroy())
 		{
-			// 클릭 처리 중 삭제 예약되면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
+			// 클릭 처리 중 파괴됐다면 이후 Up/Stay가 가지 않도록 hover 대상을 비운다.
 			m_currentMouseHoverObject = nullptr;
 		}
 	}

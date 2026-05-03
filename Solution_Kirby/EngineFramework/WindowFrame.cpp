@@ -186,7 +186,7 @@ void WindowFrame::SetScene(Scene* scene)
 	ObjectManager::GetInstance()->FlushPendingObjects();
 	m_scene->Start();
 
-	if (m_type == RenderType::Edit && m_scene->ShouldSaveInitialSceneData())
+	if (m_type == RenderType::Edit && (sceneDataLoaded || m_scene->ShouldSaveInitialSceneData()))
 	{
 		SceneDataManager::CaptureSceneSnapshot(sceneName);
 	}
