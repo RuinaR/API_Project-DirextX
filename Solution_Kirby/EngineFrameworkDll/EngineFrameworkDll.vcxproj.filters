@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Editor\EditorBuildSettingsPanel.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorHierarchyWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorObjectManagerBridge.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorRenderFacade.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorAssetField.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorInspectorWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorObjectFactory.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorSceneWorkflow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\AssetDatabase.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\FBXManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ResourceManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\SoundManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Component\AnimationRender.cpp">
+      <Filter>Rendering\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Component\ImageRender.cpp">
+      <Filter>Rendering\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UIButton.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UIActionRegistry.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UIImage.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UILabel.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UI\UIElement.cpp">
+      <Filter>Rendering\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collision\BoxCollider2D.cpp">
+      <Filter>Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collision\CircleCollider2D.cpp">
+      <Filter>Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Physics\Rigidbody2D.cpp">
+      <Filter>Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collision\Collider2D.cpp">
+      <Filter>Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiButton.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Component.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Debugging\DebugWindow.cpp">
+      <Filter>Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputString.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Physics\Rigidbody.cpp">
+      <Filter>Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\BuildSettingsManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Animation\AnimationManager.cpp">
+      <Filter>Resource\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ResourceBrowser.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowFrame.cpp">
+      <Filter>WindowFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Buffer\Buffer.cpp">
+      <Filter>Rendering\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Camera\Camera.cpp">
+      <Filter>Rendering\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Mouse.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics2D\Physics2D.cpp">
+      <Filter>Physics2D</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>MainFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxTool.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXRender.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Texture\TextureManager.cpp">
+      <Filter>Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneDataManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneSerializationService.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Editor\EditorBuildSettingsPanel.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorHierarchyWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorObjectManagerBridge.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorRenderFacade.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorAssetField.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorInspectorWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorObjectFactory.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorSceneWorkflow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneSerializationService.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\AssetDatabase.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\FBXManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\IResourceTypeManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\SoundManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Component\AnimationRender.h">
+      <Filter>Rendering\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Component\ImageRender.h">
+      <Filter>Rendering\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UIButton.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UIActionRegistry.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UIImage.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UILabel.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UI\UIElement.h">
+      <Filter>Rendering\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collision\BoxCollider2D.h">
+      <Filter>Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collision\CircleCollider2D.h">
+      <Filter>Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Rigidbody2D.h">
+      <Filter>Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collision\Collider2D.h">
+      <Filter>Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiButton.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Debugging\DebugWindow.h">
+      <Filter>Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputString.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Ray.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Rigidbody.h">
+      <Filter>Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BuildSettingsManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Animation\AnimationManager.h">
+      <Filter>Resource\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceBrowser.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFactory.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowFrame.h">
+      <Filter>WindowFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Buffer\Buffer.h">
+      <Filter>Rendering\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Camera\Camera.h">
+      <Filter>Rendering\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Mouse.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics2D\Physics2D.h">
+      <Filter>Physics2D</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\structs.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Timer.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Debugging\DebugRender.h">
+      <Filter>Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\SharedPointer.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ObjectPool.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\fbxsdk\fbxsdk.h">
+      <Filter>Fbxsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxTool.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXRender.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Texture\TextureManager.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneDataManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneJsonUtility.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Component">
+      <UniqueIdentifier>{35d33738-361d-4a7c-9e91-c27bd68abc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics">
+      <UniqueIdentifier>{b94131e1-6d49-4c55-b7d2-9f33a73f882e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Collision">
+      <UniqueIdentifier>{710bfaa1-4fa6-4f71-9c0d-1ecb37b9d5d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{1c152b55-1093-4ff8-a6df-0a2fa28d5108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WindowFrame">
+      <UniqueIdentifier>{52e1a455-5b50-44df-bb72-4ecc310c252c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Buffer">
+      <UniqueIdentifier>{f5798204-8be9-4b7b-b50a-5a3e54cf45dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Component">
+      <UniqueIdentifier>{5b45ee06-b3e7-4431-aa3a-724973e3457b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\UI">
+      <UniqueIdentifier>{83ee85bb-7d05-41a9-9fa5-60f2e3199cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Camera">
+      <UniqueIdentifier>{e2fe58d4-1f94-4801-b1a5-9cab40f188f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{779aa936-e18c-4963-bec7-7d6d60a46b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{77f30fbb-bd2a-4e34-9600-8b6725029667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics2D">
+      <UniqueIdentifier>{2b6b0c21-397d-4240-9d38-5d4332cff9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainFrame">
+      <UniqueIdentifier>{89d5651b-119d-4cd1-b5c4-8f4e0d28b506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{a16cc285-1a48-44b3-b463-ad6803caa0ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{f5b82436-9489-4d60-bd12-68909b2c251e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{ec01aace-cb20-4a7d-9db3-dd13b775942b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{21a7d7a0-6b88-4af7-9e9c-2e5a3b5de9b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Texture">
+      <UniqueIdentifier>{7bfcefd0-1d0d-42e6-ae62-90722c5a46a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Animation">
+      <UniqueIdentifier>{103c2c99-e878-4f2a-899b-82ad528e466a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{969d0714-f2f4-45a5-8eba-2fbbe03d580b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{b14ff8a2-9f8d-4546-ae1a-b3f765736444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugging">
+      <UniqueIdentifier>{0b62f72d-6779-4d95-a671-4ef690a2c5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fbxsdk">
+      <UniqueIdentifier>{6c5336c8-6dde-4b4a-a432-0f40ccff6a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FBX">
+      <UniqueIdentifier>{aa8ed7c0-d7c7-4751-8eab-924323c863c2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

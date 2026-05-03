@@ -3,6 +3,7 @@
 
 #include "Editor/EditorInspectorWindow.h"
 #include "GameObject.h"
+#include "ImGuiContextBridge.h"
 #include "SceneJsonUtility.h"
 
 void SampleSpinComponent::Initialize()
@@ -42,6 +43,7 @@ const char* SampleSpinComponent::GetInspectorName() const
 
 void SampleSpinComponent::DrawInspector()
 {
+	SyncImGuiContextForCurrentModule();
 	ImGui::Checkbox("Enabled", &m_enabled);
 	ImGui::InputFloat("Spin Speed", &m_spinSpeed);
 	ImGui::Checkbox("Use Y Axis", &m_useYAxis);

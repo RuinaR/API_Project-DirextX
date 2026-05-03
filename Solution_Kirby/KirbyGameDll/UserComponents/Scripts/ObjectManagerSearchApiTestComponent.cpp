@@ -2,7 +2,9 @@
 #include "ObjectManagerSearchApiTestComponent.h"
 
 #include "GameObject.h"
+#include "ImGuiContextBridge.h"
 #include "ObjectManager.h"
+#include "Editor/EditorSceneWorkflow.h"
 #include "SceneDataManager.h"
 #include "SceneJsonUtility.h"
 #include "WindowFrame.h"
@@ -36,6 +38,7 @@ const char* ObjectManagerSearchApiTestComponent::GetInspectorName() const
 
 void ObjectManagerSearchApiTestComponent::DrawInspector()
 {
+	SyncImGuiContextForCurrentModule();
 	ImGui::Checkbox("Enabled", &m_enabled);
 
 	char tagBuffer[128] = {};
@@ -278,7 +281,7 @@ void ObjectManagerSearchApiTestComponent::MarkCurrentSceneDirty()
 		return;
 	}
 
-	SceneDataManager::MarkSceneDirty(sceneName);
+	EditorSceneWorkflow::MarkSceneDirty(sceneName);
 }
 
 std::string ObjectManagerSearchApiTestComponent::DescribeObject(GameObject* obj) const

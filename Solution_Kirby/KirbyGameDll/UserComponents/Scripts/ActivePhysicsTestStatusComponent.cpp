@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ActivePhysicsTestStatusComponent.h"
+#include "ImGuiContextBridge.h"
 
 void ActivePhysicsTestStatusComponent::Initialize()
 {
@@ -32,6 +33,7 @@ const char* ActivePhysicsTestStatusComponent::GetInspectorName() const
 
 void ActivePhysicsTestStatusComponent::DrawInspector()
 {
+	SyncImGuiContextForCurrentModule();
 	ImGui::Text("Active Collisions: %d", m_activeCollisionCount);
 	ImGui::Text("Active Triggers: %d", m_activeTriggerCount);
 	ImGui::Text("Enable Count: %d", m_enableCount);

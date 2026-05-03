@@ -3,7 +3,7 @@
 
 #include <string>
 #include <wtypes.h>
-#include "../EngineFramework/pch.h"
+#include "AppLaunchDesc.h"
 
 #ifdef PLUGIN_EXPORTS
 #define PLUGINDECL __declspec(dllexport)
@@ -12,27 +12,18 @@
 #endif
 
 class PluginManager;
-class GameObject;
 
 
 //
-class IPlugin 
+class IPlugin
 {
 public:
 	virtual ~IPlugin() {};
-	
-	virtual bool Initialize(HINSTANCE hInst, RenderType type) = 0;
-	virtual bool Shutdown() = 0;
-	virtual void About(HWND hParent) = 0;
-	virtual double Execute(double a, double b) = 0;
+
+	virtual bool RegisterGameContent(HINSTANCE hInst, const AppLaunchDesc& launchDesc) = 0;
 	virtual const std::string GetName() = 0;
 
-	// 
-	virtual void AddObject(GameObject* p_obj){}
-	virtual void RemoveObject(GameObject* p_obj){}
-	virtual bool AllUpdate() { return false; }
-	virtual void AllStart() {}
-	virtual void AllRelease() {}
+	virtual void ReleaseGameContent() {}
 };
 
 typedef IPlugin* (*CREATEPLUGIN)(PluginManager &mgr);

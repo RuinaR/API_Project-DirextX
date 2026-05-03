@@ -90,18 +90,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Rendering\UI;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFrameworkDll.lib;Imgui.lib;Box2D.lib;Winmm.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -112,12 +112,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Rendering\UI;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,7 +125,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFrameworkDll.lib;Imgui.lib;Box2D.lib;Winmm.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -133,18 +133,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Rendering\UI;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFrameworkDll.lib;Imgui.lib;Box2D.lib;Winmm.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -154,12 +154,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;KIRBYGAMEDLL_EXPORTS;_WINDOWS;_USRDLL;PLUGIN_EXPORTS;ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)EngineFramework;$(SolutionDir)EngineFramework\Input;$(SolutionDir)EngineFramework\Utility;$(SolutionDir)EngineFramework\Scene;$(SolutionDir)EngineFramework\Component;$(SolutionDir)EngineFramework\Component\Physics;$(SolutionDir)EngineFramework\Component\Collision;$(SolutionDir)EngineFramework\Rendering\Camera;$(SolutionDir)EngineFramework\Rendering\Component;$(SolutionDir)EngineFramework\Rendering\Buffer;$(SolutionDir)EngineFramework\Rendering\UI;$(SolutionDir)EngineFramework\Resource\Texture;$(SolutionDir)EngineFramework\Resource\Animation;$(SolutionDir)EngineFramework\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,11 +167,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>EngineFramework.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib</AdditionalDependencies>
+      <AdditionalDependencies>EngineFrameworkDll.lib;Imgui.lib;Box2D.lib;Winmm.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\BuildCommon\AppBootstrap.h" />
     <ClInclude Include="..\include\plugin.h" />
     <ClInclude Include="..\include\PluginManager.h" />
     <ClInclude Include="KirbyGame.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="UserActions\Scripts\SampleButtonAction.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\BuildCommon\AppBootstrap.cpp" />
     <ClCompile Include="..\include\PluginManager.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="KirbyGame.cpp" />
@@ -204,7 +206,7 @@
     <ClCompile Include="UserActions\Scripts\SampleButtonAction.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EngineFramework\EngineFramework.vcxproj">
+    <ProjectReference Include="..\EngineFrameworkDll\EngineFrameworkDll.vcxproj">
       <Project>{afef9603-4ec1-4b69-803d-acba84bb6d41}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "ImageRender.h"
+#include "ImGuiContextBridge.h"
 #include "MainFrame.h"
 #include "SceneJsonUtility.h"
 
@@ -115,6 +116,7 @@ const char* CollisionVisualTestComponent::GetInspectorName() const
 
 void CollisionVisualTestComponent::DrawInspector()
 {
+	SyncImGuiContextForCurrentModule();
 	ImGui::Checkbox("Enabled", &m_enabled);
 	ImGui::DragFloat("Scale On Enter", &m_scaleOnEnter, 0.01f, 1.0f, 3.0f, "%.2f");
 	m_scaleOnEnter = ClampScaleMultiplier(m_scaleOnEnter);

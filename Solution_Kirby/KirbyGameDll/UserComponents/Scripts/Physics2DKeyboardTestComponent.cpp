@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "ImageRender.h"
+#include "ImGuiContextBridge.h"
 #include "Rigidbody2D.h"
 #include "SceneJsonUtility.h"
 
@@ -101,6 +102,7 @@ const char* Physics2DKeyboardTestComponent::GetInspectorName() const
 
 void Physics2DKeyboardTestComponent::DrawInspector()
 {
+	SyncImGuiContextForCurrentModule();
 	ImGui::Checkbox("Enabled", &m_enabled);
 	ImGui::DragFloat("Force Power", &m_forcePower, 10.0f, 0.0f, 100000.0f, "%.1f");
 	ImGui::DragFloat("Impulse Power", &m_impulsePower, 10.0f, 0.0f, 100000.0f, "%.1f");

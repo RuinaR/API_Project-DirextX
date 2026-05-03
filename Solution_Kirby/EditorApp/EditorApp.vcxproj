@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{FDE07F4B-5D54-45E3-ABD0-9641AB845D48}</ProjectGuid>
+    <RootNamespace>EditorApp</RootNamespace>
+    <ProjectName>EditorApp</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <TargetName>EditorApp</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>obj\EditorApp\$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>obj\EditorApp\$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>obj\EditorApp\$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>obj\EditorApp\$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(D3DXLibraryDir);$(Configuration);$(SolutionDir)Lib\x64;$(SolutionDir)Bin\$(Configuration)_$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(D3DXIncludeDir);$(SolutionDir)fbxsdk;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>EngineEditor.lib;EngineFrameworkDll.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>EngineEditor.lib;EngineFrameworkDll.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)Bin\$(Configuration)_$(Platform);$(SolutionDir)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>EngineEditor.lib;EngineFrameworkDll.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>ENGINEFRAMEWORK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)EngineFrameworkDll;$(SolutionDir)EngineFrameworkDll\Input;$(SolutionDir)EngineFrameworkDll\Utility;$(SolutionDir)EngineFrameworkDll\Scene;$(SolutionDir)EngineFrameworkDll\Component;$(SolutionDir)EngineFrameworkDll\Component\Physics;$(SolutionDir)EngineFrameworkDll\Component\Collision;$(SolutionDir)EngineFrameworkDll\Rendering\Camera;$(SolutionDir)EngineFrameworkDll\Rendering\Component;$(SolutionDir)EngineFrameworkDll\Rendering\Buffer;$(SolutionDir)EngineFrameworkDll\Rendering\UI;$(SolutionDir)EngineFrameworkDll\Resource\Texture;$(SolutionDir)EngineFrameworkDll\Resource\Animation;$(SolutionDir)EngineFrameworkDll\Debugging;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/FS /utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>EngineEditor.lib;EngineFrameworkDll.lib;d3dx9.lib;d3d9.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(D3DXLibraryDir);$(SolutionDir)$(Configuration);$(SolutionDir)Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\BuildCommon\AppLaunchDesc.h" />
+    <ClInclude Include="..\BuildCommon\AppBootstrap.h" />
+    <ClInclude Include="..\include\AppLaunchDesc.h" />
+    <ClInclude Include="..\include\plugin.h" />
+    <ClInclude Include="..\include\PluginManager.h" />
+    <ClInclude Include="..\include\RenderType.h" />
+    <ClInclude Include="BuildLoopCls.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\BuildCommon\AppLaunchDesc.cpp" />
+    <ClCompile Include="..\BuildCommon\AppBootstrap.cpp" />
+    <ClCompile Include="..\include\PluginManager.cpp" />
+    <ClCompile Include="BuildLoopCls.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EngineEditor\EngineEditor.vcxproj">
+      <Project>{2a74e28b-0fd6-4ee0-a8bf-95e4322b27d6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EngineFrameworkDll\EngineFrameworkDll.vcxproj">
+      <Project>{afef9603-4ec1-4b69-803d-acba84bb6d41}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
