@@ -185,6 +185,80 @@ namespace
 		return inspectorName;
 	}
 
+	std::string GetComponentReferenceDisplayText(Component* component)
+	{
+		if (component == nullptr)
+		{
+			return "(None)";
+		}
+
+		GameObject* owner = component->GetGameObject();
+		std::string displayText = GetComponentHeaderName(component);
+		displayText += " @ ";
+		displayText += owner != nullptr ? owner->GetName() : "(Detached)";
+		return displayText;
+	}
+
+	bool IsComponentStillValid(Component* component)
+	{
+		if (component == nullptr)
+		{
+			return false;
+		}
+
+		GameObject* owner = component->GetGameObject();
+		if (owner == nullptr || owner->GetDestroy())
+		{
+			return false;
+		}
+
+		vector<Component*>* components = owner->GetComponentVec();
+		if (components == nullptr)
+		{
+			return false;
+		}
+
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); ++itr)
+		{
+			if (*itr == component)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	Component* FindCompatibleComponentOnGameObject(GameObject* gameObject, const char* expectedType)
+	{
+		if (gameObject == nullptr || gameObject->GetDestroy())
+		{
+			return nullptr;
+		}
+
+		vector<Component*>* components = gameObject->GetComponentVec();
+		if (components == nullptr)
+		{
+			return nullptr;
+		}
+
+		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); ++itr)
+		{
+			Component* component = *itr;
+			if (component == nullptr)
+			{
+				continue;
+			}
+
+			if (expectedType == nullptr || strlen(expectedType) == 0 || IsSameComponentType(component, expectedType))
+			{
+				return component;
+			}
+		}
+
+		return nullptr;
+	}
+
 	void DrawAddComponentMenu(GameObject* obj)
 	{
 		if (obj == nullptr)
@@ -406,6 +480,61 @@ bool EditorInspectorWindow::DrawGameObjectReferenceField(const char* label, Game
 	return changed;
 }
 
+bool EditorInspectorWindow::DrawComponentReferenceField(const char* label, Component*& ref, const char* expectedType)
+{
+	bool changed = false;
+	const char* safeLabel = label != nullptr ? label : "Component";
+
+	if (!IsComponentStillValid(ref))
+	{
+		ref = nullptr;
+	}
+
+	const std::string displayText = GetComponentReferenceDisplayText(ref);
+
+	ImGui::PushID(safeLabel);
+	ImGui::Text("%s", safeLabel);
+	ImGui::SameLine();
+	ImGui::Button(displayText.c_str(), ImVec2(260.0f, 0.0f));
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kHierarchyGameObjectPayload))
+		{
+			if (payload->DataSize == sizeof(GameObject*))
+			{
+				GameObject* droppedObject = *static_cast<GameObject* const*>(payload->Data);
+				Component* compatibleComponent = FindCompatibleComponentOnGameObject(droppedObject, expectedType);
+				if (compatibleComponent != nullptr && ref != compatibleComponent)
+				{
+					ref = compatibleComponent;
+					changed = true;
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	ImGui::SameLine();
+	const bool hasReferenceBeforeClear = (ref != nullptr);
+	if (!hasReferenceBeforeClear)
+	{
+		ImGui::BeginDisabled();
+	}
+	if (ImGui::Button("Clear"))
+	{
+		ref = nullptr;
+		changed = true;
+	}
+	if (!hasReferenceBeforeClear)
+	{
+		ImGui::EndDisabled();
+	}
+
+	ImGui::PopID();
+	return changed;
+}
+
 void EditorInspectorWindow::Draw()
 {
 	ObjectManager* objectManager = ObjectManager::GetInstance();
@@ -513,7 +642,7 @@ void EditorInspectorWindow::DrawGameObjectInspector(GameObject* obj)
 	{
 		for (vector<Component*>::iterator itr = components->begin(); itr != components->end(); itr++)
 		{
-			if (DrawComponentInspector(*itr))
+			if (DrawComponentInspector(*itr, &inspectorChanged))
 			{
 				componentToRemove = *itr;
 				break;
@@ -536,7 +665,7 @@ void EditorInspectorWindow::DrawGameObjectInspector(GameObject* obj)
 	ImGui::End();
 }
 
-bool EditorInspectorWindow::DrawComponentInspector(Component* component)
+bool EditorInspectorWindow::DrawComponentInspector(Component* component, bool* outInspectorChanged)
 {
 	if (component == nullptr)
 	{
@@ -547,6 +676,7 @@ bool EditorInspectorWindow::DrawComponentInspector(Component* component)
 	const bool isRequired = IsRequiredComponent(component);
 	const std::string headerName = GetComponentHeaderName(component);
 	const bool isOpen = ImGui::TreeNodeEx(headerName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+
 	bool removeRequested = false;
 
 	ImGui::SameLine();
@@ -564,8 +694,56 @@ bool EditorInspectorWindow::DrawComponentInspector(Component* component)
 	{
 		if (!removeRequested)
 		{
+			const std::string beforeComponentState = component->SerializeWithRegisteredReferenceFields();
 			component->DrawInspector();
+
+			ReferenceFieldRegistry referenceFieldRegistry;
+			component->RegisterReferenceFields(referenceFieldRegistry);
+
+			const std::vector<GameObjectRefField>& gameObjectRefs = referenceFieldRegistry.GetGameObjectRefs();
+			for (std::vector<GameObjectRefField>::const_iterator itr = gameObjectRefs.begin(); itr != gameObjectRefs.end(); ++itr)
+			{
+				if (itr->field == nullptr)
+				{
+					continue;
+				}
+
+				GameObject* referencedObject = *(itr->field);
+				int referencedObjectId = referencedObject != nullptr ? referencedObject->GetId() : -1;
+				if (DrawGameObjectReferenceField(itr->label, referencedObject, referencedObjectId))
+				{
+					*(itr->field) = referencedObject;
+					if (outInspectorChanged != nullptr)
+					{
+						*outInspectorChanged = true;
+					}
+				}
+			}
+
+			const std::vector<ComponentRefField>& componentRefs = referenceFieldRegistry.GetComponentRefs();
+			for (std::vector<ComponentRefField>::const_iterator itr = componentRefs.begin(); itr != componentRefs.end(); ++itr)
+			{
+				if (itr->field == nullptr)
+				{
+					continue;
+				}
+
+				Component* referencedComponent = *(itr->field);
+				if (DrawComponentReferenceField(itr->label, referencedComponent, itr->expectedType))
+				{
+					*(itr->field) = referencedComponent;
+					if (outInspectorChanged != nullptr)
+					{
+						*outInspectorChanged = true;
+					}
+				}
+			}
+
 			DrawEditorAssetInspectorFields(component);
+			if (outInspectorChanged != nullptr && beforeComponentState != component->SerializeWithRegisteredReferenceFields())
+			{
+				*outInspectorChanged = true;
+			}
 		}
 		ImGui::TreePop();
 	}

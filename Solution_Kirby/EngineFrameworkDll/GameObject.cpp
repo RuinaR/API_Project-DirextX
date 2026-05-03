@@ -771,7 +771,21 @@ std::string GameObject::Serialize(int objectId, int parentId, int sceneVersion) 
                 oss << ",";
             }
             oss << "\n";
-            oss << "        { \"type\": \"" << component->GetSerializableType() << "\", \"data\": " << component->Serialize() << " }";
+            oss << "        { \"type\": \"" << component->GetSerializableType() << "\"";
+            if (sceneVersion >= 8)
+            {
+                oss << ", \"componentId\": " << component->GetComponentId();
+            }
+            oss << ", \"data\": ";
+            if (sceneVersion >= 9)
+            {
+                oss << component->SerializeWithRegisteredReferenceFields();
+            }
+            else
+            {
+                oss << component->Serialize();
+            }
+            oss << " }";
             isFirstComponent = false;
         }
     }

@@ -3,6 +3,7 @@
 #include "../BuildCommon/AppBootstrap.h"
 #include "../EngineFrameworkDll/Editor/EditorRenderFacade.h"
 #include "../EngineFrameworkDll/Editor/EditorSceneWorkflow.h"
+#include "../EngineFrameworkDll/DebugLog.h"
 #include "../EngineFrameworkDll/RenderManager.h"
 #include "../EngineFrameworkDll/Scene/SceneDataManager.h"
 #include "../EngineFrameworkDll/WindowFrame.h"
@@ -33,6 +34,9 @@ void BuildLoopCls::Init(HINSTANCE hInstance)
 	{
 		return;
 	}
+
+	DebugLog::Clear();
+	DebugLog::Log("EditorApp initialized.");
 
 	WindowFrame::SetSceneSnapshotCallback(
 		[](const std::string& sceneName)

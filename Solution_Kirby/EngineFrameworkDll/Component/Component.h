@@ -1,14 +1,60 @@
 ﻿#pragma once
 #include "../EngineFrameworkAPI.h"
 #include <iostream>
+#include <string>
 #include <unordered_map>
+#include <vector>
 class GameObject;
 class Collider2D;
+class Component;
+
+struct GameObjectRefField
+{
+	const char* label = nullptr;
+	GameObject** field = nullptr;
+};
+
+struct ComponentRefField
+{
+	const char* label = nullptr;
+	Component** field = nullptr;
+	const char* expectedType = nullptr;
+};
+
+class ENGINEFRAMEWORK_API ReferenceFieldRegistry
+{
+public:
+	void RegisterGameObjectRef(const char* label, GameObject** field);
+	void RegisterComponentRef(const char* label, Component** field, const char* expectedType = nullptr);
+
+	const std::vector<GameObjectRefField>& GetGameObjectRefs() const;
+	const std::vector<ComponentRefField>& GetComponentRefs() const;
+
+private:
+	std::vector<GameObjectRefField> m_gameObjectRefs;
+	std::vector<ComponentRefField> m_componentRefs;
+};
 
 class ENGINEFRAMEWORK_API Component abstract
 {
 protected:
+	struct PendingGameObjectReference
+	{
+		std::string label;
+		int gameObjectId = -1;
+	};
+
+	struct PendingComponentReference
+	{
+		std::string label;
+		int componentId = -1;
+		std::string expectedType;
+	};
+
 	GameObject* m_gameObj = nullptr;
+	int m_componentId = -1;
+	std::vector<PendingGameObjectReference> m_pendingGameObjectRefs;
+	std::vector<PendingComponentReference> m_pendingComponentRefs;
 
 	virtual void CollisionEnter(Collider2D* other) {};
 	// 충돌 Exit는 상대 오브젝트가 이미 삭제 예약된 경우 nullptr로 들어올 수 있다.
@@ -46,6 +92,8 @@ public:
 	void OnTriggerStay(Collider2D* other) { TriggerStay(other); }
 	virtual void InitGameObj(GameObject* obj);
 	GameObject* GetGameObject();
+	int GetComponentId() const;
+	void SetComponentId(int componentId);
 
 	void OnLBtnDown() { LBtnDown(); }
 	void OnLBtnUp() { LBtnUp(); }
@@ -60,7 +108,13 @@ public:
 	virtual void DrawInspector();
 	virtual const char* GetSerializableType() const;
 	virtual std::string Serialize() const;
+	std::string SerializeWithRegisteredReferenceFields() const;
 	virtual bool Deserialize(const std::string& componentJson);
+	virtual void RegisterReferenceFields(ReferenceFieldRegistry& registry);
+	void LoadReferenceFieldIds(const std::string& componentJson);
+	void ResolveRegisteredReferenceFields(
+		const std::unordered_map<int, GameObject*>& objectMap,
+		const std::unordered_map<int, Component*>& componentMap);
 	virtual void ResolveReferences(const std::unordered_map<int, GameObject*>& objectMap);
 	virtual void OnDeviceLost();
 	virtual void OnDeviceReset();

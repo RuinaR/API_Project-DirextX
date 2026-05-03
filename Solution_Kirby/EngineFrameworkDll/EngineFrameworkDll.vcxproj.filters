@@ -4,6 +4,9 @@
     <ClCompile Include="Editor\EditorBuildSettingsPanel.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorDebugLogWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
     <ClCompile Include="Editor\EditorHierarchyWindow.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -79,6 +82,9 @@
     <ClCompile Include="Debugging\DebugWindow.cpp">
       <Filter>Debugging</Filter>
     </ClCompile>
+    <ClCompile Include="DebugLog.cpp">
+      <Filter>Debugging</Filter>
+    </ClCompile>
     <ClCompile Include="Input\InputString.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -145,6 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorBuildSettingsPanel.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorDebugLogWindow.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Editor\EditorHierarchyWindow.h">
@@ -226,6 +235,9 @@
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="Debugging\DebugWindow.h">
+      <Filter>Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLog.h">
       <Filter>Debugging</Filter>
     </ClInclude>
     <ClInclude Include="Input\InputString.h">

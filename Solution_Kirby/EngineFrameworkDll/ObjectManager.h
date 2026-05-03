@@ -31,7 +31,9 @@ private:
 	bool IsPendingAdd(GameObject* obj);
 	bool IsPendingRemove(GameObject* obj);
 	void AssignRuntimeObjectId(GameObject* obj);
-	void ResolveComponentReferences(const std::unordered_map<int, GameObject*>& objectMap);
+	void ResolveComponentReferences(
+		const std::unordered_map<int, GameObject*>& objectMap,
+		const std::unordered_map<int, Component*>& componentMap);
 	// 삭제는 즉시 하지 않고 pending remove 예약으로 처리한다.
 	// 실제 Release/delete는 FlushPendingObjects()에서 일괄 수행한다.
 	void QueueDestroyObject(GameObject* obj);

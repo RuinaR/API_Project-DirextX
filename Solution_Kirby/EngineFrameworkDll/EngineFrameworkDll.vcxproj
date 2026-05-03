@@ -201,6 +201,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor\EditorBuildSettingsPanel.cpp" />
+    <ClCompile Include="Editor\EditorDebugLogWindow.cpp" />
     <ClCompile Include="Editor\EditorHierarchyWindow.cpp" />
     <ClCompile Include="Editor\EditorObjectManagerBridge.cpp" />
     <ClCompile Include="Editor\EditorRenderFacade.cpp" />
@@ -232,6 +233,7 @@
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Debugging\DebugWindow.cpp" />
+    <ClCompile Include="DebugLog.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input\InputString.cpp" />
     <ClCompile Include="MainFrame.cpp" />
@@ -250,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorBuildSettingsPanel.h" />
+    <ClInclude Include="Editor\EditorDebugLogWindow.h" />
     <ClInclude Include="Editor\EditorHierarchyWindow.h" />
     <ClInclude Include="Editor\EditorObjectManagerBridge.h" />
     <ClInclude Include="Editor\EditorRenderFacade.h" />
@@ -285,6 +288,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Debugging\DebugWindow.h" />
+    <ClInclude Include="DebugLog.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input\InputString.h" />
     <ClInclude Include="Math\Ray.h" />

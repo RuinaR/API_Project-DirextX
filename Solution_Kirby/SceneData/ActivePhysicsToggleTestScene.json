@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 9,
   "sceneName": "ActivePhysicsToggleTestScene",
   "timeScale": 2.15,
   "camera": {
@@ -26,8 +26,8 @@
         "size": { "x": 1280, "y": 64, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/land.bmp" } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 1280, "y": 64 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 1, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 2, "data": { "bodyType": 0, "trigger": false, "size": { "x": 1280, "y": 64 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -42,8 +42,8 @@
         "size": { "x": 1280, "y": 64, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/land.bmp" } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 1280, "y": 64 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 3, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 4, "data": { "bodyType": 0, "trigger": false, "size": { "x": 1280, "y": 64 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -58,8 +58,8 @@
         "size": { "x": 64, "y": 744, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 64, "y": 744 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 5, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 6, "data": { "bodyType": 0, "trigger": false, "size": { "x": 64, "y": 744 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -74,8 +74,8 @@
         "size": { "x": 64, "y": 744, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 64, "y": 744 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 7, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/BG.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 8, "data": { "bodyType": 0, "trigger": false, "size": { "x": 64, "y": 744 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -90,12 +90,12 @@
         "size": { "x": 96, "y": 96, "z": 1 }
       },
       "components": [
-        { "type": "AnimationRender", "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/right/walk.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294924890, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "" } },
-        { "type": "Rigidbody2D", "data": { "bodyType": "Dynamic", "drag": 0.2, "angularDrag": 0.2, "useGravity": true, "gravityScale": 1, "fixedRotation": true, "linearVelocity": { "x": 0, "y": -1.50667e-08 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": true } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 2, "trigger": false, "size": { "x": 86, "y": 92 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
-        { "type": "Physics2DKeyboardTestComponent", "data": { "enabled": true, "forcePower": 25000, "impulsePower": 90000, "torquePower": 0, "useVelocityMode": true } },
-        { "type": "ActivePhysicsTestStatusComponent", "data": {} }
+        { "type": "AnimationRender", "componentId": 9, "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/right/walk.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "ImageRender", "componentId": 10, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294924890, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "" } },
+        { "type": "Rigidbody2D", "componentId": 11, "data": { "bodyType": "Dynamic", "drag": 0.2, "angularDrag": 0.2, "useGravity": true, "gravityScale": 1, "fixedRotation": true, "linearVelocity": { "x": 0, "y": -5.81349e-09 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": true } },
+        { "type": "BoxCollider2D", "componentId": 12, "data": { "bodyType": 2, "trigger": false, "size": { "x": 86, "y": 92 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "Physics2DKeyboardTestComponent", "componentId": 13, "data": { "enabled": true, "forcePower": 25000, "impulsePower": 90000, "torquePower": 0, "useVelocityMode": true } },
+        { "type": "ActivePhysicsTestStatusComponent", "componentId": 14, "data": {} }
       ]
     },
     {
@@ -110,8 +110,8 @@
         "size": { "x": 240, "y": 40, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/stoneObj.bmp" } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": false, "size": { "x": 240, "y": 40 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 15, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/stoneObj.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 16, "data": { "bodyType": 0, "trigger": false, "size": { "x": 240, "y": 40 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -126,8 +126,8 @@
         "size": { "x": 120, "y": 140, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 2164205823, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/door.bmp" } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": true, "size": { "x": 120, "y": 140 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 17, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 2164205823, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/door.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 18, "data": { "bodyType": 0, "trigger": true, "size": { "x": 120, "y": 140 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -142,9 +142,9 @@
         "size": { "x": 180, "y": 180, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 2155905279, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/player.bmp" } },
-        { "type": "CircleCollider2D", "data": { "bodyType": 0, "trigger": false, "radius": 88, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } },
-        { "type": "Rigidbody2D", "data": { "bodyType": "Dynamic", "drag": 0, "angularDrag": 0, "useGravity": false, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } }
+        { "type": "ImageRender", "componentId": 19, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 2155905279, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/obj/player.bmp" } },
+        { "type": "CircleCollider2D", "componentId": 20, "data": { "bodyType": 0, "trigger": false, "radius": 88, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } },
+        { "type": "Rigidbody2D", "componentId": 21, "data": { "bodyType": "Dynamic", "drag": 0, "angularDrag": 0, "useGravity": false, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } }
       ]
     },
     {
@@ -154,14 +154,14 @@
       "tag": "Kinematic_Box_Mover",
       "active": true,
       "transform": {
-        "position": { "x": -33536.2, "y": -40, "z": 0 },
+        "position": { "x": -48202.9, "y": -40, "z": 0 },
         "rotation": { "x": 0, "y": 0, "z": 83.2238 },
         "size": { "x": 100, "y": 100, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/swordObj.bmp" } },
-        { "type": "Rigidbody2D", "data": { "bodyType": "Kinematic", "drag": 0, "angularDrag": 0, "useGravity": false, "gravityScale": 0, "fixedRotation": false, "linearVelocity": { "x": -70, "y": 0 }, "angularVelocity": 0.5, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 1, "trigger": false, "size": { "x": 92, "y": 92 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 22, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/swordObj.bmp" } },
+        { "type": "Rigidbody2D", "componentId": 23, "data": { "bodyType": "Kinematic", "drag": 0, "angularDrag": 0, "useGravity": false, "gravityScale": 0, "fixedRotation": false, "linearVelocity": { "x": -70, "y": 0 }, "angularVelocity": 0.5, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } },
+        { "type": "BoxCollider2D", "componentId": 24, "data": { "bodyType": 1, "trigger": false, "size": { "x": 92, "y": 92 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -176,9 +176,9 @@
         "size": { "x": 84, "y": 84, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/defaultObj.bmp" } },
-        { "type": "Rigidbody2D", "data": { "bodyType": "Dynamic", "drag": 0.1, "angularDrag": 0.1, "useGravity": true, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 2, "trigger": false, "size": { "x": 80, "y": 80 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 25, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/defaultObj.bmp" } },
+        { "type": "Rigidbody2D", "componentId": 26, "data": { "bodyType": "Dynamic", "drag": 0.1, "angularDrag": 0.1, "useGravity": true, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } },
+        { "type": "BoxCollider2D", "componentId": 27, "data": { "bodyType": 2, "trigger": false, "size": { "x": 80, "y": 80 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -193,8 +193,8 @@
         "size": { "x": 96, "y": 96, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/attack.bmp" } },
-        { "type": "CircleCollider2D", "data": { "bodyType": 0, "trigger": false, "radius": 46, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 28, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/obj/attack.bmp" } },
+        { "type": "CircleCollider2D", "componentId": 29, "data": { "bodyType": 0, "trigger": false, "radius": 46, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -209,7 +209,7 @@
         "size": { "x": 212, "y": 44, "z": 1 }
       },
       "components": [
-        { "type": "UIButton", "data": { "position": { "x": -1070, "y": 68 }, "size": { "x": 212, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "MiddleRight", "imagePath": "", "useTexture": false, "normalColor": 4284132608, "hoverColor": 4287094783, "pressedColor": 4289384447, "actionKey": "ActivePhysicsTest.TogglePlayerActive" } }
+        { "type": "UIButton", "componentId": 30, "data": { "position": { "x": -1070, "y": 68 }, "size": { "x": 212, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "MiddleRight", "imagePath": "", "useTexture": false, "normalColor": 4284132608, "hoverColor": 4287094783, "pressedColor": 4289384447, "actionKey": "ActivePhysicsTest.TogglePlayerActive" } }
       ]
     },
     {
@@ -224,7 +224,7 @@
         "size": { "x": 192.727, "y": 30, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 46, "y": 10 }, "size": { "x": 192.727, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Toggle Player Active", "color": 4294967295, "fontSize": 22, "scale": 1 } }
+        { "type": "UILabel", "componentId": 32, "data": { "position": { "x": 46, "y": 10 }, "size": { "x": 192.727, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Toggle Player Active", "color": 4294967295, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
@@ -239,7 +239,7 @@
         "size": { "x": 220, "y": 44, "z": 1 }
       },
       "components": [
-        { "type": "UIButton", "data": { "position": { "x": 18, "y": 604 }, "size": { "x": 220, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "TopLeft", "imagePath": "", "useTexture": false, "normalColor": 4281565510, "hoverColor": 4283791257, "pressedColor": 4286029610, "actionKey": "ActivePhysicsTest.TogglePlayerTrigger" } }
+        { "type": "UIButton", "componentId": 33, "data": { "position": { "x": 18, "y": 604 }, "size": { "x": 220, "y": 44 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "TopLeft", "imagePath": "", "useTexture": false, "normalColor": 4281565510, "hoverColor": 4283791257, "pressedColor": 4286029610, "actionKey": "ActivePhysicsTest.TogglePlayerTrigger" } }
       ]
     },
     {
@@ -254,7 +254,7 @@
         "size": { "x": 205, "y": 30, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 44, "y": 12 }, "size": { "x": 205, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Toggle Player Trigger", "color": 4294967295, "fontSize": 22, "scale": 1 } }
+        { "type": "UILabel", "componentId": 35, "data": { "position": { "x": 44, "y": 12 }, "size": { "x": 205, "y": 30 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Toggle Player Trigger", "color": 4294967295, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
@@ -269,7 +269,7 @@
         "size": { "x": 440, "y": 398, "z": 1 }
       },
       "components": [
-        { "type": "UIImage", "data": { "position": { "x": 8, "y": -59 }, "size": { "x": 440, "y": 398 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "TopLeft", "useTexture": false, "color": 3356364578, "imagePath": "" } }
+        { "type": "UIImage", "componentId": 36, "data": { "position": { "x": 8, "y": -59 }, "size": { "x": 440, "y": 398 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "TopLeft", "useTexture": false, "color": 3356364578, "imagePath": "" } }
       ]
     },
     {
@@ -284,7 +284,7 @@
         "size": { "x": 420, "y": 260, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 18, "y": 10 }, "size": { "x": 420, "y": 260 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Player Active: true\nPlayer Trigger: false\nCollision Contacts: 1\nTrigger Contacts: 0\nEnable Count: 0\nDisable Count: 0\nCollision Enter Count: 1\nTrigger Enter Count: 0\nLast Event: CollisionEnter\nRecent Events:\n- CollisionEnter", "color": 4294967295, "fontSize": 20, "scale": 1 } }
+        { "type": "UILabel", "componentId": 38, "data": { "position": { "x": 18, "y": 10 }, "size": { "x": 420, "y": 260 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "Player Active: true\nPlayer Trigger: false\nCollision Contacts: 1\nTrigger Contacts: 0\nEnable Count: 0\nDisable Count: 0\nCollision Enter Count: 1\nTrigger Enter Count: 0\nLast Event: CollisionEnter\nRecent Events:\n- CollisionEnter", "color": 4294967295, "fontSize": 20, "scale": 1 } }
       ]
     },
     {
@@ -299,7 +299,7 @@
         "size": { "x": 460, "y": 84, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 18, "y": 378 }, "size": { "x": 460, "y": 84 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "WASD / Arrow / Space\\nUse buttons to test Active and Trigger changes.", "color": 4294967295, "fontSize": 22, "scale": 1 } }
+        { "type": "UILabel", "componentId": 39, "data": { "position": { "x": 18, "y": 378 }, "size": { "x": 460, "y": 84 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopLeft", "text": "WASD / Arrow / Space\\nUse buttons to test Active and Trigger changes.", "color": 4294967295, "fontSize": 22, "scale": 1 } }
       ]
     },
     {
@@ -314,7 +314,7 @@
         "size": { "x": 1, "y": 1, "z": 1 }
       },
       "components": [
-        { "type": "ActivePhysicsTestInfoComponent", "data": { "labelObjectId": 17, "playerObjectId": 5 } }
+        { "type": "ActivePhysicsTestInfoComponent", "componentId": 40, "data": { "labelObjectId": 17, "playerObjectId": 5 } }
       ]
     },
     {
@@ -329,7 +329,7 @@
         "size": { "x": 231.273, "y": 48, "z": 1 }
       },
       "components": [
-        { "type": "UILabel", "data": { "position": { "x": 206, "y": -2.00006 }, "size": { "x": 231.273, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "anchorPreset": "TopLeft", "text": "Text", "color": 4294967295, "fontSize": 24, "scale": 1 } }
+        { "type": "UILabel", "componentId": 41, "data": { "position": { "x": 206, "y": -2.00006 }, "size": { "x": 231.273, "y": 48 }, "visible": true, "enabled": true, "orderInLayer": 0, "anchorPreset": "TopLeft", "text": "Text", "color": 4294967295, "fontSize": 24, "scale": 1 } }
       ]
     },
     {
@@ -344,9 +344,9 @@
         "size": { "x": 128, "y": 128, "z": 1 }
       },
       "components": [
-        { "type": "ImageRender", "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
-        { "type": "Rigidbody2D", "data": { "bodyType": "Static", "drag": 0, "angularDrag": 0, "useGravity": true, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } },
-        { "type": "BoxCollider2D", "data": { "bodyType": 0, "trigger": true, "size": { "x": 128, "y": 128 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
+        { "type": "ImageRender", "componentId": 42, "data": { "renderEnabled": true, "useTexture": false, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } },
+        { "type": "Rigidbody2D", "componentId": 43, "data": { "bodyType": "Static", "drag": 0, "angularDrag": 0, "useGravity": true, "gravityScale": 1, "fixedRotation": false, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Discrete", "interpolate": "None", "freezeRotationZ": false } },
+        { "type": "BoxCollider2D", "componentId": 44, "data": { "bodyType": 0, "trigger": true, "size": { "x": 128, "y": 128 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } }
       ]
     },
     {
@@ -356,13 +356,13 @@
       "tag": "fbxobj",
       "active": true,
       "transform": {
-        "position": { "x": -266.329, "y": 121.984, "z": 49.8655 },
+        "position": { "x": -266.329, "y": 122.079, "z": 49.8655 },
         "rotation": { "x": 0, "y": 66.2, "z": 0 },
         "size": { "x": 1, "y": 1, "z": 1 }
       },
       "components": [
-        { "type": "CircleCollider2D", "data": { "bodyType": 0, "trigger": false, "radius": 64, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } },
-        { "type": "FBXRender", "data": { "fbxPath": "FBX/fbxSample.fbx" } }
+        { "type": "CircleCollider2D", "componentId": 45, "data": { "bodyType": 0, "trigger": false, "radius": 64, "offset": { "x": 0, "y": 0 }, "fixedRotation": false } },
+        { "type": "FBXRender", "componentId": 46, "data": { "fbxPath": "FBX/fbxSample.fbx" } }
       ]
     },
     {
@@ -390,7 +390,7 @@
         "size": { "x": 0, "y": 0, "z": 0 }
       },
       "components": [
-        { "type": "ObjectManagerSearchApiTestComponent", "data": { "enabled": true, "testTag": "ObjectManagerApiTest", "spawnCount": 3, "spacingX": 120 } }
+        { "type": "ObjectManagerSearchApiTestComponent", "componentId": 47, "data": { "enabled": true, "testTag": "ObjectManagerApiTest", "spawnCount": 3, "spacingX": 120 } }
       ]
     },
     {
@@ -443,7 +443,9 @@
         "rotation": { "x": 0, "y": 0, "z": 0 },
         "size": { "x": 0, "y": 0, "z": 0 }
       },
-      "components": []
+      "components": [
+        { "type": "ReferenceFieldRegistryTestComponent", "componentId": 3352, "data": { "enabled": true, "manualTargetObjectId": 5 , "referenceFields": { "Registry Target Object": { "kind": "GameObject", "gameObjectId": 11 }, "Any Component": { "kind": "Component", "componentId": 1, "expectedType": "" }, "Rigidbody2D Only": { "kind": "Component", "componentId": 26, "expectedType": "Rigidbody2D" } } } }
+      ]
     }
   ]
 }

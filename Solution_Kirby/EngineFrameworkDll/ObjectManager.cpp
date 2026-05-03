@@ -110,7 +110,9 @@ void ObjectManager::AssignRuntimeObjectId(GameObject* obj)
 	m_nextRuntimeObjectId++;
 }
 
-void ObjectManager::ResolveComponentReferences(const std::unordered_map<int, GameObject*>& objectMap)
+void ObjectManager::ResolveComponentReferences(
+	const std::unordered_map<int, GameObject*>& objectMap,
+	const std::unordered_map<int, Component*>& componentMap)
 {
 	for (list<GameObject*>::iterator objItr = m_objList->begin(); objItr != m_objList->end(); objItr++)
 	{
@@ -129,6 +131,7 @@ void ObjectManager::ResolveComponentReferences(const std::unordered_map<int, Gam
 				continue;
 
 			component->ResolveReferences(objectMap);
+			component->ResolveRegisteredReferenceFields(objectMap, componentMap);
 		}
 	}
 }
@@ -794,11 +797,13 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 	{
 		std::string type;
 		std::string dataJson;
+		int componentId = -1;
 		if (!SceneJson::ReadString(*itr, "type", type) || !SceneJson::ExtractObject(*itr, "data", dataJson))
 		{
 			std::cout << "SceneData load failed: invalid component data." << std::endl;
 			return false;
 		}
+		SceneJson::ReadInt(*itr, "componentId", componentId);
 
 		Component* component = ComponentFactory::GetInstance().Create(type, dataJson);
 		if (component == nullptr)
@@ -812,6 +817,10 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 		{
 			std::cout << "SceneData component skipped by policy: " << type << std::endl;
 			continue;
+		}
+		if (componentId >= 0)
+		{
+			addedComponent->SetComponentId(componentId);
 		}
 
 		PendingComponentData pendingComponent;
@@ -841,6 +850,8 @@ static bool DeserializeComponents(GameObject* obj, const std::string& objectJson
 			std::cout << "SceneData load failed: component deserialize failed: " << itr->type << std::endl;
 			return false;
 		}
+
+		itr->component->LoadReferenceFieldIds(itr->dataJson);
 	}
 	return true;
 }
@@ -882,6 +893,7 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 
 	vector<GameObject*> createdObjects;
 	std::unordered_map<int, GameObject*> objectMap;
+	std::unordered_map<int, Component*> componentMap;
 	for (size_t i = 0; i < objectDataList.size(); i++)
 	{
 		GameObject* obj = GameObject::CreateFromSerializedData(objectDataList[i]);
@@ -900,6 +912,19 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 		if (objectDataList[i].objectId >= 0)
 		{
 			objectMap[objectDataList[i].objectId] = obj;
+		}
+
+		vector<Component*>* components = obj->GetComponentVec();
+		if (components != nullptr)
+		{
+			for (vector<Component*>::iterator componentItr = components->begin(); componentItr != components->end(); ++componentItr)
+			{
+				Component* component = *componentItr;
+				if (component != nullptr)
+				{
+					componentMap[component->GetComponentId()] = component;
+				}
+			}
 		}
 		createdObjects.push_back(obj);
 	}
@@ -933,7 +958,7 @@ bool ObjectManager::DeserializeObjects(const std::string& sceneJson, int sceneVe
 	}
 
 	FlushPendingObjects();
-	ResolveComponentReferences(objectMap);
+	ResolveComponentReferences(objectMap, componentMap);
 	return true;
 }
 

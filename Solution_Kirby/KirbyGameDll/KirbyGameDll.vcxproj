@@ -182,6 +182,7 @@
     <ClInclude Include="UserComponents\Scripts\CollisionVisualTestComponent.h" />
     <ClInclude Include="UserComponents\Scripts\ObjectManagerSearchApiTestComponent.h" />
     <ClInclude Include="UserComponents\Scripts\Physics2DKeyboardTestComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\ReferenceFieldRegistryTestComponent.h" />
     <ClInclude Include="UserActions\GameActionRegistry.h" />
     <ClInclude Include="UserActions\Scripts\ActivePhysicsTestActions.h" />
     <ClInclude Include="UserComponents\UserComponentPlaceholder.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="UserComponents\Scripts\CollisionVisualTestComponent.cpp" />
     <ClCompile Include="UserComponents\Scripts\ObjectManagerSearchApiTestComponent.cpp" />
     <ClCompile Include="UserComponents\Scripts\Physics2DKeyboardTestComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\ReferenceFieldRegistryTestComponent.cpp" />
     <ClCompile Include="UserComponents\Scripts\SampleSpinComponent.cpp" />
     <ClCompile Include="UserActions\Scripts\ActivePhysicsTestActions.cpp" />
     <ClCompile Include="UserActions\Scripts\SampleButtonAction.cpp" />

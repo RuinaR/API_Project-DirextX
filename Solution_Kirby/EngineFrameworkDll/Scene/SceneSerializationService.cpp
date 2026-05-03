@@ -25,7 +25,7 @@ namespace
 
 std::string SceneSerializationService::BuildSceneDataJson(const std::string& sceneName, MainFrame* mainFrame, Camera* camera, ObjectManager* objectManager)
 {
-	constexpr int kSceneDataVersion = 7;
+	constexpr int kSceneDataVersion = 9;
 	const D3DXVECTOR3 cameraPosition = camera != nullptr ? camera->GetPos() : D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const D3DXVECTOR3 cameraRotation = camera != nullptr ? camera->GetRotation() : D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	const CameraProjectionMode projectionMode = camera != nullptr ? camera->GetProjectionMode() : CameraProjectionMode::Orthographic;

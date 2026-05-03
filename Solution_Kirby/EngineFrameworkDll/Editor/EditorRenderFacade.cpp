@@ -6,11 +6,19 @@
 #include "ImguiButton.h"
 #include "ImageRender.h"
 #include "UIElement.h"
+#include "../DebugLog.h"
+#include "EditorDebugLogWindow.h"
 #include "EditorObjectManagerBridge.h"
 #include "EditorSelectionService.h"
 
 namespace
 {
+	bool& GetEditorOverlayInitializedFlag()
+	{
+		static bool initialized = false;
+		return initialized;
+	}
+
 	void DrawSelectedObjectMarker(const ImVec2& imageScreenPos)
 	{
 		GameObject* selectedObject = EditorSelectionService::GetSelectedObject();
@@ -123,6 +131,13 @@ namespace
 
 void EditorRenderFacade::DrawOverlay(RenderManager& renderManager)
 {
+	bool& overlayInitialized = GetEditorOverlayInitializedFlag();
+	if (!overlayInitialized)
+	{
+		DebugLog::Log("EditorApp initialized.");
+		overlayInitialized = true;
+	}
+
 	const D3DXVECTOR2 gameViewScreenPos = renderManager.GetGameViewScreenPos();
 	DrawSelectedObjectMarker(ImVec2(gameViewScreenPos.x, gameViewScreenPos.y));
 
@@ -139,6 +154,7 @@ void EditorRenderFacade::DrawOverlay(RenderManager& renderManager)
 	}
 
 	EditorObjectManagerBridge::DrawManagerWindows();
+	EditorDebugLogWindow::Draw();
 
 	ObjectManager* objectManager = ObjectManager::GetInstance();
 	if (objectManager != nullptr)
