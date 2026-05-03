@@ -80,6 +80,11 @@ void MainFrame::SetTimeScale(float timeScale)
 	}
 }
 
+void MainFrame::SetCurrentScene(Scene* scene)
+{
+	m_scene = scene;
+}
+
 namespace
 {
 	struct CollisionPair
@@ -714,8 +719,8 @@ void MainFrame::Initialize(int targetFPS, Scene* scene, RenderType type)
     RenderManager::Create();
     RenderManager::GetInstance()->Initialize();
 
-    m_scene = scene;
-    WindowFrame::GetInstance()->SetScene(m_scene);
+    SetCurrentScene(scene);
+    WindowFrame::GetInstance()->SetScene(scene);
 
     // ImGui 컨텍스트와 입력 옵션을 설정한다.
     IMGUI_CHECKVERSION();

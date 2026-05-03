@@ -75,6 +75,7 @@ public:
 	double UnscaledDeltaTime() const;
 	float GetTimeScale() const;
 	void SetTimeScale(float timeScale);
+	void SetCurrentScene(Scene* scene);
 	void Initialize(int targetFPS, Scene* scene, RenderType type);
 	//int Run();
 	//void Set();

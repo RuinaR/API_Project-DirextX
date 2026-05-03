@@ -164,6 +164,13 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 
 void WindowFrame::SetScene(Scene* scene)
 {
+	MainFrame* mainFrame = MainFrame::GetInstance();
+	if (mainFrame != nullptr)
+	{
+		// 씬 교체 중에는 MainFrame이 지워질 씬을 더 이상 잡고 있지 않게 먼저 끊어 둔다.
+		mainFrame->SetCurrentScene(nullptr);
+	}
+
 	if (m_scene)
 	{
 		m_scene->Release();
@@ -172,6 +179,10 @@ void WindowFrame::SetScene(Scene* scene)
 		delete m_scene;
 	}
 	m_scene = scene;
+	if (mainFrame != nullptr)
+	{
+		mainFrame->SetCurrentScene(m_scene);
+	}
 	m_scene->Init();
 	const std::string requestedSceneDataName = m_requestedSceneDataName;
 	const bool hasRequestedSceneDataName = !requestedSceneDataName.empty();
