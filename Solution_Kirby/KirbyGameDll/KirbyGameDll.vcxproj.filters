@@ -60,6 +60,39 @@
     <ClInclude Include="UserComponents\UserComponentRegistration.h">
       <Filter>UserComponents</Filter>
     </ClInclude>
+    <ClInclude Include="UserActions\Scripts\SceneChangeAction.h">
+      <Filter>UserActions\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunGameManagerComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunItemComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunObstacleComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunPlayerControllerComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunResultComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunRotateYComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\CookieRunScrollingPoolComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\ObjectPoolComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\LoopObjectPoolComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="UserComponents\Scripts\SpawnObjectPoolComponent.h">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\BuildCommon\AppBootstrap.cpp">
@@ -79,6 +112,39 @@
     </ClCompile>
     <ClCompile Include="UserComponents\GameComponentRegistry.cpp">
       <Filter>UserComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="UserActions\Scripts\SceneChangeAction.cpp">
+      <Filter>UserActions\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunGameManagerComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunItemComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunObstacleComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunPlayerControllerComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunResultComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunRotateYComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\CookieRunScrollingPoolComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\ObjectPoolComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\LoopObjectPoolComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="UserComponents\Scripts\SpawnObjectPoolComponent.cpp">
+      <Filter>UserComponents\Scripts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

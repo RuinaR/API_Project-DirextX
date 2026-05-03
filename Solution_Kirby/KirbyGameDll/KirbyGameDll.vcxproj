@@ -178,6 +178,17 @@
     <ClInclude Include="KirbyGame.h" />
     <ClInclude Include="UserComponents\GameComponentRegistry.h" />
     <ClInclude Include="UserActions\GameActionRegistry.h" />
+    <ClInclude Include="UserActions\Scripts\SceneChangeAction.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunGameManagerComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunItemComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunObstacleComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunPlayerControllerComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunResultComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunRotateYComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\CookieRunScrollingPoolComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\LoopObjectPoolComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\ObjectPoolComponent.h" />
+    <ClInclude Include="UserComponents\Scripts\SpawnObjectPoolComponent.h" />
     <ClInclude Include="UserComponents\UserComponentPlaceholder.h" />
     <ClInclude Include="UserComponents\UserComponentRegistration.h" />
   </ItemGroup>
@@ -187,7 +198,18 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="KirbyGame.cpp" />
     <ClCompile Include="UserActions\GameActionRegistry.cpp" />
+    <ClCompile Include="UserActions\Scripts\SceneChangeAction.cpp" />
     <ClCompile Include="UserComponents\GameComponentRegistry.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunGameManagerComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunItemComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunObstacleComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunPlayerControllerComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunResultComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunRotateYComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\CookieRunScrollingPoolComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\LoopObjectPoolComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\ObjectPoolComponent.cpp" />
+    <ClCompile Include="UserComponents\Scripts\SpawnObjectPoolComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EngineFrameworkDll\EngineFrameworkDll.vcxproj">

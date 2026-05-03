@@ -1,0 +1,822 @@
+﻿{
+  "version": 9,
+  "sceneName": "GameScene",
+  "timeScale": 1,
+  "camera": {
+    "position": { "x": 0, "y": 0, "z": -1569 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "projection": {
+      "mode": "Perspective",
+      "fov": 0.785398,
+      "orthographicSize": 900,
+      "nearClip": 1,
+      "farClip": 3000
+    }
+  },
+  "objects": [
+    {
+      "id": 1,
+      "parentId": -1,
+      "name": "GameManager",
+      "tag": "GameManager",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "CookieRunGameManagerComponent", "componentId": 1, "data": { "score": 0, "maxHp": 3, "currentHp": 3, "scrollSpeed": 220, "speedIncreaseInterval": 5, "speedIncreaseAmount": 30, "damageInvincibleDuration": 0.8, "hitFlashDuration": 0.18, "cameraShakeDuration": 0.22, "cameraShakeStrengthX": 0.035, "cameraShakeStrengthY": 0.05, "gameOver": false , "referenceFields": { "Player GameObject": { "kind": "GameObject", "gameObjectId": 2 }, "ScoreLabel Component": { "kind": "Component", "componentId": 44, "expectedType": "UILabel" }, "SpeedLabel Component": { "kind": "Component", "componentId": 45, "expectedType": "UILabel" }, "HPLabel Component": { "kind": "Component", "componentId": 46, "expectedType": "UILabel" }, "BackgroundPool Component": { "kind": "Component", "componentId": 6, "expectedType": "LoopObjectPoolComponent" }, "LandPool Component": { "kind": "Component", "componentId": 11, "expectedType": "LoopObjectPoolComponent" }, "ItemPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" }, "ObstaclePool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 2,
+      "parentId": -1,
+      "name": "Player",
+      "tag": "Player",
+      "active": true,
+      "transform": {
+        "position": { "x": -420, "y": -260, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 120, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "AnimationRender", "componentId": 2, "data": { "play": true, "oneTime": false, "frameTime": 0.1, "animationFolderKey": "Animation/Player/default/right/jump.anim", "frameDuration": 0.1, "loop": true, "playOnStart": true, "useColorKey": true, "sourcePath": "" } },
+        { "type": "Rigidbody2D", "componentId": 3, "data": { "bodyType": "Dynamic", "drag": 0.05, "angularDrag": 0, "useGravity": true, "gravityScale": 12, "fixedRotation": true, "linearVelocity": { "x": 0, "y": 0 }, "angularVelocity": 0, "collisionDetection": "Continuous", "interpolate": "Interpolate", "freezeRotationZ": true } },
+        { "type": "BoxCollider2D", "componentId": 4, "data": { "bodyType": 2, "trigger": false, "size": { "x": 42, "y": 42 }, "offset": { "x": 0, "y": -4 }, "fixedRotation": true } },
+        { "type": "CookieRunPlayerControllerComponent", "componentId": 5, "data": { "maxJumpCount": 2, "jumpForce": 800, "fallAcceleration": 3500, "lowJumpAcceleration": 3500, "idleAnimationKey": "Animation/Player/default/right/idle.anim", "runAnimationKey": "Animation/Player/default/right/run.anim", "jumpAnimationKey": "Animation/Player/default/right/jump.anim" , "referenceFields": { "Rigidbody2D Component": { "kind": "Component", "componentId": 3, "expectedType": "Rigidbody2D" }, "AnimationRender Component": { "kind": "Component", "componentId": 2, "expectedType": "AnimationRender" }, "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" } } } },
+        { "type": "ImageRender", "componentId": 329, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "" } }
+      ]
+    },
+    {
+      "id": 3,
+      "parentId": -1,
+      "name": "BackgroundPool",
+      "tag": "Pool",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "LoopObjectPoolComponent", "componentId": 6, "data": { "leftBound": -1700, "rightSpawnX": 1440, "spacing": -20, "repositionInsteadOfDisable": true, "poolTag": "BackgroundSegment" } },
+        { "type": "CookieRunScrollingPoolComponent", "componentId": 7, "data": { "scrollSpeed": 220, "leftBound": -1700, "useGameManagerSpeed": true , "referenceFields": { "ObjectPool Component": { "kind": "Component", "componentId": 6, "expectedType": "LoopObjectPoolComponent" }, "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" } } } }
+      ]
+    },
+    {
+      "id": 4,
+      "parentId": 3,
+      "name": "BG_1",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": -1440, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 8, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 5,
+      "parentId": 3,
+      "name": "BG_2",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 9, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 6,
+      "parentId": 3,
+      "name": "BG_3",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 1440, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 10, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 100,
+      "parentId": 3,
+      "name": "BG_4",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 2880, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 101, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 105,
+      "parentId": 3,
+      "name": "BG_5",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 4320, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 106, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 7,
+      "parentId": -1,
+      "name": "LandPool",
+      "tag": "Pool",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "LoopObjectPoolComponent", "componentId": 11, "data": { "leftBound": -1300, "rightSpawnX": 720, "spacing": -16, "repositionInsteadOfDisable": true, "poolTag": "Land" } },
+        { "type": "CookieRunScrollingPoolComponent", "componentId": 12, "data": { "scrollSpeed": 220, "leftBound": -1300, "useGameManagerSpeed": true , "referenceFields": { "ObjectPool Component": { "kind": "Component", "componentId": 11, "expectedType": "LoopObjectPoolComponent" }, "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" } } } }
+      ]
+    },
+    {
+      "id": 8,
+      "parentId": 7,
+      "name": "Land_1",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": -720, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 13, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 14, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 9,
+      "parentId": 7,
+      "name": "Land_2",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 15, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 16, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 10,
+      "parentId": 7,
+      "name": "Land_3",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 720, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 17, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 18, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 102,
+      "parentId": 7,
+      "name": "Land_4",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 1440, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 103, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 104, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 107,
+      "parentId": 7,
+      "name": "Land_5",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 2160, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 108, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 109, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 11,
+      "parentId": -1,
+      "name": "ItemPool",
+      "tag": "Pool",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "SpawnObjectPoolComponent", "componentId": 19, "data": { "leftBound": -900, "rightSpawnX": 900, "spacing": 520, "repositionInsteadOfDisable": false, "poolTag": "Item" } },
+        { "type": "CookieRunScrollingPoolComponent", "componentId": 20, "data": { "scrollSpeed": 220, "leftBound": -900, "useGameManagerSpeed": true , "referenceFields": { "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" }, "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" } } } }
+      ]
+    },
+    {
+      "id": 12,
+      "parentId": 11,
+      "name": "Item_1",
+      "tag": "Item",
+      "active": true,
+      "transform": {
+        "position": { "x": 300, "y": -220, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 21, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 22, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 23, "data": { "scoreValue": 10 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 13,
+      "parentId": 11,
+      "name": "Item_2",
+      "tag": "Item",
+      "active": true,
+      "transform": {
+        "position": { "x": 820, "y": -150, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 24, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 25, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 26, "data": { "scoreValue": 15 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 14,
+      "parentId": 11,
+      "name": "Item_3",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 1340, "y": -240, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 27, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 28, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 29, "data": { "scoreValue": 20 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 15,
+      "parentId": -1,
+      "name": "ObstaclePool",
+      "tag": "Pool",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "SpawnObjectPoolComponent", "componentId": 30, "data": { "leftBound": -900, "rightSpawnX": 1000, "spacing": 620, "repositionInsteadOfDisable": false, "poolTag": "Obstacle" } },
+        { "type": "CookieRunScrollingPoolComponent", "componentId": 31, "data": { "scrollSpeed": 220, "leftBound": -900, "useGameManagerSpeed": true , "referenceFields": { "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" }, "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" } } } }
+      ]
+    },
+    {
+      "id": 16,
+      "parentId": 15,
+      "name": "Obstacle_1",
+      "tag": "Obstacle",
+      "active": true,
+      "transform": {
+        "position": { "x": 520, "y": -290, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 32, "data": { "fbxPath": "FBX/fbxSample.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 33, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 34, "data": { "requiresDoubleJump": false, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 330, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 17,
+      "parentId": 15,
+      "name": "Obstacle_2",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 1140, "y": -300, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 35, "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 36, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 37, "data": { "requiresDoubleJump": true, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 331, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 18,
+      "parentId": 15,
+      "name": "Obstacle_3",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 1140, "y": -205, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 38, "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 39, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 40, "data": { "requiresDoubleJump": true, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 332, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 19,
+      "parentId": 15,
+      "name": "Obstacle_4",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 1760, "y": -290, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 41, "data": { "fbxPath": "FBX/fbxSample.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 42, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 43, "data": { "requiresDoubleJump": false, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 333, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 110,
+      "parentId": 3,
+      "name": "BG_6",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 5760, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 110, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 111,
+      "parentId": 3,
+      "name": "BG_7",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 7200, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 111, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 112,
+      "parentId": 3,
+      "name": "BG_8",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 8640, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 112, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 113,
+      "parentId": 3,
+      "name": "BG_9",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 10080, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 113, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 114,
+      "parentId": 3,
+      "name": "BG_10",
+      "tag": "BackgroundSegment",
+      "active": true,
+      "transform": {
+        "position": { "x": 11520, "y": 0, "z": 50 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1460, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 114, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 0, "trans": true, "texturePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 115,
+      "parentId": 7,
+      "name": "Land_6",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 2880, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 115, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 116, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 116,
+      "parentId": 7,
+      "name": "Land_7",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 3600, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 117, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 118, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 117,
+      "parentId": 7,
+      "name": "Land_8",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 4320, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 119, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 120, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 118,
+      "parentId": 7,
+      "name": "Land_9",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 5040, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 121, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 122, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 119,
+      "parentId": 7,
+      "name": "Land_10",
+      "tag": "Land",
+      "active": true,
+      "transform": {
+        "position": { "x": 5760, "y": -410, "z": 10 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 732, "y": 120, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 123, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 1, "trans": true, "texturePath": "IMG/land.bmp" } },
+        { "type": "BoxCollider2D", "componentId": 124, "data": { "bodyType": 0, "trigger": false, "size": { "x": 720, "y": 120 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } }
+      ]
+    },
+    {
+      "id": 120,
+      "parentId": 11,
+      "name": "Item_4",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 1860, "y": -170, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 125, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 126, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 127, "data": { "scoreValue": 10 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 121,
+      "parentId": 11,
+      "name": "Item_5",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 2380, "y": -230, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 128, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 129, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 130, "data": { "scoreValue": 15 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 122,
+      "parentId": 11,
+      "name": "Item_6",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 2900, "y": -140, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 131, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 132, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 133, "data": { "scoreValue": 20 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 123,
+      "parentId": 11,
+      "name": "Item_7",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 3420, "y": -260, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 134, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 135, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 136, "data": { "scoreValue": 10 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 124,
+      "parentId": 11,
+      "name": "Item_8",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 3940, "y": -180, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 137, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 138, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 139, "data": { "scoreValue": 15 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 125,
+      "parentId": 11,
+      "name": "Item_9",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 4460, "y": -120, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 140, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 141, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 142, "data": { "scoreValue": 20 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 126,
+      "parentId": 11,
+      "name": "Item_10",
+      "tag": "Item",
+      "active": false,
+      "transform": {
+        "position": { "x": 4980, "y": -240, "z": 5 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 70, "y": 70, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 143, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": false, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": false, "orderInLayer": 2, "trans": true, "texturePath": "IMG/item.png" } },
+        { "type": "BoxCollider2D", "componentId": 144, "data": { "bodyType": 0, "trigger": true, "size": { "x": 60, "y": 60 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunItemComponent", "componentId": 145, "data": { "scoreValue": 10 , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 19, "expectedType": "SpawnObjectPoolComponent" } } } }
+      ]
+    },
+    {
+      "id": 127,
+      "parentId": 15,
+      "name": "Obstacle_5",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 3000, "y": -290, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 146, "data": { "fbxPath": "FBX/fbxSample.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 147, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 148, "data": { "requiresDoubleJump": false, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 334, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 128,
+      "parentId": 15,
+      "name": "Obstacle_6",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 3620, "y": -300, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 149, "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 150, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 151, "data": { "requiresDoubleJump": true, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 335, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 129,
+      "parentId": 15,
+      "name": "Obstacle_7",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 3620, "y": -205, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 152, "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 153, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 154, "data": { "requiresDoubleJump": true, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 336, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 130,
+      "parentId": 15,
+      "name": "Obstacle_8",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 4240, "y": -290, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 155, "data": { "fbxPath": "FBX/fbxSample.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 156, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 157, "data": { "requiresDoubleJump": false, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 337, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 131,
+      "parentId": 15,
+      "name": "Obstacle_9",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 4860, "y": -300, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 158, "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 159, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 160, "data": { "requiresDoubleJump": true, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 338, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 132,
+      "parentId": 15,
+      "name": "Obstacle_10",
+      "tag": "Obstacle",
+      "active": false,
+      "transform": {
+        "position": { "x": 4860, "y": -205, "z": 3 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 0.28, "y": 0.28, "z": 0.28 }
+      },
+      "components": [
+        { "type": "FBXRender", "componentId": 161, "data": { "fbxPath": "FBX/fbxSample1.fbx" } },
+        { "type": "BoxCollider2D", "componentId": 162, "data": { "bodyType": 0, "trigger": true, "size": { "x": 72, "y": 88 }, "offset": { "x": 0, "y": 0 }, "fixedRotation": true } },
+        { "type": "CookieRunObstacleComponent", "componentId": 163, "data": { "requiresDoubleJump": true, "hitCooldown": 1, "disableAfterHit": false , "referenceFields": { "GameManager Component": { "kind": "Component", "componentId": 1, "expectedType": "CookieRunGameManagerComponent" }, "ObjectPool Component": { "kind": "Component", "componentId": 30, "expectedType": "SpawnObjectPoolComponent" } } } },
+        { "type": "CookieRunRotateYComponent", "componentId": 339, "data": { "rotationSpeed": 0.7 } }
+      ]
+    },
+    {
+      "id": 20,
+      "parentId": -1,
+      "name": "ScoreLabel",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 160, "y": 40, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 260, "y": 40, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 44, "data": { "position": { "x": 30, "y": 20 }, "size": { "x": 260, "y": 40 }, "visible": true, "enabled": true, "orderInLayer": 5, "anchorPreset": "TopLeft", "text": "Score: 0", "color": 4294967295, "fontSize": 28, "scale": 1 } }
+      ]
+    },
+    {
+      "id": 21,
+      "parentId": -1,
+      "name": "SpeedLabel",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 160, "y": 78, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 260, "y": 40, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 45, "data": { "position": { "x": 30, "y": 58 }, "size": { "x": 260, "y": 40 }, "visible": true, "enabled": true, "orderInLayer": 5, "anchorPreset": "TopLeft", "text": "Speed: 220", "color": 4294967295, "fontSize": 28, "scale": 1 } }
+      ]
+    },
+    {
+      "id": 22,
+      "parentId": -1,
+      "name": "HPLabel",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 160, "y": 116, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 260, "y": 40, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 46, "data": { "position": { "x": 30, "y": 96 }, "size": { "x": 260, "y": 40 }, "visible": true, "enabled": true, "orderInLayer": 5, "anchorPreset": "TopLeft", "text": "HP: 3 / 3", "color": 4294967295, "fontSize": 28, "scale": 1 } }
+      ]
+    }
+  ]
+}
+

@@ -1035,5 +1035,20 @@ bool ObjectManager::GetLastMouseRaycastInfo(Ray& outRay, RaycastHit2D& outHit, b
 	outRay = m_lastMouseRay;
 	outHit = m_lastMouseRaycastHit;
 	outHasHit = m_hasLastMouseRaycastHit;
+
+	if (!outHasHit)
+	{
+		return true;
+	}
+
+	if (outHit.gameObject == nullptr ||
+		!const_cast<ObjectManager*>(this)->FindObject(outHit.gameObject) ||
+		outHit.gameObject->GetDestroy() ||
+		!outHit.gameObject->GetActive())
+	{
+		outHit = RaycastHit2D();
+		outHasHit = false;
+	}
+
 	return true;
 }

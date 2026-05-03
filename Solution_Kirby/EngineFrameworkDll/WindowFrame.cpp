@@ -43,6 +43,24 @@ namespace
 		static WindowFrame::SceneSnapshotCallback callback;
 		return callback;
 	}
+
+	class SceneNameOnlyScene final : public Scene
+	{
+	public:
+		explicit SceneNameOnlyScene(const std::string& sceneName)
+			: m_sceneName(sceneName)
+		{
+		}
+
+		void Init() override {}
+		void Release() override {}
+		void Start() override {}
+		const char* GetSceneName() const override { return m_sceneName.c_str(); }
+		void BuildInitialSceneObjects() override {}
+
+	private:
+		std::string m_sceneName;
+	};
 }
 
 void WindowFrame::Create(HINSTANCE hInstance)
@@ -210,6 +228,17 @@ void WindowFrame::SetScene(Scene* scene)
 			sceneSnapshotCallback(sceneName);
 		}
 	}
+}
+
+void WindowFrame::OpenSceneByName(const std::string& sceneName)
+{
+	if (sceneName.empty())
+	{
+		return;
+	}
+
+	SetRequestedSceneDataName(sceneName);
+	SetScene(new SceneNameOnlyScene(sceneName));
 }
 
 void WindowFrame::Initialize(RenderType type)

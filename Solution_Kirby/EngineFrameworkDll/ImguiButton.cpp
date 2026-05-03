@@ -114,7 +114,7 @@ void ImguiButton::ImguiButtonEvent()
     if (m_event)
     {
         //m_event();
-        MainFrame::GetInstance()->AddBtnEvent(m_event);
+        MainFrame::GetInstance()->QueueDeferredAction(m_event);
     }
 }
 

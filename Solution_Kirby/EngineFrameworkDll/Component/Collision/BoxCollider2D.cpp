@@ -34,8 +34,8 @@ b2Fixture* BoxCollider2D::CreateFixtureOnBody(b2Body* body)
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &box;
 	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-	fixtureDef.restitution = 0.5f;
+	fixtureDef.friction = 0.8f;
+	fixtureDef.restitution = 0.0f;
 	fixtureDef.isSensor = m_isTrigger;
 	return body->CreateFixture(&fixtureDef);
 }

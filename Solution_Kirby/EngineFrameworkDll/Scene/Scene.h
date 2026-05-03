@@ -6,6 +6,7 @@ protected:
 	float m_timeScale = 1.0f;
 
 public:
+	virtual ~Scene() = default;
 	virtual void Init() abstract;
 	virtual void Release() abstract;
 	virtual void Start() abstract;

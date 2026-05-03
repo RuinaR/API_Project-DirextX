@@ -1,0 +1,78 @@
+{
+  "version": 9,
+  "sceneName": "StartScene",
+  "timeScale": 1,
+  "camera": {
+    "position": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "projection": {
+      "mode": "Orthographic",
+      "fov": 0.785398,
+      "orthographicSize": 900,
+      "nearClip": 1,
+      "farClip": 1000
+    }
+  },
+  "objects": [
+    {
+      "id": 1,
+      "parentId": -1,
+      "name": "Start_BG",
+      "tag": "Background",
+      "active": true,
+      "transform": {
+        "position": { "x": 720, "y": 450, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1440, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "UIImage", "componentId": 1, "data": { "position": { "x": 0, "y": 0 }, "size": { "x": 1440, "y": 900 }, "visible": true, "enabled": true, "orderInLayer": 0, "anchorPreset": "MiddleCenter", "useTexture": true, "color": 4294967295, "imagePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 2,
+      "parentId": -1,
+      "name": "TitleText",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 716.5, "y": 190, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 265, "y": 60, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 2, "data": { "position": { "x": -3.5, "y": -260 }, "size": { "x": 265, "y": 60 }, "visible": true, "enabled": true, "orderInLayer": 1, "anchorPreset": "MiddleCenter", "text": "Cookie Run Mini", "color": 4278190080, "fontSize": 50, "scale": 1 } }
+      ]
+    },
+    {
+      "id": 3,
+      "parentId": -1,
+      "name": "GameStartButton",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 720, "y": 425, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 260, "y": 90, "z": 1 }
+      },
+      "components": [
+        { "type": "UIButton", "componentId": 3, "data": { "position": { "x": 0, "y": -25 }, "size": { "x": 260, "y": 90 }, "visible": true, "enabled": true, "orderInLayer": 3, "anchorPreset": "MiddleCenter", "imagePath": "", "useTexture": false, "normalColor": 3024907891, "hoverColor": 3362575735, "pressedColor": 2682183218, "actionKey": "SceneChange.StartToGame" } }
+      ]
+    },
+    {
+      "id": 4,
+      "parentId": 3,
+      "name": "GameStartButtonText",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 757, "y": 432, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 160, "y": 40, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 4, "data": { "position": { "x": 87, "y": 32 }, "size": { "x": 160, "y": 40 }, "visible": true, "enabled": true, "orderInLayer": 12, "anchorPreset": "TopLeft", "text": "Game Start", "color": 4294967295, "fontSize": 26, "scale": 1 } }
+      ]
+    }
+  ]
+}

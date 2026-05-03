@@ -64,7 +64,7 @@ private:
 	EditorPlaybackState m_editorPlaybackState = EditorPlaybackState::Paused;
 	bool m_editorStepRequested = false;
 
-	list<std::function<void()>> m_listBtnEvent;
+	list<std::function<void()>> m_deferredActions;
 public:
 	static void Create(HINSTANCE hInstance);
 	static MainFrame* GetInstance();
@@ -100,7 +100,7 @@ public:
 	void ResetCollisionPairsForCollider(Collider2D* collider);
 	void ResetTriggerPairsForCollider(Collider2D* collider);
 
-	void AddBtnEvent(std::function<void()> p_event);
+	void QueueDeferredAction(std::function<void()> p_event);
 private:
 	void InvalidateDeviceResources();
 	void RestoreDeviceResources();

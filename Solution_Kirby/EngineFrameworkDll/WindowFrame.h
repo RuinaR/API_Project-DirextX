@@ -32,6 +32,7 @@ public:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
 	void SetScene(Scene* scene);
+	void OpenSceneByName(const std::string& sceneName);
 	void Initialize(RenderType type);
 	void BuildWindow();
 	void Run(const MSG* Message);

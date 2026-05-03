@@ -235,9 +235,17 @@ namespace
 		ImGui::Text("Ray Direction: %.3f, %.3f, %.3f", ray.direction.x, ray.direction.y, ray.direction.z);
 		ImGui::Text("Hit: %s", hasHit ? "true" : "false");
 
-		if (hasHit && hit.gameObject != nullptr)
+		GameObject* hitObject = hit.gameObject;
+		const bool isValidHitObject =
+			hasHit &&
+			hitObject != nullptr &&
+			objectManager->FindObject(hitObject) &&
+			!hitObject->GetDestroy() &&
+			hitObject->GetActive();
+
+		if (isValidHitObject)
 		{
-			ImGui::Text("Hit GameObject: %s", hit.gameObject->GetName().c_str());
+			ImGui::Text("Hit GameObject: %s", hitObject->GetName().c_str());
 			ImGui::Text("Hit Distance: %.3f", hit.distance);
 			ImGui::Text("Hit Point: %.2f, %.2f, %.2f", hit.point.x, hit.point.y, hit.point.z);
 			ImGui::Text("Hit Normal: %.2f, %.2f, %.2f", hit.normal.x, hit.normal.y, hit.normal.z);
@@ -629,9 +637,18 @@ void EditorHierarchyWindow::DrawGameObjectNode(GameObject* obj, int depth, int& 
 	visibleIndex++;
 	sprintf_s(str, 128, "%s%d. %s", prefix.c_str(), visibleIndex, obj->GetName().c_str());
 	ImGui::PushID(obj);
+	const bool isActive = obj->GetActive();
+	if (!isActive)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.55f, 0.55f, 0.55f, 1.0f));
+	}
 	if (ImGui::Selectable(str, EditorSelectionService::GetSelectedObject() == obj))
 	{
 		EditorSelectionService::SetSelectedObject(obj);
+	}
+	if (!isActive)
+	{
+		ImGui::PopStyleColor();
 	}
 	DrawHierarchyDragDrop(obj);
 	DrawHierarchyContextMenu(obj);

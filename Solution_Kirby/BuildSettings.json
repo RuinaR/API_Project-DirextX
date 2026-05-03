@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "startScene": "",
-  "scenes": []
+  "startScene": "StartScene",
+  "scenes": ["StartScene", "GameScene", "ResultScene"]
 }

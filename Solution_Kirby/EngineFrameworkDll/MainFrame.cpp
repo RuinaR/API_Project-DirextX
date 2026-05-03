@@ -755,9 +755,9 @@ void MainFrame::ProcessMouseInput() {
 	}
 }
 
-void MainFrame::AddBtnEvent(std::function<void()> p_event)
+void MainFrame::QueueDeferredAction(std::function<void()> p_event)
 {
-    m_listBtnEvent.push_back(p_event);
+    m_deferredActions.push_back(p_event);
 }
 
 
@@ -873,10 +873,10 @@ bool MainFrame::Update()
             const double simulationDeltaTime = min(m_timer.getTotalDeltaTime(), 0.02);
 
             //버튼이벤트 일괄 처리
-            for (auto itr = m_listBtnEvent.begin(); itr != m_listBtnEvent.end();)
+            for (auto itr = m_deferredActions.begin(); itr != m_deferredActions.end();)
             {
                 (*itr)();
-                itr = m_listBtnEvent.erase(itr);
+                itr = m_deferredActions.erase(itr);
             }
 
             //ImGui
@@ -896,6 +896,7 @@ bool MainFrame::Update()
                 ? simulationDeltaTime * static_cast<double>(GetTimeScale())
                 : 0.0;
             const bool shouldAdvanceSimulation = shouldRunSimulation && scaledSimulationDeltaTime > 0.0;
+            const bool shouldRunGameplayUpdate = shouldRunSimulation && ObjectManager::GetInstance() != nullptr;
             m_frameDeltaTime = shouldAdvanceSimulation ? scaledSimulationDeltaTime : 0.0;
 
             if (shouldAdvanceSimulation)
@@ -903,6 +904,10 @@ bool MainFrame::Update()
                 m_pWorld->Step(static_cast<float>(scaledSimulationDeltaTime), m_velocityIterations, m_positionIterations);
                 CleanupActiveCollisionPairs();
                 DispatchActiveTriggerStayEvents();
+            }
+
+            if (shouldRunGameplayUpdate)
+            {
                 ObjectManager::GetInstance()->Update();
 
                 if (m_type == RenderType::Edit && m_editorStepRequested)

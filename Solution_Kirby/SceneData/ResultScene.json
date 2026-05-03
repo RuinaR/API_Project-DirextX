@@ -1,0 +1,108 @@
+{
+  "version": 9,
+  "sceneName": "ResultScene",
+  "timeScale": 1,
+  "camera": {
+    "position": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "projection": {
+      "mode": "Orthographic",
+      "fov": 0.785398,
+      "orthographicSize": 900,
+      "nearClip": 1,
+      "farClip": 1000
+    }
+  },
+  "objects": [
+    {
+      "id": 1,
+      "parentId": -1,
+      "name": "Result_BG",
+      "tag": "Background",
+      "active": true,
+      "transform": {
+        "position": { "x": 720, "y": 450, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1440, "y": 900, "z": 1 }
+      },
+      "components": [
+        { "type": "UIImage", "componentId": 1, "data": { "position": { "x": 0, "y": 0 }, "size": { "x": 1440, "y": 900 }, "visible": true, "enabled": true, "orderInLayer": 0, "anchorPreset": "MiddleCenter", "useTexture": true, "color": 4291611852, "imagePath": "IMG/BG.bmp" } }
+      ]
+    },
+    {
+      "id": 3,
+      "parentId": -1,
+      "name": "ResultScoreLabel",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 820, "y": 210, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 420, "y": 60, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 3, "data": { "position": { "x": 100, "y": 180 }, "size": { "x": 420, "y": 60 }, "visible": true, "enabled": true, "orderInLayer": 2, "anchorPreset": "TopCenter", "text": "Final Score: 0", "color": 4294967295, "fontSize": 34, "scale": 1 } }
+      ]
+    },
+    {
+      "id": 4,
+      "parentId": -1,
+      "name": "PlayerResultImage",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 320, "y": 430, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 220, "y": 220, "z": 1 }
+      },
+      "components": [
+        { "type": "ImageRender", "componentId": 4, "data": { "renderEnabled": true, "useTexture": true, "magentaColorKey": true, "flipX": false, "flipY": false, "color": 4294967295, "isUIRender": true, "orderInLayer": 3, "trans": true, "texturePath": "IMG/player.bmp" } }
+      ]
+    },
+    {
+      "id": 5,
+      "parentId": -1,
+      "name": "BackToStartButton",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 720, "y": 585, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 260, "y": 90, "z": 1 }
+      },
+      "components": [
+        { "type": "UIButton", "componentId": 5, "data": { "position": { "x": 0, "y": 135 }, "size": { "x": 260, "y": 90 }, "visible": true, "enabled": true, "orderInLayer": 5, "anchorPreset": "MiddleCenter", "imagePath": "", "useTexture": false, "normalColor": 3024907891, "hoverColor": 3362575735, "pressedColor": 2682183218, "actionKey": "SceneChange.ResultToStart" } }
+      ]
+    },
+    {
+      "id": 6,
+      "parentId": -1,
+      "name": "BackToStartButtonText",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 760, "y": 590, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 180, "y": 40, "z": 1 }
+      },
+      "components": [
+        { "type": "UILabel", "componentId": 6, "data": { "position": { "x": 670, "y": 570 }, "size": { "x": 180, "y": 40 }, "visible": true, "enabled": true, "orderInLayer": 10, "anchorPreset": "TopLeft", "text": "Back To Start", "color": 4294967295, "fontSize": 24, "scale": 1 } }
+      ]
+    },
+    {
+      "id": 7,
+      "parentId": -1,
+      "name": "ResultManager",
+      "tag": "UI",
+      "active": true,
+      "transform": {
+        "position": { "x": 0, "y": 0, "z": 0 },
+        "rotation": { "x": 0, "y": 0, "z": 0 },
+        "size": { "x": 1, "y": 1, "z": 1 }
+      },
+      "components": [
+        { "type": "CookieRunResultComponent", "componentId": 7, "data": { "referenceFields": { "ResultScoreLabel Component": { "kind": "Component", "componentId": 3, "expectedType": "UILabel" } } } }
+      ]
+    }
+  ]
+}
