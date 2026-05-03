@@ -106,6 +106,8 @@ void CookieRunGameManagerComponent::Update()
 		return;
 	}
 
+	SanitizeCachedReferences();
+
 	MainFrame* mainFrame = MainFrame::GetInstance();
 	if (mainFrame == nullptr)
 	{
@@ -616,6 +618,21 @@ void CookieRunGameManagerComponent::ResolveFallbackReferences()
 	}
 }
 
+void CookieRunGameManagerComponent::SanitizeCachedReferences()
+{
+	ObjectManager* objectManager = ObjectManager::GetInstance();
+	if (objectManager == nullptr)
+	{
+		m_player = nullptr;
+		return;
+	}
+
+	if (m_player != nullptr && !objectManager->IsTrackedObjectPointer(m_player))
+	{
+		m_player = nullptr;
+	}
+}
+
 UILabel* CookieRunGameManagerComponent::GetScoreLabel() const
 {
 	return dynamic_cast<UILabel*>(m_scoreLabelComponent);
@@ -654,6 +671,12 @@ ObjectPoolComponent* CookieRunGameManagerComponent::GetObstaclePool() const
 ImageRender* CookieRunGameManagerComponent::GetPlayerImageRender() const
 {
 	if (m_player == nullptr)
+	{
+		return nullptr;
+	}
+
+	ObjectManager* objectManager = ObjectManager::GetInstance();
+	if (objectManager == nullptr || !objectManager->IsTrackedObjectPointer(m_player))
 	{
 		return nullptr;
 	}

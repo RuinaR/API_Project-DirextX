@@ -44,6 +44,7 @@ public:
 
 private:
 	void ResolveFallbackReferences();
+	void SanitizeCachedReferences();
 	void UpdateHitFlashAndCameraShake(float deltaTime);
 	void UpdateDifficultyTimeScale(float deltaTime, float unscaledDeltaTime);
 	void UpdateScoreCollectEffect(float unscaledDeltaTime);

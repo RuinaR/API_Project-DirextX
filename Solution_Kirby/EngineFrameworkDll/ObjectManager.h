@@ -65,6 +65,7 @@ public:
 	GameObject* FindFirstObjectByTag(const string& tag);
 	vector<GameObject*> FindObjectsByTag(const string& tag);
 	bool FindObject(GameObject* obj);
+	bool IsTrackedObjectPointer(const GameObject* obj) const;
 	void Initialize();
 	void Release();
 	void Update();

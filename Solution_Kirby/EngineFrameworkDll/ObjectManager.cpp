@@ -506,6 +506,43 @@ bool ObjectManager::FindObject(GameObject* obj)
 	return IsInObjectList(obj) && !IsPendingRemove(obj) && obj != nullptr && !obj->GetDestroy();
 }
 
+bool ObjectManager::IsTrackedObjectPointer(const GameObject* obj) const
+{
+	if (obj == nullptr)
+	{
+		return false;
+	}
+
+	for (vector<GameObject*>::const_iterator itr = m_pendingAddObjects.begin(); itr != m_pendingAddObjects.end(); ++itr)
+	{
+		if (*itr == obj)
+		{
+			return true;
+		}
+	}
+
+	for (vector<GameObject*>::const_iterator itr = m_pendingRemoveObjects.begin(); itr != m_pendingRemoveObjects.end(); ++itr)
+	{
+		if (*itr == obj)
+		{
+			return false;
+		}
+	}
+
+	if (m_objList != nullptr)
+	{
+		for (list<GameObject*>::const_iterator itr = m_objList->begin(); itr != m_objList->end(); ++itr)
+		{
+			if (*itr == obj)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void ObjectManager::Initialize()
 {
 	m_objList = new list<GameObject*>();
