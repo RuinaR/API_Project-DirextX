@@ -14,3 +14,9 @@
 
 /BuildOutput/Resources/*
 !/BuildOutput/Resources/.gitkeep
+
+# VSCode: share project run/build settings only.
+/.vscode/*
+!/.vscode/launch.json
+!/.vscode/tasks.json
+!/.vscode/extensions.json

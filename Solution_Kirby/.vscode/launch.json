@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Game (Win32)",
+      "name": "Debug GameApp (Win32)",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}\\Bin\\Debug_Win32\\BuildResultGame.exe",
+      "program": "${workspaceFolder}\\Bin\\Debug_Win32\\GameApp.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}\\Bin\\Debug_Win32",
@@ -14,10 +14,10 @@
       "preLaunchTask": "Build Debug Win32"
     },
     {
-      "name": "Debug Editor (Win32)",
+      "name": "Debug EditorApp (Win32)",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}\\Bin\\Debug_Win32\\BuildEdit.exe",
+      "program": "${workspaceFolder}\\Bin\\Debug_Win32\\EditorApp.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}\\Bin\\Debug_Win32",
@@ -26,10 +26,10 @@
       "preLaunchTask": "Build Debug Win32"
     },
     {
-      "name": "Debug Game (x64)",
+      "name": "Debug GameApp (x64)",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}\\Bin\\Debug_x64\\BuildResultGame.exe",
+      "program": "${workspaceFolder}\\Bin\\Debug_x64\\GameApp.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}\\Bin\\Debug_x64",
@@ -38,10 +38,10 @@
       "preLaunchTask": "Build Debug x64"
     },
     {
-      "name": "Debug Editor (x64)",
+      "name": "Debug EditorApp (x64)",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}\\Bin\\Debug_x64\\BuildEdit.exe",
+      "program": "${workspaceFolder}\\Bin\\Debug_x64\\EditorApp.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}\\Bin\\Debug_x64",
