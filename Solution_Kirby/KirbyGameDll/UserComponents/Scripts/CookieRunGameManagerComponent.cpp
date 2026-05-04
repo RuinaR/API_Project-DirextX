@@ -22,6 +22,7 @@ namespace
 	const D3DCOLOR kDefaultPlayerColor = 0xffffffff;
 	const D3DCOLOR kHitFlashPlayerColor = D3DCOLOR_ARGB(255, 255, 120, 120);
 	const D3DCOLOR kScoreCollectPlayerColor = D3DCOLOR_ARGB(255, 180, 255, 140);
+	const D3DCOLOR kStartInvinciblePlayerColor = D3DCOLOR_ARGB(255, 150, 210, 255);
 
 	std::wstring ToWideLabel(const std::string& prefix, int value)
 	{
@@ -67,6 +68,7 @@ void CookieRunGameManagerComponent::Start()
 	m_speedIncreaseTimer = 0.0f;
 	m_timeScaleIncreaseTimer = 0.0f;
 	m_damageInvincibleTimer = 0.0f;
+	m_startInvincibleTimer = m_startInvincibleDuration;
 	m_hitFlashTimer = 0.0f;
 	m_cameraShakeTimer = 0.0f;
 	m_currentDifficultyTimeScale = 1.0f;
@@ -114,6 +116,10 @@ void CookieRunGameManagerComponent::Update()
 		return;
 	}
 
+	UpdateScoreUI();
+	UpdateSpeedUI();
+	UpdateHpUI();
+
 	const float deltaTime = static_cast<float>(mainFrame->DeltaTime());
 	const float unscaledDeltaTime = static_cast<float>(mainFrame->UnscaledDeltaTime());
 
@@ -126,6 +132,15 @@ void CookieRunGameManagerComponent::Update()
 		if (m_damageInvincibleTimer < 0.0f)
 		{
 			m_damageInvincibleTimer = 0.0f;
+		}
+	}
+
+	if (m_startInvincibleTimer > 0.0f)
+	{
+		m_startInvincibleTimer -= deltaTime;
+		if (m_startInvincibleTimer < 0.0f)
+		{
+			m_startInvincibleTimer = 0.0f;
 		}
 	}
 
@@ -174,7 +189,7 @@ void CookieRunGameManagerComponent::AddScore(int amount)
 
 bool CookieRunGameManagerComponent::DamagePlayer(int amount)
 {
-	if (m_gameOver || amount <= 0 || m_damageInvincibleTimer > 0.0f)
+	if (m_gameOver || amount <= 0 || m_damageInvincibleTimer > 0.0f || m_startInvincibleTimer > 0.0f)
 	{
 		return false;
 	}
@@ -260,6 +275,11 @@ bool CookieRunGameManagerComponent::IsScoreCollectEffectActive() const
 
 void CookieRunGameManagerComponent::UpdateScoreUI()
 {
+	if (GetScoreLabel() == nullptr)
+	{
+		ResolveFallbackReferences();
+	}
+
 	if (UILabel* scoreLabel = GetScoreLabel())
 	{
 		scoreLabel->SetText(ToWideLabel("Score: ", m_score));
@@ -268,6 +288,11 @@ void CookieRunGameManagerComponent::UpdateScoreUI()
 
 void CookieRunGameManagerComponent::UpdateSpeedUI()
 {
+	if (GetSpeedLabel() == nullptr)
+	{
+		ResolveFallbackReferences();
+	}
+
 	if (UILabel* speedLabel = GetSpeedLabel())
 	{
 		speedLabel->SetText(ToWideLabel("Speed: ", static_cast<int>(m_scrollSpeed)));
@@ -276,6 +301,11 @@ void CookieRunGameManagerComponent::UpdateSpeedUI()
 
 void CookieRunGameManagerComponent::UpdateHpUI()
 {
+	if (GetHpLabel() == nullptr)
+	{
+		ResolveFallbackReferences();
+	}
+
 	if (UILabel* hpLabel = GetHpLabel())
 	{
 		hpLabel->SetText(ToWideHpLabel(m_currentHp, m_maxHp));
@@ -307,6 +337,10 @@ void CookieRunGameManagerComponent::UpdateHitFlashAndCameraShake(float deltaTime
 		else if (m_hitFlashTimer > 0.0f)
 		{
 			playerImageRender->SetColor(kHitFlashPlayerColor);
+		}
+		else if (m_startInvincibleTimer > 0.0f)
+		{
+			playerImageRender->SetColor(kStartInvinciblePlayerColor);
 		}
 		else
 		{
@@ -465,6 +499,7 @@ void CookieRunGameManagerComponent::DrawInspector()
 	ImGui::DragFloat("Speed Increase Interval", &m_speedIncreaseInterval, 0.1f, 0.1f, 60.0f);
 	ImGui::DragFloat("Speed Increase Amount", &m_speedIncreaseAmount, 1.0f, 0.0f, 1000.0f);
 	ImGui::DragFloat("Damage Invincible Duration", &m_damageInvincibleDuration, 0.05f, 0.0f, 10.0f);
+	ImGui::DragFloat("Start Invincible Duration", &m_startInvincibleDuration, 0.05f, 0.0f, 10.0f);
 	ImGui::DragFloat("Hit Flash Duration", &m_hitFlashDuration, 0.01f, 0.0f, 2.0f);
 	ImGui::DragFloat("Camera Shake Duration", &m_cameraShakeDuration, 0.01f, 0.0f, 2.0f);
 	ImGui::DragFloat("Camera Shake X", &m_cameraShakeStrengthX, 0.001f, 0.0f, 0.5f);
@@ -489,13 +524,12 @@ std::string CookieRunGameManagerComponent::Serialize() const
 {
 	std::ostringstream oss;
 	oss << "{ ";
-	oss << "\"score\": " << m_score << ", ";
 	oss << "\"maxHp\": " << m_maxHp << ", ";
-	oss << "\"currentHp\": " << m_currentHp << ", ";
 	oss << "\"scrollSpeed\": " << m_scrollSpeed << ", ";
 	oss << "\"speedIncreaseInterval\": " << m_speedIncreaseInterval << ", ";
 	oss << "\"speedIncreaseAmount\": " << m_speedIncreaseAmount << ", ";
 	oss << "\"damageInvincibleDuration\": " << m_damageInvincibleDuration << ", ";
+	oss << "\"startInvincibleDuration\": " << m_startInvincibleDuration << ", ";
 	oss << "\"hitFlashDuration\": " << m_hitFlashDuration << ", ";
 	oss << "\"cameraShakeDuration\": " << m_cameraShakeDuration << ", ";
 	oss << "\"cameraShakeStrengthX\": " << m_cameraShakeStrengthX << ", ";
@@ -506,21 +540,19 @@ std::string CookieRunGameManagerComponent::Serialize() const
 	oss << "\"scoreCollectEffectDuration\": " << m_scoreCollectEffectDuration << ", ";
 	oss << "\"scoreCollectLabelPulseScale\": " << m_scoreCollectLabelPulseScale << ", ";
 	oss << "\"scoreCollectCameraTiltX\": " << m_scoreCollectCameraTiltX << ", ";
-	oss << "\"scoreCollectCameraTiltY\": " << m_scoreCollectCameraTiltY << ", ";
-	oss << "\"gameOver\": " << (m_gameOver ? "true" : "false");
+	oss << "\"scoreCollectCameraTiltY\": " << m_scoreCollectCameraTiltY;
 	oss << " }";
 	return oss.str();
 }
 
 bool CookieRunGameManagerComponent::Deserialize(const std::string& componentJson)
 {
-	SceneJson::ReadInt(componentJson, "score", m_score);
 	SceneJson::ReadInt(componentJson, "maxHp", m_maxHp);
-	SceneJson::ReadInt(componentJson, "currentHp", m_currentHp);
 	SceneJson::ReadFloat(componentJson, "scrollSpeed", m_scrollSpeed);
 	SceneJson::ReadFloat(componentJson, "speedIncreaseInterval", m_speedIncreaseInterval);
 	SceneJson::ReadFloat(componentJson, "speedIncreaseAmount", m_speedIncreaseAmount);
 	SceneJson::ReadFloat(componentJson, "damageInvincibleDuration", m_damageInvincibleDuration);
+	SceneJson::ReadFloat(componentJson, "startInvincibleDuration", m_startInvincibleDuration);
 	SceneJson::ReadFloat(componentJson, "hitFlashDuration", m_hitFlashDuration);
 	SceneJson::ReadFloat(componentJson, "cameraShakeDuration", m_cameraShakeDuration);
 	SceneJson::ReadFloat(componentJson, "cameraShakeStrengthX", m_cameraShakeStrengthX);
@@ -532,7 +564,6 @@ bool CookieRunGameManagerComponent::Deserialize(const std::string& componentJson
 	SceneJson::ReadFloat(componentJson, "scoreCollectLabelPulseScale", m_scoreCollectLabelPulseScale);
 	SceneJson::ReadFloat(componentJson, "scoreCollectCameraTiltX", m_scoreCollectCameraTiltX);
 	SceneJson::ReadFloat(componentJson, "scoreCollectCameraTiltY", m_scoreCollectCameraTiltY);
-	SceneJson::ReadBool(componentJson, "gameOver", m_gameOver);
 	return true;
 }
 

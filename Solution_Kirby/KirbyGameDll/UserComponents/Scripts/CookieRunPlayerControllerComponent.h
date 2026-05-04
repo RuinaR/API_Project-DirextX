@@ -55,7 +55,6 @@ private:
 	float m_fallAcceleration = 26000.0f;
 	float m_lowJumpAcceleration = 18000.0f;
 	bool m_isGrounded = false;
-	bool m_spaceWasDown = false;
 	std::string m_idleAnimationKey = "Animation/Player/default/right/idle.anim";
 	std::string m_runAnimationKey = "Animation/Player/default/right/run.anim";
 	std::string m_jumpAnimationKey = "Animation/Player/default/right/jump.anim";

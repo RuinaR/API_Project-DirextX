@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CookieRunPlayerControllerComponent.h"
 
 #include "AnimationRender.h"
@@ -128,25 +128,26 @@ void CookieRunPlayerControllerComponent::ResolveFallbackReferences()
 
 void CookieRunPlayerControllerComponent::HandleJumpInput()
 {
-	const bool isSpaceDown = (GetAsyncKeyState(VK_SPACE) & 0x8000) != 0;
+	const bool isSpaceDown = WindowFrame::IsKeyDown(VK_SPACE);
+	const bool wasSpacePressedThisFrame = WindowFrame::WasKeyPressedThisFrame(VK_SPACE);
+
+	if (!isSpaceDown)
+	{
+		return;
+	}
 
 	if (CookieRunGameManagerComponent* gameManager = GetGameManager())
 	{
 		if (gameManager->IsScoreCollectEffectActive())
 		{
-			// 아이템 획득 연출 중에는 점프 입력을 잠깐 막는다.
-			// 이때 눌린 Space도 현재 상태로 기억해서 연출이 끝난 직후 점프가 튀지 않게 한다.
-			m_spaceWasDown = isSpaceDown;
 			return;
 		}
 	}
 
-	if (isSpaceDown && !m_spaceWasDown)
+	if (wasSpacePressedThisFrame)
 	{
 		ApplyJump();
 	}
-
-	m_spaceWasDown = isSpaceDown;
 }
 
 void CookieRunPlayerControllerComponent::ApplyAirMotionTuning()
@@ -165,7 +166,6 @@ void CookieRunPlayerControllerComponent::ApplyAirMotionTuning()
 	}
 
 	D3DXVECTOR2 velocity = rigidbody->GetVelocity();
-	const bool isSpaceDown = (GetAsyncKeyState(VK_SPACE) & 0x8000) != 0;
 
 	if (velocity.y < 0.0f)
 	{
@@ -174,7 +174,7 @@ void CookieRunPlayerControllerComponent::ApplyAirMotionTuning()
 		return;
 	}
 
-	if (velocity.y > 0.0f && !isSpaceDown)
+	if (velocity.y > 0.0f)
 	{
 		velocity.y -= m_lowJumpAcceleration * deltaTime;
 		rigidbody->SetVelocity(velocity);
@@ -232,6 +232,14 @@ void CookieRunPlayerControllerComponent::EnterGround(Collider2D* other)
 	if (other->GetGameObject()->GetTag() != "Land")
 	{
 		return;
+	}
+
+	if (Rigidbody2D* rigidbody = GetRigidbody())
+	{
+		if (rigidbody->GetVelocity().y > 0.0f)
+		{
+			return;
+		}
 	}
 
 	m_groundContactCount = max(m_groundContactCount, 1);

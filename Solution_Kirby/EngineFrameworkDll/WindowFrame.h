@@ -27,6 +27,9 @@ public:
 	static void Destroy();
 	static void SetSceneSnapshotCallback(SceneSnapshotCallback callback);
 	static void ClearSceneSnapshotCallback();
+	static void BeginInputFrame();
+	static bool IsKeyDown(int virtualKey);
+	static bool WasKeyPressedThisFrame(int virtualKey);
 
 	// Win32 윈도우 프로시저는 static 함수 형태여야 한다.
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);

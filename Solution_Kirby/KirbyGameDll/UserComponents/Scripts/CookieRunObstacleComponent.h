@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 
@@ -27,7 +27,9 @@ public:
 
 protected:
 	void TriggerEnter(Collider2D* other) override;
+	void TriggerStay(Collider2D* other) override;
 	void CollisionEnter(Collider2D* other) override;
+	void CollisionStay(Collider2D* other) override;
 
 private:
 	void ResolveFallbackReferences();

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CookieRunObstacleComponent.h"
 
 #include "CookieRunGameManagerComponent.h"
@@ -75,7 +75,17 @@ void CookieRunObstacleComponent::TriggerEnter(Collider2D* other)
 	HandleHit(other);
 }
 
+void CookieRunObstacleComponent::TriggerStay(Collider2D* other)
+{
+	HandleHit(other);
+}
+
 void CookieRunObstacleComponent::CollisionEnter(Collider2D* other)
+{
+	HandleHit(other);
+}
+
+void CookieRunObstacleComponent::CollisionStay(Collider2D* other)
 {
 	HandleHit(other);
 }

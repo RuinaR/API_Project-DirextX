@@ -44,6 +44,18 @@ namespace
 		return callback;
 	}
 
+	bool (&GetKeyDownStorage())[256]
+	{
+		static bool keyDown[256] = {};
+		return keyDown;
+	}
+
+	bool (&GetKeyPressedStorage())[256]
+	{
+		static bool keyPressed[256] = {};
+		return keyPressed;
+	}
+
 	class SceneNameOnlyScene final : public Scene
 	{
 	public:
@@ -100,6 +112,35 @@ void WindowFrame::ClearSceneSnapshotCallback()
 	GetSceneSnapshotCallbackStorage() = SceneSnapshotCallback();
 }
 
+void WindowFrame::BeginInputFrame()
+{
+	bool (&keyPressed)[256] = GetKeyPressedStorage();
+	for (int i = 0; i < 256; ++i)
+	{
+		keyPressed[i] = false;
+	}
+}
+
+bool WindowFrame::IsKeyDown(int virtualKey)
+{
+	if (virtualKey < 0 || virtualKey >= 256)
+	{
+		return false;
+	}
+
+	return GetKeyDownStorage()[virtualKey];
+}
+
+bool WindowFrame::WasKeyPressedThisFrame(int virtualKey)
+{
+	if (virtualKey < 0 || virtualKey >= 256)
+	{
+		return false;
+	}
+
+	return GetKeyPressedStorage()[virtualKey];
+}
+
 // imgui_impl_win32.cpp에 있는 메시지 처리 함수를 여기서 먼저 선언해 둔다.
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -141,8 +182,41 @@ LRESULT WindowFrame::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 	case WM_MOUSEMOVE:
 		Mouse::GetInstance()->SetPos(LOWORD(lParam), HIWORD(lParam));
 		return 0;
-	case WM_KILLFOCUS:
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+	{
+		if (wParam < 256)
+		{
+			bool (&keyDown)[256] = GetKeyDownStorage();
+			bool (&keyPressed)[256] = GetKeyPressedStorage();
+			const int virtualKey = static_cast<int>(wParam);
+			const bool wasAlreadyDown = (lParam & (1L << 30)) != 0;
+			if (!keyDown[virtualKey] && !wasAlreadyDown)
+			{
+				keyPressed[virtualKey] = true;
+			}
+			keyDown[virtualKey] = true;
+		}
 		return 0;
+	}
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		if (wParam < 256)
+		{
+			GetKeyDownStorage()[static_cast<int>(wParam)] = false;
+		}
+		return 0;
+	case WM_KILLFOCUS:
+	{
+		bool (&keyDown)[256] = GetKeyDownStorage();
+		bool (&keyPressed)[256] = GetKeyPressedStorage();
+		for (int i = 0; i < 256; ++i)
+		{
+			keyDown[i] = false;
+			keyPressed[i] = false;
+		}
+		return 0;
+	}
 	case WM_SETFOCUS:
 		return 0;
 	case WM_SIZE:

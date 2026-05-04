@@ -36,7 +36,6 @@ void BuildLoopCls::Init(HINSTANCE hInstance)
 	}
 
 	DebugLog::Clear();
-	DebugLog::Log("EditorApp initialized.");
 
 	WindowFrame::SetSceneSnapshotCallback(
 		[](const std::string& sceneName)

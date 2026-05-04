@@ -77,6 +77,8 @@ private:
 	float m_timeScaleIncreaseTimer = 0.0f;
 	float m_damageInvincibleDuration = 0.8f;
 	float m_damageInvincibleTimer = 0.0f;
+	float m_startInvincibleDuration = 3.0f;
+	float m_startInvincibleTimer = 0.0f;
 	float m_hitFlashDuration = 0.14f;
 	float m_hitFlashTimer = 0.0f;
 	float m_cameraShakeDuration = 0.16f;

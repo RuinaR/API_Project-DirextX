@@ -848,6 +848,8 @@ void MainFrame::QueueDeferredAction(std::function<void()> p_event)
 
 bool MainFrame::Update()
 {
+    WindowFrame::BeginInputFrame();
+
     while (PeekMessage(&m_message, 0, 0, 0, PM_REMOVE))  // 메시지 처리 우선
     {
         WindowFrame::GetInstance()->Run(&m_message);
